@@ -2,7 +2,7 @@
 
 My configuration files for vim and tmux
 
-Please read the [Important Notes][README.md#important-notes]
+Please read the [Important Notes](README.md#important-notes)
 
 ![my setup](screenshot.png)
 
@@ -140,7 +140,7 @@ but screen terminal really plays bad with Vim graphical customizations, therefor
         ```
         env TERM=screen-256color tmux
         ```
-    this issue may be related to other applications overriding system terminal settings, run `which tic` to be sure.
+        this issue may be related to other applications overriding system terminal settings, run `which tic` to be sure.
 
 ## Important Notes:
 
@@ -160,8 +160,8 @@ On OSX, just download *.ttf files and double click to install.
 
 * When in Tmux, you may notice the following bugs:
     * Vim current cursor shape affects the cursor shape in other tmux windows (easily solved by going back to NORMAL mode before switching panes)
-    * Less and Man pages will badly interpret the customized italics escape sequences (see hacks above) and will show highlighted text with italics font.
-    This is annoying when searching text.
-_NOTE_ that there may be fixes for abovementioned bugs, I just didn't find them ;)
+    * Less and Man pages will badly interpret the customized italics escape sequences (see hacks above) and will show highlighted text with italics font. This is annoying when searching text.
+
+    _NOTE_ that there may be fixes for abovementioned bugs, I just didn't find them ;)
 
 
