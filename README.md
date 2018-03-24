@@ -143,7 +143,6 @@ but screen terminal really plays bad with Vim graphical customizations, therefor
         this issue may be related to other applications overriding system terminal settings, run `which tic` to be sure.
 
 ## Important Notes:
-
 * This extensive configuration does not make a paradigm of portability and is suited for users who want to customize Vim and tmux on their local machines.
 
 * Users are discouraged from blindly clone this repo and override their ~/.vimrc and ~/.tmux.conf files for three reasons:
@@ -157,6 +156,7 @@ but screen terminal really plays bad with Vim graphical customizations, therefor
 On OSX, just download *.ttf files and double click to install.
 
 * Vim YouCompleteMe plugin needs to be compiled on your system. Follow the instructions on http://valloric.github.io/YouCompleteMe/#full-installation-guide
+oh, and requires **MacVim**!
 
 * When in Tmux, you may notice the following bugs:
     * Vim current cursor shape affects the cursor shape in other tmux windows (easily solved by going back to NORMAL mode before switching panes)
