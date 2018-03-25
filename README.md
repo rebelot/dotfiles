@@ -17,7 +17,7 @@ follow specific pluign manager instrucions for installation
 
 ### Vim Plugins
 
-* **'tpope/vim-fugitive'**: a tmux wrapper so awesome it should be illegal
+* **'tpope/vim-fugitive'**: a git wrapper so awesome it should be illegal
 * **'ctrlpvim/ctrlp.vim'**: fuzzy finder for files, mru and buffers 
 * **'rstacruz/sparkup'**: html syntax
 * **'flazz/vim-colorschemes'**: one colorscheme package to rule them all
