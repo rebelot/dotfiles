@@ -16,6 +16,7 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'flazz/vim-colorschemes'
 Plugin 'JuliaEditorSupport/julia-vim'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'kovetskiy/ycm-sh'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'bling/vim-bufferline'
@@ -24,17 +25,21 @@ Plugin 'majutsushi/tagbar'
 Plugin 'moll/vim-bbye'
 Plugin 'jlanzarotta/bufexplorer'
 Plugin 'lambdalisue/suda.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'scrooloose/nerdtree'
 Plugin 'ivalkeen/nerdtree-execute.git'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'lervag/vimtex.git'
 " Plugin 'joonty/vdebug'
 Plugin 'tmux-plugins/vim-tmux'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
+Plugin 'benmills/vimux'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'vim-scripts/Gundo'
 Plugin 'vim-scripts/YankRing.vim'
-Plugin 'Shougo/unite.vim'
+" Plugin 'Shougo/unite.vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'metakirby5/codi.vim'
 Plugin 'terryma/vim-multiple-cursors'
@@ -45,6 +50,11 @@ Plugin 'wesQ3/vim-windowswap'
 Plugin 'mileszs/ack.vim'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'vim-scripts/Vim-Gromacs'
+Plugin 'chrisbra/vim-zsh'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'guns/xterm-color-table.vim'
+Plugin 'itchyny/calendar.vim'
 if has('nvim')
     Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plugin 'Shougo/denite.nvim'
@@ -66,10 +76,15 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 " Plugin Options
+
+let g:sparkupMaps = 0
+
 let g:ycm_python_binary_path = '/opt/anaconda3/bin/python'
 let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_autoclose_preview_window_after_completion = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
+
+let g:UltiSnipsExpandTrigger = '<c-j>'
 
 let g:bufferline_echo = 1
 
@@ -174,18 +189,39 @@ function! FzyCommand(choice_command, vim_command)
   endif
 endfunction
 
+function! VimuxSlime()
+  let l:text = @v
+  let l:text = substitute(l:text, "\n$", "", "")
+  call VimuxSendText(l:text)
+  call VimuxSendKeys("Enter")
+ endfunction
+vnoremap <leader>vs "vy :call VimuxSlime()<CR>
+nnoremap <leader>vp :VimuxPromptCommand<CR>
+
 " MyCommands
 command! -nargs=1 SudoEdit edit sudo:<args>
 command! -nargs=1 SudoWrite write sudo:<args>
 
-autocmd BufNewFile,BufRead *.pdb  setfiletype PDB
-autocmd BufNewFile,BufRead *.aln  setfiletype clustal
-autocmd BufNewFile,BufRead *.fasta,*.fa  setfiletype fasta
+command! CD lcd %:p:h
+
+autocmd BufNewFile,BufRead *.pdb setfiletype PDB
+autocmd BufNewFile,BufRead *.aln setfiletype clustal
+autocmd BufNewFile,BufRead *.fasta,*.fa setfiletype fasta
+
+if exists('$ITERM_PROFILE')
+    if exists('$TMUX')
+        autocmd BufEnter *.png,*.jpg,*.gif exec "! ~/code/bin/imgcat_4tmux " . expand("%:p") | :bw
+    else 
+        autocmd BufEnter *.png,*.jpg,*.gif exec "! ~/.iterm2/imgcat " . expand("%:p") | :bw
+    endif
+end
 
 " Settings
 syntax on                       " enable syntax highlighting
 set termguicolors               " enable gui colors for terminal TODO: set only if terminal supports it
 colorscheme chance-of-storm     " awesome colorscheme
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" " True Colors
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set encoding=utf-8              " enconding
 set guifont=Fira\ code:h14      " select font for gui
 set modeline             " enable vim modelines
@@ -221,14 +257,17 @@ set incsearch     " show search matches as you type
 set hidden        " allow modified buffers to be hidden 
 set wildmode=longest,list:longest,full
 set wildmenu      " diplay command completion listing and choice menu
-set shell=bash\ -l    " select shell as login bash
+" set shell=bash\ -l    " select shell as login bash
+set shell=/opt/local/bin/zsh
 set clipboard=unnamed " copy to system clipboard
 set ttyfast
 
 " make comments italic 
 let &t_ZH="\e[3m"   
 let &t_ZR="\e[23m"
-highlight Comment cterm=italic
+" set t_ZH=[3m   
+" set t_ZR=[23m
+highlight Comment cterm=italic, gui=italic
 
 " change cursor shape in Insert, Replace, Normal
 if exists('$ITERM_PROFILE')
@@ -242,7 +281,6 @@ if exists('$ITERM_PROFILE')
     let &t_EI = "\<Esc>]50;CursorShape=0\x7"
   endif
 end
-
 
 " highlight line numbers in active window, underline current line for special windows
 " hi CursorLine term=underline cterm=underline guibg=#2a2e31
@@ -264,24 +302,42 @@ function! ToggleCursorLineEnter()
     endfor
 endfunction
 
+if &term =~ '^screen'
+    " tmux will send xterm-style keys when its xterm-keys option is on
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+endif
+
 " mappings
 let mapleader = ","
+
 " fast edit and sourcing .vimrc
 nnoremap <leader>ev :e $MYVIMRC<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
+
 " surround word with "
 noremap <leader>" viw<Esc>a"<Esc>bi"<Esc>lel
 inoremap ( ()<Esc>i
 inoremap [ []<Esc>i
 inoremap { {}<Esc>i
 inoremap " ""<Esc>i
+
 " remap <Esc> to jk in insert mode
 inoremap jk <ESC>
 inoremap kj <ESC>
+
 " open new tab with nt
-nnoremap <leader>nt :tabnew<cr>
+nnoremap <leader>tn :tabnew<cr>
+
+" move between tabs (next / previous)
+" nnoremap <tab> :tabnext<CR> 
+" nnoremap <s-tab> :tabprev<CR>
+
 " toggle line numbers
 " nnoremap <C-N><C-N> :set invnumber<cr>
+
 " move around windows
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
@@ -291,37 +347,61 @@ nnoremap <m->> <C-W>>
 nnoremap <m-<> <C-W><
 nnoremap <m-+> <C-W>+
 nnoremap <m--> <C-W>-
-" move between tabs (next / previous)
-nmap <tab> gt
-nmap <s-tab> gT
-" close buffer
-noremap <leader>bd :Bdelete<cr>
-noremap <leader>q :q<CR>
+
+" close window/buffer
+nnoremap <leader>Q :bdelete<CR>
+nnoremap <leader>bd :Bdelete<CR>
+nnoremap <leader>q :q<CR>
+
 " save buffer (normal or insert)
 nnoremap <leader>s :w<cr>
 inoremap <leader>s <C-c>:w<cr>
+
 " copy to system clipboard
 " vnoremap <C-c> :w !pbcopy<CR><CR>
 " noremap <C-v> :r !pbpaste<CR><CR>
+
 " switch between buffers
-nnoremap <C-N> :bnext!<CR>
-nnoremap <C-P> :bprev!<CR>
-nnoremap K :YcmCompleter GetDoc<CR>
+nnoremap gb :bnext<CR>
+nnoremap gB :bprev<CR>
+
+" YCM Docs
+" nnoremap K :YcmCompleter GetDoc<CR>
+
 " undisplay highlighting
 nnoremap <leader>h :noh<CR>
+
 " create vertical split editing a new buffer
 nnoremap <leader>vn :rightbelow :vnew<CR><C-W>L
+
+" toggle tagbar
 nnoremap <F8> :TagbarToggle<CR>
+
+" Netrwd 
 " nnoremap <leader>le :topleft :30Lex<CR>
 " nnoremap <leader>e :Explore<CR>
+
+" NERDTree
 nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <leader>nf :NERDTreeFind<CR>
+
+" Folds
 nnoremap <leader>zi :set foldmethod=indent<CR>
 nnoremap <leader>zm :set foldmethod=manual<CR>
-nnoremap <leader>gt :GundoToggle<CR>
+
+" Toggle Gundo
+nnoremap <leader>gu :GundoToggle<CR>
+
+" Toggle YankRing
 nnoremap <leader>yr :YRShow<CR>
+
+" reload buffer
 nnoremap <leader>re :e%<CR>
+
+" edit new buffer
 nnoremap <leader>en :enew<CR>
+
+" FuzzyFinder
 nnoremap <leader>f :call FzyCommand("find . -type f", ":e")<cr>
 nnoremap <leader>fv :call FzyCommand("find . -type f", ":vs")<cr>
 nnoremap <leader>fs :call FzyCommand("find . -type f", ":sp")<cr>
