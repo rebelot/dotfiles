@@ -19,10 +19,11 @@ follow specific pluign manager instrucions for installation
 
 * **'tpope/vim-fugitive'**: a git wrapper so awesome it should be illegal
 * **'ctrlpvim/ctrlp.vim'**: fuzzy finder for files, mru and buffers 
-* **'rstacruz/sparkup'**: html syntax
+* **'rstacruz/sparkup'**: html snippets, refractor, syntax and more
 * **'flazz/vim-colorschemes'**: one colorscheme package to rule them all
 * **'JuliaEditorSupport/julia-vim'**: julia language support (syntax and latex completions)
 * **'Valloric/YouCompleteMe'**: an awesome syntax completer
+* **'kovetskiy/ycm-sh'**: better bash syntax for ycm
 * **'vim-airline/vim-airline'**: lightweight statusline, integrated with most plugins (better with powerline font)
 * **'vim-airline/vim-airline-themes'**: themes for airline statusline
 * **'bling/vim-bufferline'**: show buffer names within statusline or command line
@@ -31,16 +32,19 @@ follow specific pluign manager instrucions for installation
 * **'moll/vim-bbye'**: useful functions to close buffers without disrupting splits layout
 * **'jlanzarotta/bufexplorer'**: buffer navigator
 * **'lambdalisue/suda.vim'**: edit files with piviledges
-* **'plasticboy/vim-markdown'**: add markdown syntax
+* **'godlygeek/tabular'**: awesome text alignment
+* **'dhruvasagar/vim-table-mode'**: super easy table creation plus spreadsheet functionality 
+* **'plasticboy/vim-markdown'**: markdown syntax
 * **'scrooloose/nerdtree'**: file explorer and filesystem operations
 * **'ivalkeen/nerdtree-execute.git'**: NERDTree plugin to open files with systems default programs
+* **''Xuyuanp/nerdtree-git-plugin'**: show git status within nerdtree
 * **'lervag/vimtex.git'**: LaTex support and useful functions (continuous compile, preview, etc)
 * **'tmux-plugins/vim-tmux'**: vim and tmux happy together
 * **'tmux-plugins/vim-tmux-focus-events'**: better event handling when running in tmux
+* **'benmills/vimux'**: send commands to a tmux pane (awesome to send text to REPLs!)
 * **'vim-syntastic/syntastic'**: powerful syntax checker
 * **'vim-scripts/Gundo'**: Undo Tree done right, easily explore and restore file changes 
 * **'vim-scripts/YankRing.vim'**: emacs-like kill-ring to cycle across pasted text
-* **'Shougo/unite.vim'**: fuzzy finder, buffer, mru, yank history and much more
 * **'junegunn/goyo.vim'**: distraction free mode for vim
 * **'metakirby5/codi.vim'**: real time REPL evaluation of code lines
 * **'terryma/vim-multiple-cursors'**: sublime-like multiple cursors
@@ -51,6 +55,11 @@ follow specific pluign manager instrucions for installation
 * **'mileszs/ack.vim'**: awesome super fast file contents searcher
 * **'lifepillar/vim-solarized8'**: true color solarized colorscheme
 * **'vim-scripts/Vim-Gromacs'**: filetypes for Gromacs
+* **'chrisbra/vim-zsh'**: zsh syntax
+* **'SirVer/ultisnips'**: code snippets completion engine
+* **'honza/vim-snippets'**: code snippets
+* **'guns/xterm-color-table.vim'**: quick list xterm 256 colr codes
+* **'itchyny/calendar.vim'**: great calendar plugin 
 
 ### Other functionalities
 Other functionalities that may require specific settings or external applications.
@@ -58,6 +67,9 @@ _NOTE_ that graphical enchancements such as truecolors and italicized text requi
 **iTerm2** would be a great choice since already supports many features, such as easy clipboard access, italics and bold text, and dynamic cursor shapes
 
 * **fzy**: fzy finder integration, see `FzyCommand` function, **requires fzy**
+* **Ack**: Ack search engine is set to external **ag, the silver searcher**.
+* **tagbar**: requires **exuberant ctags**
+* **image preview**: you can preview images within vim when opening .jpg, .png, .gif files. (**iTerm2 only**) _NOTE_ if you use tmux, there is an hack for [imgcat](https://gist.github.com/krtx/533d33d6cc49ecbbb8fab0ae871059ec.js).
 * **True Colors**: enable True Colors with `set termguicolors`, also in tmux by adding:
     ```vim
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
