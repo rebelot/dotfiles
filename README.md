@@ -8,7 +8,7 @@ Please read the [Important Notes](README.md#important-notes)
 
 ## Plugin managers:
 
-follow specific pluign manager instrucions for installation
+Follow specific plugin manager instructions for installation
 
 * **Vim**: [Vundle](http://github.com/VundleVim/Vundle.Vim)
 * **tmux**: [tpm](https://github.com/tmux-plugins/tpm)
@@ -42,7 +42,8 @@ follow specific pluign manager instrucions for installation
 * **'tmux-plugins/vim-tmux'**: vim and tmux happy together
 * **'tmux-plugins/vim-tmux-focus-events'**: better event handling when running in tmux
 * **'benmills/vimux'**: send commands to a tmux pane (awesome to send text to REPLs!)
-* **'vim-syntastic/syntastic'**: powerful syntax checker
+* **'w0rp/ale'**: Because "using Syntastic in 2018 is particular"
+* **'raimondi/delimitmate'**: An intelligent pair-matcher
 * **'vim-scripts/Gundo'**: Undo Tree done right, easily explore and restore file changes 
 * **'vim-scripts/YankRing.vim'**: emacs-like kill-ring to cycle across pasted text
 * **'junegunn/goyo.vim'**: distraction free mode for vim
@@ -60,6 +61,9 @@ follow specific pluign manager instrucions for installation
 * **'honza/vim-snippets'**: code snippets
 * **'guns/xterm-color-table.vim'**: quick list xterm 256 colr codes
 * **'itchyny/calendar.vim'**: great calendar plugin 
+* **'francoiscabrol/ranger.vim'**: A command line file browser with vi keymaps
+* **'reedes/vim-pencil'**: Text formatting will never be a problem when writing prose
+* **'junegunn/limelight.vim'**: Distraction free
 
 ### Other functionalities
 Other functionalities that may require specific settings or external applications.
@@ -69,13 +73,13 @@ _NOTE_ that graphical enchancements such as truecolors and italicized text requi
 * **fzy**: fzy finder integration, see `FzyCommand` function, **requires fzy**
 * **Ack**: Ack search engine is set to external **ag, the silver searcher**.
 * **tagbar**: requires **exuberant ctags**
-* **image preview**: you can preview images within vim when opening .jpg, .png, .gif files. (**iTerm2 only**) _NOTE_ if you use tmux, there is an hack for [imgcat](https://gist.github.com/krtx/533d33d6cc49ecbbb8fab0ae871059ec.js).
+* **image preview**: you can preview images within vim when opening .jpg, .png, .gif files. (**iTerm2 only**) _NOTE_ if you use tmux, there is an hack for [imgcat](https://gist.github.com/krtx/533d33d6cc49ecbbb8fab0ae871059ec.js). (DISMISSED)
 * **True Colors**: enable True Colors with `set termguicolors`, also in tmux by adding:
     ```vim
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     ```
-* **_italics_ comments**: this is easy in Vim, requires a hack to work in tmux 
+* **_italics_ comments**: this is easy in Vim, requires a hack to work when in tmux (see below)
     ```vim
     let &t_ZH="\e[3m"   
     let &t_ZR="\e[23m"
@@ -104,6 +108,7 @@ _NOTE_, there is currently no way to detect when in operator-pending mode (e.g.:
 * **'tmux-plugins/tmux-sensible'**: standar configuration anyone can agree upon
 * **'tmux-plugins/tmux-pain-control'**: easily move around panes
 * **'tmux-plugins/tmux-open'**: open stuff with external apps
+* **'tmux-plugins/tmux-copycat'**: quick search
 * **'tmux-plugins/tmux-sessionist'**: easily manage and switch sessions
 * **'tmux-plugins/tmux-sidebar'**: show cwd tree contents in a side pane
 * **'tmux-plugins/tmux-yank'**: system clipboard integration, may not be needed in iTerm2 (be sure to set "terminal may access clipboard" iterm option)
@@ -113,6 +118,7 @@ _NOTE_, there is currently no way to detect when in operator-pending mode (e.g.:
 * **'jbnicolai/tmux-fpp'**: wrapper for fpp (requires fpp)
 * **'tmux-plugins/tmux-online-status'**: retrieve online status (statusline)
 * **'tmux-plugins/tmux-prefix-highlight'**: signal when in copy or pending command mode (statusline)
+* **'thewtex/tmux-mem-cpu-load'**: a better cpu status plugin
 
 ### hacks
 
@@ -127,7 +133,7 @@ The following settings grant clipboard accessibility to copy commands
 but screen terminal really plays bad with Vim graphical customizations, therefore special settings are needed:
     * **override screen-256 color properties**:
         1. create a file named `screen-256color.terminfo` with the following contents:
-            ```
+            ```terminfo
             # A screen-256color based TERMINFO that adds the escape sequences for italic.
             #
             # Install:
@@ -142,14 +148,14 @@ but screen terminal really plays bad with Vim graphical customizations, therefor
                     sitm=\E[3m, ritm=\E[23m,
                     use=screen-256color,
             ```
-        2. compile the new terminal configuartions with the following bash command:
-            ```
+        2. compile the new terminal configurations with the following bash command:
+            ```bash
             tic screen-256color.terminfo
             ```
     * set the tmux option `set -g default-terminal "screen-256color"`
     * make sure $TERM is not set within your bash configuration file (`.profile`, `.bash_profile` or `.bashrc`)
     * if things don't work, try forcing tmux startup with:
-        ```
+        ```bash
         env TERM=screen-256color tmux
         ```
         this issue may be related to other applications overriding system terminal settings, run `which tic` to be sure.
@@ -172,8 +178,8 @@ oh, and requires **MacVim**!
 
 * When in Tmux, you may notice the following bugs:
     * Vim current cursor shape affects the cursor shape in other tmux windows (easily solved by going back to NORMAL mode before switching panes)
-    * Less and Man pages will badly interpret the customized italics escape sequences (see hacks above) and will show highlighted text with italics font. This is annoying when searching text.
+    * Less and Man pages will badly interpret the customized italics escape sequences (see hacks above) and will show highlighted text with italics font. This is annoying when searching text, but can be overcome by explicitly declaring appropriate terminfo when invoking LESS (i.e. see oh-my-zsh colorized-manpage).
 
-    _NOTE_ that there may be fixes for abovementioned bugs, I just didn't find them ;)
+    _NOTE_ that there may be fixes for abovementioned bugs I am not aware of!
 
 

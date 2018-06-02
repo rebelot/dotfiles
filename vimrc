@@ -36,7 +36,9 @@ Plugin 'lervag/vimtex.git'
 Plugin 'tmux-plugins/vim-tmux'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'benmills/vimux'
-Plugin 'vim-syntastic/syntastic'
+" "Plugin 'vim-syntastic/syntastic'
+Plugin 'w0rp/ale'
+Plugin 'raimondi/delimitmate'
 Plugin 'vim-scripts/Gundo'
 Plugin 'vim-scripts/YankRing.vim'
 " Plugin 'Shougo/unite.vim'
@@ -55,6 +57,9 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'guns/xterm-color-table.vim'
 Plugin 'itchyny/calendar.vim'
+Plugin 'francoiscabrol/ranger.vim'
+Plugin 'reedes/vim-pencil'
+Plugin 'junegunn/limelight.vim'
 if has('nvim')
     Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plugin 'Shougo/denite.nvim'
@@ -79,30 +84,28 @@ filetype plugin indent on    " required
 
 let g:sparkupMaps = 0
 
+let g:ranger_map_keys = 0
+
 let g:ycm_python_binary_path = '/opt/anaconda3/bin/python'
 let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_autoclose_preview_window_after_completion = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
+if !exists('g:ycm_semantic_triggers')
+    let g:ycm_semantic_triggers = {}
+endif
+let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+" let g:ycm_key_list_stop_completion = ['<C-y>', '<Enter>']
+let g:ycm_filetype_blacklist = {}
 
 let g:UltiSnipsExpandTrigger = '<c-j>'
 
 let g:bufferline_echo = 1
 
 let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#fugitiveline#enabled = 1
-let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#bufferline#enabled = 0
-let g:airline#extensions#bufferline#overwrite_variables = 0
-let g:airline#extensions#ycm#enabled = 1
-let g:airline#extensions#ycm#error_symbol = 'E:'
-let g:airline#extensions#ycm#warning_symbol = 'W:'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#tab_nr_type = 2
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline#extensions#vimtex#enabled = 1
-let g:airline#extensions#windowswap#enabled = 1
-let g:airline#extensions#csv#enabled = 1
 let g:airline#extensions#csv#column_display = 'Name'
 let g:airline_powerline_fonts = 1
 let g:airline_theme = "molokai"
@@ -116,10 +119,10 @@ let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
-let g:syntastic_python_checkers = ["flake8"]
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
+let g:ale_set_highlights = 1
+let g:ale_lint_on_text_changed = "normal"
+let g:ale_fixers = { 'python': 'autopep8'}
+let g:ale_python_mypy_options = "--ignore-missing-imports"
 
 let g:yankring_replace_n_pkey = '<m-p>'
 let g:yankring_replace_n_nkey = '<m-n>'
@@ -134,23 +137,26 @@ let g:ackprg = 'ag --vimgrep'
 let g:ctrlp_map = '<leader>F'
 let g:ctrlp_cmd = 'CtrlPMixed'
 
-" let g:vdebug_options= {
-"     \    "port" : 9000,
-"     \    "server" : '',
-"     \    "timeout" : 20,
-"     \    "on_close" : 'stop',
-"     \    "break_on_open" : 1,
-"     \    "ide_key" : '',
-"     \    "path_maps" : {},
-"     \    "debug_window_level" : 0,
-"     \    "debug_file_level" : 0,
-"     \    "debug_file" : "",
-"     \    "watch_window_style" : 'expanded',
-"     \    "marker_default" : '⬦',
-"     \    "marker_closed_tree" : '▸',
-"     \    "marker_open_tree" : '▾'
-"     \}
+let g:limelight_default_coefficient = 0.7
+let g:limelight_priority = -1
 
+let g:delimitMate_expand_inside_quotes = 1
+let g:delimitMate_jump_expansion = 1
+let g:delimitMate_expand_cr = 2
+let g:delimitMate_expand_space = 1
+let g:delimitMate_nesting_quotes = ['"','`']
+augroup DelimitMe
+    autocmd!
+    au FileType python let b:delimitMate_nesting_quotes = ['"']
+    au FileType markdown let b:delimitMate_nesting_quotes = ['`']
+augroup END
+
+" { dirty workaround to make DelimitMate and YouCompleteMe work together
+imap <silent> <BS> <C-R>=pumvisible() ? "\<C-y>" : ""<CR><Plug>delimitMateBS
+imap <expr> <CR> pumvisible() ? "\<C-Y>" : "<Plug>delimitMateCR"
+" }
+
+let g:tagbar_ctags_bin = "/opt/bin/ctags"
 " Add support for markdown files in tagbar.
 " https://github.com/jszakmeister/markdown2ctags
 let g:tagbar_type_markdown= {
@@ -194,36 +200,37 @@ function! VimuxSlime()
   let l:text = substitute(l:text, "\n$", "", "")
   call VimuxSendText(l:text)
   call VimuxSendKeys("Enter")
- endfunction
-vnoremap <leader>vs "vy :call VimuxSlime()<CR>
-nnoremap <leader>vp :VimuxPromptCommand<CR>
+endfunction
 
 " MyCommands
-command! -nargs=1 SudoEdit edit sudo:<args>
-command! -nargs=1 SudoWrite write sudo:<args>
+command! -nargs=1 -complete=file   SudoEdit  edit  sudo:<args>
+command! -nargs=1 -complete=buffer SudoWrite write sudo:<args>
 
 command! CD lcd %:p:h
 
-autocmd BufNewFile,BufRead *.pdb setfiletype PDB
-autocmd BufNewFile,BufRead *.aln setfiletype clustal
-autocmd BufNewFile,BufRead *.fasta,*.fa setfiletype fasta
+augroup ScienceBitch
+    autocmd!
+    autocmd BufNewFile,BufRead *.pdb        set filetype=PDB
+    autocmd BufNewFile,BufRead *.aln        set filetype=clustal
+    autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=asta
+augroup END
 
-if exists('$ITERM_PROFILE')
-    if exists('$TMUX')
-        autocmd BufEnter *.png,*.jpg,*.gif exec "! ~/code/bin/imgcat_4tmux " . expand("%:p") | :bw
-    else 
-        autocmd BufEnter *.png,*.jpg,*.gif exec "! ~/.iterm2/imgcat " . expand("%:p") | :bw
-    endif
-end
+augroup DistractionFree
+    autocmd!
+    autocmd User GoyoEnter Limelight
+    autocmd User GoyoLeave Limelight!
+augroup END
 
 " Settings
 syntax on                       " enable syntax highlighting
 set termguicolors               " enable gui colors for terminal TODO: set only if terminal supports it
 colorscheme chance-of-storm     " awesome colorscheme
+" colorscheme molokai
+highlight SignColumn guibg=#181c20
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" " True Colors
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set encoding=utf-8              " enconding
-set guifont=Fira\ code:h14      " select font for gui
+set guifont=Menlo\ Regular\ Nerd\ Font\ Complete:h12      " select font for gui
 set modeline             " enable vim modelines
 if !has('nvim')          " set ttymouse (mouse works while in tmux) if not in neovim
     set ttymouse=xterm2
@@ -249,59 +256,76 @@ set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
 set showmatch     " set show matching parenthesis
 set ignorecase    " ignore case when searching
 set smartcase     " ignore case if search pattern is all lowercase,
-                    "    case-sensitive otherwise
+                  "    case-sensitive otherwise
 set smarttab      " insert tabs on the start of a line according to
-                    "    shiftwidth, not tabstop
+                  "    shiftwidth, not tabstop
 set hlsearch      " highlight search terms
 set incsearch     " show search matches as you type
 set hidden        " allow modified buffers to be hidden 
 set wildmode=longest,list:longest,full
 set wildmenu      " diplay command completion listing and choice menu
 " set shell=bash\ -l    " select shell as login bash
-set shell=/opt/local/bin/zsh
+set shell=zsh\ -l
+set shellcmdflag=-c
 set clipboard=unnamed " copy to system clipboard
 set ttyfast
+set showcmd
+set sidescroll=1
+"set completeopt+="menuone,preview,noinsert,noselect"
+
+" set spellceck
+augroup MySpellFileTypes
+    autocmd!
+    autocmd FileType latex,tex,markdown,txt setlocal spell
+augroup END
+
+let &t_Us = "\e[4m"
+let &t_Ue = "\e[0m"
+hi clear SpellBad
+hi clear SpellCap
+hi clear SpellLocal
+hi clear SpellRare
+hi SpellBad   cterm=underline ctermbg=red        ctermfg=white gui=undercurl   guisp=red 
+hi SpellLocal cterm=underline ctermbg=208        ctermfg=white gui=undercurl   guisp=#ff8700
+hi SpellCap   cterm=underline ctermbg=magenta    ctermfg=white gui=undercurl   guisp=lightblue
+hi SpellRare  cterm=underline ctermbg=darkyellow ctermfg=white gui=undercurl   guisp=darkyellow
+
+" set highlight groups for ALE
+highlight ALEError        guibg=#890303 " dark red
+highlight ALEWarning      guibg=#8e4c02 " dark orange/yellow
+highlight ALEInfo         guibg=#444444 " dark gray
+highlight ALEStyleError   guibg=#890375 " dark purple
+highlight ALEStyleWarning guibg=#033e89 " dark blue
+
+highlight ALEErrorSign        guifg=#890303 " dark red
+highlight ALEWarningSign      guifg=#8e4c02 " dark orange/yellow
+highlight ALEInfoSign         guifg=#444444 " dark gray
+highlight ALEStyleErrorSign   guifg=#890375 " dark purple
+highlight ALEStyleWarningSign guifg=#033e89 " dark blue
 
 " make comments italic 
 let &t_ZH="\e[3m"   
 let &t_ZR="\e[23m"
-" set t_ZH=[3m   
-" set t_ZR=[23m
 highlight Comment cterm=italic, gui=italic
 
 " change cursor shape in Insert, Replace, Normal
 if exists('$ITERM_PROFILE')
-  if exists('$TMUX')
-    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  else
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  endif
-end
+    if exists('$TMUX')
+        let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+        let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+        let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    else
+        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+        let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    endif
+endif
 
-" highlight line numbers in active window, underline current line for special windows
-" hi CursorLine term=underline cterm=underline guibg=#2a2e31
-hi CursorLineNr term=bold cterm=italic ctermfg=11 gui=bold guifg=Yellow
-hi clear CursorLine
-augroup CursorLineOnlyInActiveWindow
-    autocmd!
-    autocmd WinLeave * setlocal nocursorline
-    autocmd BufWinEnter,WinEnter * call ToggleCursorLineEnter()
-augroup END   
-function! ToggleCursorLineEnter()
-    setlocal cursorline
-    hi clear CursorLine    " highlight line-number only
-    for i in ["NERD_Tree_","__Tagbar","unite","YankRing"]
-        if (bufname("%") =~ i)       
-            highlight CursorLine term=underline cterm=underline guibg=#2a2e31
-            break
-        endif
-    endfor
-endfunction
+" LineNumbers colour
+" 29465f 566878 688197 907d01
+hi LineNr ctermfg=11 guifg=#325472
 
+" fix screen arrowkeys
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
     execute "set <xUp>=\e[1;*A"
@@ -319,10 +343,10 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " surround word with "
 noremap <leader>" viw<Esc>a"<Esc>bi"<Esc>lel
-inoremap ( ()<Esc>i
-inoremap [ []<Esc>i
-inoremap { {}<Esc>i
-inoremap " ""<Esc>i
+" inoremap ( ()<Esc>i
+" inoremap [ []<Esc>i
+" inoremap { {}<Esc>i
+" inoremap " ""<Esc>i
 
 " remap <Esc> to jk in insert mode
 inoremap jk <ESC>
@@ -386,8 +410,8 @@ nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <leader>nf :NERDTreeFind<CR>
 
 " Folds
-nnoremap <leader>zi :set foldmethod=indent<CR>
-nnoremap <leader>zm :set foldmethod=manual<CR>
+nnoremap <leader>zi :setlocal foldmethod=indent<CR>
+nnoremap <leader>zm :setlocal foldmethod=manual<CR>
 
 " Toggle Gundo
 nnoremap <leader>gu :GundoToggle<CR>
@@ -405,3 +429,10 @@ nnoremap <leader>en :enew<CR>
 nnoremap <leader>f :call FzyCommand("find . -type f", ":e")<cr>
 nnoremap <leader>fv :call FzyCommand("find . -type f", ":vs")<cr>
 nnoremap <leader>fs :call FzyCommand("find . -type f", ":sp")<cr>
+nnoremap <leader>fm :CtrlPMRUFiles<CR>
+nnoremap <leader>fb :CtrlPBuffer<CR>
+
+"Vimux
+vnoremap <leader>vs "vy :call VimuxSlime()<CR>
+nnoremap <leader>vp :VimuxPromptCommand<CR>
+
