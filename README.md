@@ -72,14 +72,13 @@ _NOTE_ that graphical enchancements such as truecolors and italicized text requi
 
 * **fzy**: fzy finder integration, see `FzyCommand` function, **requires fzy**
 * **Ack**: Ack search engine is set to external **ag, the silver searcher**.
-* **tagbar**: requires **exuberant ctags**
-* **image preview**: you can preview images within vim when opening .jpg, .png, .gif files. (**iTerm2 only**) _NOTE_ if you use tmux, there is an hack for [imgcat](https://gist.github.com/krtx/533d33d6cc49ecbbb8fab0ae871059ec.js). (DISMISSED)
+* **tagbar**: requires **exuberant ctags** or **universal ctags** (recommended)
 * **True Colors**: enable True Colors with `set termguicolors`, also in tmux by adding:
     ```vim
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     ```
-* **_italics_ comments**: this is easy in Vim, requires a hack to work when in tmux (see below)
+* **_italics_ comments**: this is easy in Vim, requires a properly set terminal to work when in tmux (see below)
     ```vim
     let &t_ZH="\e[3m"   
     let &t_ZR="\e[23m"
@@ -87,7 +86,6 @@ _NOTE_ that graphical enchancements such as truecolors and italicized text requi
     ```
 * **cursor shape**: change cursor shape when in `INSERT`, `NORMAL` or `REPLACE` modes. Send the right escapes when in tmux
 _NOTE_, there is currently no way to detect when in operator-pending mode (e.g.: after `y` or `d`), although hacky functions exist
-* **fancy highlights**: highlight line numbers in active window, underline current line for special windows
 * **arrow keys in screen tmux**: correctly interpret arrow keys when running in tmux. requires tmux option: `set-window-option -g xterm-keys on`
     ```vim
     if &term =~ '^screen'
@@ -126,9 +124,12 @@ _NOTE_, there is currently no way to detect when in operator-pending mode (e.g.:
 may be installed with MacPorts, run `sudo port install tmux-pasteboard`.
 The following settings grant clipboard accessibility to copy commands
     ```tmux
+    set-option -g default-command "reattach-to-user-namespace -l $SHELL"
     bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
     bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy" \; display-message "highlighted selection copied to system clipboard"
     ```
+
+* **True colors** If your terminal emulator supports truecolors then you may set `set termguicolors` in your vimrc. To enable truecolors in tmux, you will have to set `set-option -ga terminal-overrides   ",xterm-256color:Tc"` in your tmux.conf. **NOTE** that there is a lot of confusion about this: _regardless_ of the terminal that tmux sets for itself (which should be `screen-256color` of `tmux-256color` depending on your version of tmux), you have to override the terminal info of the terminal that is set when you launch tmux. I.e. if your terminal emulator (iTerm2 or Terminal.app) sets up `xterm-256color`, then you need to override the tmux internal representation of that terminal with the above mentioned command.
 * **_italics_ for screen terminal**: tmux terminal has to be set to screen* (i.e.: `set -g default-terminal "screen-256color"`)
 but screen terminal really plays bad with Vim graphical customizations, therefore special settings are needed:
     * **override screen-256 color properties**:
@@ -152,13 +153,14 @@ but screen terminal really plays bad with Vim graphical customizations, therefor
             ```bash
             tic screen-256color.terminfo
             ```
-    * set the tmux option `set -g default-terminal "screen-256color"`
+        3. If you have a recent enough version of tmux, and you should, you can use `tmux-256color` terminal instead of screen. This is recommended since it handles highlighted text and italics properly. Check in `/usr/share/terminfo` if `tmux-256color` is present, if you have **macoprts**, `/opt/local/share/terminfo` will have it, but be careful to have `/opt/local/bin/infocmp` also in your login startup `$PATH`. Otherwise, you may compile the `tmux-256color.terminfo` file in this repo with `/usr/bin/tic`.
+    * Set the tmux option `set -gs default-terminal "screen-256color"` (or tmux-256color)
     * make sure $TERM is not set within your bash configuration file (`.profile`, `.bash_profile` or `.bashrc`)
     * if things don't work, try forcing tmux startup with:
         ```bash
         env TERM=screen-256color tmux
         ```
-        this issue may be related to other applications overriding system terminal settings, run `which tic` to be sure.
+        this issue may be related to other applications overriding system terminal settings. The compiled product of the terminfo file is stored within a terminfo database, usually in `$HOME/.terminfo`, you have to make sure that the `tic` command you used to compile the terminfo file comes from the same distribution of the command `infocmp` and that they are accessible by tmux startup `$PATH`, which is the `$PATH` of login shells. Usually `tic` and `infocmp` are located in `/usr/bin/`, but other package managers may override these commands.I.e., **macports** and **Anaconda** have their versions in their relative bin folders (usually `/opt/local/bin` and `/opt/anaconda3/bin`). Be sure that whatever command you use to compile the terminal specs is visible by tmux startup environment or you are likely to see weird things in your terminal.
 
 ## Important Notes:
 * This extensive configuration does not make a paradigm of portability and is suited for users who want to customize Vim and tmux on their local machines.
@@ -175,11 +177,4 @@ On OSX, just download *.ttf files and double click to install.
 
 * Vim YouCompleteMe plugin needs to be compiled on your system. Follow the instructions on http://valloric.github.io/YouCompleteMe/#full-installation-guide
 oh, and requires **MacVim**!
-
-* When in Tmux, you may notice the following bugs:
-    * Vim current cursor shape affects the cursor shape in other tmux windows (easily solved by going back to NORMAL mode before switching panes)
-    * Less and Man pages will badly interpret the customized italics escape sequences (see hacks above) and will show highlighted text with italics font. This is annoying when searching text, but can be overcome by explicitly declaring appropriate terminfo when invoking LESS (i.e. see oh-my-zsh colorized-manpage).
-
-    _NOTE_ that there may be fixes for abovementioned bugs I am not aware of!
-
 
