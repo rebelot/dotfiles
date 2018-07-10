@@ -1,0 +1,273 @@
+# sample config for khd
+
+# NOTE(koekeishiya): A bind is written in the form:
+#                   <keysym> [!] [<app list>] [->] : <command>
+#                   where
+#                       <keysym>   = mode + mod + ... + mod - literal
+#
+#                       <keysym>   = mode + mod + ... + mod - keycode
+#                                    keycode must have 0x prefix
+#
+#                       <keysym>   = mode + mod + ... + mod - button#
+#                                    replace '#' with mouse-button id; id >= 3
+#
+#                       modifier only binding
+#                       <keysym>   = mode + mod + ... + mod
+#
+#                       literal only binding
+#                       <keysym>   = - literal
+#
+#                       keycode only binding
+#                       <keysym>   = - keycode
+#
+#                       [<app,
+#                         app,     = optional list '[app1, ..., appN]' of applications
+#                         app>]      that this bind will be activated for. if the
+#                                    focused application is not contained in this list,
+#                                    the associated command will not be triggered, and
+#                                    the keypress will be passed through as normal.
+#
+#                       [!]        = optional operator '!' negates the behaviour when a
+#                                    list of applications is given. this marks the bind
+#                                    as 'Hotkey_Exclude', causing the bind to not work
+#                                    when the focused application is in the given list.
+#
+#                       [->]       = optional operator '->' that marks this bind as
+#                                    'passthrough'. this causes the key to be passed
+#                                    through to the system, instead of being consumed.
+#
+#                       <command>  = command is executed through '$SHELL -c' and
+#                                    follows valid shell syntax. if the $SHELL environment
+#                                    variable is not set, it will default to '/bin/bash'.
+#                                    when bash is used, the ';' delimeter can be specified
+#                                    to chain commands.
+#
+#                                    to allow a command to extend into multiple lines,
+#                                    prepend '\' at the end of the previous line.
+#
+#                                    an EOL character signifies the end of the bind.
+
+# NOTE(koekeishiya) Example of passthrough
+# cmd - m -> : echo "alert and minimize window" | alerter -title Test passthrough -timeout 2
+
+# NOTE(koekeishiya) Example of app list
+# alt - e [
+#           iTerm2,
+#           Terminal,
+#           HyperTerm
+#         ]
+#         : echo "so this is how deep the rabbit hole goes.." |\
+#           alerter -title Test passthrough -timeout 2
+
+# NOTE(koekeishiya) Example of negated app list
+# alt - e [
+#           iTerm2,
+#           Terminal,
+#           HyperTerm
+#         ] !
+#         : echo "blue pill, i choose you!" |\
+#           alerter -title Test passthrough -timeout 2
+
+# NOTE(koekeishiya) Modifier only binding
+# left shift    -> (    right shift   -> )
+# left cmd      -> {    right cmd     -> }
+
+# khd mod_trigger_timeout 0.1
+# lshift : khd -p "shift - 8"
+# rshift : khd -p "shift - 9"
+# lcmd   : khd -p "shift + alt - 8"
+# rcmd   : khd -p "shift + alt - 9"
+
+# NOTE(koekeishiya) Bind mouse-buttons
+# - button3 : khd -w "mouse-button 3 pressed"
+# - button4 : khd -w "mouse-button 4 pressed"
+
+# TODO(koekeishiya): possibly allow combined syntax such as
+# [switcher,ytd] + ctrl - f : khd -e "mode activate default"
+
+# reload config
+cmd + alt + ctrl - r : khd -e "reload"
+
+# set border color for different modes
+khd mode default on_enter chunkc border::color 0xff458588
+khd mode switcher on_enter chunkc border::color 0xff98971a
+khd mode swap on_enter chunkc border::color 0xffd79921
+khd mode tree on_enter chunkc border::color 0xffcc241d
+khd mode space on_enter chunkc border::color 0xffebdbb2
+
+# open terminal
+cmd + ctrl - return     :   open -na /Applications/iTerm.app;\
+                            chunkc tiling::window --toggle float
+# toggle between modes
+cmd + ctrl - f          :   khd -e "mode activate switcher"
+switcher + ctrl - f     :   khd -e "mode activate default"
+swap + ctrl - f         :   khd -e "mode activate default"
+space + ctrl - f        :   khd -e "mode activate default"
+tree + ctrl - f         :   khd -e "mode activate default"
+swap + cmd + ctrl - f   :   khd -e "mode activate switcher"
+space + cmd + ctrl - f  :   khd -e "mode activate switcher"
+tree + cmd + ctrl - f   :   khd -e "mode activate switcher"
+
+switcher - escape       :   khd -e "mode activate default"
+swap - escape           :   khd -e "mode activate default"
+space - escape          :   khd -e "mode activate default"
+tree - escape           :   khd -e "mode activate default"
+
+switcher - return       :   khd -e "mode activate default"
+swap - return           :   khd -e "mode activate default"
+space - return          :   khd -e "mode activate default"
+tree - return           :   khd -e "mode activate default"
+
+switcher - a            :   khd -e "mode activate swap"
+switcher - s            :   khd -e "mode activate space"
+switcher - t            :   khd -e "mode activate tree"
+
+# select windows
+switcher - h            :   chunkc tiling::window --focus west
+switcher - l            :   chunkc tiling::window --focus east
+switcher - j            :   chunkc tiling::window --focus south
+switcher - k            :   chunkc tiling::window --focus north
+switcher - m            :   chunkc tiling::window --focus prev
+switcher - n            :   chunkc tiling::window --focus next
+
+# close window
+switcher - w            :   chunkc tiling::window --close;\
+                            khd -e "mode activate default"
+
+# move window to desktop
+switcher + shift - 1    :   chunkc tiling::window --send-to-desktop 1
+switcher + shift - 2    :   chunkc tiling::window --send-to-desktop 2
+switcher + shift - 3    :   chunkc tiling::window --send-to-desktop 3
+switcher + shift - 4    :   chunkc tiling::window --send-to-desktop 4
+switcher + shift - 5    :   chunkc tiling::window --send-to-desktop 5
+
+# swap mode
+# swap window position
+swap - h                :   chunkc tiling::window --swap west
+swap - j                :   chunkc tiling::window --swap south
+swap - k                :   chunkc tiling::window --swap north
+swap - l                :   chunkc tiling::window --swap east
+
+# move window
+swap + shift - k        :   chunkc tiling::window --warp north
+swap + shift - l        :   chunkc tiling::window --warp east
+swap + shift - j        :   chunkc tiling::window --warp south
+swap + shift - h        :   chunkc tiling::window --warp west
+
+# focus monitor
+swap - z                :   chunkc tiling::monitor -f prev
+swap - c                :   chunkc tiling::monitor -f next
+
+# mirror tree y-axis
+swap - y                :   chunkc tiling::desktop --mirror vertical
+
+# mirror tree x-axis
+swap - x                :   chunkc tiling::desktop --mirror horizontal
+
+# space mode
+space - a               :   chunkc tiling::desktop --layout bsp
+space - s               :   chunkc tiling::desktop --layout monocle
+space - d               :   chunkc tiling::desktop --layout float
+
+# toggle desktop offset
+space - o               :   chunkc tiling::desktop --toggle offset
+
+# adjust desktop padding
+space - p               :   chunkc tiling::desktop --padding inc
+space + shift - p       :   chunkc tiling::desktop --padding dec
+
+# adjust gap
+space - g               :   chunkc tiling::desktop --gap inc
+space + shift - g       :   chunkc tiling::desktop --gap dec
+
+# tree mode
+tree - f                :   chunkc tiling::window --toggle fullscreen
+tree + shift - f        :   chunkc tiling::window --toggle native-fullscreen
+tree - d                :   chunkc tiling::window --toggle parent
+tree - w                :   chunkc tiling::window --toggle float
+
+# resize folating window 
+tree - c                :   chunkc tiling::window --grid-layout 4:4:1:1:2:2
+tree + shift - c        :   chunkc tiling::window --grid-layout 1:1:0:0:1:1
+tree - up               :   chunkc tiling::window --grid-layout 2:1:0:0:2:1
+tree - down             :   chunkc tiling::window --grid-layout 2:1:0:1:2:1
+tree - left             :   chunkc tiling::window --grid-layout 1:2:0:0:1:1
+tree - right            :   chunkc tiling::window --grid-layout 1:2:1:0:1:1
+
+# move floating windows / windows on a grid space
+# 10 rows 10 cols grid, windows left and top on 0 grid, and have 5 grid width 5 grid height
+tree - q                :   chunkc tiling::window --grid-layout 10:10:0:0:5:5
+
+tree - r                :   chunkc tiling::desktop --rotate 90
+tree - s                :   chunkc tiling::window --toggle split
+
+# adjust window size
+tree - e                :   chunkc tiling::desktop --equalize
+tree - h                :   chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge west; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge east
+tree - j                :   chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge south; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge north
+tree - k                :   chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge north; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge south
+tree - l                :   chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge east; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge west
+
+# # make floating window fill screen
+# shift + alt - up     : chunkc tiling::window --grid-layout 1:1:0:0:1:1
+
+# # make floating window fill left-half of screen
+# shift + alt - left   : chunkc tiling::window --grid-layout 1:2:0:0:1:1
+
+# # make floating window fill right-half of screen
+# shift + alt - right  : chunkc tiling::window --grid-layout 1:2:1:0:1:1
+
+# # move floating windows / windows on a grid space
+# # 10 rows 10 cols grid, windows left and top on 0 grid, and have 5 grid width 5 grid height
+# alt - q : chunkc tiling::window --grid-layout 10:10:0:0:5:5
+
+# # send window to desktop
+# shift + alt - x : chunkc tiling::window --send-to-desktop $(chunkc get _last_active_desktop)
+# shift + alt - z : chunkc tiling::window --send-to-desktop prev
+# shift + alt - c : chunkc tiling::window --send-to-desktop next
+# shift + alt - 1 : chunkc tiling::window --send-to-desktop 1
+# shift + alt - 2 : chunkc tiling::window --send-to-desktop 2
+# shift + alt - 3 : chunkc tiling::window --send-to-desktop 3
+# shift + alt - 4 : chunkc tiling::window --send-to-desktop 4
+# shift + alt - 5 : chunkc tiling::window --send-to-desktop 5
+# shift + alt - 6 : chunkc tiling::window --send-to-desktop 6
+
+# # send window to desktop and switch desktop
+# shift + cmd - x : `id=$(chunkc get _last_active_desktop); chunkc tiling::window -d $id; khd -p "cmd + alt - $id" &> /dev/null`
+# shift + cmd - z : chunkc tiling::window -d prev; khd -p "cmd + alt - z"
+# shift + cmd - c : chunkc tiling::window -d next; khd -p "cmd + alt - c"
+# shift + cmd - 1 : chunkc tiling::window -d 1; khd -p "cmd + alt - 1"
+# shift + cmd - 2 : chunkc tiling::window -d 2; khd -p "cmd + alt - 2"
+# shift + cmd - 3 : chunkc tiling::window -d 3; khd -p "cmd + alt - 3"
+# shift + cmd - 4 : chunkc tiling::window -d 4; khd -p "cmd + alt - 4"
+# shift + cmd - 5 : chunkc tiling::window -d 5; khd -p "cmd + alt - 5"
+# shift + cmd - 6 : chunkc tiling::window -d 6; khd -p "cmd + alt - 6"
+
+# # switch to last active desktop
+# cmd + alt - x   : `id=$(chunkc get _last_active_desktop); khd -p "cmd + alt - $id" &> /dev/null`
+
+# # set insertion point for focused container
+# ctrl + alt - f : chunkc tiling::window --use-insertion-point cancel
+# ctrl + alt - h : chunkc tiling::window --use-insertion-point west
+# ctrl + alt - j : chunkc tiling::window --use-insertion-point south
+# ctrl + alt - k : chunkc tiling::window --use-insertion-point north
+# ctrl + alt - l : chunkc tiling::window --use-insertion-point east
+
+
+# # float / unfloat window and center on screen
+# alt - t : chunkc tiling::window --toggle float;\
+#           chunkc tiling::window --grid-layout 4:4:1:1:2:2
+
+# # toggle sticky, float and resize to picture-in-picture size
+# alt - s : chunkc tiling::window --toggle sticky;\
+#           chunkc tiling::window --grid-layout 5:5:4:0:1:1
+
+# # float next window to be tiled
+# shift + alt - t : chunkc set window_float_next 1
+
+# # change layout of desktop
+# ctrl + alt - a : chunkc tiling::desktop --layout bsp
+# ctrl + alt - s : chunkc tiling::desktop --layout monocle
+# ctrl + alt - d : chunkc tiling::desktop --layout float
+
+# ctrl + alt - w : chunkc tiling::desktop --deserialize ~/.chunkwm_layouts/dev_1
