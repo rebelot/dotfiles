@@ -1,6 +1,6 @@
 # Dotfiles
 
-My configuration files for vim and tmux
+My configuration files for various stuff.
 
 Please read the [Important Notes](README.md#important-notes)
 
