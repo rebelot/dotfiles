@@ -19,9 +19,9 @@ export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
 export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
 source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda + TMUX fix
 [[ -z $TMUX ]] || conda deactivate; conda activate base       #
-source $HOME/venv/bin/activate
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
+source "$HOME/venv/bin/activate"                              # <-- Activate the Python
 
 # Path to oh-my-zsh installation.
 export ZSH=/Users/laurenzi/.oh-my-zsh
@@ -57,7 +57,6 @@ source "$HOME/.antigen/antigen.zsh"
 antigen init "$HOME/.antigenrc"
 
 # plugin Opts
-
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern) 
 ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=red,bold'
 ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='fg=magenta,bold'
@@ -125,12 +124,12 @@ export PAGER=most
 export CPPFLAGS="-I/opt/local/include"
 export LDFLAGS="-L/opt/local/lib"
 export DYLD_LIBRARY_PATH="/usr/local/cuda/lib:$DYLD_LIBRARY_PATH"
-export QT_API='pyqt5'
+export QT_API="pyqt5"
 export CXX="/opt/local/bin/clang++"
 export CC="/opt/local/bin/clang"
 
 # ssh
-export SSH_KEY_PATH="~/.ssh/rsa_id"
+export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 export elenuar="159.149.32.81"
 export nero="159.149.32.106"
 export jessicah="159.149.32.103"
@@ -208,6 +207,26 @@ function chunk {
     chunkwm &
 }
 
+function toggle_desktop_icons {
+    local state
+    state=$(defaults read com.apple.finder CreateDesktop)
+    if $state; then
+        defaults write com.apple.finder CreateDesktop false; killall Finder
+    else
+        defaults write com.apple.finder CreateDesktop true; killall Finder
+    fi
+}
+
+function neovim_remote {
+    local serverlist
+    serverlist="$(nvr --serverlist)"
+    if [[ -z "$serverlist" ]]; then
+        NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim "$@"
+    else
+        nvim "$@"
+    fi
+}
+
 function prompt_size_toggle {
     if [ $ps1_short_state -eq 0 ]; then
         ps1_short_state=1
@@ -253,14 +272,15 @@ alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
 alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
 alias catdcd="/Applications/VMD\ 1.9.4.app/Contents/vmd/plugins/MACOSXX86/bin/catdcd5.2/catdcd"
 alias vmd="/Applications/VMD\ 1.9.4.app/Contents/Resources/VMD.app/Contents/MacOS/VMD"
-#alias X11=xquartz
-alias em="/Applications/MacPorts/Emacs.app/Contents/MacOS/emacs"
 alias port-switch='sudo "/Users/laurenzi/code/src/port-switch_command"'
 alias spritz="~/Desktop/tommy/nsfw/spritz.py"
-# alias schrun="$SCHRODINGER/run"
 alias nvm_init="source $NVM_DIR/nvm.sh"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
+alias nvim=neovim_remote
+alias tflip='echo "(╯°□°）╯︵ ┻━┻"'
+alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate"
 
 #test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 compinit
+compdef neovim_remote=nvim
