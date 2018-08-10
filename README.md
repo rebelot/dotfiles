@@ -6,14 +6,7 @@ Please read the [Important Notes](README.md#important-notes)
 
 ![my setup](screenshot.png)
 
-## Plugin managers:
-
-Follow specific plugin manager instructions for installation
-
-* **Vim**: [Vundle](http://github.com/VundleVim/Vundle.Vim)
-* **tmux**: [tpm](https://github.com/tmux-plugins/tpm)
-
-## Vim
+## Vim/Neovim
 
 Some functionalities may require specific settings or external applications.
 _NOTE_ that graphical enchancements such as truecolors and italicized text require compliant terminals.
