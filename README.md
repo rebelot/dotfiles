@@ -39,6 +39,12 @@ _NOTE_, there is currently no way to detect when in operator-pending mode (e.g.:
     **NOTE**: This is not a problem in neovim, also in vim, you may not experience this issue, but if you see your arrow keys acting funny when in tmux, consider trying this solution.
 * **custom mappings and special settings** are all documented within the vimrc
 
+## Syntax Completion
+
+Code syntax completion is available in neovim with `deoplete` + `language-client-neovim`.
+
+**A remark for python:** the use of `virtualenv`s is highly recommended to avoid conflicts. I have an Anaconda3 python installation, which activates the `base` (default) environment. I installed `virtualenv` with `conda install virtualenv` and built a python virtualenv aware of system packages using the `--system-site-packages` flag. Once activated (`source myVenv/bin/activate`) use pip to install modules required for syntax completion, such as `pip install 'python-language-server[all]'`, `mypy`, and `jedi` is not already available. But this setup is highly susceptible of ones workflow needs.
+
 ## Tmux
 
 ### hacks
