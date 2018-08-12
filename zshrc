@@ -119,7 +119,8 @@ export NVM_DIR="$HOME/.nvm"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export EDITOR=nvim
-export PAGER=most
+export PAGER=less
+export VISUAL=nvim
 
 # Compilation flags
 # export CPPFLAGS="-I/opt/local/include"
