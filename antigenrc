@@ -17,4 +17,4 @@ antigen bundle zsh-users/zsh-completions
 
 antigen apply
 
-# vim:set et sw=4 ts=4 ft=zsh:
+# vim:set et sw=4 ts=4 ft=config:
