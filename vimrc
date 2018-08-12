@@ -36,12 +36,10 @@ Plugin 'lervag/vimtex.git'
 Plugin 'tmux-plugins/vim-tmux'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 Plugin 'benmills/vimux'
-" "Plugin 'vim-syntastic/syntastic'
 Plugin 'w0rp/ale'
 Plugin 'raimondi/delimitmate'
 Plugin 'vim-scripts/Gundo'
 Plugin 'vim-scripts/YankRing.vim'
-" Plugin 'Shougo/unite.vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'metakirby5/codi.vim'
 Plugin 'terryma/vim-multiple-cursors'
@@ -60,10 +58,7 @@ Plugin 'itchyny/calendar.vim'
 Plugin 'francoiscabrol/ranger.vim'
 Plugin 'reedes/vim-pencil'
 Plugin 'junegunn/limelight.vim'
-if has('nvim')
-    Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    Plugin 'Shougo/denite.nvim'
-endif
+Plugin 'Konfekt/FastFold'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -232,9 +227,7 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set encoding=utf-8              " enconding
 set guifont=Menlo\ Regular\ Nerd\ Font\ Complete:h12      " select font for gui
 set modeline             " enable vim modelines
-if !has('nvim')          " set ttymouse (mouse works while in tmux) if not in neovim
-    set ttymouse=xterm2
-endif
+set ttymouse=xterm2
 set mouse=a              " enable mouse for all modes
 set noeb vb t_vb=		 " remove all errors; 'set visualbell noeb' to revert
 set history=1000         " remember more commands and search history
@@ -343,10 +336,6 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " surround word with "
 noremap <leader>" viw<Esc>a"<Esc>bi"<Esc>lel
-" inoremap ( ()<Esc>i
-" inoremap [ []<Esc>i
-" inoremap { {}<Esc>i
-" inoremap " ""<Esc>i
 
 " remap <Esc> to jk in insert mode
 inoremap jk <ESC>
@@ -435,4 +424,3 @@ nnoremap <leader>fb :CtrlPBuffer<CR>
 "Vimux
 vnoremap <leader>vs "vy :call VimuxSlime()<CR>
 nnoremap <leader>vp :VimuxPromptCommand<CR>
-
