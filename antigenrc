@@ -10,9 +10,10 @@ antigen bundle $ZSH/custom/plugins/schrun-completion
 antigen bundle $ZSH/custom/plugins/exa-completion
 antigen bundle $ZSH/custom/plugins/hub-completion
 # antigen bundle esc/conda-zsh-completion
+antigen bundle pip
+antigen bundle zdharma/fast-syntax-highlighting
 antigen bundle zsh-users/zsh-completions
-# antigen bundle zdharma/fast-syntax-highlighting
-antigen bundle zsh-users/zsh-syntax-highlighting
+# antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen apply
 

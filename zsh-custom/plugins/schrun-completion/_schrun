@@ -9,17 +9,17 @@ __schrun() {
         '*::arg:->args'
     
     asl=(\
-        'protein'\
-        'backbone'\
-        'chain '\
-        'a.ele'\
+        protein
+        backbone
+        chain
+        a.ele
         'protein and res.num'
-        'solute'\
-        'ligand'\
-        'membrane or protein'\
-        'protein or ligand'\
-        'membrane'\
-        'not water'\
+        solute
+        ligand
+        'membrane or protein'
+        'protein or ligand'
+        membrane
+        'not water'
     )
 
     case $state in
@@ -27,63 +27,71 @@ __schrun() {
         case $line[1] in
             (dummy)
                 _arguments \
-                    {-o,--opt}"[patawawa]:MESSAGE:(action)"\
+                    {-o,--opt}"[patawawa]:MESSAGE:(action)" \
                     && return 0
                 ;;
             (trj_center.py)
                 _arguments \
-                    {-h,--help}'[show help message and exit]'\
-                    {-t,-trj}'[Input trajectory dir name]:DIRECTORY:_files -/'\
-                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)'\
-                    '-asl[ASL expression to specify the part of system to be centered. Default is solute.]:ASL:("${asl[@]}")'\
-                    ':IN .cms:_path_files -/ -g "*.cms"'\
-                    ':OUT:(centered)'\
+                    {-h,--help}'[show help message and exit]' \
+                    {-t,-trj}'[Input trajectory dir name]:DIRECTORY:_files -/' \
+                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)' \
+                    '-asl[ASL expression to specify the part of system to be centered. Default is solute.]:ASL:("${asl[@]}")' \
+                    ':IN .cms:_path_files -/ -g "*.cms"' \
+                    ':OUT:(centered)' \
                     && return 0
                 ;;
             (trj_extract_subsystem.py)
                 _arguments \
-                    {-h,--help}'[show help message and exit]'\
-                    {-t,-trj}'[Input trajectory dir name]:DIRECTORY:_files -/'\
-                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)'\
-                    '-asl[ASL expression to specify the subsystem. Defaults to "not water"]:ASL:("${asl[@]}")'\
-                    '-whole[Fix molecules broken by the periodic boundary to make them whole again.]'\
-                    ':IN .cms:_path_files -/ -g "*cms"'\
-                    ':OUT:(extracted)'\
+                    {-h,--help}'[show help message and exit]' \
+                    {-t,-trj}'[Input trajectory dir name]:DIRECTORY:_files -/' \
+                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)' \
+                    '-asl[ASL expression to specify the subsystem. Defaults to "not water"]:ASL:("${asl[@]}")' \
+                    '-whole[Fix molecules broken by the periodic boundary to make them whole again.]' \
+                    ':IN .cms:_path_files -/ -g "*cms"' \
+                    ':OUT:(extracted)' \
                     && return 0
                 ;;
             (trj_cluster.py)
                 _arguments \
-                    {-h,--help}'[show help message and exit]'\
-                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)'\
-                    '-rmsd-asl[ASL expression to specify atoms to calculate RMSD]:ASL:("protein" "backbone" "all")'\
-                    '-fit-asl[ASL expression to specify atoms to superimpose before calculating RMSD]:ASL("${asl[@]}")'\
-                    '-n[Write output data for the N most populated clusters.]:clusters N:(1 2 3 4 5 6 7 8 9)'\
-                    ':IN .cms:_path_files -/ -g "*cms"'\
-                    ':TRJ:_path_files -/'\
-                    ':OUT:(outfile)'\
+                    {-h,--help}'[show help message and exit]' \
+                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)' \
+                    '-rmsd-asl[ASL expression to specify atoms to calculate RMSD]:ASL:("protein" "backbone" "all")' \
+                    '-fit-asl[ASL expression to specify atoms to superimpose before calculating RMSD]:ASL("${asl[@]}")' \
+                    '-n[Write output data for the N most populated clusters.]:clusters N:(1 2 3 4 5 6 7 8 9)' \
+                    ':IN .cms:_path_files -/ -g "*cms"' \
+                    ':TRJ:_path_files -/' \
+                    ':OUT:(outfile)' \
                     && return 0
                 ;;
             (trj_merge.py)
                 _arguments \
-                    {-h,--help}'[show help message and exit]'\
-                    '-output-trajectory-format[output trajectory format. It defaults to "dtr".]:FORMAT:(dtr xtc)'\
-                    '-concat[concatenates trajectories with updated chemical times (ps)]:TIME:("start_time time_interval")'\
-                    '-o[output base name]:OUT:(merged)'\
-                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)'\
-                    ':IN .cms:_path_files -/ -g "*cms"'\
-                    '*:TRJ:_path_files -/'\
+                    {-h,--help}'[show help message and exit]' \
+                    '-output-trajectory-format[output trajectory format. It defaults to "dtr".]:FORMAT:(dtr xtc)' \
+                    '-concat[concatenates trajectories with updated chemical times (ps)]:TIME:("start_time time_interval")' \
+                    '-o[output base name]:OUT:(merged)' \
+                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)' \
+                    ':IN .cms:_path_files -/ -g "*cms"' \
+                    '*:TRJ:_path_files -/' \
                     && return 0
                 ;;
             (trj_align.py)
                 _arguments \
-                    {-h,--help}'[show help message and exit]'\
-                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)'\
-                    '-ref-mae[Structure file containing reference coordinates]:REF FILE:_path_files -/ -g "*.(cms|mae)"'\
-                    '-ref-frame[Specify the frame to use as the reference geometry]:FRAME:(0 -1 n)'\
-                    '-asl[ASL expression to specify the subsystem to be superimposed. Defaults to "solute"]:ASL:("${asl[@]}")'\
-                    ':IN .cms:_path_files -/ -g "*cms"'\
-                    ':TRJ:_path_files -/'\
-                    ':OUT:(aligned)'\
+                    {-h,--help}'[show help message and exit]' \
+                    {-s,-slice-trj}'[START:END:STEP Use the sliced trajectory]:RANGE:(START\:END\:STEP)' \
+                    '-ref-mae[Structure file containing reference coordinates]:REF FILE:_path_files -/ -g "*.(cms|mae)"' \
+                    '-ref-frame[Specify the frame to use as the reference geometry]:FRAME:(0 -1 n)' \
+                    '-asl[ASL expression to specify the subsystem to be superimposed. Defaults to "solute"]:ASL:("${asl[@]}")' \
+                    ':IN .cms:_path_files -/ -g "*cms"' \
+                    ':TRJ:_path_files -/' \
+                    ':OUT:(aligned)' \
+                    && return 0
+                ;;
+            (schrodinger_virtualenv.py)
+                _arguments \
+                    {-h,--help}'[show help message and exit]' \
+                    '--clear[Delete the contents of the environment directory if it already exists, before environment creation.]' \
+                    '--prompt[Provides an alternative prompt prefix for this environment.]' \
+                    '*:ENV_DIR:(schrodinger.ve "")' \
                     && return 0
                 ;;
         esac
@@ -94,12 +102,13 @@ __schrun() {
 _schrodinger_tools() {
     local tools
     tools=(\
-        'trj_center.py:Translates all atoms so that the specified atoms stay in the center (origin) of the simulation box.'\
+        'trj_center.py:Translates all atoms so that the specified atoms stay in the center (origin) of the simulation box.'
         'trj_extract_subsystem.py:Extract subsystem and create a new file'
         'trj_cluster.py:Cluster trajectory frames'
         'trj_merge.py:Merge Desmond trajectories.'
         'trj_align.py:Transforms all coordinates in the frame with respect to the reference coordinates.'
-        'dummy:Description')
+        'schrodinger_virtualenv.py:Creates virtual Python environments that have access to the Schrodinger tools in one or more target directories.'
+        )
     _describe 'script' tools
 }
 

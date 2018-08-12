@@ -57,21 +57,22 @@ source "$HOME/.antigen/antigen.zsh"
 antigen init "$HOME/.antigenrc"
 
 # plugin Opts
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern) 
-ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=red,bold'
-ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='fg=magenta,bold'
-ZSH_HIGHLIGHT_STYLES[bracket-level-1]='default'
-ZSH_HIGHLIGHT_STYLES[bracket-level-2]='default'
-ZSH_HIGHLIGHT_STYLES[bracket-level-3]='default'
-ZSH_HIGHLIGHT_STYLES[bracket-level-4]='default'
-ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
-ZSH_HIGHLIGHT_PATTERNS+=('sudo' 'fg=white,bold,bg=red')
+# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern) 
+# ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=red,bold'
+# ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='fg=magenta,bold'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-1]='default'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-2]='default'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-3]='default'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-4]='default'
+# ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
+# ZSH_HIGHLIGHT_PATTERNS+=('sudo' 'fg=white,bold,bg=red')
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 export FZF_DEFAULT_OPTS="
 --no-height
 --preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && zsh /Users/laurenzi/.oh-my-zsh/plugins/catimg/catimg.sh {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=monokai -f console256 -g {} || cat {}) 2> /dev/null | head -500'
+--preview-window wrap:hidden
 --bind 'ctrl-o:toggle-preview'
 --bind 'tab':down
 --bind 'btab:up'
@@ -93,7 +94,7 @@ ps1_short_state=1
 # ls colors
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagEgGx
-# eval $( dircolors -b $HOME/code/src/LS_COLORS/LS_COLORS )
+eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
 
 # history
 export HISTSIZE=50000
@@ -121,12 +122,17 @@ export EDITOR=nvim
 export PAGER=most
 
 # Compilation flags
-export CPPFLAGS="-I/opt/local/include"
-export LDFLAGS="-L/opt/local/lib"
-export DYLD_LIBRARY_PATH="/usr/local/cuda/lib:$DYLD_LIBRARY_PATH"
-export QT_API="pyqt5"
-export CXX="/opt/local/bin/clang++"
-export CC="/opt/local/bin/clang"
+# export CPPFLAGS="-I/opt/local/include"
+# export LDFLAGS="-L/opt/local/lib"
+# export DYLD_LIBRARY_PATH="/usr/local/cuda/lib:$DYLD_LIBRARY_PATH"
+# export QT_API="pyqt5"
+# export CXX="/opt/local/bin/clang++"
+# export CC="/opt/local/bin/clang"
+
+#XCODE CTL SOURCES
+# /Applications/Xcode.app/Contents/Developer
+# /Library/Developer/CommandLineTools
+# e.g.: xcode-select --switch /Library/Developer/CommandLineTools
 
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
@@ -180,9 +186,9 @@ function tmx {
 
 function licmae {
     if [[ $HOST =~ elenuar ]]; then
-         /opt/schrodinger2018-1/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/
+         /opt/schrodinger2018-2/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/
     else 
-        ssh $elenuar "/opt/schrodinger2018-1/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/"
+        ssh $elenuar "/opt/schrodinger2018-2/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/"
     fi
 }
 
@@ -221,10 +227,14 @@ function neovim_remote {
     local serverlist
     serverlist="$(nvr --serverlist)"
     if [[ -z "$serverlist" ]]; then
-        NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim "$@"
+        NVIM_LISTEN_ADDRESS=/tmp/nvimsocket /opt/bin/nvim "$@"
     else
-        nvim "$@"
+        /opt/bin/nvim "$@"
     fi
+}
+
+function google {
+    open "https://www.google.com/search?q=$*"
 }
 
 function prompt_size_toggle {
@@ -261,12 +271,14 @@ bindkey "p" prompt_split_toggle
 
 # Z-styles
 zstyle ':completion:*:descriptions' format 'Select: %d'
-zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:options' list-colors '=^(-- *)=36'
 
 # Aliases
 # see .oh-my-zsh/custom/plugins/common-aliases/common-aliases.plugin.zsh
 
 alias juliapro=/Applications/JuliaPro-0.6.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
+alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
 alias licmoe="lmutil lmstat -c /Applications/moe2018/license.dat -a"
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
 alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
@@ -277,8 +289,8 @@ alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias nvm_init="source $NVM_DIR/nvm.sh"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias nvim=neovim_remote
-alias tflip='echo "(╯°□°）╯︵ ┻━┻"'
-alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate"
+alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
+alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
 
 #test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
