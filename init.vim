@@ -328,6 +328,8 @@ command! CD lcd %:p:h
 
 command! LCMenu call LanguageClient_contextMenu()
 
+command! FollowSymLink execute "file " . resolve(expand('%')) | edit
+
 augroup MyAutoCommands
     autocmd!
     
