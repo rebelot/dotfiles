@@ -278,12 +278,11 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' verbose true
 zstyle ':completion:*:options' description yes
 zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:descriptions' format $'\e[31;1m -- %d --\e[0m'
+zstyle ':completion:*:descriptions' format $'\e[93;1m -- %d --\e[0m'
 zstyle ':completion:*:messages' format $'\e[31;1m -- %d --\e[0m'
 zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
 zstyle ':completion:*:functions' ignored-patterns '_*'
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*:options' list-colors '=^(-- *)=36'
+zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=34' ${(s.:.)LS_COLORS}
 
 # Aliases
 # see .oh-my-zsh/custom/plugins/common-aliases/common-aliases.plugin.zsh
