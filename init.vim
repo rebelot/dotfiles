@@ -553,15 +553,17 @@ nnoremap <m-j> <C-E>
 nnoremap <m-k> <C-Y>
 
 " close window/buffer
+nnoremap <leader>q :close<CR>
 nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
-nnoremap <leader>q :q<CR>
 nnoremap <leader>bo :%bd \| e# \| bd #<CR>
 
 " switch between buffers
 nnoremap <silent><m-n> :bnext<CR>
 nnoremap <silent><m-p> :bprev<CR>
-nnoremap gb :ls<CR>:b 
+nnoremap gbb :ls<CR>:b 
+nnoremap gbs :ls<CR>:sb 
+nnoremap gbv :ls<CR>:vertical sb 
 
 " [s]ave buffer (normal or insert)
 nnoremap <leader>s :w<cr>

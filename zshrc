@@ -1,3 +1,4 @@
+#
 # ███████╗███████╗██╗  ██╗██████╗  ██████╗
 # ╚══███╔╝██╔════╝██║  ██║██╔══██╗██╔════╝
 #   ███╔╝ ███████╗███████║██████╔╝██║     
@@ -57,13 +58,6 @@ source "$HOME/.antigen/antigen.zsh"
 antigen init "$HOME/.antigenrc"
 
 # plugin Opts
-# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern) 
-# ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=red,bold'
-# ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='fg=magenta,bold'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-1]='default'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-2]='default'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-3]='default'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-4]='default'
 # ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
 # ZSH_HIGHLIGHT_PATTERNS+=('sudo' 'fg=white,bold,bg=red')
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
