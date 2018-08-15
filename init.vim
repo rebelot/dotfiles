@@ -33,9 +33,15 @@ Plug 'lervag/vimtex'
 Plug 'lionawurscht/deoplete-biblatex'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-" Plug 'zchee/deoplete-jedi'
 " Plug 'ncm2/ncm2'
 " Plug 'roxma/nvim-yarp'
+" Plug 'ncm2/ncm2-bufword'
+" Plug 'ncm2/ncm2-tmux'
+" Plug 'ncm2/ncm2-path'
+" Plug 'ncm2/ncm2-vim'
+" Plug 'ncm2/ncm2-ultisnips'
+" Plug 'ncm2/ncm2-syntax'
+" Plug 'zchee/deoplete-jedi'
 " Plug 'neoclide/coc.nvim', { 'do': 'yarn install' }
 " Plug 'chemzqm/jsonc.vim'
 " }}}
@@ -55,7 +61,7 @@ Plug 'Konfekt/FastFold'
 " File, Buffer Browsers {{{
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'scrooloose/nerdtree'
 Plug 'ivalkeen/nerdtree-execute'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
@@ -131,7 +137,7 @@ call plug#end()
 " Code completion {{{
 " Deoplete {{{
 let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('min_pattern_length', 2)
+  call deoplete#custom#option('min_pattern_length', 2)
 if !exists('g:deoplete#omni#input_patterns')
     let g:deoplete#omni#input_patterns = {}
 endif
@@ -160,10 +166,19 @@ call deoplete#custom#source('include',       'mark', '#')
 "                  舘侀炙    ⌾
 " }}}
 
+" Ncm2 {{{
+" let g:ncm2#complete_length = 2
+" }}}
+
 " Language Client {{{
 let g:LanguageClient_autoStart = 1
-let g:LanguageClient_waitOutputTimeout = 500
+let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
+" let g:LanguageClient_loggingFile = '/tmp/LanguageClient.log'
+" let g:LanguageClient_loggingLevel = 'DEBUG'
+let g:LanguageClient_waitOutputTimeout = 30
 let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_hoverPreview = "Always" 
+let g:LanguageClient_completionPreferTextEdit = 1 
 let g:LanguageClient_serverCommands = {
         \ 'sh': ['bash-language-server','start'],
         \ 'r': ['R', '--quiet', '--slave', '-e', 'languageserver::run()'],
@@ -187,8 +202,11 @@ let g:vimtex_view_method = 'skim'
 
 let g:echodoc_enable_at_startup = 1
 
+" let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
 let g:UltiSnipsExpandTrigger = '<c-j>'
-
+let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
 " }}}
 
 " Syntax and Folds {{{
@@ -310,13 +328,30 @@ let g:delimitMate_nesting_quotes = ['"','`']
 
 " Functions {{{
 
-function! VimuxSlime()
+function! VimuxSlime() abort
   let l:text = @v
   let l:text = substitute(l:text, "\n$", "", "")
   call VimuxSendText(l:text)
   call VimuxSendKeys("Enter")
 endfunction
 
+function! WinZoomToggle() abort
+    if ! exists('w:WinZoomIsZoomed') 
+        let w:WinZoomIsZoomed = 0
+    endif
+    if w:WinZoomIsZoomed == 0
+      let w:WinZoomOldWidth = winwidth(0)
+      let w:WinZoomOldHeight = winheight(0)
+      wincmd _
+      wincmd |
+      let w:WinZoomIsZoomed = 1
+    elseif w:WinZoomIsZoomed == 1
+      execute "resize " . w:WinZoomOldHeight
+      execute "vertical resize " . w:WinZoomOldWidth
+      let w:WinZoomIsZoomed = 0
+   endif
+endfunction
+    
 " }}}
 
 " Commands {{{
@@ -334,8 +369,8 @@ augroup MyAutoCommands
     autocmd!
     
     " Science
-    autocmd BufNewFile,BufRead *.pdb        set filetype=PDB
-    autocmd BufNewFile,BufRead *.aln        set filetype=clustal
+    autocmd BufNewFile,BufRead *.pdb set filetype=PDB
+    autocmd BufNewFile,BufRead *.aln set filetype=clustal
     autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=fasta
 
     " Distraction Free
@@ -358,8 +393,9 @@ augroup MyAutoCommands
     " syntax filetype
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
-    " Delete Hidden [No Name] buffers
-    " autocmd BufHidden * if expand("<afile>") == "" && &modified == 0 | bdel | endif
+    " Ncm2
+    " autocmd BufEnter * call ncm2#enable_for_buffer()
+    " autocmd TextChangedI * call ncm2#auto_trigger()
 
 augroup END
 
@@ -413,7 +449,7 @@ set shellcmdflag=-c      " default shell command for non interactive invocations
 set showcmd              " show key spressed in lower-right corner
 set sidescroll=1         " smooth side scrolling
 set conceallevel=2       " conceal marked text
-" set completeopt="menuone,preview,noinsert,noselect
+set completeopt=menuone,noinsert,noselect,preview
                          " set the behavior of the completion menu 
 set fillchars=vert:┃,fold:\ 
                          " set various fillchars; in this case removes clobbering signs from folds ('\ ')
@@ -495,14 +531,23 @@ nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 " Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
 " C-l refresh/escape delimiters, C-Space invoke completion,
 " C-U C-D scroll Up/Down
+let g:ulti_expand_res = 0
+function! Ulti_Expand_and_getRes() abort
+  call UltiSnips#ExpandSnippet()
+  return g:ulti_expand_res
+endfunction
+
+imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : deoplete#close_popup() : delimitMate#ExpandReturn()<CR>
 imap <silent><BS> <C-R>=pumvisible() ? deoplete#smart_close_popup() : ""<CR><Plug>delimitMateBS
-imap <expr><CR> pumvisible() ? deoplete#close_popup() : "<Plug>delimitMateCR"
-inoremap <expr><Tab> pumvisible() ? "\<C-n>"  : "\<Tab>" 
-imap <expr><S-Tab> pumvisible() ? "\<C-p>"  : "<Plug>delimitMateS-Tab"
-imap <expr><C-l> pumvisible() ? deoplete#refresh() : "<Plug>delimitMateS-Tab"
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
+imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 inoremap <expr><C-Space> pumvisible() ? deoplete#complete_common_string() : deoplete#manual_complete()
-inoremap <expr><C-d> pumvisible() ? "\<PageDown>"  : "\<C-d>" 
-inoremap <expr><C-u> pumvisible() ? "\<PageUp>"    : "\<C-u>"
+inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
+inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
+imap <C-l> <Plug>delimitMateS-Tab
+" imap <expr><C-l> pumvisible() ? deoplete#refresh() : "<Plug>delimitMateS-Tab"
+" imap <expr><CR> pumvisible() ? ncm2_ultisnips#completed_is_snippet() ? "\<C-j>" : "\<C-y>" : "\<Plug>delimitMateCR"
+" imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
 
 " laguage client [K]doc, [D]efinition, [M]enu, [A]ction, [R]ename, [U]sage, [F]ormat
 nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
@@ -512,8 +557,10 @@ nnoremap <silent><leader>lca :call LanguageClient_textDocument_codeAction()<CR>
 nnoremap <silent><leader>lcr :call LanguageClient_textDocument_rename()<CR>
 nnoremap <silent><leader>lcu :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent><leader>lcf :call LanguageClient_textDocument_formatting()<CR>
+vnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
 nnoremap <silent><leader>lcs :call LanguageClient_textDocument_documentSymbol()<CR>
 nnoremap <silent><leader>lcS :call LanguageClient_workspace_symbol()<CR>
+nnoremap <silent><leader>lch :call LanguageClient_textDocument_documentHighlight()<CR>
 
 " `"'({[<surrounds>]})'"`
 vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
@@ -542,6 +589,7 @@ nnoremap <m->> <C-W>>
 nnoremap <m-<> <C-W><
 nnoremap <m-+> <C-W>+
 nnoremap <m--> <C-W>-
+nnoremap <m-z> :call WinZoomToggle()<CR>
 
 " WindowSwap
 nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
@@ -579,7 +627,7 @@ nnoremap <silent><leader>l :noh<CR>:redraw!<CR>
 " [re]load buffer
 nnoremap <leader>re :e%<CR>
 
-" [e]dit, [v]ertical, horizontal [s]plit ot [t]ab a [n]ew buffer
+" [e]dit, [v]ertical, horizontal [s]plit or [t]ab a [n]ew buffer
 nnoremap <leader>en :enew<CR>
 nnoremap <leader>vn :rightbelow vnew<CR>
 nnoremap <leader>sn :belowright new<CR>
