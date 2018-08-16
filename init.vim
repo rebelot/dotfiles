@@ -20,30 +20,23 @@ call plug#begin('~/.vim/bundle')
 Plug 'junegunn/vim-plug'
 
 " Code completion {{{
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-vim'
+Plug 'ncm2/ncm2-ultisnips'
+Plug 'ncm2/ncm2-syntax'
+Plug 'ncm2/ncm2-tagprefix'
 Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/neco-vim'
 Plug 'Shougo/neco-syntax'
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-Plug 'zchee/deoplete-clang'
-Plug 'zchee/deoplete-zsh'
 Plug 'wellle/tmux-complete.vim'
 Plug 'JuliaEditorSupport/julia-vim'
 Plug 'lervag/vimtex'
-Plug 'lionawurscht/deoplete-biblatex'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-" Plug 'ncm2/ncm2'
-" Plug 'roxma/nvim-yarp'
-" Plug 'ncm2/ncm2-bufword'
-" Plug 'ncm2/ncm2-tmux'
-" Plug 'ncm2/ncm2-path'
-" Plug 'ncm2/ncm2-vim'
-" Plug 'ncm2/ncm2-ultisnips'
-" Plug 'ncm2/ncm2-syntax'
-" Plug 'zchee/deoplete-jedi'
-" Plug 'neoclide/coc.nvim', { 'do': 'yarn install' }
-" Plug 'chemzqm/jsonc.vim'
 " }}}
 
 " Syntax and Folds {{{
@@ -135,39 +128,25 @@ call plug#end()
 " Plugin Options {{{
 
 " Code completion {{{
-" Deoplete {{{
-let g:deoplete#enable_at_startup = 1
-  call deoplete#custom#option('min_pattern_length', 2)
-if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
-endif
-let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
-let g:deoplete#sources#clang#libclang_path = "/opt/local/libexec/llvm-6.0/lib/libclang.dylib"
-let g:deoplete#sources#clang#clang_header = "/opt/local/libexec/llvm-6.0/lib/c++/v1"
-
-call deoplete#custom#source('omni',          'mark', '')
-call deoplete#custom#source('LanguageClient','mark', '')
-call deoplete#custom#source('zsh',           'mark', '')
-call deoplete#custom#source('clang',         'mark', '')
-call deoplete#custom#source('julia',         'mark', '')
-call deoplete#custom#source('jedi',          'mark', '')
-call deoplete#custom#source('vim',           'mark', '')
-call deoplete#custom#source('ultisnips',     'mark', '')
-call deoplete#custom#source('tag',           'mark', '炙')
-call deoplete#custom#source('around',        'mark', '↻')
-call deoplete#custom#source('buffer',        'mark', 'ℬ')
-call deoplete#custom#source('tmux-complete', 'mark', '侀')
-call deoplete#custom#source('syntax',        'mark', '')
-call deoplete#custom#source('member',        'mark', '.')
-call deoplete#custom#source('file',          'mark', '')
-call deoplete#custom#source('dictionary',    'mark', '')
-call deoplete#custom#source('biblatex',      'mark', '"..."')
-call deoplete#custom#source('include',       'mark', '#')
-"                  舘侀炙    ⌾
-" }}}
 
 " Ncm2 {{{
-" let g:ncm2#complete_length = 2
+let g:ncm2#complete_length = 2
+
+call ncm2#override_source('vim',                  {'mark': ''})
+call ncm2#override_source('bufword',              {'mark': 'ℬ'})
+call ncm2#override_source('rootpath',             {'mark': ''})
+call ncm2#override_source('bufpath',              {'mark': ''})
+call ncm2#override_source('cwdpath',              {'mark': ''})
+call ncm2#override_source('tmux-complete',        {'mark': '侀'})
+call ncm2#override_source('ultisnips',            {'mark': ''})
+call ncm2#override_source('syntax',               {'mark': ''})
+call ncm2#override_source('LanguageClient_python',{'mark': ''})
+call ncm2#override_source('LanguageClient_julia', {'mark': ''})
+call ncm2#override_source('LanguageClient_sh',    {'mark': ''})
+call ncm2#override_source('LanguageClient_c',     {'mark': ''})
+call ncm2#override_source('tagprefix',            {'mark': '炙'})
+" echo keys(ncm2#_s('sources'))
+"                  舘侀炙    ⌾
 " }}}
 
 " Language Client {{{
@@ -387,16 +366,73 @@ augroup MyAutoCommands
     autocmd FileType latex,tex,markdown,txt setlocal wrap 
 
     " DelimitMate
-    autocmd FileType python   let b:delimitMate_nesting_quotes = ['"']
+    autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
     autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
 
     " syntax filetype
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
     " Ncm2
-    " autocmd BufEnter * call ncm2#enable_for_buffer()
-    " autocmd TextChangedI * call ncm2#auto_trigger()
+    autocmd BufEnter * call ncm2#enable_for_buffer()
+    autocmd TextChangedI * call ncm2#auto_trigger()
 
+augroup END
+
+augroup VimTexRegisterSource
+  autocmd!
+  autocmd Filetype tex call ncm2#register_source({
+          \ 'name' : 'vimtex-cmds',
+          \ 'priority': 8, 
+          \ 'complete_length': -1,
+          \ 'scope': ['tex'],
+          \ 'matcher': {'name': 'prefix', 'key': 'word'},
+          \ 'word_pattern': '\w+',
+          \ 'complete_pattern': g:vimtex#re#ncm2#cmds,
+          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+          \ })
+  autocmd Filetype tex call ncm2#register_source({
+          \ 'name' : 'vimtex-labels',
+          \ 'priority': 8, 
+          \ 'complete_length': -1,
+          \ 'scope': ['tex'],
+          \ 'matcher': {'name': 'combine',
+          \             'matchers': [
+          \               {'name': 'substr', 'key': 'word'},
+          \               {'name': 'substr', 'key': 'menu'},
+          \             ]},
+          \ 'word_pattern': '\w+',
+          \ 'complete_pattern': g:vimtex#re#ncm2#labels,
+          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+          \ })
+  autocmd Filetype tex call ncm2#register_source({
+          \ 'name' : 'vimtex-files',
+          \ 'priority': 8, 
+          \ 'complete_length': -1,
+          \ 'scope': ['tex'],
+          \ 'matcher': {'name': 'combine',
+          \             'matchers': [
+          \               {'name': 'abbrfuzzy', 'key': 'word'},
+          \               {'name': 'abbrfuzzy', 'key': 'abbr'},
+          \             ]},
+          \ 'word_pattern': '\w+',
+          \ 'complete_pattern': g:vimtex#re#ncm2#files,
+          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+          \ })
+  autocmd Filetype tex call ncm2#register_source({
+          \ 'name' : 'bibtex',
+          \ 'priority': 8, 
+          \ 'complete_length': -1,
+          \ 'scope': ['tex'],
+          \ 'matcher': {'name': 'combine',
+          \             'matchers': [
+          \               {'name': 'prefix', 'key': 'word'},
+          \               {'name': 'abbrfuzzy', 'key': 'abbr'},
+          \               {'name': 'abbrfuzzy', 'key': 'menu'},
+          \             ]},
+          \ 'word_pattern': '\w+',
+          \ 'complete_pattern': g:vimtex#re#ncm2#bibtex,
+          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+          \ })
 augroup END
 
 " }}}
@@ -537,17 +573,13 @@ function! Ulti_Expand_and_getRes() abort
   return g:ulti_expand_res
 endfunction
 
-imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : deoplete#close_popup() : delimitMate#ExpandReturn()<CR>
-imap <silent><BS> <C-R>=pumvisible() ? deoplete#smart_close_popup() : ""<CR><Plug>delimitMateBS
+imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : "\<C-y>" : delimitMate#ExpandReturn()<CR>
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
 imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
-inoremap <expr><C-Space> pumvisible() ? deoplete#complete_common_string() : deoplete#manual_complete()
 inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
 inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
+imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
 imap <C-l> <Plug>delimitMateS-Tab
-" imap <expr><C-l> pumvisible() ? deoplete#refresh() : "<Plug>delimitMateS-Tab"
-" imap <expr><CR> pumvisible() ? ncm2_ultisnips#completed_is_snippet() ? "\<C-j>" : "\<C-y>" : "\<Plug>delimitMateCR"
-" imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
 
 " laguage client [K]doc, [D]efinition, [M]enu, [A]ction, [R]ename, [U]sage, [F]ormat
 nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
@@ -561,6 +593,7 @@ vnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()
 nnoremap <silent><leader>lcs :call LanguageClient_textDocument_documentSymbol()<CR>
 nnoremap <silent><leader>lcS :call LanguageClient_workspace_symbol()<CR>
 nnoremap <silent><leader>lch :call LanguageClient_textDocument_documentHighlight()<CR>
+nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<CR>
 
 " `"'({[<surrounds>]})'"`
 vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
