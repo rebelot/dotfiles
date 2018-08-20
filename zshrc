@@ -75,14 +75,11 @@ export FZF_DEFAULT_OPTS="
 # User configuration
 
 # prompt
-prompt_long='%B%F{37}%n%b%f@%B%F{168}%m%b%f:%B%F{222}%~%b%f$ '
-prompt_short='%F{magenta}❯%f '
-prompt_2long="┌$prompt_long"$'\n'"└$prompt_short"
+prompt_short='%F{$(my_vim_cmd_mode)}❯%f '
 prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
 
 export PS1="$prompt_2short"
 ps1_split_state=1
-ps1_short_state=1
 #export RPROMPT=""
 
 # ls colors
@@ -232,37 +229,36 @@ function google {
     open "https://www.google.com/search?q=$*"
 }
 
-function prompt_size_toggle {
-    if [ $ps1_short_state -eq 0 ]; then
-        ps1_short_state=1
-        [ $ps1_split_state -eq 0 ] && export PS1=$prompt_short
-        [ $ps1_split_state -eq 1 ] && export PS1=$prompt_2short
-    elif [ $ps1_short_state -eq 1 ]; then
-        ps1_short_state=0
-        [ $ps1_split_state -eq 0 ] && export PS1=$prompt_long
-        [ $ps1_split_state -eq 1 ] && export PS1=$prompt_2long 
-    fi
-    zle reset-prompt
-}
-
 function prompt_split_toggle {
     if [ $ps1_split_state -eq 0 ]; then
         ps1_split_state=1
-        [ $ps1_short_state -eq 0 ] && export PS1=$prompt_2long
-        [ $ps1_short_state -eq 1 ] && export PS1=$prompt_2short
+        export PS1=$prompt_2short
     elif [ $ps1_split_state -eq 1 ]; then
         ps1_split_state=0
-        [ $ps1_short_state -eq 0 ] && export PS1=$prompt_long
-        [ $ps1_short_state -eq 1 ] && export PS1=$prompt_short
+        export PS1=$prompt_short
     fi
     zle reset-prompt
 }
 
-zle -N prompt_size_toggle
+function my_vim_cmd_mode {
+    case $KEYMAP in
+        vicmd) echo "red" ;;
+        main|viins) echo "magenta" ;;
+        *) echo "magenta" ;;
+    esac
+}
+
+function zle-keymap-select {
+    zle reset-prompt
+}
+
+zle -N zle-keymap-select
 zle -N prompt_split_toggle
 
-bindkey "P" prompt_size_toggle
 bindkey "p" prompt_split_toggle
+bindkey "" vi-cmd-mode
+# bindkey '\e[A' up-line
+# bindkey '\e[B' history-beginning-search-forward
 
 # Z-styles
 zstyle ':completion:*' list-dirs-first true
