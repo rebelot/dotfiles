@@ -6,14 +6,13 @@
 "   ██║██║ ╚████║██║   ██║██╗ ╚████╔╝ ██║██║ ╚═╝ ██║
 "   ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
                                                 
-set nocompatible              " be iMproved, required
+                            " be iMproved, required
 
 " Plugins {{{
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/bundle')
@@ -28,6 +27,7 @@ Plug 'ncm2/ncm2-vim'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'ncm2/ncm2-syntax'
 Plug 'ncm2/ncm2-tagprefix'
+Plug 'ncm2/ncm2-markdown-subscope'
 Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/neco-vim'
 Plug 'Shougo/neco-syntax'
@@ -132,19 +132,19 @@ call plug#end()
 " Ncm2 {{{
 let g:ncm2#complete_length = 2
 
-call ncm2#override_source('vim',                  {'mark': ''})
-call ncm2#override_source('bufword',              {'mark': 'ℬ'})
-call ncm2#override_source('rootpath',             {'mark': ''})
-call ncm2#override_source('bufpath',              {'mark': ''})
-call ncm2#override_source('cwdpath',              {'mark': ''})
-call ncm2#override_source('tmux-complete',        {'mark': '侀'})
-call ncm2#override_source('ultisnips',            {'mark': ''})
-call ncm2#override_source('syntax',               {'mark': ''})
-call ncm2#override_source('LanguageClient_python',{'mark': ''})
-call ncm2#override_source('LanguageClient_julia', {'mark': ''})
-call ncm2#override_source('LanguageClient_sh',    {'mark': ''})
-call ncm2#override_source('LanguageClient_c',     {'mark': ''})
-call ncm2#override_source('tagprefix',            {'mark': '炙'})
+call ncm2#override_source('vim',                  {'mark': '  '})
+call ncm2#override_source('bufword',              {'mark': ' ℬ '})
+call ncm2#override_source('rootpath',             {'mark': '  '})
+call ncm2#override_source('bufpath',              {'mark': '  '})
+call ncm2#override_source('cwdpath',              {'mark': '  '})
+call ncm2#override_source('tmux-complete',        {'mark': ' 侀'})
+call ncm2#override_source('ultisnips',            {'mark': '  '})
+call ncm2#override_source('syntax',               {'mark': '  '})
+call ncm2#override_source('LanguageClient_python',{'mark': '  '})
+call ncm2#override_source('LanguageClient_julia', {'mark': '  '})
+call ncm2#override_source('LanguageClient_sh',    {'mark': '  '})
+call ncm2#override_source('LanguageClient_c',     {'mark': '  '})
+call ncm2#override_source('tagprefix',            {'mark': ' 炙'})
 " echo keys(ncm2#_s('sources'))
 "                  舘侀炙    ⌾
 " }}}
@@ -156,7 +156,7 @@ let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
 " let g:LanguageClient_loggingLevel = 'DEBUG'
 let g:LanguageClient_waitOutputTimeout = 30
 let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_hoverPreview = "Always" 
+let g:LanguageClient_hoverPreview = 'Always' 
 let g:LanguageClient_completionPreferTextEdit = 1 
 let g:LanguageClient_serverCommands = {
         \ 'sh': ['bash-language-server','start'],
@@ -178,13 +178,15 @@ let g:default_julia_version = '0.6.4'
 
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'skim'
+" vimtex ncm2 register source in
+" ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
 
 let g:echodoc_enable_at_startup = 1
 
 " let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
 let g:UltiSnipsExpandTrigger = '<c-j>'
-let g:UltiSnipsJumpForwardTrigger	= "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger	= "<c-k>"
+let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
+let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 " }}}
 
@@ -225,7 +227,7 @@ let g:ranger_map_keys = 0
 
 " Colors {{{
 let g:gruvbox_italic = 1
-let g:gruvbox_sign_column = "bg0"
+let g:gruvbox_sign_column = 'bg0'
 
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
@@ -234,7 +236,7 @@ let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#csv#column_display = 'Name'
 let g:airline_powerline_fonts = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-let g:airline_theme = "gruvbox"
+let g:airline_theme = 'gruvbox'
 " onedark molokai
 
 let g:limelight_default_coefficient = 0.7
@@ -245,8 +247,8 @@ let g:Illuminate_delay = 250
 " }}}
 
 " Utils {{{
-let g:gutentags_ctags_exclude = [".mypy_cache"]
-let g:gutentags_project_root = ["__init__.py"]
+let g:gutentags_ctags_exclude = ['.mypy_cache']
+let g:gutentags_project_root = ['__init__.py']
 
 let g:gitgutter_map_keys = 0
 let g:gitgutter_override_sign_column_highlight = 0
@@ -254,13 +256,11 @@ let g:gitgutter_override_sign_column_highlight = 0
 let g:ale_set_highlights = 1
 let g:ale_sign_error = '' "  ⤫
 let g:ale_sign_warning = '' " ⚠    
-let g:ale_lint_on_text_changed = "always"
+let g:ale_lint_on_text_changed = 'always'
 let g:ale_fixers = { 'python': 'autopep8', 'sh': 'shfmt'}
-let g:ale_python_mypy_options = "--ignore-missing-imports"
-let g:ale_python_pylint_options = "--disable=C"
-let g:ale_python_flake8_options = "--ignore=E221,E241,E201"
-let g:ale_linter_aliases = { 'zsh': 'sh' }
-let g:ale_linters = { 'zsh': ['language_server', 'shell', 'shellcheck'] }
+let g:ale_python_mypy_options = '--ignore-missing-imports'
+let g:ale_python_pylint_options = '--disable=C'
+let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
 
 let g:suda#prefix = 'sudo:'
 call suda#init('sudo:*,sudo:*/*')
@@ -270,7 +270,7 @@ let g:historian_registers = ['+', '"']
 let g:windowswap_map_keys = 0
 
 " Tagbar {{{
-let g:tagbar_ctags_bin = "/opt/bin/ctags"
+let g:tagbar_ctags_bin = '/opt/bin/ctags'
 let g:tagbar_type_markdown= {
     \ 'ctagstype': 'markdown',
     \ 'ctagsbin' : '/Users/laurenzi/.vim/mystuff/markdown2ctags/markdown2ctags.py',
@@ -309,9 +309,9 @@ let g:delimitMate_nesting_quotes = ['"','`']
 
 function! VimuxSlime() abort
   let l:text = @v
-  let l:text = substitute(l:text, "\n$", "", "")
+  let l:text = substitute(l:text, '\n$', '', '')
   call VimuxSendText(l:text)
-  call VimuxSendKeys("Enter")
+  call VimuxSendKeys('Enter')
 endfunction
 
 function! WinZoomToggle() abort
@@ -325,8 +325,8 @@ function! WinZoomToggle() abort
       wincmd |
       let w:WinZoomIsZoomed = 1
     elseif w:WinZoomIsZoomed == 1
-      execute "resize " . w:WinZoomOldHeight
-      execute "vertical resize " . w:WinZoomOldWidth
+      execute 'resize ' . w:WinZoomOldHeight
+      execute 'vertical resize ' . w:WinZoomOldWidth
       let w:WinZoomIsZoomed = 0
    endif
 endfunction
@@ -363,7 +363,7 @@ augroup MyAutoCommands
     " autocmd FileType latex,tex,markdown,txt setlocal spell
 
     " Line Wrapping
-    autocmd FileType latex,tex,markdown,txt setlocal wrap 
+    autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
 
     " DelimitMate
     autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
@@ -378,67 +378,10 @@ augroup MyAutoCommands
 
 augroup END
 
-augroup VimTexRegisterSource
-  autocmd!
-  autocmd Filetype tex call ncm2#register_source({
-          \ 'name' : 'vimtex-cmds',
-          \ 'priority': 8, 
-          \ 'complete_length': -1,
-          \ 'scope': ['tex'],
-          \ 'matcher': {'name': 'prefix', 'key': 'word'},
-          \ 'word_pattern': '\w+',
-          \ 'complete_pattern': g:vimtex#re#ncm2#cmds,
-          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-          \ })
-  autocmd Filetype tex call ncm2#register_source({
-          \ 'name' : 'vimtex-labels',
-          \ 'priority': 8, 
-          \ 'complete_length': -1,
-          \ 'scope': ['tex'],
-          \ 'matcher': {'name': 'combine',
-          \             'matchers': [
-          \               {'name': 'substr', 'key': 'word'},
-          \               {'name': 'substr', 'key': 'menu'},
-          \             ]},
-          \ 'word_pattern': '\w+',
-          \ 'complete_pattern': g:vimtex#re#ncm2#labels,
-          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-          \ })
-  autocmd Filetype tex call ncm2#register_source({
-          \ 'name' : 'vimtex-files',
-          \ 'priority': 8, 
-          \ 'complete_length': -1,
-          \ 'scope': ['tex'],
-          \ 'matcher': {'name': 'combine',
-          \             'matchers': [
-          \               {'name': 'abbrfuzzy', 'key': 'word'},
-          \               {'name': 'abbrfuzzy', 'key': 'abbr'},
-          \             ]},
-          \ 'word_pattern': '\w+',
-          \ 'complete_pattern': g:vimtex#re#ncm2#files,
-          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-          \ })
-  autocmd Filetype tex call ncm2#register_source({
-          \ 'name' : 'bibtex',
-          \ 'priority': 8, 
-          \ 'complete_length': -1,
-          \ 'scope': ['tex'],
-          \ 'matcher': {'name': 'combine',
-          \             'matchers': [
-          \               {'name': 'prefix', 'key': 'word'},
-          \               {'name': 'abbrfuzzy', 'key': 'abbr'},
-          \               {'name': 'abbrfuzzy', 'key': 'menu'},
-          \             ]},
-          \ 'word_pattern': '\w+',
-          \ 'complete_pattern': g:vimtex#re#ncm2#bibtex,
-          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-          \ })
-augroup END
-
 " }}}
 
 " Settings {{{
-let g:python3_host_prog = "/Users/laurenzi/venv/bin/python"
+let g:python3_host_prog = '/Users/laurenzi/venv/bin/python'
 
 syntax on                " enable syntax highlighting
 set termguicolors        " enable gui colors for terminal
@@ -449,7 +392,7 @@ set encoding=utf-8       " enconding
 set guifont=Menlo\ Regular\ Nerd\ Font\ Complete:h12 " select font for gui
 set modeline             " enable vim modelines
 set mouse=a              " enable mouse for all modes
-set noeb vb t_vb=		 " remove all errors; 'set visualbell noeb' to revert
+set noerrorbells vb t_vb=	" remove all errors; 'set visualbell noeb' to revert
 set history=1000         " remember more commands and search history
 set undolevels=1000      " use many muchos levels of undo
 set wildignore=*.swp,*.bak,*.pyc,*.class
@@ -558,7 +501,7 @@ endfunction
 " }}}
 
 " Mappings {{{
-let mapleader = ","
+let mapleader = ','
 
 " fast [e]dit and [s]ourcing .[v]imrc
 nnoremap <leader>ev :tabedit $MYVIMRC<CR>
@@ -581,19 +524,24 @@ inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
 imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
 imap <C-l> <Plug>delimitMateS-Tab
 
-" laguage client [K]doc, [D]efinition, [M]enu, [A]ction, [R]ename, [U]sage, [F]ormat
+" Laguage Client
+" [k] Hover, [d] Definition, [m] Menu, [a] Code ActiON, [r] RenaME, [u] References,
+" [f] Format/Range Formatting, [S] Document Symbol, [s] Workspace Symbol,
+" [h] Highlight, [H] Clear Highlight, [p] Signature Help, [e] Explain Error
 nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent><leader>lcd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent><leader>lcm :call LanguageClient_contextMenu()<CR>
-nnoremap <silent><leader>lca :call LanguageClient_textDocument_codeAction()<CR>
-nnoremap <silent><leader>lcr :call LanguageClient_textDocument_rename()<CR>
-nnoremap <silent><leader>lcu :call LanguageClient_textDocument_references()<CR>
-nnoremap <silent><leader>lcf :call LanguageClient_textDocument_formatting()<CR>
+nnoremap <silent><leader>lcm :call LanguageClient#contextMenu()<CR>
+nnoremap <silent><leader>lca :call LanguageClient#textDocument_codeAction()<CR>
+nnoremap <silent><leader>lcr :call LanguageClient#textDocument_rename()<CR>
+nnoremap <silent><leader>lcu :call LanguageClient#textDocument_references()<CR>
+nnoremap <silent><leader>lcf :call LanguageClient#textDocument_formatting()<CR>
 vnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
-nnoremap <silent><leader>lcs :call LanguageClient_textDocument_documentSymbol()<CR>
-nnoremap <silent><leader>lcS :call LanguageClient_workspace_symbol()<CR>
-nnoremap <silent><leader>lch :call LanguageClient_textDocument_documentHighlight()<CR>
+nnoremap <silent><leader>lcs :call LanguageClient#textDocument_documentSymbol()<CR>
+nnoremap <silent><leader>lcS :call LanguageClient#workspace_symbol()<CR>
+nnoremap <silent><leader>lch :call LanguageClient#textDocument_documentHighlight()<CR>
+nnoremap <silent><leader>lcH :call LanguageClient#clearDocumentHighlight()<CR>
 nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<CR>
+nnoremap <silent><leader>lce :call LanguageClient#explainErrorAtPoint()<CR>
 
 " `"'({[<surrounds>]})'"`
 vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
