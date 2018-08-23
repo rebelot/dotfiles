@@ -105,6 +105,7 @@ Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
 
 " Editing Tools {{{
 Plug 'godlygeek/tabular', {'on': 'Tabularize'}
+Plug 'junegunn/vim-easy-align'
 Plug 'dhruvasagar/vim-table-mode', {'on': 'TableModeToggle'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
@@ -174,7 +175,7 @@ let g:LanguageClient_serverCommands = {
 
 let g:tmuxcomplete#trigger = ''
 
-let g:default_julia_version = '0.6.4'
+let g:default_julia_version = '0.6'
 
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'skim'
@@ -187,6 +188,7 @@ let g:echodoc_enable_at_startup = 1
 let g:UltiSnipsExpandTrigger = '<c-j>'
 let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
+let g:UltiSnipsListSnippets = '<c-x><c-s>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 " }}}
 
@@ -296,7 +298,7 @@ let g:tagbar_type_PDB= {
 " }}}
 
 " Editing Tools {{{
-let g:delimitMate_expand_inside_quotes = 1
+let g:delimitMate_expand_inside_quotes = 0
 let g:delimitMate_jump_expansion = 1
 let g:delimitMate_expand_cr = 2
 let g:delimitMate_expand_space = 1
@@ -508,7 +510,7 @@ nnoremap <leader>ev :tabedit $MYVIMRC<CR>
 nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
 " Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
-" C-l refresh/escape delimiters, C-Space invoke completion,
+" C-l escape delimiters, C-Space invoke completion,
 " C-U C-D scroll Up/Down
 let g:ulti_expand_res = 0
 function! Ulti_Expand_and_getRes() abort
@@ -530,7 +532,7 @@ imap <C-l> <Plug>delimitMateS-Tab
 " [h] Highlight, [H] Clear Highlight, [p] Signature Help, [e] Explain Error
 nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent><leader>lcd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent><leader>lcm :call LanguageClient#contextMenu()<CR>
+nnoremap <silent><leader>lcm :call LanguageClient_contextMenu()<CR>
 nnoremap <silent><leader>lca :call LanguageClient#textDocument_codeAction()<CR>
 nnoremap <silent><leader>lcr :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent><leader>lcu :call LanguageClient#textDocument_references()<CR>
@@ -542,17 +544,6 @@ nnoremap <silent><leader>lch :call LanguageClient#textDocument_documentHighlight
 nnoremap <silent><leader>lcH :call LanguageClient#clearDocumentHighlight()<CR>
 nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<CR>
 nnoremap <silent><leader>lce :call LanguageClient#explainErrorAtPoint()<CR>
-
-" `"'({[<surrounds>]})'"`
-vnoremap s( <Esc>`>a)<Esc>`<i(<Esc>
-vnoremap s[ <Esc>`>a]<Esc>`<i[<Esc>
-vnoremap s{ <Esc>`>a}<Esc>`<i{<Esc>
-vnoremap s" <Esc>`>a"<Esc>`<i"<Esc>
-vnoremap s' <Esc>`>a'<Esc>`<i'<Esc>
-vnoremap s< <Esc>`>a><Esc>`<i<<Esc>
-vnoremap s` <Esc>`>a`<Esc>`<i`<Esc>
-vnoremap s_ <Esc>`>a_<Esc>`<i_<Esc>
-vnoremap s* <Esc>`>a*<Esc>`<i*<Esc>
 
 " remap <Esc> to jk in insert mode
 inoremap jk <Esc>
@@ -571,9 +562,6 @@ nnoremap <m-<> <C-W><
 nnoremap <m-+> <C-W>+
 nnoremap <m--> <C-W>-
 nnoremap <m-z> :call WinZoomToggle()<CR>
-
-" WindowSwap
-nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
 
 " Vertical/Horizontal Scrolling
 nnoremap <m-l> zl
@@ -614,26 +602,6 @@ nnoremap <leader>vn :rightbelow vnew<CR>
 nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
 
-" toggle tagbar
-nnoremap <silent><F8> :TagbarToggle<CR>
-
-" [N]ERDTree
-nnoremap <silent><leader>nt :NERDTreeToggle<CR>
-nnoremap <silent><leader>nf :NERDTreeFind<CR>
-
-" Toggle [Mu]ndo
-nnoremap <silent><leader>mu :MundoToggle<CR>
-
-" [F]uzzy [m]ost recent, [b]uffers, [l]ines, [h]elptags
-nnoremap <leader>fm :CtrlPMRUFiles<CR>
-nnoremap <leader>fb :CtrlPBuffer<CR>
-nnoremap <leader>fl :Lines<CR>
-nnoremap <leader>fh :Helptags<CR>
-
-"Vimux
-vnoremap <leader>vs "vy :call VimuxSlime()<CR>
-nnoremap <leader>vp :VimuxPromptCommand<CR>
-
 " Edit or select [R/r]egister
 nnoremap <silent><leader>r :reg<CR>:execute 'norm! "' . input("Select register: ") . "p"<CR>
 nnoremap <leader>R :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
@@ -663,6 +631,31 @@ nnoremap <leader>lo :lopen<CR>
 nnoremap <leader>ln :lnext<CR>
 nnoremap <leader>lp :lNext<CR>
 
+" WindowSwap
+nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
+ 
+" toggle tagbar
+nnoremap <silent><F8> :TagbarToggle<CR>
+
+" [N]ERDTree
+nnoremap <silent><leader>nt :NERDTreeToggle<CR>
+nnoremap <silent><leader>nf :NERDTreeFind<CR>
+
+" Toggle [Mu]ndo
+nnoremap <silent><leader>mu :MundoToggle<CR>
+
+" [F]uzzy [m]ost recent, [b]uffers, [l]ines, [h]elptags
+nnoremap <leader>fm :CtrlPMRUFiles<CR>
+nnoremap <leader>fb :CtrlPBuffer<CR>
+nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>fh :Helptags<CR>
+
+"Vimux
+vnoremap <leader>vs "vy :call VimuxSlime()<CR>
+nnoremap <leader>vp :VimuxPromptCommand<CR>
+
+" EasyAlign
+xmap ga <Plug>(EasyAlign)
 " }}}
 
 " vim: ts=2 sw=2 fdm=marker

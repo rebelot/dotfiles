@@ -99,7 +99,7 @@ export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
 # export MANPAGER=most
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2018-2"
+export SCHRODINGER="/opt/schrodinger/suites2018-3"
 export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 export JULIA_PKGDIR="/Users/laurenzi/.julia"
 export NVM_DIR="$HOME/.nvm"
@@ -291,6 +291,7 @@ alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
+alias rsync="rsync --progress -th"
 
 #test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
