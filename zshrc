@@ -268,7 +268,7 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' verbose true
 zstyle ':completion:*:options' description yes
 zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:descriptions' format $'\e[93;1m -- %d --\e[0m'
+zstyle ':completion:*:descriptions' format $'\e[33;1m -- %d --\e[0m'
 zstyle ':completion:*:messages' format $'\e[31;1m -- %d --\e[0m'
 zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
 zstyle ':completion:*:functions' ignored-patterns '_*'

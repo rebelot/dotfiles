@@ -575,12 +575,13 @@ nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
 nnoremap <leader>bo :%bd \| e# \| bd #<CR>
 
-" switch between buffers
+" switch/open buffers
 nnoremap <silent><m-n> :bnext<CR>
 nnoremap <silent><m-p> :bprev<CR>
 nnoremap gbb :ls<CR>:b 
 nnoremap gbs :ls<CR>:sb 
 nnoremap gbv :ls<CR>:vertical sb 
+nnoremap gbt :ls<CR>:tab sb 
 
 " [s]ave buffer (normal or insert)
 nnoremap <leader>s :w<cr>
