@@ -43,6 +43,7 @@ source $ZSH/keybindings.zsh
 source $ZSH/completions.zsh
 source $ZSH/aliases.zsh
 source $ZSH/functions.zsh
+source $ZSH/prompt.zsh
 # }}}
 
 # Plugins {{{
@@ -81,11 +82,7 @@ export FZF_DEFAULT_OPTS="
 # User configuration {{{
 
 # prompt
-prompt_short='%B%F{$(my_vim_cmd_mode)}❯%f%b '
-prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
-
 export PS1="$prompt_2short"
-ps1_split_state=1
 export RPROMPT='$(oh_my_git_info)'
 
 # ls colors
@@ -236,40 +233,10 @@ function google {
     open "https://www.google.com/search?q=$*"
 }
 
-function prompt_split_toggle {
-    if [ $ps1_split_state -eq 0 ]; then
-        ps1_split_state=1
-        export PS1=$prompt_2short
-    elif [ $ps1_split_state -eq 1 ]; then
-        ps1_split_state=0
-        export PS1=$prompt_short
-    fi
-    zle reset-prompt
-}
-
-function my_vim_cmd_mode {
-    case $KEYMAP in
-        vicmd) echo "red" ;;
-        main|viins) echo "magenta" ;;
-        *) echo "magenta" ;;
-    esac
-}
-
-function zle-keymap-select {
-    zle reset-prompt
-}
 
 # }}}
 
 # Zle, Zstyle {{{
-zle -N zle-keymap-select
-zle -N prompt_split_toggle
-
-bindkey "p" prompt_split_toggle
-bindkey "" vi-cmd-mode
-# bindkey '\e[A' up-line
-# bindkey '\e[B' history-beginning-search-forward
-
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' menu true=long select=long
 zstyle ':completion:*:matches' group yes
