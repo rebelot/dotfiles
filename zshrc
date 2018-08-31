@@ -64,6 +64,7 @@ zplugin ice blockf; zplugin load zsh-users/zsh-completions
 # plugin Opts {{{
 # ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
 # ZSH_HIGHLIGHT_PATTERNS+=('sudo' 'fg=white,bold,bg=red')
+print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
