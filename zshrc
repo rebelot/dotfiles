@@ -63,8 +63,11 @@ zplugin ice blockf; zplugin load zsh-users/zsh-completions
 # }}}
 
 # plugin Opts {{{
-# ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
-# ZSH_HIGHLIGHT_PATTERNS+=('sudo' 'fg=white,bold,bg=red')
+omg_suffix=" %{%B%F{white}%} %{%f%k%b%}" #          
+is_a_git_repo_symbol=" "
+has_modifications_symbol=
+has_untracked_files_symbol=
+ready_to_commit_symbol=
 print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
