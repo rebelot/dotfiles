@@ -91,6 +91,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
+Plug 'junegunn/vim-peekaboo'
 Plug 'vim-utils/vim-man', {'on': 'Man'}
 Plug 'chrisbra/vim-diff-enhanced'
 Plug 'kassio/neoterm'
@@ -271,6 +272,9 @@ let g:historian_registers = ['+', '"']
 
 let g:windowswap_map_keys = 0
 
+let g:peekaboo_compact = 0
+let g:peekaboo_window = 'vert bo 30 new'
+
 " Tagbar {{{
 let g:tagbar_ctags_bin = '/opt/bin/ctags'
 let g:tagbar_type_markdown= {
@@ -318,7 +322,7 @@ endfunction
 
 function! WinZoomToggle() abort
     if ! exists('w:WinZoomIsZoomed') 
-        let w:WinZoomIsZoomed = 0
+      let w:WinZoomIsZoomed = 0
     endif
     if w:WinZoomIsZoomed == 0
       let w:WinZoomOldWidth = winwidth(0)
@@ -332,7 +336,7 @@ function! WinZoomToggle() abort
       let w:WinZoomIsZoomed = 0
    endif
 endfunction
-    
+
 " }}}
 
 " Commands {{{
@@ -604,7 +608,7 @@ nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
 
 " Edit or select [R/r]egister
-nnoremap <silent><leader>r :reg<CR>:execute 'norm! "' . input("Select register: ") . "p"<CR>
+nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
 nnoremap <leader>R :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
 
 " Easier increase/decrease indents
@@ -651,12 +655,16 @@ nnoremap <leader>fb :CtrlPBuffer<CR>
 nnoremap <leader>fl :Lines<CR>
 nnoremap <leader>fh :Helptags<CR>
 
+" Marks
+nnoremap <leader>m :Marks<CR>
+
 "Vimux
 vnoremap <leader>vs "vy :call VimuxSlime()<CR>
 nnoremap <leader>vp :VimuxPromptCommand<CR>
 
 " EasyAlign
 xmap ga <Plug>(EasyAlign)
+
 " }}}
 
 " vim: ts=2 sw=2 fdm=marker

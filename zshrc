@@ -6,10 +6,11 @@
 # ███████╗███████║██║  ██║██║  ██║╚██████╗
 # ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 
-# $PATH.
+# zmodload zsh/zprof
+
+# $PATH {{{
 export PATH="$HOME/bin:/usr/local/bin:$PATH"                  # <-- ~/bin:/usr/lolbin
 export PATH="/opt/CHARMM/c38b2/exec/osx/:$PATH"               # <-- CHARMM
-export PATH="/opt/dssp/bin:$PATH"                             # <-- dssp
 export PATH="/Developer/NVIDIA/CUDA-9.1/bin${PATH:+:${PATH}}" # <-- CUDA
 export PATH="${PATH}:/Applications/moe2018/bin"               # <-- Moe2018
 export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
@@ -23,41 +24,44 @@ source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda + T
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
 source "$HOME/venv/bin/activate"                              # <-- Activate the Python
+# }}}
 
-# Path to oh-my-zsh installation.
-export ZSH=/Users/laurenzi/.oh-my-zsh
+# $MANPATH {{{
+export MANPATH="/usr/local/man:/usr/share/man:$MANPATH"
+export MANPATH="/opt/share/man:/opt/local/share/man:/opt/local/libexec/gnubin/man:$MANPATH"
+export MANPATH="$HOME/.fzf/man:$MANPATH"
+export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
+export ZSH="$HOME/.zsh"
+# }}}
 
-# ZSH Options
-# ZSH_THEME="robbyrussell"
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-# CASE_SENSITIVE="true"
-# HYPHEN_INSENSITIVE="true"
-# DISABLE_AUTO_UPDATE="true"
-# export UPDATE_ZSH_DAYS=13
-# DISABLE_LS_COLORS="true"
-DISABLE_AUTO_TITLE="true"
-# ENABLE_CORRECTION="true"
-COMPLETION_WAITING_DOTS="true"
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-# ZSH_CUSTOM=/path/to/new-custom-folder
+# ZSH init {{{
+ZSH_CACHE_DIR="$ZSH/cache"
+fpath=($ZSH/functions $ZSH/completions $fpath)
 
-plugins=()
+source $ZSH/options.zsh
+source $ZSH/keybindings.zsh
+source $ZSH/completions.zsh
+source $ZSH/aliases.zsh
+source $ZSH/functions.zsh
+# }}}
 
-source $ZSH/oh-my-zsh.sh
+# Plugins {{{
+source "$HOME/.zplugin/bin/zplugin.zsh"
 
-# sources that have to appear before plugins
-source /opt/gromacs-2018/bin/GMXRC.zsh # breaks fast-syntax-hl
-source /opt/local/share/tldr-cpp-client/autocomplete/complete.zsh
-source /opt/local/etc/profile.d/z.sh
-source ~/.fzf.zsh
+zplugin load common-aliases
+zplugin load schrun-completion
+zplugin load exa-completion
+zplugin ice svn; zplugin snippet OMZ::plugins/pip
+zplugin ice svn; zplugin snippet OMZ::plugins/catimg
+zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
+zplugin load bric3/oh-my-zsh-git
+zplugin load srijanshetty/zsh-pandoc-completion
+zplugin load zdharma/fast-syntax-highlighting
+zplugin ice blockf; zplugin load zsh-users/zsh-completions
 
-# init Antigen
-source "$HOME/.antigen/antigen.zsh"
-antigen init "$HOME/.antigenrc"
+# }}}
 
-# plugin Opts
+# plugin Opts {{{
 # ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
 # ZSH_HIGHLIGHT_PATTERNS+=('sudo' 'fg=white,bold,bg=red')
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
@@ -71,32 +75,30 @@ export FZF_DEFAULT_OPTS="
 --bind 'tab':down
 --bind 'btab:up'
 --bind 'ctrl-z':toggle" 
+# }}}
 
-# User configuration
+# User configuration {{{
 
 # prompt
-prompt_short='%F{$(my_vim_cmd_mode)}❯%f '
+prompt_short='%B%F{$(my_vim_cmd_mode)}❯%f%b '
 prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
 
 export PS1="$prompt_2short"
 ps1_split_state=1
-#export RPROMPT=""
+export RPROMPT='$(oh_my_git_info)'
 
 # ls colors
 export CLICOLOR=1
-export LSCOLORS=ExFxBxDxCxegedabagEgGx
+autoload -U colors && colors
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
+# export LSCOLORS=ExFxBxDxCxegedabagEgGx
 eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
 
-# history
+# History file configuration
+[ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=50000
+export SAVEHIST=10000
 export HISTFILESIZE=-1
-
-# Man
-export MANPATH="/usr/local/man:/usr/share/man:$MANPATH"
-export MANPATH="/opt/share/man:/opt/local/share/man:/opt/local/libexec/gnubin/man:$MANPATH"
-export MANPATH="$HOME/.fzf/man:$MANPATH"
-export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
-# export MANPAGER=most
 
 # programs env opts
 export SCHRODINGER="/opt/schrodinger/suites2018-3"
@@ -112,6 +114,8 @@ export LC_ALL=en_US.UTF-8
 export EDITOR=nvim
 export PAGER=less
 export VISUAL=nvim
+export LESS=-R
+# export MANPAGER=most
 
 # Compilation flags
 # export CPPFLAGS="-I/opt/local/include"
@@ -132,7 +136,9 @@ export elenuar="159.149.32.81"
 export nero="159.149.32.106"
 export jessicah="159.149.32.103"
 
-# functions
+# }}}
+
+# Functions {{{
 function cdw {
 	cd "$(dirname "$(which "$1")")"
 }
@@ -252,6 +258,9 @@ function zle-keymap-select {
     zle reset-prompt
 }
 
+# }}}
+
+# Zle, Zstyle {{{
 zle -N zle-keymap-select
 zle -N prompt_split_toggle
 
@@ -260,7 +269,6 @@ bindkey "" vi-cmd-mode
 # bindkey '\e[A' up-line
 # bindkey '\e[B' history-beginning-search-forward
 
-# Z-styles
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' menu true=long select=long
 zstyle ':completion:*:matches' group yes
@@ -272,10 +280,11 @@ zstyle ':completion:*:descriptions' format $'\e[33;1m -- %d --\e[0m'
 zstyle ':completion:*:messages' format $'\e[31;1m -- %d --\e[0m'
 zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
 zstyle ':completion:*:functions' ignored-patterns '_*'
-zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=34' ${(s.:.)LS_COLORS}
+zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=94' ${(s.:.)LS_COLORS}
+# }}}
 
-# Aliases
-# see .oh-my-zsh/custom/plugins/common-aliases/common-aliases.plugin.zsh
+# Aliases {{{
+# see ~/.zplugin/plugins/_local---common-aliases/common-aliases.plugin.zsh
 
 alias juliapro=/Applications/JuliaPro-0.6.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
 alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
@@ -284,7 +293,6 @@ alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
 alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
 alias catdcd="/Applications/VMD\ 1.9.4.app/Contents/vmd/plugins/MACOSXX86/bin/catdcd5.2/catdcd"
 alias vmd="/Applications/VMD\ 1.9.4.app/Contents/Resources/VMD.app/Contents/MacOS/VMD"
-alias port-switch='sudo "/Users/laurenzi/code/src/port-switch_command"'
 alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias nvm_init="source $NVM_DIR/nvm.sh"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
@@ -292,8 +300,23 @@ alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
 alias rsync="rsync --progress -th"
+# }}}
 
-#test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-compinit
+# compinit / compdef {{{
+autoload -Uz compinit
+compinit -i
 compdef neovim_remote=nvim
+zplugin cdreplay -q
+# }}}
+
+# other sources  {{{
+source /opt/gromacs-2018/bin/GMXRC.zsh
+source /opt/local/share/tldr-cpp-client/autocomplete/complete.zsh
+source /opt/local/etc/profile.d/z.sh
+source ~/.fzf.zsh
+#test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# }}}
+
+# zprof
+
+# vim:set et sw=2 ts=2 fdm=marker:
