@@ -9,28 +9,29 @@
 # zmodload zsh/zprof
 
 # $PATH {{{
-export PATH="$HOME/bin:/usr/local/bin:$PATH"                  # <-- ~/bin:/usr/lolbin
+# /etc/paths: /usr/local/bin /usr/bin /bin /usr/sbin /sbin
 export PATH="/opt/CHARMM/c38b2/exec/osx/:$PATH"               # <-- CHARMM
-export PATH="/Developer/NVIDIA/CUDA-9.1/bin${PATH:+:${PATH}}" # <-- CUDA
-export PATH="${PATH}:/Applications/moe2018/bin"               # <-- Moe2018
+export PATH="/Developer/NVIDIA/CUDA-9.1/bin:$PATH"            # <-- CUDA
+export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
 export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
 export PATH="$HOME/code/bin:$PATH"                            # <-- personal stuff
-export PATH="$HOME/.nvm/versions/node/v10.4.0/bin:$PATH"      # <-- nvm
+export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
 export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
-source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda + TMUX fix
-[[ -z $TMUX ]] || conda deactivate; conda activate base       #
+export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
+source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
+[[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
 source "$HOME/venv/bin/activate"                              # <-- Activate the Python
 # }}}
 
 # $MANPATH {{{
-export MANPATH="/usr/local/man:/usr/share/man:$MANPATH"
-export MANPATH="/opt/share/man:/opt/local/share/man:/opt/local/libexec/gnubin/man:$MANPATH"
-export MANPATH="$HOME/.fzf/man:$MANPATH"
-export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
+# export MANPATH="/usr/local/man:/usr/share/man:$MANPATH"
+# export MANPATH="/opt/share/man:/opt/local/share/man:/opt/local/libexec/gnubin/man:$MANPATH"
+# export MANPATH="$HOME/.fzf/man:$MANPATH"
+# export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
 # }}}
 
 # ZSH init {{{
@@ -52,13 +53,13 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/tommasolaurenzi/BioTools/blob/master/schrodinger_scripts/_schrun'
+zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin ice svn; zplugin snippet OMZ::plugins/catimg
 zplugin load bric3/oh-my-zsh-git
 zplugin load srijanshetty/zsh-pandoc-completion
-zplugin load zdharma/fast-syntax-highlighting
 zplugin ice blockf; zplugin load zsh-users/zsh-completions
-
+zplugin load zdharma/fast-syntax-highlighting
 # }}}
 
 # plugin Opts {{{
@@ -97,7 +98,7 @@ export CLICOLOR=1
 autoload -U colors && colors
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
 # export LSCOLORS=ExFxBxDxCxegedabagEgGx
-eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
+# eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS moved in $ZSH/completions.zsh
 
 # History file configuration
 [ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
@@ -109,9 +110,6 @@ export HISTFILESIZE=-1
 export SCHRODINGER="/opt/schrodinger/suites2018-3"
 export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 export JULIA_PKGDIR="/Users/laurenzi/.julia"
-export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm   # aliased down there
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # language environment
 export LANG=en_US.UTF-8
@@ -144,9 +142,6 @@ export jessicah="159.149.32.103"
 # }}}
 
 # Functions {{{
-function cdw {
-	cd "$(dirname "$(which "$1")")"
-}
 
 function melakappa {
     if [ $# -eq 0 ]; then
@@ -154,32 +149,6 @@ function melakappa {
     else
         mkdir -p ~/Jessicah/"$1" && mount_afp -i afp://$jessicah/"$1" ~/Jessicah/"$1"
     fi
-}
-
-function ts {
-    local opts cmd cwd pane
-    opts=$1
-    cmd=${@:2}
-    cwd=""
-    pane=${opts//[A-Za-z]}
-
-    if   [[ "$opts" =~ "L"  ]]; then pane="{left}"
-    elif [[ "$opts" =~ "R"  ]]; then pane="{right}"
-    elif [[ "$opts" =~ "tl" ]]; then pane="{top-left}"
-    elif [[ "$opts" =~ "tr" ]]; then pane="{top-right}"
-    elif [[ "$opts" =~ "bl" ]]; then pane="{bottom-left}"
-    elif [[ "$opts" =~ "br" ]]; then pane="{bottom-right}"
-    elif [[ "$opts" =~ "t"  ]]; then pane="{top}"
-    elif [[ "$opts" =~ "b"  ]]; then pane="{bottom}"
-    elif [[ "$opts" =~ "l"  ]]; then pane="{left-of}"
-    elif [[ "$opts" =~ "r"  ]]; then pane="{right-of}"
-    elif [[ "$opts" =~ "u"  ]]; then pane="{up-of}"
-    elif [[ "$opts" =~ "d"  ]]; then pane="{down-of}"
-    elif [[ "$opts" =~ "m"  ]]; then pane="{marked}"
-    fi 
-    [[ "$opts" =~ "c" ]] && cwd="cd $(pwd); "
-    [[ "$opts" =~ "v" ]] && cmd=":e $(pwd)/$cmd"
-    tmux send-keys -t "$pane" "$cwd$cmd" C-m
 }
 
 function tmx {
@@ -193,22 +162,6 @@ function licmae {
     else 
         ssh $elenuar "/opt/schrodinger2018-2/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/"
     fi
-}
-
-function truecolors {
-    awk 'BEGIN{
-        s="/\\/\\/\\/\\/\\"; s=s s s s s s s s s s s s s s s s s s s s s s s;
-        for (colnum = 0; colnum<256; colnum++) {
-            r = 255-(colnum*255/255);
-            g = (colnum*510/255);
-            b = (colnum*255/255);
-            if (g>255) g = 510-g;
-            printf "\033[48;2;%d;%d;%dm", r,g,b;
-            printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
-            printf "%s\033[0m", substr(s,colnum+1,1);
-        }
-        printf "\n";
-    }'
 }
 
 function chunk {
@@ -240,22 +193,6 @@ function google {
     open "https://www.google.com/search?q=$*"
 }
 
-
-# }}}
-
-# Zle, Zstyle {{{
-zstyle ':completion:*' list-dirs-first true
-zstyle ':completion:*' menu true=long select=long
-zstyle ':completion:*:matches' group yes
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:options' description yes
-zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:descriptions' format $'\e[33;1m -- %d --\e[0m'
-zstyle ':completion:*:messages' format $'\e[31;1m -- %d --\e[0m'
-zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
-zstyle ':completion:*:functions' ignored-patterns '_*'
-zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=94' ${(s.:.)LS_COLORS}
 # }}}
 
 # Aliases {{{
@@ -269,7 +206,6 @@ alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/v
 alias catdcd="/Applications/VMD\ 1.9.4.app/Contents/vmd/plugins/MACOSXX86/bin/catdcd5.2/catdcd"
 alias vmd="/Applications/VMD\ 1.9.4.app/Contents/Resources/VMD.app/Contents/MacOS/VMD"
 alias spritz="~/Desktop/tommy/nsfw/spritz.py"
-alias nvm_init="source $NVM_DIR/nvm.sh"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
@@ -290,6 +226,9 @@ source /opt/local/etc/profile.d/z.sh
 source ~/.fzf.zsh
 #test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 # }}}
+
+# Make path entries unique (avoid duplication in tmux)
+typeset -U path
 
 # zprof
 

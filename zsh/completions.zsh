@@ -1,16 +1,21 @@
 zmodload -i zsh/complist
 bindkey -M menuselect '^o' accept-and-infer-next-history
+
 zstyle ':completion:*:*:*:*:*' menu select
+
 # case and hyphen insensitive
 # zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|=*'
+
 # case insensitvie, hyphen sensitive
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 
 zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+
 # caching
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
@@ -30,6 +35,21 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
         usbmux uucp vcsa wwwrun xfs '_*'
 # ... unless we really want to.
 zstyle '*' single-ignored show
+
+zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' menu true=long select=long
+zstyle ':completion:*:matches' group yes
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:options' description yes
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:descriptions' format $'\e[33;1m -- %d --\e[0m'
+zstyle ':completion:*:messages' format $'\e[31;1m -- %d --\e[0m'
+zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
+zstyle ':completion:*:functions' ignored-patterns '_*'
+
+eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
+zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=94' ${(s.:.)LS_COLORS}
 
 # expand-or-complete-with-dots
 expand-or-complete-with-dots() {
