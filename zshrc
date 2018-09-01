@@ -70,7 +70,6 @@ has_modifications_color="%F{yellow}"
 has_untracked_files_symbol=
 ready_to_commit_symbol=
 should_push_symbol=
-should_push_color="%F{12}"
 detached_symbol=
 print_unactive_flags_space=false
 #              
