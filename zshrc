@@ -31,12 +31,12 @@ export MANPATH="/usr/local/man:/usr/share/man:$MANPATH"
 export MANPATH="/opt/share/man:/opt/local/share/man:/opt/local/libexec/gnubin/man:$MANPATH"
 export MANPATH="$HOME/.fzf/man:$MANPATH"
 export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
-export ZSH="$HOME/.zsh"
 # }}}
 
 # ZSH init {{{
+export ZSH="$HOME/.zsh"
 ZSH_CACHE_DIR="$ZSH/cache"
-fpath=($ZSH/functions $ZSH/completions $fpath)
+# fpath=($ZSH/functions $ZSH/completions $fpath)
 
 source $ZSH/options.zsh
 source $ZSH/keybindings.zsh
@@ -50,11 +50,11 @@ source $ZSH/prompt.zsh
 source "$HOME/.zplugin/bin/zplugin.zsh"
 
 zplugin load common-aliases
-zplugin load schrun-completion
-zplugin load exa-completion
+zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
+zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
+zplugin ice as"completion"; zplugin snippet 'https://github.com/tommasolaurenzi/BioTools/blob/master/schrodinger_scripts/_schrun'
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin ice svn; zplugin snippet OMZ::plugins/catimg
-zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
 zplugin load bric3/oh-my-zsh-git
 zplugin load srijanshetty/zsh-pandoc-completion
 zplugin load zdharma/fast-syntax-highlighting
@@ -63,11 +63,12 @@ zplugin ice blockf; zplugin load zsh-users/zsh-completions
 # }}}
 
 # plugin Opts {{{
-omg_suffix=" %{%B%F{white}%} %{%f%k%b%}" #          
-is_a_git_repo_symbol=" "
+omg_suffix=" %{%B%F{white}%} %{%f%k%b%}" #             
+is_a_git_repo_symbol=
 has_modifications_symbol=
 has_untracked_files_symbol=
 ready_to_commit_symbol=
+should_push_symbol=
 print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
