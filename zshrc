@@ -49,7 +49,6 @@ source $ZSH/prompt.zsh
 # Plugins {{{
 source "$HOME/.zplugin/bin/zplugin.zsh"
 
-zplugin load common-aliases
 zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/tommasolaurenzi/BioTools/blob/master/schrodinger_scripts/_schrun'
@@ -63,13 +62,18 @@ zplugin ice blockf; zplugin load zsh-users/zsh-completions
 # }}}
 
 # plugin Opts {{{
-omg_suffix=" %{%B%F{white}%} %{%f%k%b%}" #             
-is_a_git_repo_symbol=
+omg_prefix=" %{%B%F{white}%}%{%f%k%b%}"
+omg_suffix=" %{%B%F{white}%}%{%f%k%b%}"
+is_a_git_repo_symbol=" "
 has_modifications_symbol=
+has_modifications_color="%F{yellow}"
 has_untracked_files_symbol=
 ready_to_commit_symbol=
 should_push_symbol=
+should_push_color="%F{12}"
+detached_symbol=
 print_unactive_flags_space=false
+#              
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
@@ -256,7 +260,7 @@ zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=94' ${(s.:.)LS_COLORS
 # }}}
 
 # Aliases {{{
-# see ~/.zplugin/plugins/_local---common-aliases/common-aliases.plugin.zsh
+# see $ZSH/aliases.zsh
 
 alias juliapro=/Applications/JuliaPro-0.6.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
 alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
@@ -271,7 +275,6 @@ alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
-alias rsync="rsync --progress -th"
 # }}}
 
 # compinit / compdef {{{
