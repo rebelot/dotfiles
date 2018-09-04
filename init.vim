@@ -99,7 +99,7 @@ Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'skywind3000/vim-preview', {'on': 'Preview'}
-Plug 'tommasolaurenzi/nvim-historian', {'branch': 'devel'}
+Plug 'p4n1k0/nvim-historian', {'branch': 'devel'}
 Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
 " Plug 'mhinz/vim-signify'
 " }}}
@@ -268,7 +268,7 @@ let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
 let g:suda#prefix = 'sudo:'
 call suda#init('sudo:*,sudo:*/*')
 
-let g:historian_registers = ['+', '"']
+let g:historian_registers = ['+']
 
 let g:windowswap_map_keys = 0
 
