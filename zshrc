@@ -32,7 +32,7 @@ source "$HOME/venv/bin/activate"                              # <-- Activate the
 # export MANPATH="/opt/share/man:/opt/local/share/man:/opt/local/libexec/gnubin/man:$MANPATH"
 # export MANPATH="$HOME/.fzf/man:$MANPATH"
 # export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
-# }}}
+# }}} no need, man smart, man good, if set, man breaks in tmux
 
 # ZSH init {{{
 export ZSH="$HOME/.zsh"
@@ -52,7 +52,7 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
-zplugin ice as"completion"; zplugin snippet 'https://github.com/tommasolaurenzi/BioTools/blob/master/schrodinger_scripts/_schrun'
+zplugin ice as"completion"; zplugin snippet 'https://github.com/p4n1k0/BioTools/blob/master/schrodinger_scripts/_schrun'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin ice svn; zplugin snippet OMZ::plugins/catimg
@@ -63,17 +63,17 @@ zplugin load zdharma/fast-syntax-highlighting
 # }}}
 
 # plugin Opts {{{
-omg_prefix=" %{%B%F{white}%}%{%f%k%b%}"
-omg_suffix=" %{%B%F{white}%}%{%f%k%b%}"
+# omg_prefix=" %{%B%F{white}%}%{%f%k%b%}"
+omg_suffix=" %{%B%F{white}%} %{%f%k%b%}"
 is_a_git_repo_symbol=" "
 has_modifications_symbol=
 has_modifications_color="%F{yellow}"
-has_untracked_files_symbol=
-ready_to_commit_symbol=
-should_push_symbol=
+has_untracked_files_symbol=
+ready_to_commit_symbol=
+should_push_symbol=
 detached_symbol=
 print_unactive_flags_space=false
-#              
+#                  
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
@@ -227,8 +227,11 @@ source ~/.fzf.zsh
 #test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 # }}}
 
-# Make path entries unique (avoid duplication in tmux)
+# Remove duplicates from PATH (Unique)
 typeset -U path
+
+# MANPATH Guard
+unset MANPATH
 
 # zprof
 
