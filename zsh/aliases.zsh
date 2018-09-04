@@ -1,14 +1,14 @@
 # Advanced Aliases.
 
 # ls 
-alias ls='ls --color --group-directories-first'
+alias ls='ls --color=auto --group-directories-first'
 alias l='ls -lFh'     #size,show type,human readable
 alias la='ls -lAFh'   #long list,show almost all,show type,human readable
 alias lr='ls -tRFh'   #sorted by date,recursive,show type,human readable
 alias lt='ls -ltFh'   #long list,sorted by date,show type,human readable
 alias ll='ls -lh'      #long list
-alias ldot='ls -ld .*'
-alias lsd='ls -d .*'
+alias lld='ls -lhd .*'
+alias lsd='ls -dh .*'
 alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
