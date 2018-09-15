@@ -1,4 +1,4 @@
-prompt_short='%B%F{$(my_vim_cmd_mode)}❯%f%b '
+prompt_short='$(my_vim_cmd_mode)%B%F{magenta}❯%f%b '
 prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
 
 ps1_split_state=1
@@ -16,9 +16,9 @@ function prompt_split_toggle {
 
 function my_vim_cmd_mode {
     case $KEYMAP in
-        vicmd) echo "red" ;;
-        main|viins) echo "magenta" ;;
-        *) echo "magenta" ;;
+        vicmd) echo '%B%F{red}-- N --%f%b ' ;;
+        main|viins) echo "" ;;
+        *) echo "" ;;
     esac
 }
 

@@ -165,9 +165,11 @@ let g:LanguageClient_serverCommands = {
         \ 'r': ['R', '--quiet', '--slave', '-e', 'languageserver::run()'],
         \ 'c': ['cquery', '--language-server'],
         \ 'python': ['python', '-m', 'pyls'],
-        \ 'julia': ['/Applications/Julia-0.6.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
+        \ 'julia': ['/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
+        \       using StaticLint;
+        \       using DocumentFormat;
         \       using LanguageServer;
-        \       server = LanguageServer.LanguageServerInstance(STDIN, STDOUT, false);
+        \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
         \       server.runlinter = true;
         \       run(server);
         \   ']
@@ -176,7 +178,7 @@ let g:LanguageClient_serverCommands = {
 
 let g:tmuxcomplete#trigger = ''
 
-let g:default_julia_version = '0.6'
+let g:default_julia_version = '1.0'
 
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'skim'
@@ -586,6 +588,7 @@ nnoremap gbb :ls<CR>:b
 nnoremap gbs :ls<CR>:sb 
 nnoremap gbv :ls<CR>:vertical sb 
 nnoremap gbt :ls<CR>:tab sb 
+nnoremap gbd :ls<CR>:bdelete 
 
 " [s]ave buffer (normal or insert)
 nnoremap <leader>s :w<cr>
@@ -626,15 +629,17 @@ vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
 
-" Qui[c]kFix [O]pen, [N]ext, [P]revious
+" Qui[c]kFix [O]pen, [N]ext, [P]revious, [C]lose
 nnoremap <leader>co :copen<CR>
 nnoremap <leader>cn :cnext<CR>
 nnoremap <leader>cp :cNext<CR>
+nnoremap <leader>cc :cclose<CR>
 
-" Location[L]ist [O]pen [N]ext [P]revious
+" Location[L]ist [O]pen, [N]ext, [P]revious, [C]lose
 nnoremap <leader>lo :lopen<CR>
 nnoremap <leader>ln :lnext<CR>
 nnoremap <leader>lp :lNext<CR>
+nnoremap <leader>lc :lclose<CR>
 
 " WindowSwap
 nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
