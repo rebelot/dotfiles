@@ -52,7 +52,7 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
-zplugin ice as"completion"; zplugin snippet 'https://github.com/p4n1k0/BioTools/blob/master/schrodinger_scripts/_schrun'
+zplugin ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin ice svn; zplugin snippet OMZ::plugins/catimg

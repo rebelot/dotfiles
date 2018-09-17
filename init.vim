@@ -99,7 +99,7 @@ Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'skywind3000/vim-preview', {'on': 'Preview'}
-Plug 'p4n1k0/nvim-historian', {'branch': 'devel'}
+Plug 'rebelot/nvim-historian', {'branch': 'devel'}
 Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
 " Plug 'mhinz/vim-signify'
 " }}}
@@ -447,10 +447,14 @@ set updatetime=250       " time required to update CursorHold hook
 set shortmess+=c         " remove 'match x of y' echoing line
 " }}}
 
-" Colorscheme {{{
+" Colors {{{
 colorscheme gruvbox 
 set background=dark
-" }}}
+
+" Colorscheme Overrides {{{
+hi! link SpecialKey GruvboxBlue
+hi! link pythonDot GruvboxRed
+"}}}
 
 " Highlights {{{
 " transparent bg {{{
@@ -458,11 +462,6 @@ set background=dark
 " hi SignColumn guibg=NONE
 " hi VertSplit guibg=NONE
 " }}}
-
-" Colorscheme Overrides {{{
-hi! link SpecialKey GruvboxBlue
-hi! link pythonDot GruvboxRed
-"}}}
 
 " Spell {{{
 hi clear SpellBad
@@ -489,23 +488,7 @@ hi link ALEStyleErrorSign   GruvboxAqua
 hi link ALEStyleWarningSign GruvboxBlue
 " }}}
 
-" Semshi {{{
-function! SemshiHighlightGroups() 
-    hi! link semshiLocal      GruvboxBlue   
-    hi! link semshiGlobal     GruvboxBlueBold
-    hi! link semshiImported   GruvboxOrange
-    hi! link semshiParameter  GruvboxGreen
-    hi! link semshiParameterUnused GruvboxGray  
-    hi! link semshiFree       GruvboxAqua   
-    hi! link semshiBuiltin    GruvboxOrange 
-    hi! link semshiAttribute  GruvboxAqua
-    hi! link semshiSelf       GruvboxGray
-    hi! link semshiUnresolved GruvboxGray
-    hi! link semshiSelected   CursorLine 
-endfunction
-" autocmd FileType python call SemshiHighlightGroups()
 " }}}
-
 " }}}
 
 " Mappings {{{
@@ -543,7 +526,7 @@ nnoremap <silent><leader>lca :call LanguageClient#textDocument_codeAction()<CR>
 nnoremap <silent><leader>lcr :call LanguageClient#textDocument_rename()<CR>
 nnoremap <silent><leader>lcu :call LanguageClient#textDocument_references()<CR>
 nnoremap <silent><leader>lcf :call LanguageClient#textDocument_formatting()<CR>
-vnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
+xnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
 nnoremap <silent><leader>lcs :call LanguageClient#textDocument_documentSymbol()<CR>
 nnoremap <silent><leader>lcS :call LanguageClient#workspace_symbol()<CR>
 nnoremap <silent><leader>lch :call LanguageClient#textDocument_documentHighlight()<CR>
@@ -615,19 +598,19 @@ nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register]
 nnoremap <leader>R :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
 
 " Easier increase/decrease indents
-vnoremap > >gv
-vnoremap < <gv
+xnoremap > >gv
+xnoremap < <gv
 
 " select [a]ll
 nnoremap <leader>a ggVG
 
 " [y]ank to clipnoard
 nnoremap <leader>y "+y
-vnoremap <leader>y "+y
+xnoremap <leader>y "+y
 
 " [p]aste from clipboard
 nnoremap <leader>p "+p
-vnoremap <leader>p "+p
+xnoremap <leader>p "+p
 
 " Qui[c]kFix [O]pen, [N]ext, [P]revious, [C]lose
 nnoremap <leader>co :copen<CR>
@@ -664,7 +647,7 @@ nnoremap <leader>fh :Helptags<CR>
 nnoremap <leader>m :Marks<CR>
 
 "Vimux
-vnoremap <leader>vs "vy :call VimuxSlime()<CR>
+xnoremap <leader>vs "vy :call VimuxSlime()<CR>
 nnoremap <leader>vp :VimuxPromptCommand<CR>
 
 " EasyAlign
