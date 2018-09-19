@@ -68,7 +68,7 @@ alias tc="tree -C"
 alias exa="exa --group-directories-first"
 alias el="exa -l"
 alias t='tail -f'
-alias vim=nvim
+# alias vim=nvim
 alias edit=nvim # Vim Only!
 alias git=hub
 
