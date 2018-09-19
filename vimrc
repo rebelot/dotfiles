@@ -1,159 +1,271 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+"           le vimrc
+                                                
+                            " be iMproved, required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" Plugins {{{
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
 
-Plugin 'tpope/vim-fugitive'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'flazz/vim-colorschemes'
-Plugin 'JuliaEditorSupport/julia-vim'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'kovetskiy/ycm-sh'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'bling/vim-bufferline'
-Plugin 'vim-utils/vim-man'
-Plugin 'majutsushi/tagbar'
-Plugin 'moll/vim-bbye'
-Plugin 'jlanzarotta/bufexplorer'
-Plugin 'lambdalisue/suda.vim'
-Plugin 'godlygeek/tabular'
-Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'scrooloose/nerdtree'
-Plugin 'ivalkeen/nerdtree-execute.git'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'lervag/vimtex.git'
-" Plugin 'joonty/vdebug'
-Plugin 'tmux-plugins/vim-tmux'
-Plugin 'tmux-plugins/vim-tmux-focus-events'
-Plugin 'benmills/vimux'
-Plugin 'w0rp/ale'
-Plugin 'raimondi/delimitmate'
-Plugin 'vim-scripts/Gundo'
-Plugin 'vim-scripts/YankRing.vim'
-Plugin 'junegunn/goyo.vim'
-Plugin 'metakirby5/codi.vim'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'chrisbra/csv.vim'
-Plugin 'chrisbra/vim-diff-enhanced'
-Plugin 'chrisbra/NrrwRgn'
-Plugin 'wesQ3/vim-windowswap'
-Plugin 'mileszs/ack.vim'
-Plugin 'lifepillar/vim-solarized8'
-Plugin 'vim-scripts/Vim-Gromacs'
-Plugin 'chrisbra/vim-zsh'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'guns/xterm-color-table.vim'
-Plugin 'itchyny/calendar.vim'
-Plugin 'francoiscabrol/ranger.vim'
-Plugin 'reedes/vim-pencil'
-Plugin 'junegunn/limelight.vim'
-Plugin 'Konfekt/FastFold'
+call plug#begin('~/.vim/bundle')
+Plug 'junegunn/vim-plug'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+" Code completion {{{
+" Plug 'ncm2/ncm2'
+" Plug 'roxma/nvim-yarp'
+" Plug 'ncm2/ncm2-bufword'
+" Plug 'ncm2/ncm2-path'
+" Plug 'ncm2/ncm2-vim'
+" Plug 'ncm2/ncm2-ultisnips'
+" Plug 'ncm2/ncm2-syntax'
+" Plug 'ncm2/ncm2-tagprefix'
+" Plug 'ncm2/ncm2-markdown-subscope'
+" Plug 'Shougo/echodoc.vim'
+" Plug 'Shougo/neco-vim'
+" Plug 'Shougo/neco-syntax'
+" Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+" Plug 'wellle/tmux-complete.vim'
+" Plug 'JuliaEditorSupport/julia-vim'
+" Plug 'lervag/vimtex'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+" }}}
 
-" Plugin Options
+" Syntax and Folds {{{
+Plug 'plasticboy/vim-markdown'
+Plug 'chrisbra/vim-zsh'
+Plug 'chrisbra/csv.vim', { 'on': 'CSVInit' }
+Plug 'vim-python/python-syntax'
+Plug 'tmhedberg/SimpylFold'
+Plug 'KeitaNakamura/highlighter.nvim'
+Plug 'Konfekt/FastFold'
+" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+" Plug 'jaxbot/semantic-highlight.vim'
+" }}}
 
-let g:sparkupMaps = 0
+" File, Buffer Browsers {{{
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'ivalkeen/nerdtree-execute'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
+Plug 'mileszs/ack.vim'
+Plug 'jlanzarotta/bufexplorer'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
+Plug 'junegunn/fzf.vim'
+" }}}
+
+" Colors {{{
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'machakann/vim-highlightedyank'
+Plug 'RRethy/vim-illuminate'
+Plug 'morhetz/gruvbox'
+" Plug 'andreypopp/vim-colors-plain'
+" Plug 'lifepillar/vim-solarized8'
+" Plug 'ajmwagar/vim-deus'
+" Plug 'flazz/vim-colorschemes'
+" Plug 'romainl/flattened'
+" Plug 'nightsense/stellarized'
+" Plug 'guns/xterm-color-table.vim'
+" Plug 'nightsense/vrunchbang'
+" Plug 'nightsense/seagrey'
+" }}}
+
+" Utils {{{  
+" Plug 'w0rp/ale'
+Plug 'joonty/vdebug', {'on': 'VdebugStart'}
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
+Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
+Plug 'junegunn/vim-peekaboo'
+Plug 'vim-utils/vim-man', {'on': 'Man'}
+Plug 'chrisbra/vim-diff-enhanced'
+Plug 'kassio/neoterm'
+Plug 'moll/vim-bbye'
+Plug 'lambdalisue/suda.vim'
+Plug 'wesQ3/vim-windowswap'
+Plug 'skywind3000/vim-preview', {'on': 'Preview'}
+Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
+" Plug 'mhinz/vim-signify'
+" }}}
+
+" Editing Tools {{{
+Plug 'godlygeek/tabular', {'on': 'Tabularize'}
+Plug 'junegunn/vim-easy-align'
+Plug 'dhruvasagar/vim-table-mode', {'on': 'TableModeToggle'}
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'raimondi/delimitmate'
+Plug 'wellle/targets.vim'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'justinmk/vim-sneak'
+Plug 'tpope/vim-repeat'
+Plug 'chrisbra/NrrwRgn'
+" }}}
+
+" Tmux {{{
+Plug 'benmills/vimux'
+Plug 'tmux-plugins/vim-tmux'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+" }}}
+
+call plug#end()
+" }}}
+
+" Plugin Options {{{
+
+" Code completion {{{
+
+" Ncm2 {{{
+" let g:ncm2#complete_length = 2
+
+" call ncm2#override_source('vim',                  {'mark': '  '})
+" call ncm2#override_source('bufword',              {'mark': ' ℬ '})
+" call ncm2#override_source('rootpath',             {'mark': '  '})
+" call ncm2#override_source('bufpath',              {'mark': '  '})
+" call ncm2#override_source('cwdpath',              {'mark': '  '})
+" call ncm2#override_source('tmux-complete',        {'mark': ' 侀'})
+" call ncm2#override_source('ultisnips',            {'mark': '  '})
+" call ncm2#override_source('syntax',               {'mark': '  '})
+" call ncm2#override_source('LanguageClient_python',{'mark': '  '})
+" call ncm2#override_source('LanguageClient_julia', {'mark': '  '})
+" call ncm2#override_source('LanguageClient_sh',    {'mark': '  '})
+" call ncm2#override_source('LanguageClient_c',     {'mark': '  '})
+" call ncm2#override_source('tagprefix',            {'mark': ' 炙'})
+" echo keys(ncm2#_s('sources'))
+"                  舘侀炙    ⌾
+" }}}
+
+" Language Client {{{
+" let g:LanguageClient_autoStart = 1
+" let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
+" " let g:LanguageClient_loggingFile = '/tmp/LanguageClient.log'
+" " let g:LanguageClient_loggingLevel = 'DEBUG'
+" let g:LanguageClient_waitOutputTimeout = 30
+" let g:LanguageClient_diagnosticsEnable = 0
+" let g:LanguageClient_hoverPreview = 'Always' 
+" let g:LanguageClient_completionPreferTextEdit = 1 
+" let g:LanguageClient_serverCommands = {
+"         \ 'sh': ['bash-language-server','start'],
+"         \ 'r': ['R', '--quiet', '--slave', '-e', 'languageserver::run()'],
+"         \ 'c': ['cquery', '--language-server'],
+"         \ 'python': ['python', '-m', 'pyls'],
+"         \ 'julia': ['/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
+"         \       using StaticLint;
+"         \       using DocumentFormat;
+"         \       using LanguageServer;
+"         \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
+"         \       server.runlinter = true;
+"         \       run(server);
+"         \   ']
+"         \}
+" " }}}
+
+" let g:tmuxcomplete#trigger = ''
+
+" let g:default_julia_version = '1.0'
+
+" let g:vimtex_compiler_progname = 'nvr'
+" let g:vimtex_view_method = 'skim'
+" " vimtex ncm2 register source in
+" " ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
+
+" let g:echodoc_enable_at_startup = 1
+
+" " let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+" let g:UltiSnipsExpandTrigger = '<c-j>'
+" let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
+" let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
+" let g:UltiSnipsListSnippets = '<c-x><c-s>'
+" let g:UltiSnipsRemoveSelectModeMappings = 0
+" }}}
+
+" Syntax and Folds {{{
+let g:python_highlight_all = 1
+let g:python_highlight_file_headers_as_comments = 1
+let g:python_highlight_space_errors = 0
+
+let g:fastfold_fold_command_suffixes = ['x', 'X', 'a', 'A', 'o', 'O', 'c', 'C', 'r', 'R', 'm', 'M', 'i', 'n', 'N']
+" let g:tex_fold_enabled = 1
+" let g:vimsyn_folding ='af'
+" let g:sh_fold_enabled = 7
+" let g:markdown_folding = 0
+
+" let g:semshi#error_sign = 0
+" let g:semshi#always_update_all_highlights = 1
+" let g:semshi#simplify_markup = 0
+" }}}
+
+" File, Buffer, Browsers {{{
+
+let g:NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeDirArrows = 1
+
+let g:ackprg = 'ag --vimgrep'
+
+let g:ctrlp_map = '<leader>f'
+let g:ctrlp_cmd = 'CtrlPMixed'
+
+let g:fzf_tags_command = '/opt/bin/ctags -R'
 
 let g:ranger_map_keys = 0
+" }}}
 
-let g:ycm_python_binary_path = '/opt/anaconda3/bin/python'
-let g:ycm_server_python_interpreter = '/usr/bin/python'
-let g:ycm_autoclose_preview_window_after_completion = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
-if !exists('g:ycm_semantic_triggers')
-    let g:ycm_semantic_triggers = {}
-endif
-let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
-" let g:ycm_key_list_stop_completion = ['<C-y>', '<Enter>']
-let g:ycm_filetype_blacklist = {}
-
-let g:UltiSnipsExpandTrigger = '<c-j>'
-
-let g:bufferline_echo = 1
+" Colors {{{
+let g:gruvbox_italic = 1
+let g:gruvbox_sign_column = 'bg0'
 
 let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#bufferline#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#csv#column_display = 'Name'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = "molokai"
-
-let g:bufExplorerFindActive=1
-
-let g:suda#prefix = 'sudo:'
-call suda#init('sudo:*,sudo:*/*')
-
-let NERDTreeAutoDeleteBuffer = 1
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-
-let g:ale_set_highlights = 1
-let g:ale_lint_on_text_changed = "normal"
-let g:ale_fixers = { 'python': 'autopep8'}
-let g:ale_python_mypy_options = "--ignore-missing-imports"
-
-let g:yankring_replace_n_pkey = '<m-p>'
-let g:yankring_replace_n_nkey = '<m-n>'
-let g:yankring_paste_using_g = 0
-
-" let g:multi_cursor_use_default_mapping = 0
-let g:multi_cursor_start_key='<F2>'
-let g:multi_cursor_start_word_key='g<F2>'
-
-let g:ackprg = 'ag --vimgrep'
-
-let g:ctrlp_map = '<leader>F'
-let g:ctrlp_cmd = 'CtrlPMixed'
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline_theme = 'gruvbox'
+" onedark molokai
 
 let g:limelight_default_coefficient = 0.7
 let g:limelight_priority = -1
 
-let g:delimitMate_expand_inside_quotes = 1
-let g:delimitMate_jump_expansion = 1
-let g:delimitMate_expand_cr = 2
-let g:delimitMate_expand_space = 1
-let g:delimitMate_nesting_quotes = ['"','`']
-augroup DelimitMe
-    autocmd!
-    au FileType python let b:delimitMate_nesting_quotes = ['"']
-    au FileType markdown let b:delimitMate_nesting_quotes = ['`']
-augroup END
+let g:Illuminate_ftblacklist = ['nerdtree', 'ctrlp', 'Mundo']
+let g:Illuminate_delay = 250
+" }}}
 
-" { dirty workaround to make DelimitMate and YouCompleteMe work together
-imap <silent> <BS> <C-R>=pumvisible() ? "\<C-y>" : ""<CR><Plug>delimitMateBS
-imap <expr> <CR> pumvisible() ? "\<C-Y>" : "<Plug>delimitMateCR"
-" }
+" Utils {{{
+let g:gutentags_ctags_exclude = ['.mypy_cache']
+let g:gutentags_project_root = ['__init__.py']
 
-let g:tagbar_ctags_bin = "/opt/bin/ctags"
-" Add support for markdown files in tagbar.
-" https://github.com/jszakmeister/markdown2ctags
+let g:gitgutter_map_keys = 0
+let g:gitgutter_override_sign_column_highlight = 0
+
+let g:ale_set_highlights = 1
+let g:ale_sign_error = '' "  ⤫
+let g:ale_sign_warning = '' " ⚠    
+let g:ale_lint_on_text_changed = 'always'
+let g:ale_fixers = { 'python': 'autopep8', 'sh': 'shfmt'}
+let g:ale_python_mypy_options = '--ignore-missing-imports'
+let g:ale_python_pylint_options = '--disable=C'
+let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
+
+let g:suda#prefix = 'sudo:'
+call suda#init('sudo:*,sudo:*/*')
+
+let g:windowswap_map_keys = 0
+
+let g:peekaboo_compact = 0
+let g:peekaboo_window = 'vert bo 30 new'
+
+" Tagbar {{{
+let g:tagbar_ctags_bin = '/opt/bin/ctags'
 let g:tagbar_type_markdown= {
     \ 'ctagstype': 'markdown',
     \ 'ctagsbin' : '/Users/laurenzi/.vim/mystuff/markdown2ctags/markdown2ctags.py',
@@ -168,8 +280,6 @@ let g:tagbar_type_markdown= {
     \ },
     \ 'sort': 0,
 \ }
-
-" PDB tags
 let g:tagbar_type_PDB= {
     \ 'ctagstype': 'PDB',
     \ 'ctagsargs' : '-f - --sort=yes',
@@ -177,181 +287,249 @@ let g:tagbar_type_PDB= {
         \ 'a:atom',
     \ ],
 \ }
+" }}}
+" }}}
 
-function! FzyCommand(choice_command, vim_command)
-  try
-    let output = system(a:choice_command . " | fzy ")
-  catch /Vim:Interrupt/
-    " Swallow errors from ^C, allow redraw! below
-  endtry
-  redraw!
-  if v:shell_error == 0 && !empty(output)
-    exec a:vim_command . ' ' . output
-  endif
-endfunction
+" Editing Tools {{{
+let g:delimitMate_expand_inside_quotes = 0
+let g:delimitMate_jump_expansion = 1
+let g:delimitMate_expand_cr = 2
+let g:delimitMate_expand_space = 1
+let g:delimitMate_nesting_quotes = ['"','`']
+" }}}
 
-function! VimuxSlime()
+" }}}
+
+" Functions {{{
+
+function! VimuxSlime() abort
   let l:text = @v
-  let l:text = substitute(l:text, "\n$", "", "")
+  let l:text = substitute(l:text, '\n$', '', '')
   call VimuxSendText(l:text)
-  call VimuxSendKeys("Enter")
+  call VimuxSendKeys('Enter')
 endfunction
 
-" MyCommands
+function! WinZoomToggle() abort
+    if ! exists('w:WinZoomIsZoomed') 
+      let w:WinZoomIsZoomed = 0
+    endif
+    if w:WinZoomIsZoomed == 0
+      let w:WinZoomOldWidth = winwidth(0)
+      let w:WinZoomOldHeight = winheight(0)
+      wincmd _
+      wincmd |
+      let w:WinZoomIsZoomed = 1
+    elseif w:WinZoomIsZoomed == 1
+      execute 'resize ' . w:WinZoomOldHeight
+      execute 'vertical resize ' . w:WinZoomOldWidth
+      let w:WinZoomIsZoomed = 0
+   endif
+endfunction
+
+" }}}
+
+" Commands {{{
+
 command! -nargs=1 -complete=file   SudoEdit  edit  sudo:<args>
 command! -nargs=1 -complete=buffer SudoWrite write sudo:<args>
 
 command! CD lcd %:p:h
 
-augroup ScienceBitch
-    autocmd!
-    autocmd BufNewFile,BufRead *.pdb        set filetype=PDB
-    autocmd BufNewFile,BufRead *.aln        set filetype=clustal
-    autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=asta
-augroup END
+command! LCMenu call LanguageClient_contextMenu()
 
-augroup DistractionFree
+command! FollowSymLink execute "file " . resolve(expand('%')) | edit
+
+augroup MyAutoCommands
     autocmd!
+    
+    " Science
+    autocmd BufNewFile,BufRead *.pdb set filetype=PDB
+    autocmd BufNewFile,BufRead *.aln set filetype=clustal
+    autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=fasta
+
+    " Distraction Free
     autocmd User GoyoEnter Limelight
     autocmd User GoyoLeave Limelight!
+    
+    " Competions Preview
+    " autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
+    
+    " Set SpellCheck
+    " autocmd FileType latex,tex,markdown,txt setlocal spell
+
+    " Line Wrapping
+    " autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
+
+    " DelimitMate
+    autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+    autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
+
+    " syntax filetype
+    autocmd BufNewFile,BufRead *.coffee set filetype=coffee
+
+    " Ncm2
+    " autocmd BufEnter * call ncm2#enable_for_buffer()
+    " autocmd TextChangedI * call ncm2#auto_trigger()
+
 augroup END
 
-" Settings
-syntax on                       " enable syntax highlighting
-set termguicolors               " enable gui colors for terminal TODO: set only if terminal supports it
-colorscheme chance-of-storm     " awesome colorscheme
-" colorscheme molokai
-highlight SignColumn guibg=#181c20
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" " True Colors
+" }}}
+
+" Settings {{{
+let g:python3_host_prog = '/Users/laurenzi/venv/bin/python'
+
+syntax on                " enable syntax highlighting
+set termguicolors        " enable gui colors for terminal
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" 
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-set encoding=utf-8              " enconding
-set guifont=Menlo\ Regular\ Nerd\ Font\ Complete:h12      " select font for gui
+                         " Failsafe to enable True Colors in tmux; is it really required?
+set encoding=utf-8       " enconding
+set guifont=Menlo\ Regular\ Nerd\ Font\ Complete:h12 " select font for gui
 set modeline             " enable vim modelines
-set ttymouse=xterm2
 set mouse=a              " enable mouse for all modes
-set noeb vb t_vb=		 " remove all errors; 'set visualbell noeb' to revert
+set noerrorbells vb t_vb=	" remove all errors; 'set visualbell noeb' to revert
 set history=1000         " remember more commands and search history
 set undolevels=1000      " use many muchos levels of undo
 set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminal's title
-set nobackup             " don't write .swp files
-set noswapfile
-set nowrap        " don't wrap lines
-set tabstop=4     " a tab is four spaces
-set expandtab     " expand tab to count tabstop n° of spaces
+set nobackup             " no backup file 
+set noswapfile           " don't write .swp files
+set undofile             " set permanent undo (default `undodir = ~/.local/share/nvim/undo/` 
+set nowrap               " don't wrap lines
+set tabstop=4            " a tab is four spaces
+let &shiftwidth=&tabstop " number of spaces to use for autoindenting
+set shiftround           " use multiple of shiftwidth when indenting with '<' and '>'
+set expandtab            " expand tab to count tabstop n° of spaces
 set backspace=indent,eol,start
-                  " allow backspacing over everything in insert mode
-set autoindent    " always set autoindenting on
-set copyindent    " copy the previous indentation on autoindenting
-set number        " always show line numbers
-set shiftwidth=4  " number of spaces to use for autoindenting
-set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
-set showmatch     " set show matching parenthesis
-set ignorecase    " ignore case when searching
-set smartcase     " ignore case if search pattern is all lowercase,
-                  "    case-sensitive otherwise
-set smarttab      " insert tabs on the start of a line according to
-                  "    shiftwidth, not tabstop
-set hlsearch      " highlight search terms
-set incsearch     " show search matches as you type
-set hidden        " allow modified buffers to be hidden 
+                         " allow backspacing over everything in insert mode
+set autoindent           " always set autoindenting on
+set copyindent           " copy the previous indentation on autoindenting
+set number               " always show line numbers
+set showmatch            " show matching parenthesis with a quick jump
+set ignorecase           " ignore case when searching with / or ?
+set smartcase            " ignore case if search pattern is all lowercase,
+                         "    case-sensitive otherwise
+set smarttab             " insert tabs on the start of a line according to
+                         "    shiftwidth, not tabstop
+set hlsearch             " highlight search terms
+set incsearch            " show search matches as you type
+set hidden               " allow modified buffers to be hidden 
 set wildmode=longest,list:longest,full
-set wildmenu      " diplay command completion listing and choice menu
-" set shell=bash\ -l    " select shell as login bash
-set shell=zsh\ -l
-set shellcmdflag=-c
-set clipboard=unnamed " copy to system clipboard
+set wildmenu             " diplay command completion listing and choice menu
+set wildignorecase       " ignore case command completion menu 
+set shell=zsh\ --login   " default shell (iteractive)
+set shellcmdflag=-c      " default shell command for non interactive invocations
+"set clipboard=unnamed   " send yanks to system clipboard (buggy with v-block)
+set showcmd              " show key spressed in lower-right corner
+set sidescroll=1         " smooth side scrolling
+set conceallevel=2       " conceal marked text
+set completeopt=menuone,noinsert,noselect,preview
+                         " set the behavior of the completion menu 
+set fillchars=vert:┃,fold:\ 
+                         " set various fillchars; in this case removes clobbering signs from folds ('\ ')
+set inccommand=split     " real time preview of substitution commands
+set noshowmode           " Do not show -- MODE -- in cmdline"
+set cmdheight=1          " Height of the command line
+set updatetime=250       " time required to update CursorHold hook
+set shortmess+=c         " remove 'match x of y' echoing line
 set ttyfast
-set showcmd
-set sidescroll=1
-"set completeopt+="menuone,preview,noinsert,noselect"
+" }}}
 
-" set spellceck
-augroup MySpellFileTypes
-    autocmd!
-    autocmd FileType latex,tex,markdown,txt setlocal spell
-augroup END
+" Colors {{{
+colorscheme gruvbox 
+set background=dark
 
-let &t_Us = "\e[4m"
-let &t_Ue = "\e[0m"
+" Colorscheme Overrides {{{
+hi! link SpecialKey GruvboxBlue
+hi! link pythonDot GruvboxRed
+"}}}
+
+" Highlights {{{
+" transparent bg {{{
+" hi Normal guibg=NONE
+" hi SignColumn guibg=NONE
+" hi VertSplit guibg=NONE
+" }}}
+
+" Spell {{{
 hi clear SpellBad
 hi clear SpellCap
 hi clear SpellLocal
 hi clear SpellRare
-hi SpellBad   cterm=underline ctermbg=red        ctermfg=white gui=undercurl   guisp=red 
-hi SpellLocal cterm=underline ctermbg=208        ctermfg=white gui=undercurl   guisp=#ff8700
-hi SpellCap   cterm=underline ctermbg=magenta    ctermfg=white gui=undercurl   guisp=lightblue
-hi SpellRare  cterm=underline ctermbg=darkyellow ctermfg=white gui=undercurl   guisp=darkyellow
+" Works well with iTerm2 underline color
+hi SpellBad   gui=underline     " guifg=red 
+hi SpellLocal gui=underline     " guifg=yellow
+hi SpellCap   gui=underline     " guifg=orange
+hi SpellRare  gui=underline     " guifg=darkyellow
+" }}}
 
-" set highlight groups for ALE
-highlight ALEError        guibg=#890303 " dark red
-highlight ALEWarning      guibg=#8e4c02 " dark orange/yellow
-highlight ALEInfo         guibg=#444444 " dark gray
-highlight ALEStyleError   guibg=#890375 " dark purple
-highlight ALEStyleWarning guibg=#033e89 " dark blue
+" ALE {{{
+hi ALEInfo                  gui=underline
+hi ALEError                 gui=underline
+hi ALEWarning               gui=underline
+hi ALEStyleError            gui=underline
+hi ALEStyleWarning          gui=underline
+hi link ALEInfoSign         GruvboxYellow
+hi link ALEErrorSign        GruvboxRed
+hi link ALEWarningSign      GruvboxOrange
+hi link ALEStyleErrorSign   GruvboxAqua
+hi link ALEStyleWarningSign GruvboxBlue
+" }}}
 
-highlight ALEErrorSign        guifg=#890303 " dark red
-highlight ALEWarningSign      guifg=#8e4c02 " dark orange/yellow
-highlight ALEInfoSign         guifg=#444444 " dark gray
-highlight ALEStyleErrorSign   guifg=#890375 " dark purple
-highlight ALEStyleWarningSign guifg=#033e89 " dark blue
+" }}}
+" }}}
 
-" make comments italic 
-let &t_ZH="\e[3m"   
-let &t_ZR="\e[23m"
-highlight Comment cterm=italic, gui=italic
+" Mappings {{{
+let mapleader = ','
 
-" change cursor shape in Insert, Replace, Normal
-if exists('$ITERM_PROFILE')
-    if exists('$TMUX')
-        let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-        let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-        let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-    else
-        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-        let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-    endif
-endif
+" fast [e]dit and [s]ourcing .[v]imrc
+nnoremap <leader>ev :tabedit $MYVIMRC<CR>
+nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
-" LineNumbers colour
-" 29465f 566878 688197 907d01
-hi LineNr ctermfg=11 guifg=#325472
+" Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
+" C-l escape delimiters, C-Space invoke completion,
+" C-U C-D scroll Up/Down
+" let g:ulti_expand_res = 0
+" function! Ulti_Expand_and_getRes() abort
+"   call UltiSnips#ExpandSnippet()
+"   return g:ulti_expand_res
+" endfunction
 
-" fix screen arrowkeys
-if &term =~ '^screen'
-    " tmux will send xterm-style keys when its xterm-keys option is on
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xRight>=\e[1;*C"
-    execute "set <xLeft>=\e[1;*D"
-endif
+" imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : "\<C-y>" : delimitMate#ExpandReturn()<CR>
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
+" imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
+" inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
+" inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
+" imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
+imap <C-l> <Plug>delimitMateS-Tab
 
-" mappings
-let mapleader = ","
-
-" fast edit and sourcing .vimrc
-nnoremap <leader>ev :e $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
-
-" surround word with "
-noremap <leader>" viw<Esc>a"<Esc>bi"<Esc>lel
+" Laguage Client
+" [k] Hover, [d] Definition, [m] Menu, [a] Code ActiON, [r] RenaME, [u] References,
+" [f] Format/Range Formatting, [S] Document Symbol, [s] Workspace Symbol,
+" [h] Highlight, [H] Clear Highlight, [p] Signature Help, [e] Explain Error
+" nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent><leader>lcd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent><leader>lcm :call LanguageClient_contextMenu()<CR>
+" nnoremap <silent><leader>lca :call LanguageClient#textDocument_codeAction()<CR>
+" nnoremap <silent><leader>lcr :call LanguageClient#textDocument_rename()<CR>
+" nnoremap <silent><leader>lcu :call LanguageClient#textDocument_references()<CR>
+" nnoremap <silent><leader>lcf :call LanguageClient#textDocument_formatting()<CR>
+" xnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
+" nnoremap <silent><leader>lcs :call LanguageClient#textDocument_documentSymbol()<CR>
+" nnoremap <silent><leader>lcS :call LanguageClient#workspace_symbol()<CR>
+" nnoremap <silent><leader>lch :call LanguageClient#textDocument_documentHighlight()<CR>
+" nnoremap <silent><leader>lcH :call LanguageClient#clearDocumentHighlight()<CR>
+" nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<CR>
+" nnoremap <silent><leader>lce :call LanguageClient#explainErrorAtPoint()<CR>
 
 " remap <Esc> to jk in insert mode
-inoremap jk <ESC>
-inoremap kj <ESC>
+inoremap jk <Esc>
+inoremap kj <Esc>
 
-" open new tab with nt
-nnoremap <leader>tn :tabnew<cr>
+" toggle [r]elative line [n]umbers
+nnoremap <silent><leader>rn :set invrelativenumber<CR>
 
-" move between tabs (next / previous)
-" nnoremap <tab> :tabnext<CR> 
-" nnoremap <s-tab> :tabprev<CR>
-
-" toggle line numbers
-" nnoremap <C-N><C-N> :set invnumber<cr>
-
-" move around windows
+" move around and resize windows
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -360,67 +538,109 @@ nnoremap <m->> <C-W>>
 nnoremap <m-<> <C-W><
 nnoremap <m-+> <C-W>+
 nnoremap <m--> <C-W>-
+nnoremap <m-z> :call WinZoomToggle()<CR>
+
+" Vertical/Horizontal Scrolling
+nnoremap <m-l> zl
+nnoremap <m-h> zh
+nnoremap <m-j> <C-E>
+nnoremap <m-k> <C-Y>
 
 " close window/buffer
+nnoremap <leader>q :close<CR>
 nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
-nnoremap <leader>q :q<CR>
+nnoremap <leader>bo :%bd \| e# \| bd #<CR>
 
-" save buffer (normal or insert)
+" switch/open buffers
+nnoremap <silent><m-n> :bnext<CR>
+nnoremap <silent><m-p> :bprev<CR>
+nnoremap gbb :ls<CR>:b 
+nnoremap gbs :ls<CR>:sb 
+nnoremap gbv :ls<CR>:vertical sb 
+nnoremap gbt :ls<CR>:tab sb 
+nnoremap gbd :ls<CR>:bdelete 
+
+" [s]ave buffer (normal or insert)
 nnoremap <leader>s :w<cr>
-inoremap <leader>s <C-c>:w<cr>
+" inoremap <leader>s <C-c>:w<cr>
 
 " copy to system clipboard
 " vnoremap <C-c> :w !pbcopy<CR><CR>
 " noremap <C-v> :r !pbpaste<CR><CR>
 
-" switch between buffers
-nnoremap gb :bnext<CR>
-nnoremap gB :bprev<CR>
+" redraw screen and c[l]ear highlights
+nnoremap <silent><leader>l :noh<CR>:redraw!<CR>
 
-" YCM Docs
-" nnoremap K :YcmCompleter GetDoc<CR>
-
-" undisplay highlighting
-nnoremap <leader>h :noh<CR>
-
-" create vertical split editing a new buffer
-nnoremap <leader>vn :rightbelow :vnew<CR><C-W>L
-
-" toggle tagbar
-nnoremap <F8> :TagbarToggle<CR>
-
-" Netrwd 
-" nnoremap <leader>le :topleft :30Lex<CR>
-" nnoremap <leader>e :Explore<CR>
-
-" NERDTree
-nnoremap <leader>n :NERDTreeToggle<CR>
-nnoremap <leader>nf :NERDTreeFind<CR>
-
-" Folds
-nnoremap <leader>zi :setlocal foldmethod=indent<CR>
-nnoremap <leader>zm :setlocal foldmethod=manual<CR>
-
-" Toggle Gundo
-nnoremap <leader>gu :GundoToggle<CR>
-
-" Toggle YankRing
-nnoremap <leader>yr :YRShow<CR>
-
-" reload buffer
+" [re]load buffer
 nnoremap <leader>re :e%<CR>
 
-" edit new buffer
+" [e]dit, [v]ertical, horizontal [s]plit or [t]ab a [n]ew buffer
 nnoremap <leader>en :enew<CR>
+nnoremap <leader>vn :rightbelow vnew<CR>
+nnoremap <leader>sn :belowright new<CR>
+nnoremap <leader>tn :tabnew<cr>
 
-" FuzzyFinder
-nnoremap <leader>f :call FzyCommand("find . -type f", ":e")<cr>
-nnoremap <leader>fv :call FzyCommand("find . -type f", ":vs")<cr>
-nnoremap <leader>fs :call FzyCommand("find . -type f", ":sp")<cr>
+" Edit or select [R/r]egister
+nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
+nnoremap <leader>R :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
+
+" Easier increase/decrease indents
+xnoremap > >gv
+xnoremap < <gv
+
+" select [a]ll
+nnoremap <leader>a ggVG
+
+" [y]ank to clipnoard
+nnoremap <leader>y "+y
+xnoremap <leader>y "+y
+
+" [p]aste from clipboard
+nnoremap <leader>p "+p
+xnoremap <leader>p "+p
+
+" Qui[c]kFix [O]pen, [N]ext, [P]revious, [C]lose
+nnoremap <leader>co :copen<CR>
+nnoremap <leader>cn :cnext<CR>
+nnoremap <leader>cp :cNext<CR>
+nnoremap <leader>cc :cclose<CR>
+
+" Location[L]ist [O]pen, [N]ext, [P]revious, [C]lose
+nnoremap <leader>lo :lopen<CR>
+nnoremap <leader>ln :lnext<CR>
+nnoremap <leader>lp :lNext<CR>
+nnoremap <leader>lc :lclose<CR>
+
+" WindowSwap
+nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
+ 
+" toggle tagbar
+nnoremap <silent><F8> :TagbarToggle<CR>
+
+" [N]ERDTree
+nnoremap <silent><leader>nt :NERDTreeToggle<CR>
+nnoremap <silent><leader>nf :NERDTreeFind<CR>
+
+" Toggle [Mu]ndo
+nnoremap <silent><leader>mu :MundoToggle<CR>
+
+" [F]uzzy [m]ost recent, [b]uffers, [l]ines, [h]elptags
 nnoremap <leader>fm :CtrlPMRUFiles<CR>
 nnoremap <leader>fb :CtrlPBuffer<CR>
+nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>fh :Helptags<CR>
+
+" Marks
+nnoremap <leader>m :Marks<CR>
 
 "Vimux
-vnoremap <leader>vs "vy :call VimuxSlime()<CR>
+xnoremap <leader>vs "vy :call VimuxSlime()<CR>
 nnoremap <leader>vp :VimuxPromptCommand<CR>
+
+" EasyAlign
+xmap ga <Plug>(EasyAlign)
+
+" }}}
+
+" vim: ts=2 sw=2 fdm=marker
