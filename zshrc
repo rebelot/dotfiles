@@ -56,11 +56,10 @@ zplugin ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools
 zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zplugin load hlissner/zsh-autopair
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
-# eval "`pip completion --zsh`"
 zplugin load bric3/oh-my-zsh-git
 zplugin load srijanshetty/zsh-pandoc-completion
-zplugin ice blockf; zplugin load zsh-users/zsh-completions
-zplugin load zdharma/fast-syntax-highlighting
+zplugin ice blockf; zplugin light zsh-users/zsh-completions
+zplugin light zdharma/fast-syntax-highlighting
 # }}}
 
 # plugin Opts {{{
