@@ -5,7 +5,7 @@
 "   ██║██║╚██╗██║██║   ██║   ╚██╗ ██╔╝██║██║╚██╔╝██║
 "   ██║██║ ╚████║██║   ██║██╗ ╚████╔╝ ██║██║ ╚═╝ ██║
 "   ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
-                                                
+
                             " be iMproved, required
 
 " Plugins {{{
@@ -47,19 +47,15 @@ Plug 'vim-python/python-syntax'
 Plug 'tmhedberg/SimpylFold'
 Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Konfekt/FastFold'
-" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
-" Plug 'jaxbot/semantic-highlight.vim'
 " }}}
 
 " File, Buffer Browsers {{{
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'scrooloose/nerdtree'
 Plug 'ivalkeen/nerdtree-execute'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
 Plug 'mileszs/ack.vim'
-Plug 'jlanzarotta/bufexplorer'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 " }}}
@@ -85,6 +81,7 @@ Plug 'morhetz/gruvbox'
 
 " Utils {{{  
 Plug 'w0rp/ale'
+Plug 'neomake/neomake'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -92,15 +89,13 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 Plug 'junegunn/vim-peekaboo'
-Plug 'vim-utils/vim-man', {'on': 'Man'}
 Plug 'chrisbra/vim-diff-enhanced'
 Plug 'kassio/neoterm'
 Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
-Plug 'skywind3000/vim-preview', {'on': 'Preview'}
 Plug 'rebelot/nvim-historian', {'branch': 'devel'}
-Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
+" Plug 'andymass/vim-matchup'
 " Plug 'mhinz/vim-signify'
 " }}}
 
@@ -166,9 +161,7 @@ let g:LanguageClient_serverCommands = {
         \ 'c': ['cquery', '--language-server'],
         \ 'python': ['python', '-m', 'pyls'],
         \ 'julia': ['/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
-        \       using StaticLint;
-        \       using DocumentFormat;
-        \       using LanguageServer;
+        \       import LanguageServer;
         \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
         \       server.runlinter = true;
         \       run(server);
@@ -182,6 +175,7 @@ let g:default_julia_version = '1.0'
 
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'skim'
+let g:vimtex_quickfix_autoclose_after_keystrokes = 10
 " vimtex ncm2 register source in
 " ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
 
@@ -206,15 +200,11 @@ let g:fastfold_fold_command_suffixes = ['x', 'X', 'a', 'A', 'o', 'O', 'c', 'C', 
 " let g:sh_fold_enabled = 7
 " let g:markdown_folding = 0
 
-" let g:semshi#error_sign = 0
-" let g:semshi#always_update_all_highlights = 1
-" let g:semshi#simplify_markup = 0
+let g:tex_flavor = 'latex'
+
 " }}}
 
 " File, Buffer, Browsers {{{
-call denite#custom#var('file/rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
 
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMinimalUI = 1
@@ -242,13 +232,13 @@ let g:airline#extensions#csv#column_display = 'Name'
 let g:airline_powerline_fonts = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_theme = 'gruvbox'
-" onedark molokai
 
 let g:limelight_default_coefficient = 0.7
 let g:limelight_priority = -1
 
 let g:Illuminate_ftblacklist = ['nerdtree', 'ctrlp', 'Mundo']
 let g:Illuminate_delay = 250
+
 " }}}
 
 " Utils {{{
@@ -353,36 +343,36 @@ command! LCMenu call LanguageClient_contextMenu()
 command! FollowSymLink execute "file " . resolve(expand('%')) | edit
 
 augroup MyAutoCommands
-    autocmd!
-    
-    " Science
-    autocmd BufNewFile,BufRead *.pdb set filetype=PDB
-    autocmd BufNewFile,BufRead *.aln set filetype=clustal
-    autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=fasta
+  autocmd!
+  
+  " Science
+  autocmd BufNewFile,BufRead *.pdb set filetype=PDB
+  autocmd BufNewFile,BufRead *.aln set filetype=clustal
+  autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=fasta
 
-    " Distraction Free
-    autocmd User GoyoEnter Limelight
-    autocmd User GoyoLeave Limelight!
-    
-    " Competions Preview
-    autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
-    
-    " Set SpellCheck
-    " autocmd FileType latex,tex,markdown,txt setlocal spell
+  " Distraction Free
+  autocmd User GoyoEnter Limelight
+  autocmd User GoyoLeave Limelight!
+  
+  " Competions Preview
+  autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
+  
+  " Set SpellCheck
+  " autocmd FileType latex,tex,markdown,txt setlocal spell
 
-    " Line Wrapping
-    autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
+  " Line Wrapping
+  " autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
 
-    " DelimitMate
-    autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
-    autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
+  " DelimitMate
+  autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+  autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
 
-    " syntax filetype
-    autocmd BufNewFile,BufRead *.coffee set filetype=coffee
+  " syntax filetype
+  autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
-    " Ncm2
-    autocmd BufEnter * call ncm2#enable_for_buffer()
-    autocmd TextChangedI * call ncm2#auto_trigger()
+  " Ncm2
+  autocmd BufEnter * call ncm2#enable_for_buffer()
+  autocmd TextChangedI * call ncm2#auto_trigger()
 
 augroup END
 
@@ -493,6 +483,7 @@ hi link ALEStyleWarningSign GruvboxBlue
 
 " Mappings {{{
 let mapleader = ','
+noremap <Space> :
 
 " fast [e]dit and [s]ourcing .[v]imrc
 nnoremap <leader>ev :tabedit $MYVIMRC<CR>
@@ -562,7 +553,7 @@ nnoremap <m-k> <C-Y>
 nnoremap <leader>q :close<CR>
 nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
-nnoremap <leader>bo :%bd \| e# \| bd #<CR>
+nnoremap <leader>bo :%bd <bar> e# <bar> bd #<CR>
 
 " switch/open buffers
 nnoremap <silent><m-n> :bnext<CR>
@@ -623,6 +614,9 @@ nnoremap <leader>lo :lopen<CR>
 nnoremap <leader>ln :lnext<CR>
 nnoremap <leader>lp :lNext<CR>
 nnoremap <leader>lc :lclose<CR>
+
+" Text Formatting
+nnoremap <leader>gq vipgq
 
 " WindowSwap
 nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>

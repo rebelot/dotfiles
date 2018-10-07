@@ -427,7 +427,6 @@ set completeopt=menuone,noinsert,noselect,preview
                          " set the behavior of the completion menu 
 set fillchars=vert:┃,fold:\ 
                          " set various fillchars; in this case removes clobbering signs from folds ('\ ')
-set inccommand=split     " real time preview of substitution commands
 set noshowmode           " Do not show -- MODE -- in cmdline"
 set cmdheight=1          " Height of the command line
 set updatetime=250       " time required to update CursorHold hook

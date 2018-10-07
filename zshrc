@@ -54,8 +54,9 @@ zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.co
 zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
+zplugin load hlissner/zsh-autopair
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
-zplugin ice svn; zplugin snippet OMZ::plugins/catimg
+# eval "`pip completion --zsh`"
 zplugin load bric3/oh-my-zsh-git
 zplugin load srijanshetty/zsh-pandoc-completion
 zplugin ice blockf; zplugin load zsh-users/zsh-completions
@@ -199,7 +200,7 @@ function google {
 # see $ZSH/aliases.zsh
 
 alias juliapro=/Applications/JuliaPro-0.6.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
-alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
+# alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
 alias licmoe="lmutil lmstat -c /Applications/moe2018/license.dat -a"
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
 alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
@@ -210,6 +211,7 @@ alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
+alias gnuplot="/Applications/Gnuplot.app/Contents/Resources/bin/gnuplot-run.sh"
 # }}}
 
 # compinit / compdef {{{
