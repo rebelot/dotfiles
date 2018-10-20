@@ -161,7 +161,7 @@ let g:LanguageClient_serverCommands = {
         \ 'c': ['cquery', '--language-server'],
         \ 'python': ['python', '-m', 'pyls'],
         \ 'julia': ['/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
-        \       import LanguageServer;
+        \       using LanguageServer;
         \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
         \       server.runlinter = true;
         \       run(server);
@@ -349,6 +349,7 @@ augroup MyAutoCommands
   autocmd BufNewFile,BufRead *.pdb set filetype=PDB
   autocmd BufNewFile,BufRead *.aln set filetype=clustal
   autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=fasta
+  autocmd BufNewFile,BufRead *.msj set filetype=config
 
   " Distraction Free
   autocmd User GoyoEnter Limelight
@@ -435,6 +436,7 @@ set noshowmode           " Do not show -- MODE -- in cmdline"
 set cmdheight=1          " Height of the command line
 set updatetime=250       " time required to update CursorHold hook
 set shortmess+=c         " remove 'match x of y' echoing line
+" set printdevice=OLIVETTI_d_COPIA4500MF_plus__2_
 " }}}
 
 " Colors {{{
@@ -526,8 +528,8 @@ nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<C
 nnoremap <silent><leader>lce :call LanguageClient#explainErrorAtPoint()<CR>
 
 " remap <Esc> to jk in insert mode
-inoremap jk <Esc>
-inoremap kj <Esc>
+" inoremap jk <Esc>
+" inoremap kj <Esc>
 
 " toggle [r]elative line [n]umbers
 nnoremap <silent><leader>rn :set invrelativenumber<CR>
@@ -617,6 +619,9 @@ nnoremap <leader>lc :lclose<CR>
 
 " Text Formatting
 nnoremap <leader>gq vipgq
+
+" Search visual selection
+xnoremap g/ y/\V<C-r>=escape(@",'/\')<CR><CR>
 
 " WindowSwap
 nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
