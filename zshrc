@@ -54,6 +54,7 @@ zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.co
 zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
+zplugin ice as"completion"; zplugin snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
 zplugin load hlissner/zsh-autopair
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin load bric3/oh-my-zsh-git
@@ -158,9 +159,9 @@ function tmx {
 
 function licmae {
     if [[ $HOST =~ elenuar ]]; then
-         /opt/schrodinger2018-2/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/
+         /opt/schrodinger2018-3/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/
     else 
-        ssh $elenuar "/opt/schrodinger2018-2/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/"
+        ssh $elenuar "/opt/schrodinger2018-3/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/"
     fi
 }
 
@@ -169,7 +170,7 @@ function chunk {
     chunkwm &
 }
 
-function toggle_desktop_icons {
+function deskhide {
     local state
     state=$(defaults read com.apple.finder CreateDesktop)
     if $state; then
@@ -198,7 +199,7 @@ function google {
 # Aliases {{{
 # see $ZSH/aliases.zsh
 
-alias juliapro=/Applications/JuliaPro-0.6.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
+alias juliapro=/Applications/JuliaPro-1.0.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
 # alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
 alias licmoe="lmutil lmstat -c /Applications/moe2018/license.dat -a"
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
@@ -210,7 +211,6 @@ alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
-alias gnuplot="/Applications/Gnuplot.app/Contents/Resources/bin/gnuplot-run.sh"
 # }}}
 
 # compinit / compdef {{{
