@@ -70,8 +70,10 @@ alias el="exa -l"
 alias t='tail -f'
 # alias vim=nvim
 alias edit=nvim # Vim Only!
-alias git=hub
 
+# git
+alias git=hub
+alias gr='cd $(git rev-parse --show-toplevel)'
 # alias whereami=display_info
 
 # alias rm='rm -i'
