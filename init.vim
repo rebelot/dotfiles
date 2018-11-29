@@ -47,6 +47,10 @@ Plug 'vim-python/python-syntax'
 Plug 'tmhedberg/SimpylFold'
 Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Konfekt/FastFold'
+Plug 'jaredsampson/vim-pymol'
+" Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug '/opt/plumed-2.4.3/lib/plumed/vim'
 " }}}
 
 " File, Buffer Browsers {{{
@@ -63,11 +67,11 @@ Plug 'junegunn/fzf.vim'
 " Colors {{{
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'morhetz/gruvbox'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'machakann/vim-highlightedyank'
-Plug 'RRethy/vim-illuminate'
-Plug 'morhetz/gruvbox'
+" Plug 'RRethy/vim-illuminate'
 " Plug 'andreypopp/vim-colors-plain'
 " Plug 'lifepillar/vim-solarized8'
 " Plug 'ajmwagar/vim-deus'
@@ -81,7 +85,6 @@ Plug 'morhetz/gruvbox'
 
 " Utils {{{  
 Plug 'w0rp/ale'
-Plug 'neomake/neomake'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -95,7 +98,8 @@ Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'rebelot/nvim-historian', {'branch': 'devel'}
-" Plug 'andymass/vim-matchup'
+Plug 'neomake/neomake'
+Plug 'andymass/vim-matchup'
 " Plug 'mhinz/vim-signify'
 " }}}
 
@@ -116,7 +120,7 @@ Plug 'chrisbra/NrrwRgn'
 " Tmux {{{
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
-Plug 'tmux-plugins/vim-tmux-focus-events'
+" Plug 'tmux-plugins/vim-tmux-focus-events'
 " }}}
 
 call plug#end()
@@ -160,7 +164,7 @@ let g:LanguageClient_serverCommands = {
         \ 'r': ['R', '--quiet', '--slave', '-e', 'languageserver::run()'],
         \ 'c': ['cquery', '--language-server'],
         \ 'python': ['python', '-m', 'pyls'],
-        \ 'julia': ['/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
+        \ 'julia': ['julia', '--startup-file=no', '--history-file=no', '-e', '
         \       using LanguageServer;
         \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
         \       server.runlinter = true;
@@ -175,7 +179,10 @@ let g:default_julia_version = '1.0'
 
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'skim'
-let g:vimtex_quickfix_autoclose_after_keystrokes = 10
+let g:vimtex_quickfix_autoclose_after_keystrokes = 0
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_fold_enabled = 0
+let g:vimtex_matchparen_enabled = 0
 " vimtex ncm2 register source in
 " ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
 
@@ -224,6 +231,8 @@ let g:ranger_map_keys = 0
 let g:gruvbox_italic = 1
 let g:gruvbox_sign_column = 'bg0'
 
+" let g:airline_focuslost_inactive = 0
+let g:airline#extensions#neomake#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
@@ -253,6 +262,7 @@ let g:ale_sign_error = '' "  ⤫
 let g:ale_sign_warning = '' " ⚠    
 let g:ale_lint_on_text_changed = 'always'
 let g:ale_fixers = { 'python': 'autopep8', 'sh': 'shfmt'}
+let g:ale_linters = {'python': ['flake8', 'pylint']}
 let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_python_pylint_options = '--disable=C'
 let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
@@ -267,6 +277,9 @@ let g:windowswap_map_keys = 0
 let g:peekaboo_compact = 0
 let g:peekaboo_window = 'vert bo 30 new'
 
+" let g:neomake_logfile = '/tmp/neomake.log'
+
+let g:matchup_override_vimtex = 1
 " Tagbar {{{
 let g:tagbar_ctags_bin = '/opt/bin/ctags'
 let g:tagbar_type_markdown= {
@@ -342,8 +355,13 @@ command! LCMenu call LanguageClient_contextMenu()
 
 command! FollowSymLink execute "file " . resolve(expand('%')) | edit
 
+command! Reload source $MYVIMRC | noh
+
 augroup MyAutoCommands
   autocmd!
+
+  " zsh!
+  autocmd vimenter * let &shell='/opt/local/bin/zsh -i'
   
   " Science
   autocmd BufNewFile,BufRead *.pdb set filetype=PDB
@@ -359,7 +377,7 @@ augroup MyAutoCommands
   autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
   
   " Set SpellCheck
-  " autocmd FileType latex,tex,markdown,txt setlocal spell
+  autocmd FileType latex,tex,markdown,txt setlocal spell
 
   " Line Wrapping
   " autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
@@ -374,13 +392,29 @@ augroup MyAutoCommands
   " Ncm2
   autocmd BufEnter * call ncm2#enable_for_buffer()
   autocmd TextChangedI * call ncm2#auto_trigger()
+  au User Ncm2Plugin call ncm2#register_source({
+        \ 'name' : 'plumed',
+        \ 'priority': 9, 
+        \ 'subscope_enable': 1,
+        \ 'scope': ['plumed'],
+        \ 'mark': 'plumed',
+        \ 'word_pattern': '[\w]+',
+        \ 'on_complete': ['ncm2#on_complete#omni', 'PlumedComplete'],
+        \ })
+
+  " Send to Repl
+  autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
+
+  " make
+  autocmd FileType markdown setlocal makeprg=pandoc\ %\ -o\ %:r.pdf
 
 augroup END
 
 " }}}
 
 " Settings {{{
-let g:python3_host_prog = '/Users/laurenzi/venv/bin/python'
+let g:python3_host_prog = '/Users/laurenzi/venvs/base/bin/python'
+let g:python_host_prog = '/opt/local/bin/python2.7'
 
 syntax on                " enable syntax highlighting
 set termguicolors        " enable gui colors for terminal
@@ -428,6 +462,7 @@ set showcmd              " show key spressed in lower-right corner
 set sidescroll=1         " smooth side scrolling
 set conceallevel=2       " conceal marked text
 set completeopt=menuone,noinsert,noselect,preview
+set pumheight=15         " set completion menu max height
                          " set the behavior of the completion menu 
 set fillchars=vert:┃,fold:\ 
                          " set various fillchars; in this case removes clobbering signs from folds ('\ ')
@@ -488,7 +523,7 @@ let mapleader = ','
 noremap <Space> :
 
 " fast [e]dit and [s]ourcing .[v]imrc
-nnoremap <leader>ev :tabedit $MYVIMRC<CR>
+nnoremap <leader>ev :edit $MYVIMRC<CR>
 nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
 " Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
@@ -623,6 +658,10 @@ nnoremap <leader>gq vipgq
 " Search visual selection
 xnoremap g/ y/\V<C-r>=escape(@",'/\')<CR><CR>
 
+" Add blank lines above/below cursor
+nnoremap ]<CR> :call append(line('.'), '')<CR>
+nnoremap [<CR> :call append(line('.')-1, '')<CR>
+
 " WindowSwap
 nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
  
@@ -645,7 +684,7 @@ nnoremap <leader>fh :Helptags<CR>
 " Marks
 nnoremap <leader>m :Marks<CR>
 
-"Vimux
+" Vimux
 xnoremap <leader>vs "vy :call VimuxSlime()<CR>
 nnoremap <leader>vp :VimuxPromptCommand<CR>
 
