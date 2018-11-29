@@ -13,7 +13,6 @@
 export PATH="/opt/CHARMM/c38b2/exec/osx/:$PATH"               # <-- CHARMM
 export PATH="/Developer/NVIDIA/CUDA-9.1/bin:$PATH"            # <-- CUDA
 export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
-export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
 export PATH="$HOME/code/bin:$PATH"                            # <-- personal stuff
 export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
@@ -22,9 +21,10 @@ export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
 export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
 [[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
+export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
-source "$HOME/venv/bin/activate"                              # <-- Activate the Python
+source "$HOME/venvs/base/bin/activate"                       	# <-- Activate the Python
 # }}}
 
 # $MANPATH {{{
@@ -55,10 +55,11 @@ zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/z
 zplugin ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zplugin ice as"completion"; zplugin snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
+zplugin ice as"completion" mv"* -> _pandoc"; zplugin snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
 zplugin load hlissner/zsh-autopair
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin load bric3/oh-my-zsh-git
-zplugin load srijanshetty/zsh-pandoc-completion
+# zplugin load srijanshetty/zsh-pandoc-completion
 zplugin ice blockf; zplugin light zsh-users/zsh-completions
 zplugin light zdharma/fast-syntax-highlighting
 # }}}
@@ -80,7 +81,7 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 export FZF_DEFAULT_OPTS="
 --no-height
---preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && zsh /Users/laurenzi/.oh-my-zsh/plugins/catimg/catimg.sh {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=monokai -f console256 -g {} || cat {}) 2> /dev/null | head -500'
+--preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=gruvbox -f terminal16m -g {} || cat {}) 2> /dev/null | head -500'
 --preview-window wrap:hidden
 --bind 'ctrl-o:toggle-preview'
 --bind 'tab':down
@@ -108,9 +109,11 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2018-3"
+export SCHRODINGER="/opt/schrodinger/suites2018-4"
+export PYMOL4MAESTRO="/opt/anaconda3/bin"
 export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 export JULIA_PKGDIR="/Users/laurenzi/.julia"
+export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
 
 # language environment
 export LANG=en_US.UTF-8
@@ -152,11 +155,6 @@ function melakappa {
     fi
 }
 
-function tmx {
-    [ -f /Users/laurenzi/.tmux/MySessions/"$1" ] || echo Session Layout does not exist!
-    [ -f /Users/laurenzi/.tmux/MySessions/"$1" ] && /Users/laurenzi/.tmux/MySessions/"$1"
-}
-
 function licmae {
     if [[ $HOST =~ elenuar ]]; then
          /opt/schrodinger2018-3/licadmin STAT -c 27008@149.132.157.125:/opt/schrodinger/licenses/
@@ -180,16 +178,6 @@ function deskhide {
     fi
 }
 
-function neovim_remote {
-    local serverlist
-    serverlist="$(nvr --serverlist)"
-    if [[ -z "$serverlist" ]]; then
-        NVIM_LISTEN_ADDRESS=/tmp/nvimsocket /opt/bin/nvim "$@"
-    else
-        /opt/bin/nvim "$@"
-    fi
-}
-
 function google {
     open "https://www.google.com/search?q=$*"
 }
@@ -208,7 +196,6 @@ alias catdcd="/Applications/VMD\ 1.9.4.app/Contents/vmd/plugins/MACOSXX86/bin/ca
 alias vmd="/Applications/VMD\ 1.9.4.app/Contents/Resources/VMD.app/Contents/MacOS/VMD"
 alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
-alias nvim=neovim_remote
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
 # }}}
@@ -216,12 +203,11 @@ alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
 # compinit / compdef {{{
 autoload -Uz compinit
 compinit -i
-compdef neovim_remote=nvim
 zplugin cdreplay -q
 # }}}
 
 # other sources  {{{
-source /opt/gromacs-2018/bin/GMXRC.zsh
+source /opt/gromacs-2018.4/bin/GMXRC
 source /opt/local/share/tldr-cpp-client/autocomplete/complete.zsh
 source /opt/local/etc/profile.d/z.sh
 source ~/.fzf.zsh
