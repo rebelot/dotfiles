@@ -26,6 +26,9 @@ autoload -U down-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
 
+bindkey "^p" up-line-or-beginning-search
+bindkey "^n" down-line-or-beginning-search
+
 bindkey "${terminfo[khome]}" beginning-of-line    # [Home] - Go to beginning of line
 bindkey "${terminfo[kend]}"  end-of-line          # [End] - Go to end of line
 
