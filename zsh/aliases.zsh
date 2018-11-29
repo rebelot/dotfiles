@@ -63,13 +63,14 @@ alias p='ps -f'
 alias sortnr='sort -n -r'
 alias unexport='unset'
 alias rsync="rsync --progress -th"
-alias ccat='pygmentize -O style=monokai -f console256 -g'
+alias ccat='pygmentize -O style=gruvbox -f terminal16m -g'
 alias tc="tree -C"
 alias exa="exa --group-directories-first"
 alias el="exa -l"
 alias t='tail -f'
 # alias vim=nvim
 alias edit=nvim # Vim Only!
+alias watch="env TERM=xterm-256color watch"
 
 # git
 alias git=hub
