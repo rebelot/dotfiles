@@ -480,46 +480,14 @@ hi link ALEStyleWarningSign GruvboxBlue
 
 " Mappings {{{
 let mapleader = ','
+noremap <Space> :
 
 " fast [e]dit and [s]ourcing .[v]imrc
 nnoremap <leader>ev :tabedit $MYVIMRC<CR>
 nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
-" Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
-" C-l escape delimiters, C-Space invoke completion,
-" C-U C-D scroll Up/Down
-" let g:ulti_expand_res = 0
-" function! Ulti_Expand_and_getRes() abort
-"   call UltiSnips#ExpandSnippet()
-"   return g:ulti_expand_res
-" endfunction
-
-" imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : "\<C-y>" : delimitMate#ExpandReturn()<CR>
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
-" imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
-" inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
-" inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-" imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
 imap <C-l> <Plug>delimitMateS-Tab
-
-" Laguage Client
-" [k] Hover, [d] Definition, [m] Menu, [a] Code ActiON, [r] RenaME, [u] References,
-" [f] Format/Range Formatting, [S] Document Symbol, [s] Workspace Symbol,
-" [h] Highlight, [H] Clear Highlight, [p] Signature Help, [e] Explain Error
-" nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
-" nnoremap <silent><leader>lcd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent><leader>lcm :call LanguageClient_contextMenu()<CR>
-" nnoremap <silent><leader>lca :call LanguageClient#textDocument_codeAction()<CR>
-" nnoremap <silent><leader>lcr :call LanguageClient#textDocument_rename()<CR>
-" nnoremap <silent><leader>lcu :call LanguageClient#textDocument_references()<CR>
-" nnoremap <silent><leader>lcf :call LanguageClient#textDocument_formatting()<CR>
-" xnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
-" nnoremap <silent><leader>lcs :call LanguageClient#textDocument_documentSymbol()<CR>
-" nnoremap <silent><leader>lcS :call LanguageClient#workspace_symbol()<CR>
-" nnoremap <silent><leader>lch :call LanguageClient#textDocument_documentHighlight()<CR>
-" nnoremap <silent><leader>lcH :call LanguageClient#clearDocumentHighlight()<CR>
-" nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<CR>
-" nnoremap <silent><leader>lce :call LanguageClient#explainErrorAtPoint()<CR>
 
 " remap <Esc> to jk in insert mode
 inoremap jk <Esc>
