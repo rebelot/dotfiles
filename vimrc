@@ -12,27 +12,6 @@ endif
 call plug#begin('~/.vim/bundle')
 Plug 'junegunn/vim-plug'
 
-" Code completion {{{
-" Plug 'ncm2/ncm2'
-" Plug 'roxma/nvim-yarp'
-" Plug 'ncm2/ncm2-bufword'
-" Plug 'ncm2/ncm2-path'
-" Plug 'ncm2/ncm2-vim'
-" Plug 'ncm2/ncm2-ultisnips'
-" Plug 'ncm2/ncm2-syntax'
-" Plug 'ncm2/ncm2-tagprefix'
-" Plug 'ncm2/ncm2-markdown-subscope'
-" Plug 'Shougo/echodoc.vim'
-" Plug 'Shougo/neco-vim'
-" Plug 'Shougo/neco-syntax'
-" Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-" Plug 'wellle/tmux-complete.vim'
-" Plug 'JuliaEditorSupport/julia-vim'
-" Plug 'lervag/vimtex'
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
-" }}}
-
 " Syntax and Folds {{{
 Plug 'plasticboy/vim-markdown'
 Plug 'chrisbra/vim-zsh'
@@ -41,8 +20,6 @@ Plug 'vim-python/python-syntax'
 Plug 'tmhedberg/SimpylFold'
 Plug 'KeitaNakamura/highlighter.nvim'
 Plug 'Konfekt/FastFold'
-" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
-" Plug 'jaxbot/semantic-highlight.vim'
 " }}}
 
 " File, Buffer Browsers {{{
@@ -65,15 +42,6 @@ Plug 'junegunn/limelight.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'RRethy/vim-illuminate'
 Plug 'morhetz/gruvbox'
-" Plug 'andreypopp/vim-colors-plain'
-" Plug 'lifepillar/vim-solarized8'
-" Plug 'ajmwagar/vim-deus'
-" Plug 'flazz/vim-colorschemes'
-" Plug 'romainl/flattened'
-" Plug 'nightsense/stellarized'
-" Plug 'guns/xterm-color-table.vim'
-" Plug 'nightsense/vrunchbang'
-" Plug 'nightsense/seagrey'
 " }}}
 
 " Utils {{{  
@@ -93,7 +61,6 @@ Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'skywind3000/vim-preview', {'on': 'Preview'}
 Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
-" Plug 'mhinz/vim-signify'
 " }}}
 
 " Editing Tools {{{
@@ -121,86 +88,12 @@ call plug#end()
 
 " Plugin Options {{{
 
-" Code completion {{{
-
-" Ncm2 {{{
-" let g:ncm2#complete_length = 2
-
-" call ncm2#override_source('vim',                  {'mark': '  '})
-" call ncm2#override_source('bufword',              {'mark': ' ℬ '})
-" call ncm2#override_source('rootpath',             {'mark': '  '})
-" call ncm2#override_source('bufpath',              {'mark': '  '})
-" call ncm2#override_source('cwdpath',              {'mark': '  '})
-" call ncm2#override_source('tmux-complete',        {'mark': ' 侀'})
-" call ncm2#override_source('ultisnips',            {'mark': '  '})
-" call ncm2#override_source('syntax',               {'mark': '  '})
-" call ncm2#override_source('LanguageClient_python',{'mark': '  '})
-" call ncm2#override_source('LanguageClient_julia', {'mark': '  '})
-" call ncm2#override_source('LanguageClient_sh',    {'mark': '  '})
-" call ncm2#override_source('LanguageClient_c',     {'mark': '  '})
-" call ncm2#override_source('tagprefix',            {'mark': ' 炙'})
-" echo keys(ncm2#_s('sources'))
-"                  舘侀炙    ⌾
-" }}}
-
-" Language Client {{{
-" let g:LanguageClient_autoStart = 1
-" let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
-" " let g:LanguageClient_loggingFile = '/tmp/LanguageClient.log'
-" " let g:LanguageClient_loggingLevel = 'DEBUG'
-" let g:LanguageClient_waitOutputTimeout = 30
-" let g:LanguageClient_diagnosticsEnable = 0
-" let g:LanguageClient_hoverPreview = 'Always' 
-" let g:LanguageClient_completionPreferTextEdit = 1 
-" let g:LanguageClient_serverCommands = {
-"         \ 'sh': ['bash-language-server','start'],
-"         \ 'r': ['R', '--quiet', '--slave', '-e', 'languageserver::run()'],
-"         \ 'c': ['cquery', '--language-server'],
-"         \ 'python': ['python', '-m', 'pyls'],
-"         \ 'julia': ['/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
-"         \       using StaticLint;
-"         \       using DocumentFormat;
-"         \       using LanguageServer;
-"         \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
-"         \       server.runlinter = true;
-"         \       run(server);
-"         \   ']
-"         \}
-" " }}}
-
-" let g:tmuxcomplete#trigger = ''
-
-" let g:default_julia_version = '1.0'
-
-" let g:vimtex_compiler_progname = 'nvr'
-" let g:vimtex_view_method = 'skim'
-" " vimtex ncm2 register source in
-" " ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
-
-" let g:echodoc_enable_at_startup = 1
-
-" " let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
-" let g:UltiSnipsExpandTrigger = '<c-j>'
-" let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
-" let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
-" let g:UltiSnipsListSnippets = '<c-x><c-s>'
-" let g:UltiSnipsRemoveSelectModeMappings = 0
-" }}}
-
 " Syntax and Folds {{{
 let g:python_highlight_all = 1
 let g:python_highlight_file_headers_as_comments = 1
 let g:python_highlight_space_errors = 0
 
 let g:fastfold_fold_command_suffixes = ['x', 'X', 'a', 'A', 'o', 'O', 'c', 'C', 'r', 'R', 'm', 'M', 'i', 'n', 'N']
-" let g:tex_fold_enabled = 1
-" let g:vimsyn_folding ='af'
-" let g:sh_fold_enabled = 7
-" let g:markdown_folding = 0
-
-" let g:semshi#error_sign = 0
-" let g:semshi#always_update_all_highlights = 1
-" let g:semshi#simplify_markup = 0
 " }}}
 
 " File, Buffer, Browsers {{{
@@ -351,9 +244,6 @@ augroup MyAutoCommands
     autocmd User GoyoEnter Limelight
     autocmd User GoyoLeave Limelight!
     
-    " Competions Preview
-    " autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
-    
     " Set SpellCheck
     " autocmd FileType latex,tex,markdown,txt setlocal spell
 
@@ -367,9 +257,6 @@ augroup MyAutoCommands
     " syntax filetype
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
-    " Ncm2
-    " autocmd BufEnter * call ncm2#enable_for_buffer()
-    " autocmd TextChangedI * call ncm2#auto_trigger()
 
 augroup END
 
@@ -444,11 +331,6 @@ hi! link pythonDot GruvboxRed
 "}}}
 
 " Highlights {{{
-" transparent bg {{{
-" hi Normal guibg=NONE
-" hi SignColumn guibg=NONE
-" hi VertSplit guibg=NONE
-" }}}
 
 " Spell {{{
 hi clear SpellBad
