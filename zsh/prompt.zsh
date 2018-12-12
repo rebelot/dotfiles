@@ -1,5 +1,11 @@
-prompt_short='$(my_vim_cmd_mode)%B%F{magenta}❯%f%b '
-prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
+if [[ -z $SSH_CONNECTION ]]; then
+    prompt_short='$(my_vim_cmd_mode)%B%F{magenta}❯%f%b '
+    prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
+else
+    prompt_short='$(my_vim_cmd_mode)%B%F{yellow}❯%f%b '
+    prompt_2short='%B%F{green}%n@%m%b%f %B%F{73}%~%f%b'$'\n'"$prompt_short"
+fi
+
 
 ps1_split_state=1
 
