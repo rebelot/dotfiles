@@ -183,6 +183,8 @@ let g:vimtex_quickfix_autoclose_after_keystrokes = 0
 let g:vimtex_quickfix_open_on_warning = 0
 let g:vimtex_fold_enabled = 0
 let g:vimtex_matchparen_enabled = 0
+let g:vimtex_syntax_enabled = 1
+let g:vimtex_motion_enabled = 0
 " vimtex ncm2 register source in
 " ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
 
@@ -280,6 +282,8 @@ let g:peekaboo_window = 'vert bo 30 new'
 " let g:neomake_logfile = '/tmp/neomake.log'
 
 let g:matchup_override_vimtex = 1
+let g:matchup_matchparen_deferred = 1
+
 " Tagbar {{{
 let g:tagbar_ctags_bin = '/opt/bin/ctags'
 let g:tagbar_type_markdown= {
@@ -656,7 +660,10 @@ nnoremap <leader>lc :lclose<CR>
 nnoremap <leader>gq vipgq
 
 " Search visual selection
-xnoremap g/ y/\V<C-r>=escape(@",'/\')<CR><CR>
+xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>
+
+" Set @/ to word under cursor
+nnoremap <silent><leader>/ :call setreg('/', expand('<cword>'))<CR>
 
 " Add blank lines above/below cursor
 nnoremap ]<CR> :call append(line('.'), '')<CR>
