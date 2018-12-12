@@ -41,12 +41,12 @@ chunkc core::hotload 0
 # NOTE: the following are config variables for the chunkwm-tiling plugin.
 #
 
-chunkc set custom_bar_enabled            1
-chunkc set custom_bar_all_monitors       0
-chunkc set custom_bar_offset_top         7
-chunkc set custom_bar_offset_bottom      7
-chunkc set custom_bar_offset_left        0
-chunkc set custom_bar_offset_right       0
+chunkc set custom_bar_enabled            0
+# chunkc set custom_bar_all_monitors       0
+# chunkc set custom_bar_offset_top         7
+# chunkc set custom_bar_offset_bottom      7
+# chunkc set custom_bar_offset_left        0
+# chunkc set custom_bar_offset_right       0
 
 chunkc set global_desktop_mode           bsp
 chunkc set global_desktop_offset_top     20
