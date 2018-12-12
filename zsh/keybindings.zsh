@@ -49,3 +49,7 @@ bindkey '\C-x\C-e' edit-command-line
 
 # file rename magick
 bindkey "^[m" copy-prev-shell-word
+
+function buffer2clipboard { echo $BUFFER | pbcopy }
+zle -N buffer2clipboard
+bindkey '^Xy' buffer2clipboard
