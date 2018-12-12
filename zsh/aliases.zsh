@@ -73,7 +73,7 @@ alias edit=nvim # Vim Only!
 alias watch="env TERM=xterm-256color watch"
 
 # git
-alias git=hub
+command -v hub > /dev/null && alias git=hub
 alias gr='cd $(git rev-parse --show-toplevel)'
 # alias whereami=display_info
 
@@ -103,20 +103,26 @@ alias -s ace="unace l"
 # zsh is able to auto-do some kungfoo
 # depends on the SUFFIX :)
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    OPENER=xdg-open
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    OPENER=open
+fi
+
 _browser_fts=(htm html de org net com at cx nl se dk)
-for ft in $_browser_fts; do alias -s $ft=open; done
+for ft in $_browser_fts; do alias -s $ft=$OPENER; done
 
 _editor_fts=(cpp cxx cc c hh h inl asc txt TXT tex)
 for ft in $_editor_fts; do alias -s $ft=$EDITOR; done
 
 _image_fts=(jpg jpeg png gif mng tiff tif xpm)
-for ft in $_image_fts; do alias -s $ft=open; done
+for ft in $_image_fts; do alias -s $ft=$OPENER; done
 
 _media_fts=(ape avi flv m4a mkv mov mp3 mpeg mpg ogg ogm rm wav webm)
-for ft in $_media_fts; do alias -s $ft=open; done
+for ft in $_media_fts; do alias -s $ft=$OPENER; done
 
 #read documents
-alias -s pdf=open
+alias -s pdf=$OPENER
 alias -s ps=gv
 alias -s dvi=xdvi
 alias -s chm=xchm
