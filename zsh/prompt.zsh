@@ -1,11 +1,10 @@
 if [[ -z $SSH_CONNECTION ]]; then
-    prompt_short='$(my_vim_cmd_mode)%B%F{magenta}❯%f%b '
+    prompt_short='%B%F{magenta}❯%f%b '
     prompt_2short='%B%F{73}%~%f%b'$'\n'"$prompt_short"
 else
-    prompt_short='$(my_vim_cmd_mode)%B%F{yellow}❯%f%b '
+    prompt_short='%B%F{yellow}❯%f%b '
     prompt_2short='%B%F{green}%n@%m%b%f %B%F{73}%~%f%b'$'\n'"$prompt_short"
 fi
-
 
 ps1_split_state=1
 
@@ -20,15 +19,13 @@ function prompt_split_toggle {
     zle reset-prompt
 }
 
-function my_vim_cmd_mode {
-    case $KEYMAP in
-        vicmd) echo -ne '\e[s\e[B%B%F{red}-- NORMAL --%f%b\e[u' ;;
-        main|viins) echo "" ;;
-        *) echo "" ;;
-    esac
-}
-
 function zle-keymap-select {
+    region_highlight+=("${#BUFFER} $((${#BUFFER} + 13)) fg=yellow,bold")
+    case $KEYMAP in
+        vicmd) POSTDISPLAY=$'\n'"-- NORMAL --" ;;
+        main|viins)  POSTDISPLAY="" ;;
+        *) POSTDISPLAY="" ;;
+    esac
     zle reset-prompt
 }
 
