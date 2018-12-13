@@ -22,7 +22,7 @@ function prompt_split_toggle {
 
 function my_vim_cmd_mode {
     case $KEYMAP in
-        vicmd) echo '%B%F{red}-- N --%f%b ' ;;
+        vicmd) echo -ne '\e[s\e[B%B%F{red}-- NORMAL --%f%b\e[u' ;;
         main|viins) echo "" ;;
         *) echo "" ;;
     esac
