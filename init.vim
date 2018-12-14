@@ -190,7 +190,7 @@ let g:vimtex_motion_enabled = 0
 
 let g:echodoc_enable_at_startup = 1
 
-" let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+let g:UltiSnipsExpandTrigger = '<Plug>(ultisnips_expand)'
 let g:UltiSnipsExpandTrigger = '<c-j>'
 let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
@@ -533,13 +533,7 @@ nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 " Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
 " C-l escape delimiters, C-Space invoke completion,
 " C-U C-D scroll Up/Down
-let g:ulti_expand_res = 0
-function! Ulti_Expand_and_getRes() abort
-  call UltiSnips#ExpandSnippet()
-  return g:ulti_expand_res
-endfunction
-
-imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : "\<C-y>" : delimitMate#ExpandReturn()<CR>
+inoremap <silent><expr><CR> pumvisible() ? ncm2_ultisnips#expand_or("\<C-y>", 'n') : delimitMate#ExpandReturn()
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
 imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
