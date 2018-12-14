@@ -198,6 +198,7 @@ alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate.zsh"
+alias clock='tty-clock -c -f %d-%m-%Y'
 # }}}
 
 # compinit / compdef {{{
