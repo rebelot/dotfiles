@@ -180,6 +180,9 @@ function google {
     open "https://www.google.com/search?q=$*"
 }
 
+function lessc {
+  pygmentize -O style=gruvbox -f terminal16m -g $1 | less
+}
 # }}}
 
 # Aliases {{{
