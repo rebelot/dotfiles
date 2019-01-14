@@ -524,7 +524,8 @@ hi link ALEStyleWarningSign GruvboxBlue
 
 " Mappings {{{
 let mapleader = ','
-noremap <Space> :
+nnoremap <Space> :
+xnoremap <Space> :
 
 " fast [e]dit and [s]ourcing .[v]imrc
 nnoremap <leader>ev :edit $MYVIMRC<CR>
@@ -533,7 +534,14 @@ nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 " Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
 " C-l escape delimiters, C-Space invoke completion,
 " C-U C-D scroll Up/Down
-inoremap <silent><expr><CR> pumvisible() ? ncm2_ultisnips#expand_or("\<C-y>", 'n') : delimitMate#ExpandReturn()
+
+let g:ulti_expand_res = 0
+function! Ulti_Expand_and_getRes() abort
+  call UltiSnips#ExpandSnippet()
+  return g:ulti_expand_res
+endfunction
+
+imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : "\<C-y>" : delimitMate#ExpandReturn()<CR>
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
 imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
