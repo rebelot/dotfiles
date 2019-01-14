@@ -13,23 +13,13 @@ call plug#begin('~/.vim/bundle')
 Plug 'junegunn/vim-plug'
 
 " Syntax and Folds {{{
-Plug 'plasticboy/vim-markdown'
 Plug 'chrisbra/vim-zsh'
-Plug 'chrisbra/csv.vim', { 'on': 'CSVInit' }
 Plug 'vim-python/python-syntax'
-Plug 'tmhedberg/SimpylFold'
-Plug 'KeitaNakamura/highlighter.nvim'
 Plug 'Konfekt/FastFold'
 " }}}
 
 " File, Buffer Browsers {{{
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'ivalkeen/nerdtree-execute'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
-Plug 'mileszs/ack.vim'
-Plug 'jlanzarotta/bufexplorer'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 " }}}
@@ -37,30 +27,20 @@ Plug 'junegunn/fzf.vim'
 " Colors {{{
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
 Plug 'machakann/vim-highlightedyank'
-Plug 'RRethy/vim-illuminate'
 Plug 'morhetz/gruvbox'
 " }}}
 
 " Utils {{{  
-" Plug 'w0rp/ale'
-Plug 'joonty/vdebug', {'on': 'VdebugStart'}
+Plug 'w0rp/ale'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
-Plug 'junegunn/vim-peekaboo'
 Plug 'vim-utils/vim-man', {'on': 'Man'}
-Plug 'chrisbra/vim-diff-enhanced'
-Plug 'kassio/neoterm'
 Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
-Plug 'wesQ3/vim-windowswap'
-Plug 'skywind3000/vim-preview', {'on': 'Preview'}
-Plug 'itchyny/calendar.vim', {'on': 'Calendar'}
 " }}}
 
 " Editing Tools {{{
@@ -74,7 +54,6 @@ Plug 'wellle/targets.vim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-repeat'
-Plug 'chrisbra/NrrwRgn'
 " }}}
 
 " Tmux {{{
@@ -98,12 +77,6 @@ let g:fastfold_fold_command_suffixes = ['x', 'X', 'a', 'A', 'o', 'O', 'c', 'C', 
 
 " File, Buffer, Browsers {{{
 
-let g:NERDTreeAutoDeleteBuffer = 1
-let g:NERDTreeMinimalUI = 1
-let g:NERDTreeDirArrows = 1
-
-let g:ackprg = 'ag --vimgrep'
-
 let g:ctrlp_map = '<leader>f'
 let g:ctrlp_cmd = 'CtrlPMixed'
 
@@ -126,11 +99,6 @@ let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_theme = 'gruvbox'
 " onedark molokai
 
-let g:limelight_default_coefficient = 0.7
-let g:limelight_priority = -1
-
-let g:Illuminate_ftblacklist = ['nerdtree', 'ctrlp', 'Mundo']
-let g:Illuminate_delay = 250
 " }}}
 
 " Utils {{{
@@ -152,10 +120,6 @@ let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
 let g:suda#prefix = 'sudo:'
 call suda#init('sudo:*,sudo:*/*')
 
-let g:windowswap_map_keys = 0
-
-let g:peekaboo_compact = 0
-let g:peekaboo_window = 'vert bo 30 new'
 
 " Tagbar {{{
 let g:tagbar_ctags_bin = '/opt/bin/ctags'
@@ -282,6 +246,7 @@ set title                " change the terminal's title
 set nobackup             " no backup file 
 set noswapfile           " don't write .swp files
 set undofile             " set permanent undo (default `undodir = ~/.local/share/nvim/undo/` 
+set undodir=/Users/laurenzi/.local/share/nvim/undo
 set nowrap               " don't wrap lines
 set tabstop=4            " a tab is four spaces
 let &shiftwidth=&tabstop " number of spaces to use for autoindenting
@@ -461,15 +426,8 @@ nnoremap <leader>ln :lnext<CR>
 nnoremap <leader>lp :lNext<CR>
 nnoremap <leader>lc :lclose<CR>
 
-" WindowSwap
-nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
- 
 " toggle tagbar
 nnoremap <silent><F8> :TagbarToggle<CR>
-
-" [N]ERDTree
-nnoremap <silent><leader>nt :NERDTreeToggle<CR>
-nnoremap <silent><leader>nf :NERDTreeFind<CR>
 
 " Toggle [Mu]ndo
 nnoremap <silent><leader>mu :MundoToggle<CR>
