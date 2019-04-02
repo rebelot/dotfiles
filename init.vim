@@ -132,6 +132,20 @@ call plug#end()
 
 " Ncm2 {{{
 let g:ncm2#complete_length = 2
+let g:LanguageClient_documentHighlightDisplay = {
+      \    1: {
+      \        "name": "Text",
+      \        "texthl": "DiffChange",
+      \    },
+      \    2: {
+      \        "name": "Read",
+      \        "texthl": "DiffChange",
+      \    },
+      \    3: {
+      \        "name": "Write",
+      \        "texthl": "DiffChange",
+      \    },
+      \}
 
 call ncm2#override_source('vim',                  {'mark': '  '})
 call ncm2#override_source('bufword',              {'mark': ' ℬ '})
@@ -153,6 +167,7 @@ call ncm2#override_source('tagprefix',            {'mark': ' 炙'})
 " Language Client {{{
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
+" let g:LanguageClient_hasSnippetSupport = 0
 " let g:LanguageClient_loggingFile = '/tmp/LanguageClient.log'
 " let g:LanguageClient_loggingLevel = 'DEBUG'
 let g:LanguageClient_waitOutputTimeout = 30
@@ -410,7 +425,7 @@ augroup MyAutoCommands
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
 
   " make
-  autocmd FileType markdown setlocal makeprg=pandoc\ %\ -o\ %:r.pdf
+  autocmd FileType markdown setlocal makeprg=pandoc\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf
 
 augroup END
 
@@ -418,7 +433,7 @@ augroup END
 
 " Settings {{{
 let g:python3_host_prog = '/Users/laurenzi/venvs/base/bin/python'
-let g:python_host_prog = '/opt/local/bin/python2.7'
+let g:python_host_prog = '/Users/laurenzi/venvs/base27/bin/python'
 
 syntax on                " enable syntax highlighting
 set termguicolors        " enable gui colors for terminal
@@ -476,6 +491,8 @@ set cmdheight=1          " Height of the command line
 set updatetime=250       " time required to update CursorHold hook
 set shortmess+=c         " remove 'match x of y' echoing line
 " set printdevice=OLIVETTI_d_COPIA4500MF_plus__2_
+set showbreak=↪\ 
+set listchars=tab:..,trail:_,extends:>,precedes:<,nbsp:~,eol:¬
 " }}}
 
 " Colors {{{
@@ -546,7 +563,7 @@ inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
 inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-imap <silent><C-Space> <Plug>(ncm2_manual_trigger)
+inoremap <silent><C-Space> <C-R>=ncm2#force_trigger()<CR>
 imap <C-l> <Plug>delimitMateS-Tab
 
 " Laguage Client
@@ -628,8 +645,8 @@ nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
 
 " Edit or select [R/r]egister
-nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
-nnoremap <leader>R :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
+" nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
+nnoremap <leader>" :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
 
 " Easier increase/decrease indents
 xnoremap > >gv
@@ -666,6 +683,9 @@ xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>
 
 " Set @/ to word under cursor
 nnoremap <silent><leader>/ :call setreg('/', expand('<cword>'))<CR>
+
+" Poor men refactoring
+nnoremap cr *``cgn
 
 " Add blank lines above/below cursor
 nnoremap ]<CR> :call append(line('.'), '')<CR>
