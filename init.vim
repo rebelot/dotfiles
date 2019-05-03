@@ -37,6 +37,8 @@ Plug 'JuliaEditorSupport/julia-vim'
 Plug 'lervag/vimtex'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+" Plug 'neoclide/coc-neco'
+" Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 " }}}
 
 " Syntax and Folds {{{
@@ -98,7 +100,7 @@ Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'rebelot/nvim-historian', {'branch': 'devel'}
-Plug 'neomake/neomake'
+" Plug 'neomake/neomake'
 Plug 'andymass/vim-matchup'
 " Plug 'mhinz/vim-signify'
 " }}}
@@ -167,9 +169,6 @@ call ncm2#override_source('tagprefix',            {'mark': ' 炙'})
 " Language Client {{{
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
-" let g:LanguageClient_hasSnippetSupport = 0
-" let g:LanguageClient_loggingFile = '/tmp/LanguageClient.log'
-" let g:LanguageClient_loggingLevel = 'DEBUG'
 let g:LanguageClient_waitOutputTimeout = 30
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_hoverPreview = 'Always' 
@@ -565,6 +564,22 @@ inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>"
 inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
 inoremap <silent><C-Space> <C-R>=ncm2#force_trigger()<CR>
 imap <C-l> <Plug>delimitMateS-Tab
+
+" inoremap <silent><expr> <c-space> coc#refresh()
+" augroup LCHL
+"   autocmd CursorHold * silent call CocActionAsync('highlight')
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup END
+
+" nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
+" nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
+" nmap <silent><leader>lcd <Plug>(coc-definition)
+" nmap <silent><leader>lca <Plug>(coc-codeaction)
+" xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
+" nmap <silent><leader>lcr <Plug>(coc-rename)
+" nmap <silent><leader>lcu <Plug>(coc-references)
+" nmap <silent><leader>lcf <Plug>(coc-format-selected)
+" xmap <silent><leader>lcf <Plug>(coc-format-selected)
 
 " Laguage Client
 " [k] Hover, [d] Definition, [m] Menu, [a] Code ActiON, [r] RenaME, [u] References,
