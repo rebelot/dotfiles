@@ -19,26 +19,14 @@ call plug#begin('~/.vim/bundle')
 Plug 'junegunn/vim-plug'
 
 " Code completion {{{
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-vim'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'ncm2/ncm2-syntax'
-Plug 'ncm2/ncm2-tagprefix'
-Plug 'ncm2/ncm2-markdown-subscope'
-Plug 'Shougo/echodoc.vim'
-Plug 'Shougo/neco-vim'
-Plug 'Shougo/neco-syntax'
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'wellle/tmux-complete.vim'
 Plug 'JuliaEditorSupport/julia-vim'
 Plug 'lervag/vimtex'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-" Plug 'neoclide/coc-neco'
-" Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc-neco'
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'liuchengxu/vista.vim'
 " }}}
 
 " Syntax and Folds {{{
@@ -69,7 +57,8 @@ Plug 'junegunn/fzf.vim'
 " Colors {{{
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'morhetz/gruvbox'
+" Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'machakann/vim-highlightedyank'
@@ -132,59 +121,8 @@ call plug#end()
 
 " Code completion {{{
 
-" Ncm2 {{{
-let g:ncm2#complete_length = 2
-let g:LanguageClient_documentHighlightDisplay = {
-      \    1: {
-      \        "name": "Text",
-      \        "texthl": "DiffChange",
-      \    },
-      \    2: {
-      \        "name": "Read",
-      \        "texthl": "DiffChange",
-      \    },
-      \    3: {
-      \        "name": "Write",
-      \        "texthl": "DiffChange",
-      \    },
-      \}
-
-call ncm2#override_source('vim',                  {'mark': '  '})
-call ncm2#override_source('bufword',              {'mark': ' ℬ '})
-call ncm2#override_source('rootpath',             {'mark': '  '})
-call ncm2#override_source('bufpath',              {'mark': '  '})
-call ncm2#override_source('cwdpath',              {'mark': '  '})
-call ncm2#override_source('tmux-complete',        {'mark': ' 侀'})
-call ncm2#override_source('ultisnips',            {'mark': '  '})
-call ncm2#override_source('syntax',               {'mark': '  '})
-call ncm2#override_source('LanguageClient_python',{'mark': '  '})
-call ncm2#override_source('LanguageClient_julia', {'mark': '  '})
-call ncm2#override_source('LanguageClient_sh',    {'mark': '  '})
-call ncm2#override_source('LanguageClient_c',     {'mark': '  '})
-call ncm2#override_source('tagprefix',            {'mark': ' 炙'})
-" echo keys(ncm2#_s('sources'))
 "                  舘侀炙    ⌾
-" }}}
 
-" Language Client {{{
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_settingsPath = '~/.config/nvim/settings.json'
-let g:LanguageClient_waitOutputTimeout = 30
-let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_hoverPreview = 'Always' 
-let g:LanguageClient_completionPreferTextEdit = 1 
-let g:LanguageClient_serverCommands = {
-        \ 'sh': ['bash-language-server','start'],
-        \ 'r': ['R', '--quiet', '--slave', '-e', 'languageserver::run()'],
-        \ 'c': ['cquery', '--language-server'],
-        \ 'python': ['python', '-m', 'pyls'],
-        \ 'julia': ['julia', '--startup-file=no', '--history-file=no', '-e', '
-        \       using LanguageServer;
-        \       server = LanguageServer.LanguageServerInstance(stdin, stdout, false);
-        \       server.runlinter = true;
-        \       run(server);
-        \   ']
-        \}
 " }}}
 
 let g:tmuxcomplete#trigger = ''
@@ -210,6 +148,15 @@ let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
 let g:UltiSnipsListSnippets = '<c-x><c-s>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
+
+let g:vista_echo_cursor_strategy = 'floating_win'
+
+let g:vista_default_executive = 'ctags'
+
+let g:vista_executive_for = {
+    \ 'cpp': 'coc',
+    \ 'python': 'coc'
+    \ }
 " }}}
 
 " Syntax and Folds {{{
@@ -369,8 +316,6 @@ command! -nargs=1 -complete=buffer SudoWrite write sudo:<args>
 
 command! CD lcd %:p:h
 
-command! LCMenu call LanguageClient_contextMenu()
-
 command! FollowSymLink execute "file " . resolve(expand('%')) | edit
 
 command! Reload source $MYVIMRC | noh
@@ -406,19 +351,10 @@ augroup MyAutoCommands
 
   " syntax filetype
   autocmd BufNewFile,BufRead *.coffee set filetype=coffee
-
-  " Ncm2
-  autocmd BufEnter * call ncm2#enable_for_buffer()
-  autocmd TextChangedI * call ncm2#auto_trigger()
-  au User Ncm2Plugin call ncm2#register_source({
-        \ 'name' : 'plumed',
-        \ 'priority': 9, 
-        \ 'subscope_enable': 1,
-        \ 'scope': ['plumed'],
-        \ 'mark': 'plumed',
-        \ 'word_pattern': '[\w]+',
-        \ 'on_complete': ['ncm2#on_complete#omni', 'PlumedComplete'],
-        \ })
+    
+  " Coc
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
   " Send to Repl
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
@@ -533,6 +469,10 @@ hi link ALEErrorSign        GruvboxRed
 hi link ALEWarningSign      GruvboxOrange
 hi link ALEStyleErrorSign   GruvboxAqua
 hi link ALEStyleWarningSign GruvboxBlue
+
+hi link CocHighlightText DiffChange
+hi link CocHighlightRead DiffChange
+hi link CocHighlightWrite DiffChange
 " }}}
 
 " }}}
@@ -562,43 +502,24 @@ inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
 inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-inoremap <silent><C-Space> <C-R>=ncm2#force_trigger()<CR>
 imap <C-l> <Plug>delimitMateS-Tab
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" inoremap <silent><expr> <c-space> coc#refresh()
-" augroup LCHL
-"   autocmd CursorHold * silent call CocActionAsync('highlight')
-"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-" augroup END
-
-" nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
-" nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
-" nmap <silent><leader>lcd <Plug>(coc-definition)
-" nmap <silent><leader>lca <Plug>(coc-codeaction)
-" xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
-" nmap <silent><leader>lcr <Plug>(coc-rename)
-" nmap <silent><leader>lcu <Plug>(coc-references)
-" nmap <silent><leader>lcf <Plug>(coc-format-selected)
-" xmap <silent><leader>lcf <Plug>(coc-format-selected)
-
-" Laguage Client
+" LSP
 " [k] Hover, [d] Definition, [m] Menu, [a] Code ActiON, [r] RenaME, [u] References,
 " [f] Format/Range Formatting, [S] Document Symbol, [s] Workspace Symbol,
 " [h] Highlight, [H] Clear Highlight, [p] Signature Help, [e] Explain Error
-nnoremap <silent><leader>lck :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent><leader>lcd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent><leader>lcm :call LanguageClient_contextMenu()<CR>
-nnoremap <silent><leader>lca :call LanguageClient#textDocument_codeAction()<CR>
-nnoremap <silent><leader>lcr :call LanguageClient#textDocument_rename()<CR>
-nnoremap <silent><leader>lcu :call LanguageClient#textDocument_references()<CR>
-nnoremap <silent><leader>lcf :call LanguageClient#textDocument_formatting()<CR>
-xnoremap <silent><leader>lcf :call LanguageClient#textDocument_rangeFormatting()<CR>
-nnoremap <silent><leader>lcs :call LanguageClient#textDocument_documentSymbol()<CR>
-nnoremap <silent><leader>lcS :call LanguageClient#workspace_symbol()<CR>
-nnoremap <silent><leader>lch :call LanguageClient#textDocument_documentHighlight()<CR>
-nnoremap <silent><leader>lcH :call LanguageClient#clearDocumentHighlight()<CR>
-nnoremap <silent><leader>lcp :call LanguageClient#textDocument_signatureHelp()<CR>
-nnoremap <silent><leader>lce :call LanguageClient#explainErrorAtPoint()<CR>
+
+nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
+nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
+nmap <silent><leader>lcd <Plug>(coc-definition)
+nmap <silent><leader>lca <Plug>(coc-codeaction)
+xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
+nmap <silent><leader>lcr <Plug>(coc-rename)
+nmap <silent><leader>lcu <Plug>(coc-references)
+nmap <silent><leader>lcf <Plug>(coc-format-selected)
+xmap <silent><leader>lcf <Plug>(coc-format-selected)
+
 
 " remap <Esc> to jk in insert mode
 " inoremap jk <Esc>
@@ -734,6 +655,9 @@ nnoremap <leader>vp :VimuxPromptCommand<CR>
 
 " EasyAlign
 xmap ga <Plug>(EasyAlign)
+
+" Vista
+nnoremap <leader>vv :Vista!!<CR>
 
 " }}}
 
