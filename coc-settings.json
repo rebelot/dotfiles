@@ -1,0 +1,38 @@
+{
+  "suggest.enablePreview": true,
+  "suggest.echodocSupport": true,
+  "diagnostic.displayByAle": false,
+  "diagnostic.enable": false,
+  "languageserver": {
+//    "latex": {
+//      "command": "java",
+//      "args": ["-jar", "/Users/laurenzi/code/local/texlab.jar"],
+//      // not start server at home directory, since it won't work.
+//      "ignoredRootPaths": ["~"],
+//      "filetypes": ["tex", "bib", "plaintex", "context"],
+//      "initializationOptions": {
+//        "latex.forwardSearch.executable": "/Applications/Skim.app/Contents/SharedSupport/displayline",
+//        "latex.forwardSearch.args": ["%l", "%p", "%f"]
+//      }
+//    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"],
+      "initializationOptions": {
+        "bashIde.explainshellEndpoint": "http://localhost:5000"
+      }
+    },
+    "cquery": {
+      "command": "cquery",
+      "args": ["--log-file=/tmp/cq.log"],
+      "filetypes": ["c", "cpp"],
+      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "initializationOptions": {
+        "cacheDirectory": "/tmp/cquery"
+      }
+    }
+  },
+    "python.jediEnabled": true
+}
