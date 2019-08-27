@@ -110,7 +110,7 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2019-1"
+export SCHRODINGER="/opt/schrodinger/suites2019-2"
 export PYMOL4MAESTRO="/opt/anaconda3/bin"
 export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 export JULIA_PKGDIR="/Users/laurenzi/.julia"
@@ -200,6 +200,7 @@ alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
+alias vim=nvim
 # }}}
 
 # compinit / compdef {{{
