@@ -47,7 +47,7 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 
 # sudo
 alias _='sudo'
-alias please='sudo'
+alias please='sudo $(fc -ln -1)'
 
 # misc
 alias dud='du -d 1 -h'
