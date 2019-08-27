@@ -30,7 +30,7 @@ Plug 'liuchengxu/vista.vim'
 " }}}
 
 " Syntax and Folds {{{
-Plug 'plasticboy/vim-markdown'
+" Plug 'plasticboy/vim-markdown'
 Plug 'chrisbra/vim-zsh'
 Plug 'chrisbra/csv.vim', { 'on': 'CSVInit' }
 Plug 'vim-python/python-syntax'
@@ -38,7 +38,7 @@ Plug 'tmhedberg/SimpylFold'
 Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Konfekt/FastFold'
 Plug 'jaredsampson/vim-pymol'
-" Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug '/opt/plumed-2.4.3/lib/plumed/vim'
 " }}}
@@ -320,6 +320,8 @@ command! FollowSymLink execute "file " . resolve(expand('%')) | edit
 
 command! Reload source $MYVIMRC | noh
 
+command! -range=% Wc <line1>,<line2>w ! wc
+
 augroup MyAutoCommands
   autocmd!
 
@@ -406,8 +408,9 @@ set smarttab             " insert tabs on the start of a line according to
 set hlsearch             " highlight search terms
 set incsearch            " show search matches as you type
 set hidden               " allow modified buffers to be hidden 
-set wildmode=longest,list:longest,full
-set wildmenu             " diplay command completion listing and choice menu
+" set wildmode=longest,list:longest,full
+" set wildmenu             " diplay command completion listing and choice menu
+set wildoptions+=pum
 set wildignorecase       " ignore case command completion menu 
 set shell=zsh\ --login   " default shell (iteractive)
 set shellcmdflag=-c      " default shell command for non interactive invocations
@@ -626,6 +629,10 @@ nnoremap cr *``cgn
 " Add blank lines above/below cursor
 nnoremap ]<CR> :call append(line('.'), '')<CR>
 nnoremap [<CR> :call append(line('.')-1, '')<CR>
+
+" Move selection up/down
+xnoremap <C-J> :m'>+1<CR>gv=gv
+xnoremap <C-K> :m'<-2<CR>gv=gv
 
 " WindowSwap
 nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
