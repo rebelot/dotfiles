@@ -80,13 +80,13 @@ print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
-export FZF_DEFAULT_OPTS="
---no-height
---preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=gruvbox -f terminal16m -g {} || cat {}) 2> /dev/null | head -500'
---preview-window wrap:hidden
---bind 'ctrl-o:toggle-preview'
---bind 'tab':down
---bind 'btab:up'
+export FZF_DEFAULT_OPTS="\
+--no-height \
+--preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=gruvbox -f terminal16m -g {} || cat {}) 2> /dev/null | head -500' \
+--preview-window wrap:hidden \
+--bind 'ctrl-o:toggle-preview' \
+--bind 'tab':down \
+--bind 'btab:up' \
 --bind 'ctrl-z':toggle" 
 # }}}
 
@@ -110,8 +110,8 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2019-2"
-export PYMOL4MAESTRO="/opt/anaconda3/bin"
+export SCHRODINGER="/opt/schrodinger/suites2019-4"
+export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 export JULIA_PKGDIR="/Users/laurenzi/.julia"
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket

@@ -1,22 +1,12 @@
 {
   "suggest.enablePreview": true,
   "suggest.echodocSupport": true,
-  "diagnostic.displayByAle": false,
   "diagnostic.enable": false,
+  "diagnostic.displayByAle": false,
+  "coc.preferences.colorSupport": true,
 //  "diagnostic.virtualText": true,
 //  "suggest.echodocSupport": true,
   "languageserver": {
-//    "latex": {
-//      "command": "java",
-//      "args": ["-jar", "/Users/laurenzi/code/local/texlab.jar"],
-//      // not start server at home directory, since it won't work.
-//      "ignoredRootPaths": ["~"],
-//      "filetypes": ["tex", "bib", "plaintex", "context"],
-//      "initializationOptions": {
-//        "latex.forwardSearch.executable": "/Applications/Skim.app/Contents/SharedSupport/displayline",
-//        "latex.forwardSearch.args": ["%l", "%p", "%f"]
-//      }
-//    },
     "bash": {
       "command": "bash-language-server",
       "args": ["start"],
@@ -41,5 +31,20 @@
       "filetypes": ["julia"]
      }
   },
-    "python.jediEnabled": true
+    "python.jediEnabled": true,
+    "python.venvFolders": [
+        "envs",
+        ".pyenv",
+        ".direnv",
+        "venvs"
+    ],
+    "suggest.timeout": 10000,
+    "latex.build.onSave": true,
+    "latex.forwardSearch.executable": "/Applications/Skim.app/Contents/SharedSupport/displayline",
+    "latex.forwardSearch.args": ["%l", "%p", "%f"],
+    "latex.build.args": [
+        "-pdf",
+        "-interaction=nonstopmode",
+        "-synctex=1"
+    ]
 }

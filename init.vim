@@ -21,7 +21,7 @@ Plug 'junegunn/vim-plug'
 " Code completion {{{
 Plug 'wellle/tmux-complete.vim'
 Plug 'JuliaEditorSupport/julia-vim'
-Plug 'lervag/vimtex'
+" Plug 'lervag/vimtex'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc-neco'
@@ -229,6 +229,7 @@ let g:ale_linters = {'python': ['flake8', 'pylint']}
 let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_python_pylint_options = '--disable=C'
 let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
+" let g:ale_virtualenv_dir_names = []
 
 let g:suda#prefix = 'sudo:'
 call suda#init('sudo:*,sudo:*/*')
@@ -244,9 +245,10 @@ let g:peekaboo_window = 'vert bo 30 new'
 
 let g:matchup_override_vimtex = 1
 let g:matchup_matchparen_deferred = 1
+" let g:matchup_matchparen_offscreen = 'popup'
 
 " Tagbar {{{
-let g:tagbar_ctags_bin = '/opt/bin/ctags'
+" let g:tagbar_ctags_bin = '/opt/bin/ctags'
 let g:tagbar_type_markdown= {
     \ 'ctagstype': 'markdown',
     \ 'ctagsbin' : '/Users/laurenzi/.vim/mystuff/markdown2ctags/markdown2ctags.py',
@@ -307,6 +309,19 @@ function! WinZoomToggle() abort
    endif
 endfunction
 
+function! FloatReg() abort
+  let l:regs = ''
+  redir => l:regs
+  execute 'silent reg'
+  redir end
+  let l:text = split(l:regs, '\n')
+  let l:buf = nvim_create_buf(v:false, v:true)
+  call nvim_buf_set_lines(l:buf, 0, -1, v:true, l:text)
+  let l:h = len(l:text)
+  let l:opts = {'relative': 'cursor', 'width': 80, 'height': l:h, 'col': 0, 'row': 1, 'anchor': 'NW', 'style': 'minimal'}
+  let l:win = nvim_open_win(l:buf, 0, l:opts)
+endfunction
+
 " }}}
 
 " Commands {{{
@@ -357,6 +372,8 @@ augroup MyAutoCommands
   " Coc
   autocmd CursorHold * silent call CocActionAsync('highlight')
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  autocmd FileType tex nnoremap <buffer> <F5> :CocCommand latex.Build<CR>
+  autocmd FileType tex nnoremap <buffer> <leader>fs :CocCommand latex.ForwardSearch<CR>
 
   " Send to Repl
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
@@ -430,7 +447,7 @@ set updatetime=250       " time required to update CursorHold hook
 set shortmess+=c         " remove 'match x of y' echoing line
 " set printdevice=OLIVETTI_d_COPIA4500MF_plus__2_
 set showbreak=↪\ 
-set listchars=tab:..,trail:_,extends:>,precedes:<,nbsp:~,eol:¬
+set listchars=tab:\|.,trail:_,extends:>,precedes:<,nbsp:~,eol:¬
 " }}}
 
 " Colors {{{
@@ -665,6 +682,9 @@ xmap ga <Plug>(EasyAlign)
 
 " Vista
 nnoremap <leader>vv :Vista!!<CR>
+
+" gitgutter
+nnoremap <leader>hp :GitGutterPreviewHunk<CR>
 
 " }}}
 

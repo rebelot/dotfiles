@@ -66,11 +66,13 @@ alias rsync="rsync --progress -th"
 alias ccat='pygmentize -O style=gruvbox -f terminal16m -g'
 alias tc="tree -C"
 alias exa="exa --group-directories-first"
-alias el="exa -l"
+alias el="exa -l --icons --colour-scale"
+alias ela="el -a"
 alias t='tail -f'
 # alias vim=nvim
 alias edit=nvim # Vim Only!
 alias watch="env TERM=xterm-256color watch"
+alias pipupdate="pip list --local --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 
 # git
 command -v hub > /dev/null && alias git=hub
