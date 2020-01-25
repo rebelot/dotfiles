@@ -4,8 +4,11 @@
   "diagnostic.enable": false,
   "diagnostic.displayByAle": false,
   "coc.preferences.colorSupport": true,
-//  "diagnostic.virtualText": true,
-//  "suggest.echodocSupport": true,
+  "diagnostic.errorSign": "",
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "diagnostic.hintSign": "",
+  //"diagnostic.virtualText": true,
   "languageserver": {
     "bash": {
       "command": "bash-language-server",
@@ -32,6 +35,7 @@
      }
   },
     "python.jediEnabled": true,
+    "python.jediPath": "~/venvs/base/lib/python3.7/site-packages/",
     "python.venvFolders": [
         "envs",
         ".pyenv",

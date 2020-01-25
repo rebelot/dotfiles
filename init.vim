@@ -35,7 +35,6 @@ Plug 'chrisbra/vim-zsh'
 Plug 'chrisbra/csv.vim', { 'on': 'CSVInit' }
 Plug 'vim-python/python-syntax'
 Plug 'tmhedberg/SimpylFold'
-Plug 'KeitaNakamura/highlighter.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Konfekt/FastFold'
 Plug 'jaredsampson/vim-pymol'
 Plug 'vim-pandoc/vim-pandoc'
@@ -44,12 +43,10 @@ Plug '/opt/plumed-2.4.3/lib/plumed/vim'
 " }}}
 
 " File, Buffer Browsers {{{
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'ivalkeen/nerdtree-execute'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
-Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 " }}}
@@ -57,7 +54,6 @@ Plug 'junegunn/fzf.vim'
 " Colors {{{
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Plug 'morhetz/gruvbox'
 Plug 'gruvbox-community/gruvbox'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -76,14 +72,14 @@ Plug 'machakann/vim-highlightedyank'
 
 " Utils {{{  
 Plug 'w0rp/ale'
-Plug 'joonty/vdebug', {'on': 'VdebugStart'}
+" Plug 'joonty/vdebug', {'on': 'VdebugStart'}
+Plug 'vim-vdebug/vdebug'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 Plug 'junegunn/vim-peekaboo'
-Plug 'chrisbra/vim-diff-enhanced'
 Plug 'kassio/neoterm'
 Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
@@ -91,6 +87,7 @@ Plug 'wesQ3/vim-windowswap'
 Plug 'rebelot/nvim-historian', {'branch': 'devel'}
 " Plug 'neomake/neomake'
 Plug 'andymass/vim-matchup'
+Plug 'jmcantrell/vim-virtualenv'
 " Plug 'mhinz/vim-signify'
 " }}}
 
@@ -115,6 +112,8 @@ Plug 'tmux-plugins/vim-tmux'
 " }}}
 
 call plug#end()
+
+source $VIMRUNTIME/menu.vim
 " }}}
 
 " Plugin Options {{{
@@ -129,30 +128,15 @@ let g:tmuxcomplete#trigger = ''
 
 let g:default_julia_version = '1.0'
 
-let g:vimtex_compiler_progname = 'nvr'
-let g:vimtex_view_method = 'skim'
-let g:vimtex_quickfix_autoclose_after_keystrokes = 0
-let g:vimtex_quickfix_open_on_warning = 0
-let g:vimtex_fold_enabled = 0
-let g:vimtex_matchparen_enabled = 0
-let g:vimtex_syntax_enabled = 1
-let g:vimtex_motion_enabled = 0
-" vimtex ncm2 register source in
-" ~/.local/share/nvim/site/after/ftplugin/tex_ncm2.vim
-
-let g:echodoc_enable_at_startup = 1
-
 let g:UltiSnipsExpandTrigger = '<Plug>(ultisnips_expand)'
 let g:UltiSnipsExpandTrigger = '<c-j>'
-let g:UltiSnipsJumpForwardTrigger	= '<c-j>'
-let g:UltiSnipsJumpBackwardTrigger	= '<c-k>'
+let g:UltiSnipsJumpForwardTrigger = '<c-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
 let g:UltiSnipsListSnippets = '<c-x><c-s>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
 let g:vista_echo_cursor_strategy = 'floating_win'
-
 let g:vista_default_executive = 'ctags'
-
 let g:vista_executive_for = {
     \ 'cpp': 'coc',
     \ 'python': 'coc'
@@ -175,19 +159,13 @@ let g:tex_flavor = 'latex'
 " }}}
 
 " File, Buffer, Browsers {{{
-
 let g:NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeDirArrows = 1
 
-let g:ackprg = 'ag --vimgrep'
-
-let g:ctrlp_map = '<leader>f'
-let g:ctrlp_cmd = 'CtrlPMixed'
-
-let g:fzf_tags_command = '/opt/bin/ctags -R'
-
 let g:ranger_map_keys = 0
+
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 " }}}
 
 " Colors {{{
@@ -204,13 +182,10 @@ let g:airline#extensions#csv#column_display = 'Name'
 let g:airline_powerline_fonts = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_theme = 'gruvbox'
+let g:airline#extensions#virtualenv#enabled = 0
 
 let g:limelight_default_coefficient = 0.7
 let g:limelight_priority = -1
-
-let g:Illuminate_ftblacklist = ['nerdtree', 'ctrlp', 'Mundo']
-let g:Illuminate_delay = 250
-
 " }}}
 
 " Utils {{{
@@ -222,19 +197,17 @@ let g:gitgutter_override_sign_column_highlight = 0
 
 let g:ale_set_highlights = 1
 let g:ale_sign_error = '' "  ⤫
-let g:ale_sign_warning = '' " ⚠    
+let g:ale_sign_warning = '' " ﯧ  ﯦ   ⚠    
 let g:ale_lint_on_text_changed = 'always'
 let g:ale_fixers = { 'python': 'autopep8', 'sh': 'shfmt'}
-let g:ale_linters = {'python': ['flake8', 'pylint']}
+let g:ale_linters = {'python': ['flake8', 'pylint', 'mypy']}
 let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_python_pylint_options = '--disable=C'
 let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
-" let g:ale_virtualenv_dir_names = []
+let g:ale_virtualenv_dir_names = ['.env', '.venv', 'env', 've-py3', 've', 'virtualenv', 'venv', '.ve', 'venvs']
 
 let g:suda#prefix = 'sudo:'
 call suda#init('sudo:*,sudo:*/*')
-
-let g:historian_registers = ['+']
 
 let g:windowswap_map_keys = 0
 
@@ -246,6 +219,8 @@ let g:peekaboo_window = 'vert bo 30 new'
 let g:matchup_override_vimtex = 1
 let g:matchup_matchparen_deferred = 1
 " let g:matchup_matchparen_offscreen = 'popup'
+
+let g:virtualenv_directory = '~/venvs/'
 
 " Tagbar {{{
 " let g:tagbar_ctags_bin = '/opt/bin/ctags'
@@ -322,6 +297,18 @@ function! FloatReg() abort
   let l:win = nvim_open_win(l:buf, 0, l:opts)
 endfunction
 
+function! FloatingFZF()
+  let width = float2nr(&columns * 0.9)
+  let height = float2nr(&lines * 0.6)
+  let opts = { 'relative': 'editor',
+              \ 'row': (&lines - height) / 2,
+              \ 'col': (&columns - width) / 2,
+              \ 'width': width,
+              \ 'height': height }
+  let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+  call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
+endfunction
+
 " }}}
 
 " Commands {{{
@@ -354,7 +341,7 @@ augroup MyAutoCommands
   autocmd User GoyoLeave Limelight!
   
   " Competions Preview
-  autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
+  " autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
   
   " Set SpellCheck
   autocmd FileType latex,tex,markdown,txt setlocal spell
@@ -366,8 +353,9 @@ augroup MyAutoCommands
   autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
   autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
 
-  " syntax filetype
+  " Syntax
   autocmd BufNewFile,BufRead *.coffee set filetype=coffee
+  autocmd FileType json syntax match Comment +\/\/.\+$+
     
   " Coc
   autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -380,6 +368,9 @@ augroup MyAutoCommands
 
   " make
   autocmd FileType markdown setlocal makeprg=pandoc\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf
+
+  " Surround
+  autocmd FileType tex let g:surround_92 = "\\\1\\\1{\r}"
 
 augroup END
 
@@ -438,7 +429,8 @@ set conceallevel=2       " conceal marked text
 set completeopt=menuone,noinsert,noselect,preview
 set pumheight=15         " set completion menu max height
                          " set the behavior of the completion menu 
-set fillchars=vert:┃,fold:\ 
+set fillchars+=vert:┃,fold:\ 
+" set fillchars+=foldopen:▾,foldsep:│,foldclose:▸
                          " set various fillchars; in this case removes clobbering signs from folds ('\ ')
 set inccommand=split     " real time preview of substitution commands
 set noshowmode           " Do not show -- MODE -- in cmdline"
@@ -448,6 +440,7 @@ set shortmess+=c         " remove 'match x of y' echoing line
 " set printdevice=OLIVETTI_d_COPIA4500MF_plus__2_
 set showbreak=↪\ 
 set listchars=tab:\|.,trail:_,extends:>,precedes:<,nbsp:~,eol:¬
+set wildcharm=<C-Z>      " trigger completion in macros
 " }}}
 
 " Colors {{{
@@ -526,19 +519,21 @@ imap <C-l> <Plug>delimitMateS-Tab
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " LSP
-" [k] Hover, [d] Definition, [m] Menu, [a] Code ActiON, [r] RenaME, [u] References,
-" [f] Format/Range Formatting, [S] Document Symbol, [s] Workspace Symbol,
-" [h] Highlight, [H] Clear Highlight, [p] Signature Help, [e] Explain Error
-
 nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
 nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
+nnoremap <silent><leader>lcS :call CocAction('documentSymbols')<CR>
+nnoremap <silent><leader>lcs :call CocAction('workspaceSymbols')<CR>
+nnoremap <silent><leader>lch :call CocAction('showSignatureHelp')<CR>
 nmap <silent><leader>lcd <Plug>(coc-definition)
 nmap <silent><leader>lca <Plug>(coc-codeaction)
 xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
 nmap <silent><leader>lcr <Plug>(coc-rename)
+nmap <silent><leader>lcR <Plug>(coc-refactor)
 nmap <silent><leader>lcu <Plug>(coc-references)
 nmap <silent><leader>lcf <Plug>(coc-format-selected)
 xmap <silent><leader>lcf <Plug>(coc-format-selected)
+nmap <silent><leader>lcp <Plug>(coc-float-jump)
+nnoremap <leader>cl :CocList<CR>
 
 
 " remap <Esc> to jk in insert mode
@@ -571,7 +566,7 @@ nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
 nnoremap <leader>bo :%bd <bar> e# <bar> bd #<CR>
 
-" switch/open buffers
+" Go to [b]uffer, [s]plit, [v]ertical, [t]ab or [d]elete
 nnoremap <silent><m-n> :bnext<CR>
 nnoremap <silent><m-p> :bprev<CR>
 nnoremap gbb :ls<CR>:b 
@@ -580,13 +575,8 @@ nnoremap gbv :ls<CR>:vertical sb
 nnoremap gbt :ls<CR>:tab sb 
 nnoremap gbd :ls<CR>:bdelete 
 
-" [s]ave buffer (normal or insert)
-nnoremap <leader>s :w<cr>
-" inoremap <leader>s <C-c>:w<cr>
-
-" copy to system clipboard
-" vnoremap <C-c> :w !pbcopy<CR><CR>
-" noremap <C-v> :r !pbpaste<CR><CR>
+" [w]rite buffer 
+nnoremap <leader>w :w<cr>
 
 " redraw screen and c[l]ear highlights
 nnoremap <silent><leader>l :noh<CR>:redraw!<CR>
@@ -664,11 +654,12 @@ nnoremap <silent><leader>nf :NERDTreeFind<CR>
 " Toggle [Mu]ndo
 nnoremap <silent><leader>mu :MundoToggle<CR>
 
-" [F]uzzy [m]ost recent, [b]uffers, [l]ines, [h]elptags
-nnoremap <leader>fm :CtrlPMRUFiles<CR>
-nnoremap <leader>fb :CtrlPBuffer<CR>
+" FZF [f]files, [h]istory, [b]uffers, [l]lines
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fh :History<CR>
+nnoremap <leader>fb :Buffer<CR>
 nnoremap <leader>fl :Lines<CR>
-nnoremap <leader>fh :Helptags<CR>
+" nnoremap <leader>fh :Helptags<CR>
 
 " Marks
 nnoremap <leader>m :Marks<CR>
@@ -682,9 +673,14 @@ xmap ga <Plug>(EasyAlign)
 
 " Vista
 nnoremap <leader>vv :Vista!!<CR>
+nnoremap <leader>vf :Vista finder<CR>
 
 " gitgutter
 nnoremap <leader>hp :GitGutterPreviewHunk<CR>
+
+" Menu
+nnoremap <F2> :emenu <C-Z>
+xnoremap <F2> :emenu <C-Z>
 
 " }}}
 
