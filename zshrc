@@ -84,6 +84,7 @@ export FZF_DEFAULT_OPTS="\
 --no-height \
 --preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=gruvbox -f terminal16m -g {} || cat {}) 2> /dev/null | head -500' \
 --preview-window wrap:hidden \
+--border --margin=0,2
 --bind 'ctrl-o:toggle-preview' \
 --bind 'tab':down \
 --bind 'btab:up' \
@@ -198,9 +199,10 @@ alias vmd="/Applications/VMD\ 1.9.4.app/Contents/Resources/VMD.app/Contents/MacO
 alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
-alias schrenv=". ~/Documents/Schrodinger/schrodinger.ve/bin/activate"
+alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
+alias pydebug="python -S $HOME/code/src/Komodo-PythonRemoteDebugging-11.1.0-91033-macosx/py3_dbgp -d localhost:9000"
 # }}}
 
 # compinit / compdef {{{
@@ -210,8 +212,8 @@ zplugin cdreplay -q
 # }}}
 
 # other sources  {{{
-source /opt/gromacs-2018.4/bin/GMXRC
-source /opt/local/share/tldr-cpp-client/autocomplete/complete.zsh
+# source /opt/gromacs-2018.4/bin/GMXRC
+# source /opt/local/share/tldr-cpp-client/autocomplete/complete.zsh
 source /opt/local/etc/profile.d/z.sh
 source ~/.fzf.zsh
 #test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
