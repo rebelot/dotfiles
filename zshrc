@@ -48,21 +48,21 @@ source $ZSH/prompt.zsh
 # }}}
 
 # Plugins {{{
-source "$HOME/.zplugin/bin/zplugin.zsh"
+source "$HOME/.zinit/bin/zinit.zsh"
 
-zplugin ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
-zplugin ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
-zplugin ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
-zplugin ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
-zplugin ice as"completion"; zplugin snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
-zplugin ice as"completion" mv"* -> _pandoc"; zplugin snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
-zplugin ice as"completion"; zplugin snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
-zplugin load hlissner/zsh-autopair
-zplugin ice svn; zplugin snippet OMZ::plugins/pip
-zplugin load bric3/oh-my-zsh-git
+zinit ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
+zinit ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
+zinit ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
+zinit ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
+zinit ice as"completion"; zplugin snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
+zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zplugin snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
+# zinit ice as"completion"; zplugin snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
+zinit load hlissner/zsh-autopair
+zinit ice svn; zplugin snippet OMZ::plugins/pip
+zinit load bric3/oh-my-zsh-git
 # zplugin load srijanshetty/zsh-pandoc-completion
-zplugin ice blockf; zplugin light zsh-users/zsh-completions
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice blockf; zplugin light zsh-users/zsh-completions
+zinit light zdharma/fast-syntax-highlighting
 # }}}
 
 # plugin Opts {{{
