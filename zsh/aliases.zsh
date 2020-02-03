@@ -76,7 +76,7 @@ alias pipupdate="pip list --local --outdated --format=freeze | grep -v '^\-e' | 
 alias q=exit
 
 # git
-command -v hub > /dev/null && alias git=hub
+(( $+commands[hub] )) && command -v hub > /dev/null && alias git=hub
 alias gr='cd $(git rev-parse --show-toplevel)'
 # alias whereami=display_info
 

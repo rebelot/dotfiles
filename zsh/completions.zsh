@@ -48,7 +48,7 @@ zstyle ':completion:*:messages' format $'\e[31;1m -- %d --\e[0m'
 zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
 zstyle ':completion:*:functions' ignored-patterns '_*'
 
-eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
+(( $+commands[dircolors] )) && eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
 zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=94' ${(s.:.)LS_COLORS}
 
 # expand-or-complete-with-dots
