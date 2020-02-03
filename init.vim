@@ -328,7 +328,7 @@ augroup MyAutoCommands
   autocmd!
 
   " zsh!
-  autocmd vimenter * let &shell='/opt/local/bin/zsh -i'
+  autocmd vimenter * let &shell='"/opt/local/bin/zsh" -i'
   
   " Science
   autocmd BufNewFile,BufRead *.pdb set filetype=PDB
@@ -367,7 +367,7 @@ augroup MyAutoCommands
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
 
   " make
-  autocmd FileType markdown setlocal makeprg=pandoc\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf
+  autocmd FileType markdown,pandoc setlocal makeprg=pandoc\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf
 
   " Surround
   autocmd FileType tex let g:surround_92 = "\\\1\\\1{\r}"
@@ -420,7 +420,7 @@ set hidden               " allow modified buffers to be hidden
 " set wildmenu             " diplay command completion listing and choice menu
 set wildoptions+=pum
 set wildignorecase       " ignore case command completion menu 
-set shell=zsh\ --login   " default shell (iteractive)
+set shell=/opt/local/bin/zsh\ --login   " default shell (interactive)
 set shellcmdflag=-c      " default shell command for non interactive invocations
 "set clipboard=unnamed   " send yanks to system clipboard (buggy with v-block)
 set showcmd              " show key spressed in lower-right corner
@@ -659,6 +659,7 @@ nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fh :History<CR>
 nnoremap <leader>fb :Buffer<CR>
 nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>h  :History:<CR>
 " nnoremap <leader>fh :Helptags<CR>
 
 " Marks
