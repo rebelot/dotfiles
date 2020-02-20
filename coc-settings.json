@@ -1,14 +1,17 @@
 {
   "suggest.enablePreview": true,
   "suggest.echodocSupport": true,
-  "diagnostic.enable": false,
+  "diagnostic.enable": true,
   "diagnostic.displayByAle": false,
   "coc.preferences.colorSupport": true,
+  "diagnostic.enableSign": true,
   "diagnostic.errorSign": "",
   "diagnostic.warningSign": "",
   "diagnostic.infoSign": "",
   "diagnostic.hintSign": "",
-  //"diagnostic.virtualText": true,
+  "diagnostic.virtualText": false,
+  "diagnostic.enableHighlightLineNumber": false,
+  "diagnostic.messageTarget": "float",
   "languageserver": {
     "bash": {
       "command": "bash-language-server",
@@ -35,6 +38,8 @@
      }
   },
     "python.jediEnabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.flake8Enabled": true,
     "python.jediPath": "~/venvs/base/lib/python3.7/site-packages/",
     "python.venvFolders": [
         "envs",
@@ -42,7 +47,9 @@
         ".direnv",
         "venvs"
     ],
-    "suggest.timeout": 10000,
+    "python.linting.pylintArgs": ["--disable=C"],
+    "python.linting.flake8Args": ["--ignore=E221,E241,E201"],
+    "suggest.timeout": 5000,
     "latex.build.onSave": true,
     "latex.forwardSearch.executable": "/Applications/Skim.app/Contents/SharedSupport/displayline",
     "latex.forwardSearch.args": ["%l", "%p", "%f"],
