@@ -50,18 +50,19 @@ source $ZSH/prompt.zsh
 # Plugins {{{
 source "$HOME/.zinit/bin/zinit.zsh"
 
-zinit ice as"completion" mv"comp* -> _exa"; zplugin snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
-zinit ice as"completion" mv"hub* -> _hub"; zplugin snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
-zinit ice as"completion"; zplugin snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
-zinit ice as"completion"; zplugin snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
-zinit ice as"completion"; zplugin snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
-zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zplugin snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
-# zinit ice as"completion"; zplugin snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
+zinit ice as"completion" mv"comp* -> _exa"; zinit snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
+zinit ice as"completion" mv"hub* -> _hub"; zinit snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
+zinit ice as"completion"; zinit snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
+zinit ice as"completion"; zinit snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
+zinit ice as"completion"; zinit snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
+zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zinit snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
+# zinit ice as"completion"; zinit snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
 zinit load hlissner/zsh-autopair
-zinit ice svn; zplugin snippet OMZ::plugins/pip
+zinit ice svn; zinit snippet OMZ::plugins/pip
+# zinit ice svn; zinit snippet OMZ::plugins/fd
 zinit load bric3/oh-my-zsh-git
-# zplugin load srijanshetty/zsh-pandoc-completion
-zinit ice blockf; zplugin light zsh-users/zsh-completions
+# zinit load srijanshetty/zsh-pandoc-completion
+zinit ice blockf; zinit light zsh-users/zsh-completions
 zinit light zdharma/fast-syntax-highlighting
 # }}}
 
@@ -80,6 +81,7 @@ print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
 export FZF_DEFAULT_OPTS="\
 --no-height \
 --preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=gruvbox -f terminal16m -g {} || cat {}) 2> /dev/null | head -500' \
@@ -100,7 +102,7 @@ export RPROMPT='$(oh_my_git_info)'
 # ls colors
 export CLICOLOR=1
 autoload -U colors && colors
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
+# export LSCOLORS="Gxfxcxdxbxegedabagacad"
 # export LSCOLORS=ExFxBxDxCxegedabagEgGx
 # eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS moved in $ZSH/completions.zsh
 
