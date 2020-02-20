@@ -328,7 +328,7 @@ augroup MyAutoCommands
   autocmd!
 
   " zsh!
-  autocmd vimenter * let &shell='"/opt/local/bin/zsh" -i'
+  " autocmd vimenter * let &shell='"/opt/local/bin/zsh" -i'
   
   " Science
   autocmd BufNewFile,BufRead *.pdb set filetype=PDB
@@ -420,8 +420,8 @@ set hidden               " allow modified buffers to be hidden
 " set wildmenu             " diplay command completion listing and choice menu
 set wildoptions+=pum
 set wildignorecase       " ignore case command completion menu 
-set shell=/opt/local/bin/zsh\ --login   " default shell (interactive)
-set shellcmdflag=-c      " default shell command for non interactive invocations
+" set shell=/opt/local/bin/zsh\ --login   " default shell (interactive)
+" set shellcmdflag=-c      " default shell command for non interactive invocations
 "set clipboard=unnamed   " send yanks to system clipboard (buggy with v-block)
 set showcmd              " show key spressed in lower-right corner
 set sidescroll=1         " smooth side scrolling
@@ -465,24 +465,27 @@ hi clear SpellCap
 hi clear SpellLocal
 hi clear SpellRare
 " Works well with iTerm2 underline color
-hi SpellBad   gui=underline     " guifg=red 
-hi SpellLocal gui=underline     " guifg=yellow
-hi SpellCap   gui=underline     " guifg=orange
-hi SpellRare  gui=underline     " guifg=darkyellow
+hi SpellBad   gui=underline     guisp=red 
+hi SpellLocal gui=underline     guisp=yellow
+hi SpellCap   gui=underline     guisp=orange
+hi SpellRare  gui=underline     guisp=darkyellow
 " }}}
 
 " ALE {{{
-hi ALEInfo                  gui=underline
-hi ALEError                 gui=underline
-hi ALEWarning               gui=underline
-hi ALEStyleError            gui=underline
-hi ALEStyleWarning          gui=underline
+hi ALEInfo                  gui=underline guisp=blue
+hi ALEError                 gui=underline guisp=red
+hi ALEWarning               gui=underline guisp=orange
+hi ALEStyleError            gui=underline guisp=green
+hi ALEStyleWarning          gui=underline guisp=green
 hi link ALEInfoSign         GruvboxYellow
 hi link ALEErrorSign        GruvboxRed
 hi link ALEWarningSign      GruvboxOrange
 hi link ALEStyleErrorSign   GruvboxAqua
 hi link ALEStyleWarningSign GruvboxBlue
 
+" hi link CocInfoSign GruvboxYellow
+" hi link CocErrorSign GruvboxRed
+" hi link CocWarningSign GruvboxOrange
 hi link CocHighlightText DiffChange
 hi link CocHighlightRead DiffChange
 hi link CocHighlightWrite DiffChange
