@@ -26,6 +26,7 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc-neco'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'antoinemadec/coc-fzf'
 Plug 'liuchengxu/vista.vim'
 " }}}
 
@@ -126,7 +127,7 @@ source $VIMRUNTIME/menu.vim
 
 let g:tmuxcomplete#trigger = ''
 
-let g:default_julia_version = '1.0'
+" let g:default_julia_version = '1.0'
 
 let g:UltiSnipsExpandTrigger = '<Plug>(ultisnips_expand)'
 let g:UltiSnipsExpandTrigger = '<c-j>'
@@ -137,9 +138,13 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 
 let g:vista_echo_cursor_strategy = 'floating_win'
 let g:vista_default_executive = 'ctags'
+" let g:vista_ctags_cmd = {
+"       \ 'python': 'ctags -f - --sort=yes'
+"       \ }
 let g:vista_executive_for = {
     \ 'cpp': 'coc',
-    \ 'python': 'coc'
+    \ 'python': 'coc',
+    \ 'markdown': 'toc'
     \ }
 " }}}
 
@@ -205,9 +210,7 @@ let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_python_pylint_options = '--disable=C'
 let g:ale_python_flake8_options = '--ignore=E221,E241,E201'
 let g:ale_virtualenv_dir_names = ['.env', '.venv', 'env', 've-py3', 've', 'virtualenv', 'venv', '.ve', 'venvs']
-
-let g:suda#prefix = 'sudo:'
-call suda#init('sudo:*,sudo:*/*')
+let g:ale_pattern_options = {'\.py$': {'ale_enabled': 0}}
 
 let g:windowswap_map_keys = 0
 
@@ -313,9 +316,6 @@ endfunction
 
 " Commands {{{
 
-command! -nargs=1 -complete=file   SudoEdit  edit  sudo:<args>
-command! -nargs=1 -complete=buffer SudoWrite write sudo:<args>
-
 command! CD lcd %:p:h
 
 command! FollowSymLink execute "file " . resolve(expand('%')) | edit
@@ -335,6 +335,7 @@ augroup MyAutoCommands
   autocmd BufNewFile,BufRead *.aln set filetype=clustal
   autocmd BufNewFile,BufRead *.fasta,*.fa set filetype=fasta
   autocmd BufNewFile,BufRead *.msj set filetype=config
+  autocmd BufNewFile,BufRead *.cms,*mae setlocal foldmarker={,} | setlocal fdm=marker
 
   " Distraction Free
   autocmd User GoyoEnter Limelight
@@ -362,6 +363,9 @@ augroup MyAutoCommands
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
   autocmd FileType tex nnoremap <buffer> <F5> :CocCommand latex.Build<CR>
   autocmd FileType tex nnoremap <buffer> <leader>fs :CocCommand latex.ForwardSearch<CR>
+
+  " Vista
+  autocmd FileType vista,vista_kind nnoremap <buffer> <silent> / :<c-u>call vista#finder#fzf#Run('coc')<CR>
 
   " Send to Repl
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
@@ -441,6 +445,7 @@ set shortmess+=c         " remove 'match x of y' echoing line
 set showbreak=↪\ 
 set listchars=tab:\|.,trail:_,extends:>,precedes:<,nbsp:~,eol:¬
 set wildcharm=<C-Z>      " trigger completion in macros
+set signcolumn=auto:4
 " }}}
 
 " Colors {{{
@@ -465,32 +470,45 @@ hi clear SpellCap
 hi clear SpellLocal
 hi clear SpellRare
 " Works well with iTerm2 underline color
-hi SpellBad   gui=underline     guisp=red 
-hi SpellLocal gui=underline     guisp=yellow
-hi SpellCap   gui=underline     guisp=orange
-hi SpellRare  gui=underline     guisp=darkyellow
+hi SpellBad   gui=undercurl  guisp=red 
+hi SpellLocal gui=undercurl  guisp=yellow
+hi SpellCap   gui=undercurl  guisp=orange
+hi SpellRare  gui=undercurl  guisp=darkyellow
 " }}}
 
 " ALE {{{
-hi ALEInfo                  gui=underline guisp=blue
-hi ALEError                 gui=underline guisp=red
-hi ALEWarning               gui=underline guisp=orange
-hi ALEStyleError            gui=underline guisp=green
-hi ALEStyleWarning          gui=underline guisp=green
-hi link ALEInfoSign         GruvboxYellow
-hi link ALEErrorSign        GruvboxRed
-hi link ALEWarningSign      GruvboxOrange
-hi link ALEStyleErrorSign   GruvboxAqua
-hi link ALEStyleWarningSign GruvboxBlue
+" hi ALEInfo                  gui=undercurl guisp=blue
+" hi ALEError                 gui=undercurl guisp=red
+" hi ALEWarning               gui=undercurl guisp=orange
+" hi ALEStyleError            gui=undercurl guisp=green
+" hi ALEStyleWarning          gui=undercurl guisp=green
+" hi link ALEInfoSign         GruvboxYellow
+" hi link ALEErrorSign        GruvboxRed
+" hi link ALEWarningSign      GruvboxOrange
+" hi link ALEStyleErrorSign   GruvboxAqua
+" hi link ALEStyleWarningSign GruvboxBlue
 
 " hi link CocInfoSign GruvboxYellow
 " hi link CocErrorSign GruvboxRed
 " hi link CocWarningSign GruvboxOrange
-hi link CocHighlightText DiffChange
-hi link CocHighlightRead DiffChange
-hi link CocHighlightWrite DiffChange
+" hi link CocHighlightText DiffChange
+" hi link CocHighlightRead DiffChange
+" hi link CocHighlightWrite DiffChange
 " }}}
 
+" python syntax {{{
+" https://stackoverflow.com/questions/18774910/how-to-partially-link-highlighting-groups
+" exe 'hi pythonClassVar gui=italic guifg=' . synIDattr(synIDtrans(hlID('pythonClassVar')), 'fg', 'gui')
+" exe 'hi pythonBuiltinType gui=italic guifg=' . synIDattr(synIDtrans(hlID('pythonBuiltinType')), 'fg', 'gui')
+exe 'hi pythonBuiltinType gui=italic guifg=' . synIDattr(synIDtrans(hlID('GruvboxAqua')), 'fg', 'gui')
+exe 'hi pythonClassVar gui=italic guifg=' . synIDattr(synIDtrans(hlID('GruvboxBlue')), 'fg', 'gui')
+hi link pythonClass GruvboxAquaBold
+" exe 'hi pythonClass gui=bold guifg=' . synIDattr(synIDtrans(hlID('GruvboxAquaBold')), 'fg', 'gui')
+" }}}
+
+" Coc {{{
+" hi CocHighlightText guibg=' . synIDattr(hlID('GruvboxAqua'), 'fg')
+" }}}
 " }}}
 " }}}
 
@@ -520,13 +538,18 @@ inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>"
 inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
 imap <C-l> <Plug>delimitMateS-Tab
 inoremap <silent><expr> <c-space> coc#refresh()
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
 
 " LSP
 nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
 nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
-nnoremap <silent><leader>lcS :call CocAction('documentSymbols')<CR>
-nnoremap <silent><leader>lcs :call CocAction('workspaceSymbols')<CR>
+nnoremap <silent><leader>lcs :call CocAction('documentSymbols')<CR>
+nnoremap <silent><leader>lcS :call CocAction('workspaceSymbols')<CR>
 nnoremap <silent><leader>lch :call CocAction('showSignatureHelp')<CR>
+nnoremap <silent><leader>lcF :call CocAction('format')<CR>
 nmap <silent><leader>lcd <Plug>(coc-definition)
 nmap <silent><leader>lca <Plug>(coc-codeaction)
 xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
@@ -658,7 +681,7 @@ nnoremap <silent><leader>nf :NERDTreeFind<CR>
 nnoremap <silent><leader>mu :MundoToggle<CR>
 
 " FZF [f]files, [h]istory, [b]uffers, [l]lines
-nnoremap <leader>ff :Files<CR>
+nnoremap <leader>ff :FZF<CR>
 nnoremap <leader>fh :History<CR>
 nnoremap <leader>fb :Buffer<CR>
 nnoremap <leader>fl :Lines<CR>
@@ -685,6 +708,11 @@ nnoremap <leader>hp :GitGutterPreviewHunk<CR>
 " Menu
 nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
+
+" Sintax stuff
+map <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+  \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+  \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 " }}}
 

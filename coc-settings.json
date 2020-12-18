@@ -1,9 +1,19 @@
 {
   "suggest.enablePreview": true,
+  "suggest.languageSourcePriority": 100,
+  "suggest.removeDuplicateItems": true,
+  "suggest.timeout": 5000,
   "suggest.echodocSupport": true,
+  "coc.source.buffer.priority": 1,
+  "coc.source.around.priority": 1,
+  "coc.source.tmuxcomplete.priority": 1,
+  "coc.source.ultisnips.priority": 100,
+  "coc.preferences.colorSupport": true,
+  "coc.preferences.promptInput": true,
+  "coc.preferences.maxFileSize": "10MB",
   "diagnostic.enable": true,
   "diagnostic.displayByAle": false,
-  "coc.preferences.colorSupport": true,
+  "diagnostic.checkCurrentLine": false,
   "diagnostic.enableSign": true,
   "diagnostic.errorSign": "",
   "diagnostic.warningSign": "",
@@ -13,49 +23,63 @@
   "diagnostic.enableHighlightLineNumber": false,
   "diagnostic.messageTarget": "float",
   "languageserver": {
-    "bash": {
-      "command": "bash-language-server",
-      "args": ["start"],
-      "filetypes": ["sh"],
-      "ignoredRootPaths": ["~"],
+      "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
       "initializationOptions": {
-        "bashIde.explainshellEndpoint": "http://localhost:5000"
-      }
-    },
-    "cquery": {
-      "command": "cquery",
-      "args": ["--log-file=/tmp/cq.log"],
-      "filetypes": ["c", "cpp"],
-      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-      "initializationOptions": {
-        "cacheDirectory": "/tmp/cquery"
-      }
-    },
-    "julia": {
-      "command": "julia",
-      "args" : ["--startup-file=no", "--history-file=no", "-e", "using LanguageServer; using Pkg; import StaticLint; import SymbolServer; env_path = dirname(Pkg.Types.Context().env.project_file); debug = false; server = LanguageServer.LanguageServerInstance(stdin, stdout, debug, env_path, \"\", Dict()); server.runlinter = true; run(server);" ],
-      "filetypes": ["julia"]
-     }
+         "cache": {
+           "directory": "/tmp/ccls"
+         }
+       }
+    }
   },
-    "python.jediEnabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.jediPath": "~/venvs/base/lib/python3.7/site-packages/",
-    "python.venvFolders": [
-        "envs",
-        ".pyenv",
-        ".direnv",
-        "venvs"
-    ],
-    "python.linting.pylintArgs": ["--disable=C"],
-    "python.linting.flake8Args": ["--ignore=E221,E241,E201"],
-    "suggest.timeout": 5000,
-    "latex.build.onSave": true,
-    "latex.forwardSearch.executable": "/Applications/Skim.app/Contents/SharedSupport/displayline",
-    "latex.forwardSearch.args": ["%l", "%p", "%f"],
-    "latex.build.args": [
-        "-pdf",
-        "-interaction=nonstopmode",
-        "-synctex=1"
-    ]
+//    "bash": {
+//      "command": "bash-language-server",
+//      "args": ["start"],
+//      "filetypes": ["sh"],
+//      "ignoredRootPaths": ["~"],
+//      "initializationOptions": {
+//        "bashIde.explainshellEndpoint": "http://localhost:5000"
+//      }
+//    },
+//    "cquery": {
+//      "command": "cquery",
+//      "args": ["--log-file=/tmp/cq.log"],
+//      "filetypes": ["c", "cpp"],
+//      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+//      "initializationOptions": {
+//        "cacheDirectory": "/tmp/cquery"
+//      }
+//    },
+//    "julia": {
+//      "command": "julia",
+//      "args" : ["--startup-file=no", "--history-file=no", "-e", "using LanguageServer; using Pkg; import StaticLint; import SymbolServer; env_path = dirname(Pkg.Types.Context().env.project_file); debug = false; server = LanguageServer.LanguageServerInstance(stdin, stdout, debug, env_path, \"\", Dict()); server.runlinter = true; run(server);" ],
+//      "filetypes": ["julia"]
+//     }
+//  },
+  "python.trace.server": "verbose",
+  "python.autoUpdateLanguageServer": true,
+  "python.jediEnabled": true,
+  //"python.jediPath": "/Users/laurenzi/venvs/base/lib/python3.8/site-packages",
+  "python.linting.mypyEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.formatting.provider": "black",
+  "python.venvFolders": [
+      "envs",
+      ".pyenv",
+      ".direnv",
+      "venvs"
+  ],
+  "python.linting.pylintArgs": ["--disable=C"],
+  "python.linting.flake8Args": ["--ignore=E221,E241,E201"],
+  "vimlsp.suggest.fromRuntimepath": true,
+  "latex.build.onSave": true,
+  "latex.forwardSearch.executable": "/Applications/Skim.app/Contents/SharedSupport/displayline",
+  "latex.forwardSearch.args": ["%l", "%p", "%f"],
+  "latex.build.args": [
+      "-pdf",
+      "-interaction=nonstopmode",
+      "-synctex=1"
+  ]
 }
