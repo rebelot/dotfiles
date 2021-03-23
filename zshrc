@@ -10,17 +10,18 @@
 
 # $PATH {{{
 # /etc/paths: /usr/local/bin /usr/bin /bin /usr/sbin /sbin
-export PATH="/opt/CHARMM/c38b2/exec/osx/:$PATH"               # <-- CHARMM
-export PATH="/Developer/NVIDIA/CUDA-9.1/bin:$PATH"            # <-- CUDA
-export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
-export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
+# export PATH="/opt/CHARMM/c38b2/exec/osx/:$PATH"               # <-- CHARMM
+# export PATH="/Developer/NVIDIA/CUDA-9.1/bin:$PATH"            # <-- CUDA
+# export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
+# export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
 export PATH="$HOME/code/bin:$PATH"                            # <-- personal stuff
-export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
+# export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
-export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
-export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
+# export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
+# export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
+export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
-[[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
+[[ -z $TMUX ]] || conda deactivate; conda activate py38       #   + TMUX fix
 export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
@@ -50,16 +51,15 @@ source $ZSH/prompt.zsh
 # Plugins {{{
 source "$HOME/.zinit/bin/zinit.zsh"
 
-zinit ice as"completion" mv"comp* -> _exa"; zinit snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
+# zinit ice as"completion" mv"comp* -> _exa"; zinit snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zinit ice as"completion" mv"hub* -> _hub"; zinit snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
-zinit ice as"completion"; zinit snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
+# zinit ice as"completion"; zinit snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
 zinit ice as"completion"; zinit snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zinit ice as"completion"; zinit snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
 zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zinit snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
 # zinit ice as"completion"; zinit snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
 zinit load hlissner/zsh-autopair
 zinit ice svn; zinit snippet OMZ::plugins/pip
-# zinit ice svn; zinit snippet OMZ::plugins/fd
 zinit load bric3/oh-my-zsh-git
 # zinit load srijanshetty/zsh-pandoc-completion
 zinit ice blockf; zinit light zsh-users/zsh-completions
@@ -81,22 +81,24 @@ print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
-export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
-export FZF_DEFAULT_OPTS="\
+export FZF_DEFAULT_COMMAND="fd --follow --hidden --color=always --ignore-file=$HOME/.gitignore"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS="$(echo \
+"--ansi \
 --no-height \
---preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || (pygmentize -O style=gruvbox -f terminal16m -g {} || cat {}) 2> /dev/null | head -500' \
+--preview '[[ \$(file --mime {}) =~ directory ]] && tree -C {} || { [[ \$(file --mime {}) =~ image ]] && catimg {}; } || { [[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file; } || bat --color=always --style=numbers,changes,snip {}' \
 --preview-window wrap:hidden \
---border --margin=0,2
+--border --margin=0,2 \
 --bind 'ctrl-o:toggle-preview' \
 --bind 'tab':down \
 --bind 'btab:up' \
---bind 'ctrl-z':toggle" 
+--bind 'ctrl-z':toggle ")"
 # }}}
 
 # User configuration {{{
 
 # prompt
-export PS1="$prompt_2short"
+export PS1="$prompt_2short" # Set in $ZSH/prompt.zsh
 export RPROMPT='$(oh_my_git_info)'
 
 # ls colors
@@ -113,11 +115,14 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2019-4"
+export SCHRODINGER="/opt/schrodinger/suites2020-4"
+export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 export JULIA_PKGDIR="/Users/laurenzi/.julia"
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+export SCHRODINGER_SCRIPTS="$HOME/code/src/schrodinger_utils/scripts"
+export BIOTOOLS="$HOME/code/src/BioTools"
 
 # language environment
 export LANG=en_US.UTF-8
@@ -147,6 +152,10 @@ export elenuar="159.149.32.81"
 export nero="159.149.32.106"
 export jessicah="159.149.32.103"
 export jane="159.149.32.105"
+export xlence2='192.168.60.11'
+
+# XDG
+export XDG_CONFIG_HOME="$HOME/.config/"
 
 # }}}
 
@@ -158,10 +167,6 @@ function melakappa {
     else
         mkdir -p ~/Jessicah/"$1" && mount_afp -i afp://$jessicah/"$1" ~/Jessicah/"$1"
     fi
-}
-
-function licmae {
-  $SCHRODINGER/licadmin STAT
 }
 
 function chunk {
@@ -186,25 +191,32 @@ function google {
 function lessc {
   pygmentize -O style=gruvbox -f terminal16m -g $1 | less
 }
+
+function tedit {
+  tmux splitw 'zsh -lic "nvim "'$@'; read'
+}
 # }}}
 
 # Aliases {{{
 # see $ZSH/aliases.zsh
 
-alias juliapro=/Applications/JuliaPro-1.0.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
+# alias juliapro=/Applications/JuliaPro-1.0.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
 # alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
-alias licmoe="lmutil lmstat -c /Applications/moe2018/license.dat -a"
+# alias licmoe="lmutil lmstat -c /Applications/moe2018/license.dat -a"
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
-alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
-alias catdcd="/Applications/VMD\ 1.9.4.app/Contents/vmd/plugins/MACOSXX86/bin/catdcd5.2/catdcd"
-alias vmd="/Applications/VMD\ 1.9.4.app/Contents/Resources/VMD.app/Contents/MacOS/VMD"
-alias spritz="~/Desktop/tommy/nsfw/spritz.py"
+# alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
+alias vmd='/Applications/VMD\ 1.9.4a51-x86_64-Rev9.app/Contents/MacOS/startup.command'
+# alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
 alias pydebug="python -S $HOME/code/src/Komodo-PythonRemoteDebugging-11.1.0-91033-macosx/py3_dbgp -d localhost:9000"
+alias pudb='python -m pudb'
+alias ptpy='ptipython'
+alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
+alias pymol='/opt/anaconda3/envs/pymol/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
 # }}}
 
 # compinit / compdef {{{

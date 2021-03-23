@@ -85,10 +85,11 @@ Plug 'kassio/neoterm'
 Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
-Plug 'rebelot/nvim-historian', {'branch': 'devel'}
+Plug 'fsharpasharp/nvim-historian'
 " Plug 'neomake/neomake'
 Plug 'andymass/vim-matchup'
 Plug 'jmcantrell/vim-virtualenv'
+Plug 'chrisbra/unicode.vim'
 " Plug 'mhinz/vim-signify'
 " }}}
 
@@ -200,6 +201,7 @@ let g:gutentags_project_root = ['__init__.py']
 let g:gitgutter_map_keys = 0
 let g:gitgutter_override_sign_column_highlight = 0
 
+let g:ale_floating_preview = 1
 let g:ale_set_highlights = 1
 let g:ale_sign_error = '' "  ⤫
 let g:ale_sign_warning = '' " ﯧ  ﯦ   ⚠    
@@ -224,6 +226,8 @@ let g:matchup_matchparen_deferred = 1
 " let g:matchup_matchparen_offscreen = 'popup'
 
 let g:virtualenv_directory = '~/venvs/'
+
+let g:historian_registers = ['+', '"']
 
 " Tagbar {{{
 " let g:tagbar_ctags_bin = '/opt/bin/ctags'
@@ -266,8 +270,7 @@ let g:delimitMate_nesting_quotes = ['"','`']
 function! VimuxSlime() abort
   let l:text = @v
   let l:text = substitute(l:text, '\n$', '', '')
-  call VimuxSendText(l:text)
-  call VimuxSendKeys('Enter')
+  call VimuxRunCommand(@v, 0)
 endfunction
 
 function! WinZoomToggle() abort
@@ -323,6 +326,8 @@ command! FollowSymLink execute "file " . resolve(expand('%')) | edit
 command! Reload source $MYVIMRC | noh
 
 command! -range=% Wc <line1>,<line2>w ! wc
+
+command! -nargs=1 -complete=file PythonInterpreter execute coc#config('python', {'pythonPath': <q-args>}) | CocRestart
 
 augroup MyAutoCommands
   autocmd!
@@ -434,7 +439,7 @@ set completeopt=menuone,noinsert,noselect,preview
 set pumheight=15         " set completion menu max height
                          " set the behavior of the completion menu 
 set fillchars+=vert:┃,fold:\ 
-" set fillchars+=foldopen:▾,foldsep:│,foldclose:▸
+set fillchars+=foldopen:▾,foldsep:│,foldclose:▸
                          " set various fillchars; in this case removes clobbering signs from folds ('\ ')
 set inccommand=split     " real time preview of substitution commands
 set noshowmode           " Do not show -- MODE -- in cmdline"
