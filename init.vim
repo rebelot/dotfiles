@@ -26,6 +26,7 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc-neco'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neovim/nvim-lspconfig'
 Plug 'antoinemadec/coc-fzf'
 Plug 'liuchengxu/vista.vim'
 " }}}
@@ -41,6 +42,7 @@ Plug 'jaredsampson/vim-pymol'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug '/opt/plumed-2.4.3/lib/plumed/vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " }}}
 
 " File, Buffer Browsers {{{
@@ -55,6 +57,8 @@ Plug 'junegunn/fzf.vim'
 " Colors {{{
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'rktjmp/lush.nvim'
+" Plug 'npxbr/gruvbox.nvim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -176,9 +180,10 @@ let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 " Colors {{{
 let g:gruvbox_italic = 1
+" let g:gruvbox_sign_column = 'dark0'
 let g:gruvbox_sign_column = 'bg0'
 
-" let g:airline_focuslost_inactive = 0
+let g:airline_focuslost_inactive = 1
 let g:airline#extensions#neomake#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
@@ -187,6 +192,7 @@ let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#csv#column_display = 'Name'
 let g:airline_powerline_fonts = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+" let g:airline_theme = 'base16_gruvbox_dark_hard'
 let g:airline_theme = 'gruvbox'
 let g:airline#extensions#virtualenv#enabled = 0
 
@@ -435,7 +441,7 @@ set wildignorecase       " ignore case command completion menu
 set showcmd              " show key spressed in lower-right corner
 set sidescroll=1         " smooth side scrolling
 set conceallevel=2       " conceal marked text
-set completeopt=menuone,noinsert,noselect,preview
+set completeopt=menuone,noinsert,noselect
 set pumheight=15         " set completion menu max height
                          " set the behavior of the completion menu 
 set fillchars+=vert:┃,fold:\ 
@@ -451,6 +457,8 @@ set showbreak=↪\
 set listchars=tab:\|.,trail:_,extends:>,precedes:<,nbsp:~,eol:¬
 set wildcharm=<C-Z>      " trigger completion in macros
 set signcolumn=auto:4
+
+set dictionary=/usr/share/dict/words
 " }}}
 
 " Colors {{{
@@ -463,11 +471,6 @@ hi! link pythonDot GruvboxRed
 "}}}
 
 " Highlights {{{
-" transparent bg {{{
-" hi Normal guibg=NONE
-" hi SignColumn guibg=NONE
-" hi VertSplit guibg=NONE
-" }}}
 
 " Spell {{{
 hi clear SpellBad
@@ -512,7 +515,8 @@ hi link pythonClass GruvboxAquaBold
 " }}}
 
 " Coc {{{
-" hi CocHighlightText guibg=' . synIDattr(hlID('GruvboxAqua'), 'fg')
+exe 'hi CocHighlightText guibg=' . synIDattr(hlID('GruvboxBg4'), 'fg')
+" exe 'hi CocFloating guibg=' . synIDattr(hlID('GruvboxBg1'), 'fg')
 " }}}
 " }}}
 " }}}
@@ -715,7 +719,7 @@ nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
 
 " Sintax stuff
-map <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
   \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
   \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 

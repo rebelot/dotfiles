@@ -195,6 +195,23 @@ function lessc {
 function tedit {
   tmux splitw 'zsh -lic "nvim "'$@'; read'
 }
+
+function cythonsetup {
+  local exts=("$@")
+  cat << EOF > setup.py
+from setuptools import setup
+from Cython.Build import cythonize
+
+extensions = "${exts[@]}".split()
+setup(
+    ext_modules = cythonize(extensions, language_level = "3")
+)
+EOF
+  bash -c 'read -p "Build? [y/n] " input
+  if [[ $input = "y" ]]; then 
+    python setup.py build_ext --inplace
+  fi'
+}
 # }}}
 
 # Aliases {{{

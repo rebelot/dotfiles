@@ -1,7 +1,6 @@
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'steelsojka/completion-buffers'
-
+Plug 'glepnir/lspsaga.nvim'
+Plug 'hrsh7th/nvim-compe'
 
 " LSP {{{
 lua << EOF
@@ -69,6 +68,91 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
+-- compltion
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = false;
+    nvim_lsp = true;
+    nvim_lua = true;
+    ultisnips = true;
+  };
+}
+
+local saga = require 'lspsaga'
+saga.init_lsp_saga {
+-- add your config value here
+-- default value
+use_saga_diagnostic_sign = false
+-- error_sign = '',
+-- warn_sign = '',
+-- hint_sign = '',
+-- infor_sign = '',
+-- dianostic_header_icon = '   ',
+-- code_action_icon = ' ',
+-- code_action_prompt = {
+--   enable = true,
+--   sign = true,
+--   sign_priority = 20,
+--   virtual_text = true,
+-- },
+-- finder_definition_icon = '  ',
+-- finder_reference_icon = '  ',
+-- max_preview_lines = 10, -- preview lines of lsp_finder and definition preview
+-- finder_action_keys = {
+--   open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' -- quit can be a table
+-- },
+-- code_action_keys = {
+--   quit = 'q',exec = '<CR>'
+-- },
+-- rename_action_keys = {
+--   quit = '<C-c>',exec = '<CR>'  -- quit can be a table
+-- },
+-- definition_preview_icon = '  '
+-- 1: thin border | 2: rounded border | 3: thick border | 4: ascii border
+-- border_style = 1
+-- rename_prompt_prefix = '➤',
+-- if you don't use nvim-lspconfig you must pass your server name and
+-- the related filetypes into this table
+-- like server_filetype_map = {metals = {'sbt', 'scala'}}
+-- server_filetype_map = {}
+}
+
 EOF
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm({ 'keys': "\<Plug>delimitMateCR", 'mode': '' })
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+nnoremap <silent> <leader>lcf :Lspsaga lsp_finder<CR>
+nnoremap <silent><leader>lca :Lspsaga code_action<CR>
+vnoremap <silent><leader>lca :<C-U>Lspsaga range_code_action<CR>
+nnoremap <silent> K :Lspsaga hover_doc<CR>
+nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
+nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
+nnoremap <silent><leader> lcs :Lspsaga signature_help<CR>
+nnoremap <silent><leader> lcr :Lspsaga rename<CR>
+nnoremap <silent><leader> lcd :Lspsaga preview_definition<CR>
+nnoremap <silent><leader>cD :Lspsaga show_line_diagnostics<CR>
+nnoremap <silent><leader>cd <cmd>lua require'lspsaga.diagnostic'.show_cursor_diagnostics()<CR>
+nnoremap <silent> [e :Lspsaga diagnostic_jump_next<CR>
+nnoremap <silent> ]e :Lspsaga diagnostic_jump_prev<CR>
+
 
 "}}}

@@ -52,6 +52,8 @@
   "diagnostic.virtualText": false,
   "diagnostic.enableHighlightLineNumber": false,
   "diagnostic.messageTarget": "float",
+  "coc.source.dictionary.filetypes": ["markdown", "latex", "text", "pandoc", "tex"],
+  "coc.source.dictionary.shortcut": "﬜",
   "languageserver": {
       "ccls": {
       "command": "ccls-clang-11",
