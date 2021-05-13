@@ -10,6 +10,8 @@ setopt long_list_jobs
 setopt interactivecomments
 setopt multios
 setopt prompt_subst
+zle_highlight+=(paste:underline)
+
 
 # History command configuration
 setopt extended_history       # record timestamp of command in HISTFILE

@@ -14,14 +14,14 @@
 # export PATH="/Developer/NVIDIA/CUDA-9.1/bin:$PATH"            # <-- CUDA
 # export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
 # export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
-export PATH="$HOME/code/bin:$PATH"                            # <-- personal stuff
 # export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
+export PATH="$HOME/usr/bin:$PATH"                            # <-- personal stuff
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
 # export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
-# export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
+export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
-[[ -z $TMUX ]] || conda deactivate; conda activate py38       #   + TMUX fix
+[[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
 export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
@@ -50,6 +50,18 @@ source $ZSH/prompt.zsh
 
 # Plugins {{{
 source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zinit-zsh/z-a-rust \
+    zinit-zsh/z-a-as-monitor \
+    zinit-zsh/z-a-patch-dl \
+    zinit-zsh/z-a-bin-gem-node
+
+### End of Zinit's installer chunk
 
 # zinit ice as"completion" mv"comp* -> _exa"; zinit snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zinit ice as"completion" mv"hub* -> _hub"; zinit snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
@@ -90,9 +102,9 @@ export FZF_DEFAULT_OPTS="$(echo \
 --preview-window wrap:hidden \
 --border --margin=0,2 \
 --bind 'ctrl-o:toggle-preview' \
---bind 'tab':down \
+--bind 'tab:down' \
 --bind 'btab:up' \
---bind 'ctrl-z':toggle ")"
+--bind 'ctrl-z:toggle' ")"
 # }}}
 
 # User configuration {{{
@@ -115,14 +127,14 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2020-4"
+export SCHRODINGER="/opt/schrodinger/suites2021-1"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
-export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
-export JULIA_PKGDIR="/Users/laurenzi/.julia"
+# export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
+# export JULIA_PKGDIR="/Users/laurenzi/.julia"
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
-export SCHRODINGER_SCRIPTS="$HOME/code/src/schrodinger_utils/scripts"
-export BIOTOOLS="$HOME/code/src/BioTools"
+export SCHRODINGER_SCRIPTS="$HOME/usr/src/schrodinger_utils/scripts"
+export BIOTOOLS="$HOME/usr/src/BioTools"
 
 # language environment
 export LANG=en_US.UTF-8
@@ -148,11 +160,6 @@ export LESS=-R
 
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
-export elenuar="159.149.32.81"
-export nero="159.149.32.106"
-export jessicah="159.149.32.103"
-export jane="159.149.32.105"
-export xlence2='192.168.60.11'
 
 # XDG
 export XDG_CONFIG_HOME="$HOME/.config/"
@@ -167,11 +174,6 @@ function melakappa {
     else
         mkdir -p ~/Jessicah/"$1" && mount_afp -i afp://$jessicah/"$1" ~/Jessicah/"$1"
     fi
-}
-
-function chunk {
-    khd &
-    chunkwm &
 }
 
 function deskhide {
@@ -212,6 +214,10 @@ EOF
     python setup.py build_ext --inplace
   fi'
 }
+
+function pman {
+  tmux display-popup -KR "man $@"
+}
 # }}}
 
 # Aliases {{{
@@ -229,7 +235,7 @@ alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
-alias pydebug="python -S $HOME/code/src/Komodo-PythonRemoteDebugging-11.1.0-91033-macosx/py3_dbgp -d localhost:9000"
+alias debugpy="$HOME/venvs/debugpy/bin/python -m debugpy"
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
@@ -239,7 +245,7 @@ alias pymol='/opt/anaconda3/envs/pymol/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 
 # compinit / compdef {{{
 autoload -Uz compinit
 compinit -i
-zplugin cdreplay -q
+zinit cdreplay -q
 # }}}
 
 # other sources  {{{

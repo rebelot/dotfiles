@@ -54,8 +54,3 @@ function buffer2clipboard { echo $BUFFER | pbcopy }
 zle -N buffer2clipboard
 bindkey '^Xy' buffer2clipboard
 
-function my-run-help {
-    { eval "${BUFFER%% *} --help 2> /dev/null" || eval "${BUFFER%% *} -h 2> /dev/null"; } | less
-}
-zle -N my-run-help
-bindkey '^[H' my-run-help
