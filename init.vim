@@ -15,20 +15,24 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
-call plug#begin('~/.vim/bundle')
+call plug#begin('~/.config/nvim/plug')
 Plug 'junegunn/vim-plug'
 
 " Code completion {{{
+
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'antoinemadec/coc-fzf'
+
+" Plug 'neovim/nvim-lspconfig'
+" Plug 'glepnir/lspsaga.nvim'
+" Plug 'hrsh7th/nvim-compe'
+
 Plug 'wellle/tmux-complete.vim'
 Plug 'JuliaEditorSupport/julia-vim'
-" Plug 'lervag/vimtex'
+Plug 'liuchengxu/vista.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'neoclide/coc-neco'
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-Plug 'neovim/nvim-lspconfig'
-Plug 'antoinemadec/coc-fzf'
-Plug 'liuchengxu/vista.vim'
+" Plug 'lervag/vimtex'
 " }}}
 
 " Syntax and Folds {{{
@@ -43,23 +47,28 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug '/opt/plumed-2.4.3/lib/plumed/vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
+Plug 'neoclide/jsonc.vim'
 " }}}
 
 " File, Buffer Browsers {{{
 Plug 'scrooloose/nerdtree'
-Plug 'ivalkeen/nerdtree-execute'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-dap.nvim'
 " }}}
 
 " Colors {{{
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'rktjmp/lush.nvim'
+" Plug 'rktjmp/lush.nvim'
 " Plug 'npxbr/gruvbox.nvim'
 Plug 'gruvbox-community/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'machakann/vim-highlightedyank'
@@ -77,15 +86,15 @@ Plug 'machakann/vim-highlightedyank'
 
 " Utils {{{  
 Plug 'w0rp/ale'
-" Plug 'joonty/vdebug', {'on': 'VdebugStart'}
-Plug 'vim-vdebug/vdebug'
+Plug 'mfussenegger/nvim-dap'
+Plug 'mfussenegger/nvim-dap-python'
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+Plug 'mhinz/vim-signify'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 Plug 'junegunn/vim-peekaboo'
-Plug 'kassio/neoterm'
+" Plug 'kassio/neoterm'
 Plug 'moll/vim-bbye'
 Plug 'lambdalisue/suda.vim'
 Plug 'wesQ3/vim-windowswap'
@@ -94,7 +103,7 @@ Plug 'fsharpasharp/nvim-historian'
 Plug 'andymass/vim-matchup'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'chrisbra/unicode.vim'
-" Plug 'mhinz/vim-signify'
+Plug 'mhinz/vim-startify'
 " }}}
 
 " Editing Tools {{{
@@ -143,6 +152,7 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 
 let g:vista_echo_cursor_strategy = 'floating_win'
 let g:vista_default_executive = 'ctags'
+let g:vista_ctags_executable = 'uctags'
 " let g:vista_ctags_cmd = {
 "       \ 'python': 'ctags -f - --sort=yes'
 "       \ }
@@ -176,6 +186,32 @@ let g:NERDTreeDirArrows = 1
 let g:ranger_map_keys = 0
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<Tab>"] = actions.move_selection_next,
+        ["<S-Tab>"] = actions.move_selection_previous,
+        ["<C-z>"] = actions.toggle_selection,
+        ["<C-s>"] = actions.select_horizontal,
+        ["<C-x>"] = actions.send_selected_to_qflist + actions.open_qflist,
+      },
+      n = {
+        ["<C-z>"] = actions.toggle_selection,
+        ["<C-s>"] = actions.select_horizontal,
+        ["<C-x>"] = actions.send_selected_to_qflist + actions.open_qflist,
+      }
+    },
+  }
+}
+require('telescope').load_extension('dap')
+EOF
+
 " }}}
 
 " Colors {{{
@@ -204,9 +240,6 @@ let g:limelight_priority = -1
 let g:gutentags_ctags_exclude = ['.mypy_cache']
 let g:gutentags_project_root = ['__init__.py']
 
-let g:gitgutter_map_keys = 0
-let g:gitgutter_override_sign_column_highlight = 0
-
 let g:ale_floating_preview = 1
 let g:ale_set_highlights = 1
 let g:ale_sign_error = '' "  ⤫
@@ -225,18 +258,42 @@ let g:windowswap_map_keys = 0
 let g:peekaboo_compact = 0
 let g:peekaboo_window = 'vert bo 30 new'
 
-" let g:neomake_logfile = '/tmp/neomake.log'
-
 let g:matchup_override_vimtex = 1
 let g:matchup_matchparen_deferred = 1
-" let g:matchup_matchparen_offscreen = 'popup'
+let g:matchup_matchparen_offscreen = {'method': 'popup'}
 
 let g:virtualenv_directory = '~/venvs/'
 
 let g:historian_registers = ['+', '"']
 
+" dap
+lua <<EOF
+require('dap')
+vim.fn.sign_define('DapBreakpoint', {text='⬤ ', texthl='debugBreakpoint', linehl='', numhl=''})
+vim.fn.sign_define('DapStopped', {text='▶', texthl='debugBreakpoint', linehl='debugPC', numhl=''})
+require('dap-python').setup('~/venvs/debugpy/bin/python')
+require('dap.ext.vscode').load_launchjs()
+EOF
+
+" Startify
+
+let g:startify_commands = [
+    \ ':PlugUpdate',
+    \ ':checkhealth',
+    \ ]
+let g:startify_bookmarks = [ '~/.config/nvim/init.vim', '~/.zshrc' ]
+let g:startify_myheader = [
+\'███╗   ██╗██╗   ██╗██╗███╗   ███╗',
+\'████╗  ██║██║   ██║██║████╗ ████║',
+\'██╔██╗ ██║██║   ██║██║██╔████╔██║',
+\'██║╚██╗██║╚██╗ ██╔╝██║██║╚██╔╝██║',
+\'██║ ╚████║ ╚████╔╝ ██║██║ ╚═╝ ██║',
+\'╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝',
+\]
+let g:startify_custom_header = 'startify#pad(g:startify_myheader + startify#fortune#boxed())'
+
 " Tagbar {{{
-" let g:tagbar_ctags_bin = '/opt/bin/ctags'
+let g:tagbar_ctags_bin = '/opt/local/bin/uctags'
 let g:tagbar_type_markdown= {
     \ 'ctagstype': 'markdown',
     \ 'ctagsbin' : '/Users/laurenzi/.vim/mystuff/markdown2ctags/markdown2ctags.py',
@@ -273,10 +330,8 @@ let g:delimitMate_nesting_quotes = ['"','`']
 
 " Functions {{{
 
-function! VimuxSlime() abort
-  let l:text = @v
-  let l:text = substitute(l:text, '\n$', '', '')
-  call VimuxRunCommand(@v, 0)
+function! VimuxSlime()
+ call VimuxRunCommand(@v, 0)
 endfunction
 
 function! WinZoomToggle() abort
@@ -333,8 +388,6 @@ command! Reload source $MYVIMRC | noh
 
 command! -range=% Wc <line1>,<line2>w ! wc
 
-command! -nargs=1 -complete=file PythonInterpreter execute coc#config('python', {'pythonPath': <q-args>}) | CocRestart
-
 augroup MyAutoCommands
   autocmd!
 
@@ -369,15 +422,6 @@ augroup MyAutoCommands
   autocmd BufNewFile,BufRead *.coffee set filetype=coffee
   autocmd FileType json syntax match Comment +\/\/.\+$+
     
-  " Coc
-  autocmd CursorHold * silent call CocActionAsync('highlight')
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-  autocmd FileType tex nnoremap <buffer> <F5> :CocCommand latex.Build<CR>
-  autocmd FileType tex nnoremap <buffer> <leader>fs :CocCommand latex.ForwardSearch<CR>
-
-  " Vista
-  autocmd FileType vista,vista_kind nnoremap <buffer> <silent> / :<c-u>call vista#finder#fzf#Run('coc')<CR>
-
   " Send to Repl
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
 
@@ -386,6 +430,9 @@ augroup MyAutoCommands
 
   " Surround
   autocmd FileType tex let g:surround_92 = "\\\1\\\1{\r}"
+
+  " Terminal
+  autocmd TermOpen * setlocal nonumber norelativenumber
 
 augroup END
 
@@ -399,12 +446,12 @@ syntax on                " enable syntax highlighting
 set termguicolors        " enable gui colors for terminal
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" 
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+let g:vimsyn_embed = 'lPr'
                          " Failsafe to enable True Colors in tmux; is it really required?
 set encoding=utf-8       " enconding
-set guifont=Menlo\ Regular\ Nerd\ Font\ Complete:h12 " select font for gui
 set modeline             " enable vim modelines
 set mouse=a              " enable mouse for all modes
-set noerrorbells vb t_vb=	" remove all errors; 'set visualbell noeb' to revert
+set noerrorbells novb	" remove all errors; 'set visualbell noeb' to revert
 set history=1000         " remember more commands and search history
 set undolevels=1000      " use many muchos levels of undo
 set wildignore=*.swp,*.bak,*.pyc,*.class
@@ -462,7 +509,7 @@ set dictionary=/usr/share/dict/words
 " }}}
 
 " Colors {{{
-colorscheme gruvbox 
+colorscheme gruvbox
 set background=dark
 
 " Colorscheme Overrides {{{
@@ -496,7 +543,7 @@ hi SpellRare  gui=undercurl  guisp=darkyellow
 " hi link ALEStyleErrorSign   GruvboxAqua
 " hi link ALEStyleWarningSign GruvboxBlue
 
-" hi link CocInfoSign GruvboxYellow
+" hi link CautocmdocInfoSign GruvboxYellow
 " hi link CocErrorSign GruvboxRed
 " hi link CocWarningSign GruvboxOrange
 " hi link CocHighlightText DiffChange
@@ -514,10 +561,6 @@ hi link pythonClass GruvboxAquaBold
 " exe 'hi pythonClass gui=bold guifg=' . synIDattr(synIDtrans(hlID('GruvboxAquaBold')), 'fg', 'gui')
 " }}}
 
-" Coc {{{
-exe 'hi CocHighlightText guibg=' . synIDattr(hlID('GruvboxBg4'), 'fg')
-" exe 'hi CocFloating guibg=' . synIDattr(hlID('GruvboxBg1'), 'fg')
-" }}}
 " }}}
 " }}}
 
@@ -546,29 +589,6 @@ imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
 inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
 imap <C-l> <Plug>delimitMateS-Tab
-inoremap <silent><expr> <c-space> coc#refresh()
-nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-
-" LSP
-nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
-nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
-nnoremap <silent><leader>lcs :call CocAction('documentSymbols')<CR>
-nnoremap <silent><leader>lcS :call CocAction('workspaceSymbols')<CR>
-nnoremap <silent><leader>lch :call CocAction('showSignatureHelp')<CR>
-nnoremap <silent><leader>lcF :call CocAction('format')<CR>
-nmap <silent><leader>lcd <Plug>(coc-definition)
-nmap <silent><leader>lca <Plug>(coc-codeaction)
-xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
-nmap <silent><leader>lcr <Plug>(coc-rename)
-nmap <silent><leader>lcR <Plug>(coc-refactor)
-nmap <silent><leader>lcu <Plug>(coc-references)
-nmap <silent><leader>lcf <Plug>(coc-format-selected)
-xmap <silent><leader>lcf <Plug>(coc-format-selected)
-nmap <silent><leader>lcp <Plug>(coc-float-jump)
-nnoremap <leader>cl :CocList<CR>
 
 
 " remap <Esc> to jk in insert mode
@@ -690,15 +710,25 @@ nnoremap <silent><leader>nf :NERDTreeFind<CR>
 nnoremap <silent><leader>mu :MundoToggle<CR>
 
 " FZF [f]files, [h]istory, [b]uffers, [l]lines
-nnoremap <leader>ff :FZF<CR>
-nnoremap <leader>fh :History<CR>
-nnoremap <leader>fb :Buffer<CR>
-nnoremap <leader>fl :Lines<CR>
-nnoremap <leader>h  :History:<CR>
+" nnoremap <leader>ff :FZF<CR>
+" nnoremap <leader>fh :History<CR>
+" nnoremap <leader>fb :Buffer<CR>
+" nnoremap <leader>fl :Lines<CR>
+" nnoremap <leader>h  :History:<CR>
 " nnoremap <leader>fh :Helptags<CR>
+nnoremap <leader>ff :Telescope find_files<CR>
+nnoremap <leader>f. :Telescope file_browser<CR>
+nnoremap <leader>fl :Telescope current_buffer_fuzzy_find<CR>
+nnoremap <leader>fq :Telescope quickfix<CR>
+nnoremap <leader>fh :Telescope oldfiles<CR>
+nnoremap <leader>fb :Telescope buffer<CR>
+nnoremap <leader>fg :Telescope live_grep<CR>
+nnoremap <leader><space> :Telescope commands<CR>
+nnoremap <leader>ft :Telescope treesitter<CR>
 
 " Marks
-nnoremap <leader>m :Marks<CR>
+" nnoremap <leader>m :Marks<CR>
+nnoremap <leader>m :Telescope marks<CR>
 
 " Vimux
 xnoremap <leader>vs "vy :call VimuxSlime()<CR>
@@ -712,7 +742,7 @@ nnoremap <leader>vv :Vista!!<CR>
 nnoremap <leader>vf :Vista finder<CR>
 
 " gitgutter
-nnoremap <leader>hp :GitGutterPreviewHunk<CR>
+nnoremap <leader>sd :SignifyHunkDiff<CR>
 
 " Menu
 nnoremap <F2> :emenu <C-Z>
@@ -723,6 +753,25 @@ nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> t
   \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
   \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
+" Debugger
+nnoremap <leader>do :lua require'dap'.step_over()<CR>
+nnoremap <leader>dO :lua require'dap'.step_out()<CR>
+nnoremap <leader>dn :lua require'dap'.step_into()<CR>
+nnoremap <leader>dN :lua require'dap'.step_back()<CR>
+nnoremap <leader>db :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <leader>dr :lua require'dap'.repl.toggle()<CR>
+nnoremap <leader>dv :Telescope dap variables<CR>
+nnoremap <leader>dc :Telescope dap commands<CR>
+nnoremap <leader>di :lua require'dap.ui.variables'.hover(function() return vim.fn.expand("<cexpr>") end)<CR>
+xnoremap <leader>di :lua require'dap.ui.variables'.visual_hover()<CR>
+nnoremap <leader>ds :lua require'dap.ui.variables'.scopes()<CR>
+nnoremap <leader>d. :lua require'dap'.goto_()<CR>
+
+" }}}
+
+" LSP {{{
+source $HOME/.config/nvim/nvim-coc-config
+" source $HOME/.config/nvim/nvim-lsp-config
 " }}}
 
 " vim: ts=2 sw=2 fdm=marker
