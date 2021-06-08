@@ -1,0 +1,49 @@
+
+command! -nargs=1 -complete=customlist,PythonInterpreterComplete PythonInterpreter execute coc#config('python', {'pythonPath': <q-args>}) | CocRestart
+
+function PythonInterpreterComplete(A,L,P) abort
+  let l:venvs = systemlist('find $HOME/venvs -name python')
+  let l:binaries = systemlist('which -a python')
+  return l:venvs + l:binaries
+endfunction
+
+augroup LSPAuto
+  autocmd!
+  " Coc
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  autocmd FileType tex nnoremap <buffer> <F5> :CocCommand latex.Build<CR>
+  autocmd FileType tex nnoremap <buffer> <leader>fs :CocCommand latex.ForwardSearch<CR>
+
+  " Vista
+  autocmd FileType vista,vista_kind nnoremap <buffer> <silent> / :<c-u>call vista#finder#fzf#Run('coc')<CR>
+augroup END
+
+exe 'hi CocHighlightText guibg=' . synIDattr(hlID('GruvboxBg4'), 'fg')
+" exe 'hi CocFloating guibg=' . synIDattr(hlID('GruvboxBg1'), 'fg')
+
+inoremap <silent><expr> <c-space> coc#refresh()
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+nnoremap <silent><leader>lck :call CocAction('doHover')<CR>
+nnoremap <silent><leader>lcm :call CocAction('commands')<CR>
+nnoremap <silent><leader>lcs :call CocAction('documentSymbols')<CR>
+nnoremap <silent><leader>lcS :call CocAction('workspaceSymbols')<CR>
+inoremap <silent><C-Q> <C-O>:call CocActionAsync('showSignatureHelp')<CR>
+nnoremap <silent><leader>lcF :call CocAction('format')<CR>
+" nnoremap <silent><leader>lcd :call CocAction('jumpDefinition', 'v:false')<CR>
+nmap <silent><leader>lcd <Plug>(coc-definition)
+nmap <silent><leader>lca <Plug>(coc-codeaction)
+xmap <silent><leader>lca <Plug>(coc-codeaction-selected)
+nmap <silent><leader>lcr <Plug>(coc-rename)
+nmap <silent><leader>lcR <Plug>(coc-refactor)
+nmap <silent><leader>lcu <Plug>(coc-references)
+nmap <silent><leader>lcf <Plug>(coc-format-selected)
+xmap <silent><leader>lcf <Plug>(coc-format-selected)
+nmap <silent><leader>lcp <Plug>(coc-float-jump)
+nnoremap <leader>cl :CocList<CR>
+
+" vim: ts=2 sw=2 fdm=marker ft=vim
