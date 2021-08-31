@@ -15,10 +15,11 @@
 # export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
 # export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
 # export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
-export PATH="$HOME/usr/bin:$PATH"                            # <-- personal stuff
+export PATH="$HOME/usr/bin:$PATH"                             # <-- personal stuff
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
-# export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
+# export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"               # <-- ruby gem
 export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
+export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
 [[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
@@ -127,7 +128,7 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2021-1"
+export SCHRODINGER="/opt/schrodinger/suites2021-3"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 # export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
@@ -235,11 +236,12 @@ alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
-alias debugpy="$HOME/venvs/debugpy/bin/python -m debugpy"
+alias debugpy="python $HOME/venvs/debugpy/lib/python3.8/site-packages/debugpy --listen localhost:5678 --wait-for-client"
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
 alias pymol='/opt/anaconda3/envs/pymol/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
+alias luamake=/Users/laurenzi/usr/src/lua-language-server/3rd/luamake/luamake
 # }}}
 
 # compinit / compdef {{{
