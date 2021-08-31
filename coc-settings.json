@@ -64,54 +64,24 @@
            "directory": "/tmp/ccls"
          },
          "clang": {
-            "resourceDir": "/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0",
+            //From clang -print-resource-dir
+            "resourceDir": "/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5",
+            //From clang -v -fsyntax-only -x c++ /dev/null
             "extraArgs": [
-                "-isystem",
-                "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1",
-                "-I",
-                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"
-            ]
+                 "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
+                 "-isystem/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include",
+                 "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
+                 "-isystem/Library/Developer/CommandLineTools/usr/include",
+                 "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks" ,
+                ]
+            }
         }
-        }
-    }
-},
-//    "bash": {
-//      "command": "bash-language-server",
-//      "args": ["start"],
-//      "filetypes": ["sh"],
-//      "ignoredRootPaths": ["~"],
-//      "initializationOptions": {
-//        "bashIde.explainshellEndpoint": "http://localhost:5000"
-//      }
-//    },
-//    "cquery": {
-//      "command": "cquery",
-//      "args": ["--log-file=/tmp/cq.log"],
-//      "filetypes": ["c", "cpp"],
-//      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-//      "initializationOptions": {
-//        "cacheDirectory": "/tmp/cquery"
-//      }
-//    },
-//    "julia": {
-//      "command": "julia",
-//      "args" : ["--startup-file=no", "--history-file=no", "-e", "using LanguageServer; using Pkg; import StaticLint; import SymbolServer; env_path = dirname(Pkg.Types.Context().env.project_file); debug = false; server = LanguageServer.LanguageServerInstance(stdin, stdout, debug, env_path, \"\", Dict()); server.runlinter = true; run(server);" ],
-//      "filetypes": ["julia"]
-//     }
-//  },
-//  "python.trace.server": "verbose",
-//  "python.autoUpdateLanguageServer": true,
-//  "python.jediEnabled": true,
+     }
+  },
   //"python.jediPath": "/Users/laurenzi/venvs/base/lib/python3.8/site-packages",
   "python.linting.mypyEnabled": true,
   "python.linting.flake8Enabled": true,
   "python.formatting.provider": "black",
-//  "python.venvFolders": [
-//      "envs",
-//      ".pyenv",
-//      ".direnv",
-//      "venvs"
-//  ],
   "python.venvPath": "/Users/laurenzi/venvs",
   "python.linting.pylintArgs": ["--disable=C"],
   "python.linting.flake8Args": ["--ignore=E221,E241,E201", "--max-line-length=160"],
