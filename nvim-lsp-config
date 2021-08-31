@@ -27,9 +27,22 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = true,
     signs = true,
-    update_in_insert = true,
+    update_in_insert = false,
   }
 )
+
+vim.api.nvim_exec([[
+augroup lsp_diagnostic
+  autocmd! * <buffer>
+  " autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
+  autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()
+augroup END
+]], false)
+
+vim.fn.sign_define('LspDiagnosticsSignError', { text = "", texthl = "LspDiagnosticsDefaultError" })
+vim.fn.sign_define('LspDiagnosticsSignWarning', { text = "", texthl = "LspDiagnosticsDefaultWarning" })
+vim.fn.sign_define('LspDiagnosticsSignInformation', { text = "", texthl = "LspDiagnosticsDefaultInformation" })
+vim.fn.sign_define('LspDiagnosticsSignHint', { text = "", texthl = "LspDiagnosticsDefaultHint" })
 EOF
 " }}}
 
@@ -61,12 +74,12 @@ local on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "<leader>gq", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
--- 
+
   if client.resolved_capabilities.document_highlight then
     vim.api.nvim_exec([[
-      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceRead gui=underline guisp=blue 
+      hi LspReferenceText gui=underline guisp=blue
+      hi LspReferenceWrite gui=underline guisp=blue
       augroup lsp_document_highlight
         autocmd! * <buffer>
         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -110,7 +123,7 @@ local saga = require 'lspsaga'
 saga.init_lsp_saga {
 -- add your config value here
 -- default value
-use_saga_diagnostic_sign = false
+use_saga_diagnostic_sign = false;
 -- error_sign = '',
 -- warn_sign = '',
 -- hint_sign = '',
@@ -126,15 +139,22 @@ use_saga_diagnostic_sign = false
 -- finder_definition_icon = '  ',
 -- finder_reference_icon = '  ',
 -- max_preview_lines = 10, -- preview lines of lsp_finder and definition preview
--- finder_action_keys = {
---   open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' -- quit can be a table
--- },
--- code_action_keys = {
---   quit = 'q',exec = '<CR>'
--- },
--- rename_action_keys = {
---   quit = '<C-c>',exec = '<CR>'  -- quit can be a table
--- },
+finder_action_keys = {
+  open = 'o',
+  vsplit = 's',
+  split = 'i',
+  quit = {'q', '<esc>'},
+  scroll_down = '<C-f>',
+  scroll_up = '<C-b>'
+ };
+ code_action_keys = {
+   quit = {'q', '<esc>'},
+   exec = '<CR>'
+ };
+ rename_action_keys = {
+   quit = {'q', '<esc>'},
+   exec = '<CR>'  -- quit can be a table
+ };
 -- definition_preview_icon = '  '
 -- 1: thin border | 2: rounded border | 3: thick border | 4: ascii border
 -- border_style = 1
@@ -144,14 +164,13 @@ use_saga_diagnostic_sign = false
 -- like server_filetype_map = {metals = {'sbt', 'scala'}}
 -- server_filetype_map = {}
 }
-
 EOF
 
 inoremap <silent><expr><C-Space> compe#complete()
 inoremap <silent><expr><CR>      compe#confirm({ 'keys': "\<Plug>delimitMateCR", 'mode': '' })
 inoremap <silent><expr><C-e>     compe#close('<C-e>')
 inoremap <silent><expr><C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr><C-d>     compe#scroll({ 'delta': -4 })
+inoremap <silent><expr><C-b>     compe#scroll({ 'delta': -4 })
 
 nnoremap <silent><leader>lcf :Lspsaga lsp_finder<CR>
 nnoremap <silent><leader>lca :Lspsaga code_action<CR>
