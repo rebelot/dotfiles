@@ -54,6 +54,7 @@ Plug 'neoclide/jsonc.vim'
 " File, Buffer Browsers {{{
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'kyazdani42/nvim-tree.lua'
 Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
@@ -69,6 +70,8 @@ Plug 'nvim-telescope/telescope-dap.nvim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+" Plug 'hoob3rt/lualine.nvim'
+" Plug 'akinsho/nvim-bufferline.lua'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'machakann/vim-highlightedyank'
@@ -88,6 +91,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'w0rp/ale'
 Plug 'mfussenegger/nvim-dap'
 Plug 'mfussenegger/nvim-dap-python'
+Plug 'theHamsta/nvim-dap-virtual-text'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 Plug 'ludovicchabant/vim-gutentags'
@@ -161,7 +165,6 @@ let g:vista_executive_for = {
     \ 'python': 'coc',
     \ 'markdown': 'toc'
     \ }
-" }}}
 
 " Syntax and Folds {{{
 let g:python_highlight_all = 1
@@ -175,6 +178,33 @@ let g:fastfold_fold_command_suffixes = ['x', 'X', 'a', 'A', 'o', 'O', 'c', 'C', 
 " let g:markdown_folding = 0
 
 let g:tex_flavor = 'latex'
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {}, --  "all", "maintained" or a list
+  ignore_install = {}, -- List of parsers to ignore installing
+  highlight = {
+    enable = false,      -- false will disable the whole extension
+    disable = {},  -- list of language that will be disabled
+    additional_vim_regex_highlighting = false,
+  },
+  incremental_selection = {
+    enable = false,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = false
+  },
+}
+EOF
+
+" set foldmethod=expr
+" set foldexpr=nvim_treesitter#foldexpr()
 
 " }}}
 
@@ -218,6 +248,13 @@ EOF
 let g:gruvbox_italic = 1
 " let g:gruvbox_sign_column = 'dark0'
 let g:gruvbox_sign_column = 'bg0'
+
+" lua <<EOF
+" require'lualine'.setup{
+"   options = {theme = 'gruvbox'},
+" }  
+" require("bufferline").setup{}
+" EOF
 
 let g:airline_focuslost_inactive = 1
 let g:airline#extensions#neomake#enabled = 0
@@ -268,12 +305,12 @@ let g:historian_registers = ['+', '"']
 
 " dap
 lua <<EOF
-require('dap')
 vim.fn.sign_define('DapBreakpoint', {text='⬤ ', texthl='debugBreakpoint', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text='▶', texthl='debugBreakpoint', linehl='debugPC', numhl=''})
 require('dap-python').setup('~/venvs/debugpy/bin/python')
 require('dap.ext.vscode').load_launchjs()
 EOF
+let g:dap_virtual_text = v:true
 
 " Startify
 
@@ -441,6 +478,7 @@ augroup END
 " Settings {{{
 let g:python3_host_prog = '/Users/laurenzi/venvs/base/bin/python'
 let g:python_host_prog = '/Users/laurenzi/venvs/base27/bin/python'
+" let g:netrw_browsex_viewer = 'open'
 
 syntax on                " enable syntax highlighting
 set termguicolors        " enable gui colors for terminal
@@ -759,14 +797,19 @@ nnoremap <leader>dO :lua require'dap'.step_out()<CR>
 nnoremap <leader>dn :lua require'dap'.step_into()<CR>
 nnoremap <leader>dN :lua require'dap'.step_back()<CR>
 nnoremap <leader>db :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <leader>de :lua require'dap'.set_exception_breakpoints(})<CR>
 nnoremap <leader>dr :lua require'dap'.repl.toggle()<CR>
 nnoremap <leader>dv :Telescope dap variables<CR>
 nnoremap <leader>dc :Telescope dap commands<CR>
-nnoremap <leader>di :lua require'dap.ui.variables'.hover(function() return vim.fn.expand("<cexpr>") end)<CR>
+nnoremap <leader>di :lua require'dap.ui.widgets'.hover()<CR>
 xnoremap <leader>di :lua require'dap.ui.variables'.visual_hover()<CR>
-nnoremap <leader>ds :lua require'dap.ui.variables'.scopes()<CR>
+" nnoremap <leader>ds :lua local widgets=require'dap.ui.widgets';widgets.centered_float(widgets.scopes)<CR>
+nnoremap <leader>ds :lua local widgets=require'dap.ui.widgets'; local dap_sidebar=widgets.sidebar(widgets.scopes); dap_sidebar.toggle()<CR>
 nnoremap <leader>d. :lua require'dap'.goto_()<CR>
+nnoremap <leader>dh :lua require'dap'.run_to_cursor()<CR>
 
+" netrw_gx fix
+" nmap gx yiW:!open <cWORD><CR> <C-r>" & <CR><CR>
 " }}}
 
 " LSP {{{
