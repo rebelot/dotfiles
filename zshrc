@@ -39,7 +39,7 @@ source "$HOME/venvs/base/bin/activate"                       	# <-- Activate the
 # ZSH init {{{
 export ZSH="$HOME/.zsh"
 ZSH_CACHE_DIR="$ZSH/cache"
-# fpath=($ZSH/functions $ZSH/completions $fpath)
+fpath=($ZSH/functions $ZSH/completions $fpath)
 
 source $ZSH/options.zsh
 source $ZSH/keybindings.zsh
