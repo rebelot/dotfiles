@@ -49,7 +49,7 @@ zstyle ':completion:*:warnings' format $'\e[31;1m -- No matches found --\e[0m'
 zstyle ':completion:*:functions' ignored-patterns '_*'
 
 # (( $+commands[dircolors] )) && eval "$(dircolors -b $HOME/.LS_COLORS)" # coreutils tool, exports LS_COLORS
-(( $+commands[vivid] )) && export LS_COLORS="$(vivid generate gruvbox)" # coreutils tool, exports LS_COLORS
+(( $+commands[vivid] )) && export LS_COLORS="$(vivid generate tokyonight)" # coreutils tool, exports LS_COLORS
 zstyle ':completion:*:default' list-colors '=(#b)*(-- *)=0=94' ${(s.:.)LS_COLORS}
 
 # expand-or-complete-with-dots
