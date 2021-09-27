@@ -17,6 +17,7 @@
 # export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
 export PATH="$HOME/usr/bin:$PATH"                             # <-- personal stuff
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
+export PATH="$HOME/.luarocks/bin:$PATH"                        # <-- LuaRocks
 # export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"               # <-- ruby gem
 export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
