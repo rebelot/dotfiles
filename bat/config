@@ -1,5 +1,6 @@
 # Set the theme to "TwoDark"
---theme="gruvbox-dark"
+# --theme="gruvbox-dark"
+--theme="Enki-Tokyo-Night"
 
 # Show line numbers, Git modifications and file header (but no grid)
 --style="grid,numbers,changes,header"
