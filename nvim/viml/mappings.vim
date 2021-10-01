@@ -205,21 +205,7 @@ nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> t
   \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 " Debugger
-nnoremap <leader>do <cmd>lua require'dap'.step_over()<CR>
-nnoremap <leader>dO <cmd>lua require'dap'.step_out()<CR>
-nnoremap <leader>dn <cmd>lua require'dap'.step_into()<CR>
-nnoremap <leader>dN <cmd>lua require'dap'.step_back()<CR>
-nnoremap <leader>db <cmd>lua require'dap'.toggle_breakpoint()<CR>
-nnoremap <leader>de <cmd>lua require'dap'.set_exception_breakpoints(})<CR>
-nnoremap <leader>dr <cmd>lua require'dap'.repl.toggle()<CR>
-nnoremap <leader>dv <cmd>Telescope dap variables<CR>
-nnoremap <leader>dc <cmd>Telescope dap commands<CR>
-nnoremap <leader>di <cmd>lua require'dap.ui.widgets'.hover()<CR>
-xnoremap <leader>di <cmd>lua require'dap.ui.variables'.visual_hover()<CR>
-" nnoremap <leader>d <cmd>lua local widgets=require'dap.ui.widgets';widgets.centered_float(widgets.scopes)<CR>
-nnoremap <leader>ds <cmd>lua local widgets=require'dap.ui.widgets'; local dap_sidebar=widgets.sidebar(widgets.scopes); dap_sidebar.toggle()<CR>
-nnoremap <leader>d. <cmd>lua require'dap'.goto_()<CR>
-nnoremap <leader>dh <cmd>lua require'dap'.run_to_cursor()<CR>
+" see dap-config.lua
 
 " netrw_gx fix
 " nmap gx yiW:!open <cWORD><CR> <C-r>" & <CR><CR>
