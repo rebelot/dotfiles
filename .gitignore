@@ -2,4 +2,4 @@ tags
 .DS_Store
 zsh/cache
 README.pdf
-packer_compiled.lua
+nvim/plugin/packer_compiled.lua

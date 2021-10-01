@@ -10,7 +10,8 @@ local force_inactive = {
         'Trouble',
         'vista',
         'tagbar',
-        'terminal'
+        'terminal', -- ../viml/autocommands.vim: autocmd TermOpen * setlocal filetype=terminal
+        'dap%-repl'
     },
     buftypes = {
         'terminal'
@@ -144,7 +145,7 @@ local ViMode = {
 
         return mode_name[vim.fn.mode()] -- vim.fn.mode(1):upper()
     end,
-    right_sep = {'right_rounded', ' '},
+    right_sep = {'right_rounded', '  '},
     left_sep = 'left_rounded',
     hl = function()
         local mode_color_table = {
@@ -169,7 +170,7 @@ local ViMode = {
 local FileSize = {
     enabled = hide_in_width,
     provider = 'file_size',
-    right_sep = "  "
+    right_sep = " "
 }
 
 local FileName = {
@@ -179,18 +180,14 @@ local FileName = {
         local bufnr = vim.api.nvim_win_get_buf(winid)
         local filename = vim.api.nvim_buf_get_name(bufnr)
         local path = vim.fn.fnamemodify(filename, ":~:.")
-        if path == '' then return "[No Name]" end
+        path = path == '' and "[No Name]" or path
         if (not hide_in_width(winid)) or (#path > 0.29 * vim.fn.winwidth(winid)) then
             path = vim.fn.pathshorten(path)
         end
 
         local extension = vim.fn.fnamemodify(filename, ':e')
-        local icon_str, icon_hl = require'nvim-web-devicons'.get_icon(filename, extension, {default = true})
-        component.icon = {str = icon_str .. " "}
-        local fg = vim.api.nvim_get_hl_by_name(icon_hl, true).foreground
-        if fg then
-            component.icon.hl = { fg = string.format('#%06x', fg) }
-        end
+        local icon_str, icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+        component.icon = { str = icon_str .. " ", hl = {fg = icon_color}}
 
         component.hl = {fg = "purple", style = "bold", name = 'FelineFileName'}
         component.right_sep = {}
@@ -289,6 +286,18 @@ local TSMessages = {
 }
 
 local DAPMessages = {
+    enabled = function(winid)
+        local session = require'dap'.session()
+        if session then
+            local bufnr = vim.api.nvim_win_get_buf(winid)
+            local filename = vim.api.nvim_buf_get_name(bufnr)
+            if session.config then
+                local progname = session.config.program
+                return filename == progname
+            end
+        end
+        return false
+    end,
     icon = ' ',
     provider = function() return require'dap'.status() end,
     hl = {fg = 'red'}
@@ -331,7 +340,8 @@ local FileEncoding = {
 local Position = {
     provider = 'position',
     right_sep = ' ',
-    left_sep = {str='vertical_bar', hl = {fg='blue'}}
+    -- left_sep = {str='vertical_bar', hl = {fg='blue'}}
+    left_sep = ' '
 }
 local Percent = {
     enabled = hide_in_width,
@@ -371,23 +381,45 @@ local Snippet = {
 
 local WorkDir = {
     provider = function(winid)
-        local icon = ' ' .. (vim.fn.haslocaldir(winid) == 1 and 'l' or 'g') .. ' '
+        local icon = (vim.fn.haslocaldir(winid) == 1 and 'l' or 'g') .. ' ' .. ' '
         local cwd = vim.fn.getcwd(winid)
-        local cwd = vim.fn.fnamemodify(cwd, ":~:h")
+        cwd = vim.fn.fnamemodify(cwd, ":~")
         if (not hide_in_width(winid)) or (#cwd > 0.29 * vim.fn.winwidth(winid)) then
             cwd = vim.fn.pathshorten(cwd)
         end
-        return cwd, icon
+        return cwd..'/', icon
     end,
-    right_sep = {str = '/ ', hl = {fg = 'blue1'}},
+    right_sep = ' ',
     hl = {fg = 'blue1'},
 }
+
+local TerminalName = {
+    enabled = function(winid)
+        local bufnr = vim.api.nvim_win_get_buf(winid)
+        return vim.bo[bufnr].buftype == 'terminal'
+    end,
+    icon = ' ', -- 
+    provider = function(winid, _)
+        local bufnr = vim.api.nvim_win_get_buf(winid)
+        local tname, _ = vim.api.nvim_buf_get_name(bufnr):gsub(".*:", "")
+        return tname
+    end,
+    hl = {fg = 'purple', style = 'bold'}
+}
+
+local TerminalMode = update_component(ViMode, {
+    enabled = function(winid)
+        local bufnr = vim.api.nvim_win_get_buf(winid)
+        local terminals = {"terminal", "dap-repl"}
+        return vim.fn.index(terminals, vim.bo[bufnr].filetype) ~= -1 and bufnr == vim.api.nvim_win_get_buf(0)
+    end,
+})
+
 local components = {
     active = {
         {
             -- LeftCloser,
             ViMode,
-            FileSize,
             WorkDir,
             FileName,
             GitBranch,
@@ -408,6 +440,7 @@ local components = {
         },
         {
             LSPActive,
+            FileSize,
             FileType,
             FileFormat,
             FileEncoding,
@@ -416,7 +449,7 @@ local components = {
             ScrollBar,
         }
     },
-    inactive = {{InactiveFileType, HelpFilename, FileName}, {}}
+    inactive = {{TerminalMode, InactiveFileType, HelpFilename, TerminalName, FileName}, {}}
 }
 
 require"feline".setup{

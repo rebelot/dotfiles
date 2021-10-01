@@ -6,10 +6,7 @@
 -- ██║██║ ╚████║██║   ██║██╗███████╗╚██████╔╝██║  ██║
 -- ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝
 
-local vim = vim
-
 -- TODO:
--- 2) expose LSPFormat command
 -- 3) try  sindrets/winshift.nvim
 -- 4) try nvim which-key
 

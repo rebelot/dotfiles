@@ -40,7 +40,7 @@ augroup MyAutoCommands
   autocmd FileType python xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>
 
   " run in terminal
-  autocmd FileType python nnoremap <buffer> <F5> :exe 'sp <bar> ter python ' . shellescape(expand("%")) . ''
+  autocmd FileType python nnoremap <buffer> <F5> :exe 'sp <bar> ter python ' . shellescape(expand("%")) . ''<left>
 
   " make
   autocmd FileType markdown,pandoc setlocal makeprg=pandoc\ -f\ gfm\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf

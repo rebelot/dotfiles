@@ -154,14 +154,14 @@ return require('packer').startup(function()
   use {"nvim-telescope/telescope.nvim",
     config = function() require "telescope-config" end,
     requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}} }
-  use {'nvim-telescope/telescope-dap.nvim', after = 'telescope.nvim',
+  use {'nvim-telescope/telescope-dap.nvim', after = {'telescope.nvim', 'nvim-dap'},
     config = function() require('telescope').load_extension('dap') end
   }
   use {'nvim-telescope/telescope-fzf-native.nvim', after = 'telescope.nvim', run = 'make',
     config = function() require('telescope').load_extension('fzf') end
   }
-  use { "nvim-telescope/telescope-frecency.nvim", after = 'telescope.nvim',
-  config = function() require"telescope".load_extension("frecency") end
+  use { "nvim-telescope/telescope-frecency.nvim", after = {'telescope.nvim', 'sqlite.lua'},
+    config = function() require"telescope".load_extension("frecency") end
   }
   use {"tami5/sqlite.lua", config = function() vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib" end}
   -- }}}
@@ -215,22 +215,18 @@ return require('packer').startup(function()
       -- vim.cmd [[ let g:ale_pattern_options = {'\.py$': {'ale_enabled': 0}, '\.c[p]*$': {'ale_enabled': 0}, '\.vim$': {'ale_enabled': 0}} ]]
     end
   }
-  use {'mfussenegger/nvim-dap',
-    config = function()
-      require'dap'
-      vim.fn.sign_define('DapBreakpoint', {text=' ', texthl='debugBreakpoint', linehl='', numhl=''})
-      vim.fn.sign_define('DapStopped', {text='', texthl='debugBreakpoint', linehl='debugPC', numhl=''})
-      require('dap.ext.vscode').load_launchjs()
-      vim.g.dap_virtual_text = true
-      vim.cmd [[au FileType dap-repl lua require('dap.ext.autocompl').attach()]]
-    end
-  }
-  use {'mfussenegger/nvim-dap-python',
+  use {'mfussenegger/nvim-dap', config = function() require'dap-config' end }
+  use {'mfussenegger/nvim-dap-python', after = 'nvim-dap',
     config = function()
       require('dap-python').setup('~/venvs/debugpy/bin/python')
     end
   }
-  use 'theHamsta/nvim-dap-virtual-text'
+  use {'theHamsta/nvim-dap-virtual-text', after = 'nvim-dap',
+    config = function()
+      -- vim.g.dap_virtual_text = true
+      vim.g.dap_virtual_text = 'all frames'
+    end
+  }
   use {'lewis6991/gitsigns.nvim',
     config = function()
       require'gitsigns'.setup{keymaps={}}
