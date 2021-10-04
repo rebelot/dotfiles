@@ -103,6 +103,16 @@ local function peek_definition()
                                preview_location_callback)
 end
 
+function code_action_listener()
+  local context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
+  local params = vim.lsp.util.make_range_params()
+  params.context = context
+  vim.lsp.buf_request(0, 'textDocument/codeAction', params, function(err, _, result)
+        print(vim.inspect(result))
+    end
+    )
+end
+
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -232,7 +242,7 @@ local configs = {
                         formatCommand = 'black --quiet -',
                         formatStdin = true
                     }, {
-                        lintCommand = "flake8 --max-line-length 160 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
+                        lintCommand = "flake8 --max-line-length 160 --ignore=E221,E241,E201,F401,E302,E305 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
                         lintStdin = true,
                         lintIgnoreExitCode = true,
                         lintFormats = {"%f:%l:%c: %t%n%n%n %m"},
