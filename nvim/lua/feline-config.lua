@@ -104,6 +104,7 @@ local function is_in_list(val, list)
 end
 
 local function has_buftype(winid)
+    winid = winid or 0
     local bufnr = vim.api.nvim_win_get_buf(winid)
     if vim.bo[bufnr].buftype == '' then return false
     else return true end
@@ -111,9 +112,13 @@ end
 
 
 local function hide_in_width(winid)
+    winid = winid or 0
     return vim.fn.winwidth(winid) >= 100
 end
 
+local function is_focused()
+    return vim.api.nvim_get_current_buf() == tonumber(vim.g.actual_curbuf)
+end
 
 
 local LeftCloser = {
@@ -175,42 +180,43 @@ local FileSize = {
 
 local FileName = {
     enabled = function(winid) return not has_buftype(winid) end,
-    icon = '',
-    provider = function(winid, component)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        local filename = vim.api.nvim_buf_get_name(bufnr)
+    provider = function(component)
+        local filename = vim.api.nvim_buf_get_name(0)
         local path = vim.fn.fnamemodify(filename, ":~:.")
         path = path == '' and "[No Name]" or path
-        if (not hide_in_width(winid)) or (#path > 0.29 * vim.fn.winwidth(winid)) then
+        if (not hide_in_width()) or (#path > 0.29 * vim.fn.winwidth(0)) then
             path = vim.fn.pathshorten(path)
         end
 
         local extension = vim.fn.fnamemodify(filename, ':e')
         local icon_str, icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-        component.icon = { str = icon_str .. " ", hl = {fg = icon_color}}
+        local icon = { str = icon_str .. " ", hl = {fg = icon_color}}
 
-        component.hl = {fg = "purple", style = "bold", name = 'FelineFileName'}
         component.right_sep = {}
-        if vim.bo[bufnr].modified then
+        if vim.bo.modified then
             table.insert(component.right_sep, {str = "[+]", hl = {fg = 'green', name='FelineFileFlagModified'}})
-            component.hl = {fg = "magenta", style = "bold", name = 'FelineFileNameModified'}
         end
-        if vim.bo[bufnr].readonly then
-            table.insert(component.right_sep, {str = " ", hl = {fg = 'red', name='FelineFileFlagRO'}})
+        if vim.bo.readonly then
+            table.insert(component.right_sep,  {str = " ", hl = {fg = 'red', name='FelineFileFlagRO'}})
         end
         table.insert(component.right_sep, "%<  ")
-
-        return path
+        return path, icon
+    end,
+    hl = function()
+        if vim.bo.modified then
+            return {fg = "magenta", style = "bold", name = 'FelineFileNameModified'}
+        else
+            return {fg = "purple", style = "bold", name = 'FelineFileName'}
+        end
     end,
 }
+
 local HelpFilename = {
-    enabled = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        return vim.bo[bufnr].filetype == 'help'
+    enabled = function()
+        return vim.bo.filetype == 'help'
     end,
-    provider = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        local filename = vim.api.nvim_buf_get_name(bufnr)
+    provider = function()
+        local filename = vim.api.nvim_buf_get_name(0)
         return vim.fn.fnamemodify(filename, ":t")
     end,
     hl = {fg = 'blue'}
@@ -241,10 +247,9 @@ local DiffChange = {
 }
 
 local DiagSep = {
-    provider = ' ',
-    enabled = function(_, winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        return not not vim.lsp.buf_get_clients(bufnr)
+    provider = '  ',
+    enabled = function()
+        return next(vim.lsp.buf_get_clients(0)) ~= nil
     end
 }
 
@@ -289,8 +294,7 @@ local DAPMessages = {
     enabled = function(winid)
         local session = require'dap'.session()
         if session then
-            local bufnr = vim.api.nvim_win_get_buf(winid)
-            local filename = vim.api.nvim_buf_get_name(bufnr)
+            local filename = vim.api.nvim_buf_get_name(0)
             if session.config then
                 local progname = session.config.program
                 return filename == progname
@@ -303,7 +307,7 @@ local DAPMessages = {
     hl = {fg = 'red'}
 }
 local FileType = {
-    enabled = function(winid) return hide_in_width(winid) or has_buftype(winid) end,
+    enabled = function() return hide_in_width() or has_buftype() end,
     provider = 'file_type',
     hl = {fg='blue', style='bold' },
     right_sep = ' '
@@ -315,23 +319,20 @@ local InactiveFileType = update_component(FileType, {
 })
 
 local FileFormat = {
-    enabled = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        return vim.bo[bufnr].fileformat ~= 'unix' and hide_in_width()
+    enabled = function()
+        return vim.bo.fileformat ~= 'unix' and hide_in_width()
     end,
-    provider = function(_, winid) return vim.bo[vim.api.nvim_win_get_buf(winid)].fileformat:upper() end,
+    provider = function() return vim.bo.fileformat:upper() end,
     hl = {fg = 'green'},
     right_sep = ' '
 }
 local FileEncoding = {
-    enabled = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        local enc = (vim.bo[bufnr].fenc ~= '' and vim.bo[bufnr].fenc) or vim.o.enc
+    enabled = function()
+        local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc
         return enc ~= 'utf-8' and hide_in_width()
     end,
-    provider = function(_, winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        local enc = (vim.bo[bufnr].fenc ~= '' and vim.bo[bufnr].fenc) or vim.o.enc
+    provider = function()
+        local enc = (vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc
         return enc:upper()
     end,
     hl = {fg = 'green'},
@@ -354,9 +355,8 @@ local ScrollBar = {
 }
 
 local LSPActive = {
-    enabled = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        return next(vim.lsp.buf_get_clients(bufnr)) ~= nil
+    enabled = function()
+        return next(vim.lsp.buf_get_clients(0)) ~= nil
     end,
     icon = ' ',
     provider = '[LSP]',
@@ -380,11 +380,11 @@ local Snippet = {
 }
 
 local WorkDir = {
-    provider = function(winid)
-        local icon = (vim.fn.haslocaldir(winid) == 1 and 'l' or 'g') .. ' ' .. ' '
-        local cwd = vim.fn.getcwd(winid)
+    provider = function()
+        local icon = (vim.fn.haslocaldir(0) == 1 and 'l' or 'g') .. ' ' .. ' '
+        local cwd = vim.fn.getcwd(0)
         cwd = vim.fn.fnamemodify(cwd, ":~")
-        if (not hide_in_width(winid)) or (#cwd > 0.29 * vim.fn.winwidth(winid)) then
+        if (not hide_in_width()) or (#cwd > 0.29 * vim.fn.winwidth(0)) then
             cwd = vim.fn.pathshorten(cwd)
         end
         return cwd..'/', icon
@@ -394,26 +394,25 @@ local WorkDir = {
 }
 
 local TerminalName = {
-    enabled = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        return vim.bo[bufnr].buftype == 'terminal'
+    enabled = function()
+        return vim.bo.buftype == 'terminal'
     end,
     icon = ' ', -- 
-    provider = function(winid, _)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        local tname, _ = vim.api.nvim_buf_get_name(bufnr):gsub(".*:", "")
+    provider = function()
+        local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
         return tname
     end,
     hl = {fg = 'purple', style = 'bold'}
 }
 
 local TerminalMode = update_component(ViMode, {
-    enabled = function(winid)
-        local bufnr = vim.api.nvim_win_get_buf(winid)
+    enabled = function()
         local terminals = {"terminal", "dap-repl"}
-        return vim.fn.index(terminals, vim.bo[bufnr].filetype) ~= -1 and bufnr == vim.api.nvim_win_get_buf(0)
+        local bufnr = vim.api.nvim_get_current_buf()
+        return vim.fn.index(terminals, vim.bo.filetype) ~= -1 and is_focused()
     end,
 })
+
 
 local components = {
     active = {
@@ -436,7 +435,7 @@ local components = {
             LSPMessages,
             Snippet,
             -- TSMessages,
-            DAPMessages
+            DAPMessages,
         },
         {
             LSPActive,
@@ -453,10 +452,12 @@ local components = {
 }
 
 require"feline".setup{
-    components = components,
     colors = colors,
+    components = components,
     force_inactive = force_inactive,
-    update_triggers = {'VimEnter', 'WinEnter', 'WinClosed', 'FileChangedShellPost', 'BufModifiedSet'},
+    -- default_hl = {}
+    -- highlight_reset_triggers = {}
+    -- update_triggers = {'VimEnter', 'WinEnter', 'WinClosed', 'FileChangedShellPost', 'BufModifiedSet'},
     -- custom_providers = {},
     -- separators = {},
     -- disable = {}
