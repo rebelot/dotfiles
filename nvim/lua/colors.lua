@@ -32,27 +32,16 @@ end
 tokyonight()
 -- gruvbox()
 
--- temporary...
-vim.cmd('hi link DiagnosticError LspDiagnosticsDefaultError')
-vim.cmd('hi link DiagnosticWarn LspDiagnosticsDefaultWarning')
-vim.cmd('hi link DiagnosticHint LspDiagnosticsDefaultHint')
-vim.cmd('hi link DiagnosticInfo LspDiagnosticsDefaultInformation')
-
-vim.cmd('hi link LspDiagnosticsSignError LspDiagnosticsDefaultError')
-vim.cmd('hi link LspDiagnosticsSignWarning LspDiagnosticsDefaultWarning')
-vim.cmd('hi link LspDiagnosticsSignHint LspDiagnosticsDefaultHint')
-vim.cmd('hi link LspDiagnosticsSignInformation LspDiagnosticsDefaultInformation')
+-- needed for Trouble
+vim.cmd('hi link LspDiagnosticsSignError DiagnosticError')
+vim.cmd('hi link LspDiagnosticsSignWarning DiagnosticWarn')
+vim.cmd('hi link LspDiagnosticsSignHint DiagnosticHint')
+vim.cmd('hi link LspDiagnosticsSignInformation DiagnosticInfo')
 
 vim.fn.sign_define('DiagnosticSignError', { text = "" , texthl= 'DiagnosticSignError'})
 vim.fn.sign_define('DiagnosticSignWarn', { text = "", texthl= 'DiagnosticSignWarn'})
 vim.fn.sign_define('DiagnosticSignInfo', { text = "", texthl= 'DiagnosticSignInfo'})
 vim.fn.sign_define('DiagnosticSignHint', { text = "" , texthl= 'DiagnosticSignHint'})
-
-vim.cmd('hi DiagnosticUnderlineError gui=undercurl guisp=' .. get_color('DiagnosticError', 'fg'))
-vim.cmd('hi DiagnosticUnderlineWarn gui=undercurl guisp=' .. get_color('DiagnosticWarn', 'fg'))
-vim.cmd('hi DiagnosticUnderlineInfo gui=undercurl guisp=' .. get_color('DiagnosticInfo', 'fg'))
-vim.cmd('hi DiagnosticUnderlineHint gui=undercurl guisp=' .. get_color('DiagnosticHint', 'fg'))
-
 
 -- Colorscheme Overrides {{{
 -- vim.cmd('hi! link SpecialKey Blue')

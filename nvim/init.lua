@@ -7,8 +7,11 @@
 -- ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝
 
 -- TODO:
--- 3) try  sindrets/winshift.nvim
--- 4) try nvim which-key
+-- try  sindrets/winshift.nvim
+-- try nvim which-key
+-- check out vim.quickui
+-- folke/todo-comments.nvim
+-- try null-lsp
 
 -- Plugins
 require "plugins"
@@ -18,6 +21,9 @@ require "colors"
 
 -- general configurations
 require "options"
+
+-- Diagnostics
+require "diagnostics"
 
 -- LSP
 require "lsp-config"

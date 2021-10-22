@@ -11,7 +11,8 @@ local force_inactive = {
         'vista',
         'tagbar',
         'terminal', -- ../viml/autocommands.vim: autocmd TermOpen * setlocal filetype=terminal
-        'dap%-repl'
+        'dap%-repl',
+        'dapui_.*'
     },
     buftypes = {
         'terminal'
@@ -24,7 +25,7 @@ local function get_color(hlgroup, attr)
   return vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(hlgroup)), attr, 'gui')
 end
 
-local function update_component(component, updates)
+local function copy_update_component(component, updates)
     local new_component = {}
     for k, v in pairs(component) do
         new_component[k] = v
@@ -87,8 +88,11 @@ local colors = tokyonight_colors
 
 -- require('feline.providers').add_provider(name, function)
 -- component = {
---    provider = function([component, winid]) -> str or str,
---    enabled = bool or function([winid]) -> bool
+--    provider = function([component, opts]) -> str or str,
+--    short_provider = function([component, opts]) -> str or str,
+--    truncate_hide = bool
+--    priority = int
+--    enabled = bool or function() -> bool
 --    icon = table(str, hl), str or function() -> str
 --    hl = table(fg=hex or name, bg, style, name), str to hl-group or function() -> table or str
 --    left_sep = [list of ] str, table(str, hl, always_visible (bool)) or function() -> str or table
@@ -313,7 +317,7 @@ local FileType = {
     right_sep = ' '
 }
 
-local InactiveFileType = update_component(FileType, {
+local InactiveFileType = copy_update_component(FileType, {
     enabled = has_buftype,
     right_sep = {str = ' %q', hl = {fg = 'blue'}}
 })
@@ -405,13 +409,21 @@ local TerminalName = {
     hl = {fg = 'purple', style = 'bold'}
 }
 
-local TerminalMode = update_component(ViMode, {
+local TerminalMode = copy_update_component(ViMode, {
     enabled = function()
         local terminals = {"terminal", "dap-repl"}
-        local bufnr = vim.api.nvim_get_current_buf()
         return vim.fn.index(terminals, vim.bo.filetype) ~= -1 and is_focused()
     end,
 })
+
+local Spell = {
+    enabled = function()
+        return vim.wo.spell
+    end,
+    provider = 'SPELL',
+    hl = {fg='yellow', style='bold'},
+    right_sep = ' '
+}
 
 
 local components = {
@@ -439,6 +451,7 @@ local components = {
         },
         {
             LSPActive,
+            Spell,
             FileSize,
             FileType,
             FileFormat,
@@ -455,7 +468,6 @@ require"feline".setup{
     colors = colors,
     components = components,
     force_inactive = force_inactive,
-    -- default_hl = {}
     -- highlight_reset_triggers = {}
     -- update_triggers = {'VimEnter', 'WinEnter', 'WinClosed', 'FileChangedShellPost', 'BufModifiedSet'},
     -- custom_providers = {},

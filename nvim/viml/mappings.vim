@@ -1,8 +1,13 @@
 let mapleader = ','
-nnoremap <Space> :
 xnoremap <Space> :
+nnoremap <Space> :
+noremap L $
+noremap H ^
+noremap <M-S-H> H
+noremap <M-S-L> L
+noremap <M-S-M> M
 
-" fast [e]dit and [s]ourcing .[v]imrc
+"nnore fast [e]dit and [s]ourcing .[v]imrc
 nnoremap <leader>ev :edit $MYVIMRC<CR>
 " nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
@@ -22,7 +27,6 @@ endfunction
 " imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 " inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
 " inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-imap <C-l> <Plug>delimitMateS-Tab
 
 " remap <Esc> to jk in insert mode
 " inoremap jk <Esc>
@@ -52,6 +56,7 @@ nnoremap <m-k> <C-Y>
 nnoremap <leader>q :close<CR>
 nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
+nnoremap <leader>bD :bdelete!<CR>
 nnoremap <leader>bo :%bd <bar> e# <bar> bd #<CR>
 
 " Go to [b]uffer, [s]plit, [v]ertical, [t]ab or [d]elete
@@ -79,6 +84,7 @@ nnoremap <leader>en :enew<CR>
 nnoremap <leader>vn :rightbelow vnew<CR>
 nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
+nnoremap <leader>st :split <bar> terminal <cr>
 
 " Edit or select [R/r]egister
 " nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
@@ -170,6 +176,13 @@ nnoremap <leader>fj :Telescope jumplist<CR>
 " nnoremap <leader>ts :Telescope lsp_document_symbols<CR>
 nnoremap <leader>T :Telescope<CR>
 
+"Spell
+nnoremap <leader>z :Telescope spell_suggest<CR>
+
+"Folds
+nnoremap zR zRz.
+nnoremap zM zMz.
+
 " Marks
 " nnoremap <leader>m :Marks<CR>
 nnoremap <leader>fm :Telescope marks<CR>
@@ -188,8 +201,8 @@ nnoremap <leader>vf :Vista finder<CR>
 " gitgutter
 " nnoremap <leader>sd :SignifyHunkDiff<CR>
 nnoremap <leader>hd :Gitsigns preview_hunk<CR>
-nnoremap <leader>hn :Gitsigns next_hunk<CR>
-nnoremap <leader>hp :Gitsigns next_hunk<CR>
+nnoremap ]h :Gitsigns next_hunk<CR>
+nnoremap [h :Gitsigns next_hunk<CR>
 
 " Menu
 nnoremap <F2> :emenu <C-Z>

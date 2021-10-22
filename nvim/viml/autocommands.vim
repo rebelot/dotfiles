@@ -28,10 +28,6 @@ augroup MyAutoCommands
   " Line Wrapping
   " autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
 
-  " DelimitMate
-  autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
-  autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
-
   " Syntax
   autocmd BufNewFile,BufRead *.coffee set filetype=coffee
   autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -59,3 +55,4 @@ augroup MyAutoCommands
   autocmd User DiagnosticsChanged lua vim.diagnostic.setqflist({open = false })
 
 augroup END
+
