@@ -41,7 +41,8 @@ end
 
 vim.cmd [[command! DapEditConfig lua require'dap-config'.DapEditConfig()]]
 vim.cmd [[command! DapReloadConfig lua require'dap'.configurations = {}; vim.cmd("luafile ~/.config/nvim/lua/dap-config.lua"); require'dap.ext.vscode'.load_launchjs('nvim-dap_launch.json')]]
-vim.cmd [[command! DapClose lua require'dapui'.close(); vim.cmd("bd! \\[dap-repl]") ]]
+vim.cmd [[command! DapClose lua require'dap'.terminate(); require'dapui'.close(); vim.cmd("bd! \\[dap-repl]") ]]
+vim.cmd [[command! DapStart lua require'dap'.continue()]]
 
 -- mappings
 local map_opts = { noremap = true, silent = true }
@@ -53,9 +54,6 @@ vim.api.nvim_set_keymap('n', '<leader>dO', '<cmd>lua require"dap".step_out()<CR>
 vim.api.nvim_set_keymap('n', '<leader>dn', '<cmd>lua require"dap".step_into()<CR>', map_opts)
 vim.api.nvim_set_keymap('n', '<leader>dN', '<cmd>lua require"dap".step_back()<CR>', map_opts)
 vim.api.nvim_set_keymap('n', '<leader>dr', '<cmd>lua require"dap".repl.toggle()<CR>', map_opts)
--- vim.api.nvim_set_keymap('n', '<leader>di', '<cmd>lua require"dap.ui.widgets".hover()<CR>', map_opts)
--- vim.api.nvim_set_keymap('x', '<leader>di', '<cmd>lua require"dap.ui.variables".visual_hover()<CR>', map_opts)
--- vim.api.nvim_set_keymap('n', '<leader>ds', '<cmd>lua require"dap-config".DapSidebarToggle()<CR>', map_opts)
 vim.api.nvim_set_keymap('n', '<leader>d.', '<cmd>lua require"dap".goto_()<CR>', map_opts)
 vim.api.nvim_set_keymap('n', '<leader>dh', '<cmd>lua require"dap".run_to_cursor()<CR>', map_opts)
 vim.api.nvim_set_keymap('n', '<leader>de', '<cmd>lua require"dap".set_exception_breakpoints()<CR>', map_opts)
@@ -73,10 +71,6 @@ dap.listeners.after['event_terminated']['dapui'] = function()
     vim.cmd("bd! \\[dap-repl]")
 end
 
-dap.listeners.after['event_disassemble']['test'] = function(session, err, response, payload)
-    print(vim.inspect(response))
-end
-
 dap.configurations.python = dap.configurations.python or {}
 table.insert(dap.configurations.python, {
     type = 'python';
@@ -86,15 +80,19 @@ table.insert(dap.configurations.python, {
 })
 table.insert(dap.configurations.python, {
     type = 'python';
-    request = 'launch';
-    name = 'launch args';
-    program = '${workspaceFolder}/${file}';
-    args = function()
-        local args = vim.fn.input('args (split with @@): ')
-        local argl = vim.fn.split(args, [[\s*@@\s*}]])
-        return argl
+    request = 'attach';
+    name = 'Attach remote jMC=false';
+    host = function()
+    local value = vim.fn.input('Host [127.0.0.1]: ')
+    if value ~= "" then
+        return value
+    end
+    return '127.0.0.1'
     end;
-    console = 'integratedTerminal'
+    port = function()
+    return tonumber(vim.fn.input('Port [5678]: ')) or 5678
+    end;
+    justMyCode = false
 })
 -- dap.adapters.lldb = {
 --   type = 'executable',
