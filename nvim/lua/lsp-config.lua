@@ -43,21 +43,29 @@ capabilities.textDocument.codeAction = {
     }
 }
 
+vim.lsp.util.close_preview_autocmd = function(events, winnr)
+    events = vim.tbl_filter(function(v)
+        return v ~= 'CursorMovedI' and v ~= 'BufLeave'
+    end, events)
+    vim.api.nvim_command("autocmd "..table.concat(events, ',').." <buffer> ++once lua pcall(vim.api.nvim_win_close, "..winnr..", true)")
+end
+
 -- lsp-status
 require'lsp-status'.register_progress()
 capabilities.textDocument.completion.completionItem.workDoneProgress = true
 capabilities.window.workDoneProgress = true
 
-function Echo_cursor_diagnostic()
+local M = {}
+
+function M.echo_cursor_diagnostic()
     local severity_hl = {
         'DiagnosticError', 'DiagnosticSignWarn', 'DiagnosticInfo',
         'DiagnosticHint'
     }
     local severity_prefix = {"[Error]", "[Warning]", "[Info]", "[Hint]"}
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    local line_diagnostics = vim.diagnostic.get(0, {
-        lnum = line - 1
-    })
+    local line_diagnostics = vim.diagnostic.get(0, { lnum = line - 1 })
+
     if vim.tbl_isempty(line_diagnostics) then return end
 
     local message = {}
@@ -71,40 +79,40 @@ function Echo_cursor_diagnostic()
             local avail_space = vim.v.echospace - (#severity + #msg)
             table.insert(message, {severity, severity_hl[diagnostic.severity]})
             table.insert(message, {msg:gsub(1, avail_space), 'Normal'})
-            print(vim.inspect(message))
             vim.api.nvim_echo(message, false, {})
         end
     end
 end
 
-local function preview_location_callback(err, result, ctx)
-    if result == nil or vim.tbl_isempty(result) then
-        -- print('No location found')
-        return nil
-    end
-    -- print(vim.inspect(result))
-    if vim.tbl_islist(result) then
-        vim.lsp.util.preview_location(result[1])
-    else
-        vim.lsp.util.preview_location(result)
-    end
-end
+-- local function preview_location_callback(err, result, ctx)
+--     if result == nil or vim.tbl_isempty(result) then
+--         -- print('No location found')
+--         return nil
+--     end
+--     -- print(vim.inspect(result))
+--     if vim.tbl_islist(result) then
+--         vim.lsp.util.preview_location(result[1])
+--     else
+--         vim.lsp.util.preview_location(result)
+--     end
+-- end
+--
+-- function M.peek_definition()
+--     local params = vim.lsp.util.make_position_params()
+--     return vim.lsp.buf_request(0, 'textDocument/definition', params,
+--                                preview_location_callback)
+-- end
 
-function peek_definition()
-    local params = vim.lsp.util.make_position_params()
-    return vim.lsp.buf_request(0, 'textDocument/definition', params,
-                               preview_location_callback)
-end
+-- function code_action_listener()
+--     local context = {
+--         diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
+--     }
+--     local params = vim.lsp.util.make_range_params()
+--     params.context = context
+--     vim.lsp.buf_request(0, 'textDocument/codeAction', params,
+--                         function(err, _, result) print(vim.inspect(result)) end)
+-- end
 
-function code_action_listener()
-    local context = {
-        diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
-    }
-    local params = vim.lsp.util.make_range_params()
-    params.context = context
-    vim.lsp.buf_request(0, 'textDocument/codeAction', params,
-                        function(err, _, result) print(vim.inspect(result)) end)
-end
 
 local on_attach = function(client, bufnr)
     local function buf_set_keymap(...)
@@ -178,7 +186,7 @@ local on_attach = function(client, bufnr)
     vim.api.nvim_exec([[
     augroup lsp_echo_diagnostics
     autocmd! * <buffer>
-    autocmd CursorHold <buffer> lua Echo_cursor_diagnostic()
+    autocmd CursorHold <buffer> lua require'lsp-config'.echo_cursor_diagnostic()
     "autocmd CursorHold <buffer> lua vim.diagnostic.open_float(nil, {scope = "cursor", border = "rounded", focusable = false})
     autocmd CursorMoved <buffer> echo ""
     augroup END
@@ -211,6 +219,9 @@ table.insert(runtime_path, "lua/?/init.lua")
 
 local configs = {
     pyright = {
+        flags = {
+            allow_incremental_sync = false
+        },
         settings = {
             -- pyright = { completeFunctionParens = true },
             python = {
@@ -227,22 +238,22 @@ local configs = {
     vimls = {},
     julials = {},
     ccls = {
-        cmd = {'ccls-clang-11'},
+        cmd = {'ccls'},
         init_options = {
             cache = {
                 directory = '/tmp/ccls'
             },
             clang = {
                 -- run: clang -print-resource-dir
-                resourceDir = "/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5",
+                resourceDir = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0",
                 extraArgs = {
                     -- run: clang -xc++ -fsyntax-only -v /dev/null
                     "-isystem/usr/local/include",
-                    "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
-                    "-isystem/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include",
-                    "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
-                    "-isystem/Library/Developer/CommandLineTools/usr/include",
-                    "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks",
+                    "-isystem/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1",
+                    "-isystem/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include",
+                    "-isystem/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+                    "-isystem/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+                    "-isystem/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
                     "-std=c++17", "-Wall", "-Wextra"
                 }
             }
@@ -250,9 +261,10 @@ local configs = {
     },
     efm = {
         filetypes = {
-            'lua', 'cpp', 'python', 'sh', 'bash', 'c', 'markdown', 'pandoc',
-            'json'
+            'lua', 'cpp', 'sh', 'bash', 'c', 'markdown', 'pandoc',
+            'json', 'python'
         },
+        root_dit = lspconfig.util.root_pattern{".git", "."},
         init_options = {
             documentFormatting = true,
             -- documentRangeFormatting = true,
@@ -307,31 +319,78 @@ local configs = {
                 }
             }
         }
+    },
+    jsonls = {
+        settings = {
+            json = {
+                schemas = vim.tbl_extend('force', {
+                    {
+                        description = "codeLLDB settings",
+                        fileMatch = { "launch.json" },
+                        name = "launch.json",
+                        url = 'https://raw.githubusercontent.com/vadimcn/vscode-lldb/master/package.json'
+                    },
+                }, require'schemastore'.json.schemas {
+                        select = {
+                            'package.json',
+                            'compile-commands.json'
+                        },
+                    }
+                )
+            }
+        }
     }
 }
 
 for server, config in pairs(configs) do
     config.capabilities = capabilities
     config.on_attach = on_attach
-    require'lspconfig'[server].setup(config)
+    lspconfig[server].setup(config)
 end
 
-function ChangePythonInterpreter(path)
+function M.change_python_interpreter(path)
     vim.lsp.stop_client(vim.lsp.get_active_clients())
-    local pyright_config = configs.pyright
-    pyright_config.settings.python.pythonPath = path
-    pyright_config.on_attach = on_attach
-    pyright_config.capabilities = capabilities
-    lspconfig.pyright.setup(pyright_config)
+    configs.pyright.settings.python.pythonPath = path
+    lspconfig.pyright.setup(configs.pyright)
     vim.cmd('e%')
 end
 
+function M.get_python_interpreters(a, l, p)
+    local paths = {}
+    local is_home_dir = function()
+        return vim.fn.getcwd(0) == vim.fn.expand("$HOME")
+    end
+    local commands = {'find $HOME/venvs -name python', 'which -a python', is_home_dir() and '' or 'find . -name python'}
+    for _, cmd in ipairs(commands) do
+        local _paths = vim.fn.systemlist(cmd)
+        if _paths then
+            for _, path in ipairs(_paths) do
+                table.insert(paths, path)
+            end
+        end
+    end
+    table.sort(paths)
+    local res = {}
+    for i, path in ipairs(paths) do
+        if path ~= paths[i+1] then table.insert(res, path) end
+    end
+    if a then
+        for _, p in ipairs(res) do
+            if not string.find(p, a) then
+                res = vim.fn.getcompletion(a, 'file')
+            end
+        end
+    end
+    return res
+end
+
+
 vim.api.nvim_exec([[
-command! -nargs=1 -complete=customlist,PythonInterpreterComplete PythonInterpreter lua ChangePythonInterpreter(<q-args>)
+command! -nargs=1 -complete=customlist,PythonInterpreterComplete PythonInterpreter lua require'lsp-config'.change_python_interpreter(<q-args>)
 
 function! PythonInterpreterComplete(A,L,P) abort
-  let l:venvs = systemlist('find $HOME/venvs -name python')
-  let l:binaries = systemlist('which -a python')
-  return l:venvs + l:binaries
+  return v:lua.require('lsp-config').get_python_interpreters()
 endfunction
 ]], false)
+
+return M
