@@ -52,7 +52,7 @@ augroup MyAutoCommands
   autocmd TermOpen * setlocal filetype=terminal
 
   " Diagnostics
-  autocmd User DiagnosticsChanged lua vim.diagnostic.setqflist({open = false })
+  " autocmd User DiagnosticsChanged lua vim.diagnostic.setqflist({open = false })
 
 augroup END
 
