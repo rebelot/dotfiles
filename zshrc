@@ -17,9 +17,10 @@
 # export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
 export PATH="$HOME/usr/bin:$PATH"                             # <-- personal stuff
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
-export PATH="$HOME/.luarocks/bin:$PATH"                        # <-- LuaRocks
-# export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"               # <-- ruby gem
-export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
+export PATH="$HOME/.luarocks/bin:$PATH"                       # <-- LuaRocks
+# export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"                 # <-- ruby gem
+export PATH="$HOME/.npm-packages/bin:$PATH"                   # (node installer) npm config set prefix "${HOME}/.npm-packages"
+# export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
@@ -51,6 +52,13 @@ source $ZSH/prompt.zsh
 # }}}
 
 # Plugins {{{
+# TODO: overhaul:
+# check zplug for plugin management
+# macports can install syntax highlighting and zsh-completions
+# check https://starship.rs/guide/#%F0%9F%9A%80-installation
+# check esc/conda-zsh-completion
+# check git prompt at https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+# or use vcs_info zsh builtin module
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
@@ -65,7 +73,6 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
-# zinit ice as"completion" mv"comp* -> _exa"; zinit snippet 'https://github.com/ogham/exa/blob/master/contrib/completions.zsh'
 zinit ice as"completion" mv"hub* -> _hub"; zinit snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
 # zinit ice as"completion"; zinit snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
 zinit ice as"completion"; zinit snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
@@ -73,7 +80,6 @@ zinit ice as"completion"; zinit snippet 'https://github.com/docker/cli/blob/mast
 zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zinit snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
 # zinit ice as"completion"; zinit snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
 zinit load hlissner/zsh-autopair
-zinit ice svn; zinit snippet OMZ::plugins/pip
 zinit load bric3/oh-my-zsh-git
 # zinit load srijanshetty/zsh-pandoc-completion
 zinit ice blockf; zinit light zsh-users/zsh-completions
@@ -82,7 +88,7 @@ zinit light zdharma/fast-syntax-highlighting
 
 # plugin Opts {{{
 # omg_prefix=" %{%B%F{white}%}%{%f%k%b%}"
-omg_suffix=" %{%B%F{white}%} %{%f%k%b%}"
+omg_suffix=" %{%B%F{white}%}  %{%f%k%b%}"
 is_a_git_repo_symbol=" "
 has_modifications_symbol=
 has_modifications_color="%F{yellow}"
@@ -137,6 +143,7 @@ export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
 export SCHRODINGER_SCRIPTS="$HOME/usr/src/schrodinger_utils/scripts"
 export BIOTOOLS="$HOME/usr/src/BioTools"
+export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython"
 
 # language environment
 export LANG=en_US.UTF-8
@@ -227,7 +234,6 @@ function pman {
 
 # alias juliapro=/Applications/JuliaPro-1.0.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
 # alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
-# alias licmoe="lmutil lmstat -c /Applications/moe2018/license.dat -a"
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
 # alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
 alias vmd='/Applications/VMD\ 1.9.4a51-x86_64-Rev9.app/Contents/MacOS/startup.command'
@@ -241,22 +247,22 @@ alias debugpy="python $HOME/venvs/debugpy/lib/python3.8/site-packages/debugpy --
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
-alias pymol='/opt/anaconda3/envs/pymol/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
+alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
 alias luamake=/Users/laurenzi/usr/src/lua-language-server/3rd/luamake/luamake
+alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/lldb/lib/liblldb.dylib; done"
+
 # }}}
 
 # compinit / compdef {{{
+eval "$(pip completion --zsh)"
 autoload -Uz compinit
 compinit -i
 zinit cdreplay -q
 # }}}
 
 # other sources  {{{
-# source /opt/gromacs-2018.4/bin/GMXRC
-# source /opt/local/share/tldr-cpp-client/autocomplete/complete.zsh
 source /opt/local/etc/profile.d/z.sh
 source ~/.fzf.zsh
-#test -e "$HOME/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 # }}}
 
 # Remove duplicates from PATH (Unique)
