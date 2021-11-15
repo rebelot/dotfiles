@@ -15,7 +15,8 @@ local force_inactive = {
         'dapui_.*'
     },
     buftypes = {
-        'terminal'
+        'terminal',
+        'nofile'
     },
     bufnames = {}
 }
@@ -154,7 +155,7 @@ local ViMode = {
 
         return mode_name[vim.fn.mode()] -- vim.fn.mode(1):upper()
     end,
-    right_sep = {'right_rounded', '  '},
+    -- right_sep = {'right_rounded', '  '},
     left_sep = 'left_rounded',
     hl = function()
         local mode_color_table = {
@@ -174,6 +175,33 @@ local ViMode = {
     end
     -- hl = {name = 'FelineViMode'}
 
+}
+
+local Snippet = {
+    -- enabled = function()
+    --     return vim.fn['UltiSnips#CanJumpForwards']() == 1 or vim.fn['UltiSnips#CanJumpBackwards']() == 1
+    -- end,
+    -- icon = {str = 'Snip: ', style = 'bold'},
+    provider = function()
+        local fwd = ""
+        local bwd = ""
+        if vim.fn['UltiSnips#CanJumpForwards']() == 1 then
+            fwd =  ""
+        else
+            fwd = ""
+        end
+        if vim.fn['UltiSnips#CanJumpBackwards']() == 1 then
+            bwd = " "
+        else
+            bwd = ""
+        end
+        return  vim.tbl_contains({'s', 'i'}, vim.fn.mode()) and bwd..fwd or ''
+    end,
+    hl = {fg = 'red', bg = "brightbg", syle='bold'},
+    right_sep = {
+        {str = 'right_rounded', always_visible = true},
+        {str = ' ', always_visible = true}
+    },
 }
 
 local FileSize = {
@@ -283,6 +311,7 @@ local DiagInfo = {
 }
 
 local LSPMessages = {
+    enabled = function() return next(vim.lsp.buf_get_clients(0)) ~= nil end,
     provider = function() return require('lsp-status').status() end,
     hl = {fg = 'gray4'},
     right_sep = ' '
@@ -368,27 +397,12 @@ local LSPActive = {
     right_sep = ' '
 }
 
-local Snippet = {
-    enabled = function()
-        return vim.fn['UltiSnips#CanJumpForwards']() == 1 or vim.fn['UltiSnips#CanJumpBackwards']() == 1
-    end,
-    icon = {str = 'Snip: ', style = 'bold'},
-    provider = function()
-        local fwd = ""
-        local bwd = ""
-        if vim.fn['UltiSnips#CanJumpForwards']() == 1 then fwd =  "" end
-        if vim.fn['UltiSnips#CanJumpBackwards']() == 1 then bwd = " " end
-        return  bwd .. fwd
-    end,
-    hl = {fg = 'gray3'}
-}
-
 local WorkDir = {
     provider = function()
         local icon = (vim.fn.haslocaldir(0) == 1 and 'l' or 'g') .. ' ' .. ' '
         local cwd = vim.fn.getcwd(0)
         cwd = vim.fn.fnamemodify(cwd, ":~")
-        if (not hide_in_width()) or (#cwd > 0.29 * vim.fn.winwidth(0)) then
+        if (not hide_in_width()) or (#cwd > 0.22 * vim.fn.winwidth(0)) then
             cwd = vim.fn.pathshorten(cwd)
         end
         return cwd..'/', icon
@@ -425,12 +439,23 @@ local Spell = {
     right_sep = ' '
 }
 
+local Gps = {
+	enabled = function()
+		return require'nvim-gps'.is_available()
+    end,
+    provider = function()
+		return require'nvim-gps'.get_location()
+	end,
+    hl = {fg = 'gray4'}
+}
 
 local components = {
     active = {
         {
             -- LeftCloser,
+            -- {provider = " ", hl={fg='green', style='bold'}}, -- 
             ViMode,
+            Snippet,
             WorkDir,
             FileName,
             GitBranch,
@@ -445,7 +470,7 @@ local components = {
         },
         {
             LSPMessages,
-            Snippet,
+            Gps,
             -- TSMessages,
             DAPMessages,
         },
