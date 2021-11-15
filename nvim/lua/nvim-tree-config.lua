@@ -38,12 +38,12 @@ vim.g.nvim_tree_icons = {
     }
 }
 
-vim.g.nvim_tree_ignore                 = {".git", "node_modules", ".cache"}
+-- vim.g.nvim_tree_ignore                 = {".git", "node_modules", ".cache"}
 vim.g.nvim_tree_gitignore              = 1
 vim.g.nvim_tree_auto_ignore_ft         = {} -- don't open tree on specific fiypes.
 vim.g.nvim_tree_quit_on_open           = 0 -- closes tree when file's opened
 vim.g.nvim_tree_indent_markers         = 0
-vim.g.nvim_tree_hide_dotfiles          = 0
+-- vim.g.nvim_tree_hide_dotfiles          = 0
 vim.g.nvim_tree_respect_buf_cwd        = 0
 vim.g.nvim_tree_git_hl                 = 1
 vim.g.nvim_tree_highlight_opened_files = 1 -- 3
@@ -58,8 +58,10 @@ require'nvim-tree'.setup{
       ignore_ft_on_setup  = {},
       auto_close          = false,
       open_on_tab         = false,
-      hijack_cursor       = false,
-      update_cwd          = true,
+      hijack_cursor       = true,
+      update_cwd          = false,
+      hide_dotfiles       = false,
+      -- ignore  = {".git", "node_modules", ".cache"},
       diagnostics         = {enable  = false},
       update_focused_file = {
         enable      = true,
