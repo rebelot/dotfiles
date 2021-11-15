@@ -1,5 +1,7 @@
 local actions = require('telescope.actions')
 local previewers = require('telescope.previewers')
+local themes = require('telescope.themes')
+local trouble = require("trouble.providers.telescope")
 
 require('telescope').setup {
     defaults = {
@@ -45,12 +47,22 @@ require('telescope').setup {
                 ["<S-Tab>"] = actions.move_selection_next,
                 ["<C-z>"] = actions.toggle_selection,
                 ["<C-s>"] = actions.select_horizontal,
-                ["<C-l>"] = actions.smart_send_to_loclist + actions.open_loclist
+                ["<C-x>"] = trouble.smart_open_with_trouble,
+                ["<M-l>"] = function(prompt_bufnr)
+                    actions.smart_send_to_loclist(prompt_bufnr)
+                    require'trouble'.open('loclist')
+                end,
+                ['<M-a>'] = actions.toggle_all
             },
             n = {
                 ["<C-z>"] = actions.toggle_selection,
                 ["<C-s>"] = actions.select_horizontal,
-                ["<C-l>"] = actions.smart_send_to_loclist + actions.open_loclist
+                ["<C-x>"] = trouble.smart_open_with_trouble,
+                ['<M-a>'] = actions.toggle_all,
+                ["<M-l>"] = function(prompt_bufnr)
+                    actions.smart_send_to_loclist(prompt_bufnr)
+                    require'trouble'.open('loclist')
+                end,
             }
         }
     },
@@ -72,6 +84,26 @@ require('telescope').setup {
                     ["<C-r>"] = actions.delete_buffer
                 }
             }
+        },
+        lsp_code_actions = themes.get_cursor(),
+        lsp_references = {
+            timeout = 100000
+        },
+        lsp_definitions = {
+            timeout = 100000
+        },
+        lsp_type_definitions = {
+            timeout = 100000
+        },
+        lsp_implementations = {
+            timeout = 100000
+        },
+        lsp_workspace_symbols = {
+            timeout = 100000
+        },
+        lsp_dynamic_workspace_symbols = {
+            timeout = 100000
         }
+
     }
 }
