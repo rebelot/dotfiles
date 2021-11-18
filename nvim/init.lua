@@ -28,9 +28,6 @@ require "options"
 -- Diagnostics
 require "diagnostics"
 
--- LSP
-require "lsp-config"
-
 -- Functions, Commands, Autocommands
 vim.cmd "source ~/.config/nvim/viml/commands.vim"
 vim.cmd "source ~/.config/nvim/viml/autocommands.vim"

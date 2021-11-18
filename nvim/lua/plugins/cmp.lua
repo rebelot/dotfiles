@@ -113,6 +113,7 @@ cmp.setup {
         ['<C-e>'] = cmp.mapping({ i = cmp.mapping.close(), c = cmp.mapping.close() }),
         ['<CR>'] = cmp.mapping({
             i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+            -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
             c = function(fallback)
                 if cmp.visible() then
                     cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
@@ -214,8 +215,8 @@ function M.set_sources(source_set)
     require'cmp'.setup.buffer{sources = sources}
 end
 
-vim.cmd("autocmd OptionSet spell lua require'cmp-config'.set_sources('spell')")
-vim.cmd("autocmd OptionSet nospell lua require'cmp-config'.set_sources()")
+vim.cmd("autocmd OptionSet spell lua require'plugins.cmp'.set_sources('spell')")
+vim.cmd("autocmd OptionSet nospell lua require'plugins.cmp'.set_sources()")
 
 -- vim.cmd [[ hi! link CmpItemKind Keyword]]
 -- vim.cmd [[ hi! link CmpItemMenu Cursorlinenr]]

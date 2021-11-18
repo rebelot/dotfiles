@@ -2,6 +2,7 @@ local actions = require('telescope.actions')
 local previewers = require('telescope.previewers')
 local themes = require('telescope.themes')
 local trouble = require("trouble.providers.telescope")
+local copts = {noremap = true}
 
 require('telescope').setup {
     defaults = {
@@ -107,3 +108,24 @@ require('telescope').setup {
 
     }
 }
+vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>Telescope find_files<CR>", copts)
+-- vim.api.nvim_set_keymap("n", "<leader>fF", ":Telescope find_files cwd=", {noremap=true})
+vim.api.nvim_set_keymap("n", "<leader>f.", "<cmd>Telescope file_browser<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fl", "<cmd>Telescope current_buffer_fuzzy_find<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fh", "<cmd>Telescope oldfiles<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fr", "<cmd>Telescope frecency<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd>Telescope buffers<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader><space>", "<cmd>Telescope commands<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>ft", "<cmd>Telescope treesitter<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fj", "<cmd>Telescope jumplist<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>T", "<cmd>Telescope<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>z", "<cmd>Telescope spell_suggest<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>fm", "<cmd>Telescope marks<CR>", copts)
+vim.api.nvim_set_keymap("n", '<leader>t"', "<cmd>Telescope registers<CR>", copts)
+
+vim.cmd [[ command! -nargs=1 -complete=dir FindFiles Telescope find_files cwd=<args>]]
+vim.api.nvim_set_keymap("n", "<leader>fF", ":FindFiles ", copts)
+-- nnoremap <leader>tr :Telescope lsp_references<CR>
+-- nnoremap <leader>ts :Telescope lsp_document_symbols<CR>

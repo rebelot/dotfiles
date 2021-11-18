@@ -78,7 +78,8 @@ nnoremap <leader>w :w<cr>
 nnoremap <silent><M-/> :noh<bar>diffupdate<CR><C-L>
 
 " [re]load buffer
-nnoremap <leader>re :e%<CR>
+" nnoremap <leader>re :e%<CR>
+nnoremap <leader>re :Bdelete<CR><C-O>zRzz
 
 " [e]dit, [v]ertical, horizontal [s]plit or [t]ab a [n]ew buffer
 nnoremap <leader>en :enew<CR>
@@ -177,6 +178,9 @@ xnoremap <F2> :emenu <C-Z>
 " c-n/c-p previous command or match history
 " cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"
 " cnoremap <expr><C-p> wildmenumode() ? "\<C-p>" : "\<Up>"
+" cnoremap <expr><CR> v:lua.require'cmp'.visible() ? v:lua.require'cmp'.confirm() : '\\<CR>' 
+                " \ wildmenumode() ? \
+                " \ "\<C-y>" : "\<CR>"
 
 " Sintax stuff
 nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'

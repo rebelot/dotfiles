@@ -1,5 +1,5 @@
 local tree_cb = require'nvim-tree.config'.nvim_tree_callback
-
+local copts = {noremap = true}
 
 vim.g.nvim_tree_show_icons = {
         git                = 1,
@@ -74,3 +74,5 @@ require'nvim-tree'.setup{
       },
 }
 
+vim.api.nvim_set_keymap('n', "<leader>nt", "<cmd>NvimTreeToggle<CR>", copts)
+vim.api.nvim_set_keymap('n', "<leader>nf", "<cmd>NvimTreeFindFile<CR>", copts)
