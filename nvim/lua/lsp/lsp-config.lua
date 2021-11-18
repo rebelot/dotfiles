@@ -155,4 +155,7 @@ function! PythonInterpreterComplete(A,L,P) abort
 endfunction
 ]]
 
-
+local M = {}
+M.on_attach = on_attach
+M.capabilites = capabilities
+return M

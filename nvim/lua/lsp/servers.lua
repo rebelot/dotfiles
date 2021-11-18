@@ -135,6 +135,7 @@ local jsonls = {
     }
 }
 
+
 local servers = {}
 
 servers.pyright = pyright
@@ -142,7 +143,7 @@ servers.bashls = bashls
 servers.vimls = vimls
 servers.julials = julials
 servers.ccls = ccls
-servers.efm = efm
+-- servers.efm = efm
 servers.texlab = texlab
 servers.sumneko_lua = sumneko_lua
 servers.jsonls = jsonls

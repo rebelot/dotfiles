@@ -2,11 +2,12 @@
 # pyright, vim-language-server, bash-language-server, vscode-html-language-server vscode-css-language-server vscode-json-language-server vscode-eslint-language-server
 yarn global upgrade
 
-# texlab
+# texlab, stylua
 cargo install --git https://github.com/latex-lsp/texlab.git --locked
+cargo instal stylua
 
 # efm
-go install 'github.com/mattn/efm-langserver@latest'
+# go install 'github.com/mattn/efm-langserver@latest'
 
 # ccls
 # port upgrade ccls-clang-11
