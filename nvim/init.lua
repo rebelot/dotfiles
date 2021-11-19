@@ -11,8 +11,6 @@
 -- try nvim which-key
 -- check out vim.quickui
 -- folke/todo-comments.nvim
--- try null-lsp
--- checkout simrat39/symbols-outline.nvim
 
 -- Plugins
 require "plugins"
