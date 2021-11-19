@@ -4,38 +4,20 @@ My configuration files for various stuff.
 
 ![my setup](screenshot.png)
 
-
-## Terminfo
-make sure terminfo specs are written to `$HOME/.terminfo`
-
-```bash
-unset TERMINFO
-infocmp tmux-256color > tmux-256color.terminfo  # or fetch it elsewhere
-/usr/bin/tic tmux-256color.terminfo
-/usr/bin/tic -x ./tmux-256color.terminfo
-```
-
-## Lesskey
-
-```bash
-lesskey ./lesskey
-```
-
-## Tmux
-see `terminal-overrides` option in `tmux.conf`
-
 ## Installation
 
 ```bash
 cd $HOME
 git clone https://github.com/rebelot/dotfiles
-makedir -p ~/.config/nvim
-cd dotfiles
-ln -s zsh ~/.zsh
-ln -s zshrc ~/.zshrc
-ln -s tmux.conf ~/.tmux.conf
-ln -s nvim/init.lua ~/.config/nvim/init.lua
-ln -s nvim/lua ~/.config/nvim/lua
-ln -s nvim/viml ~/.config/nvim/viml
-ln -s kitty.conf ~/.config/kitty/kitty.conf
+ln -s $HOME/dotfiles/zsh .zsh
+ln -s $HOME/dotfiles/zshrc .zshrc
+ln -s $HOME/dotfiles/tmux.conf .tmux.conf
+ln -s $HOME/dotfiles/kitty.conf .config/kitty/
+ln -s $HOME/dotfiles/nvim .config/
+ln -s $HOME/dotfiles/bat .config/
+ln -s $HOME/dotfiles/karabiner.json .config/karabiner/
+ln -s $HOME/dotfiles/vimrc .vimrc
+
+lesskey dotfiles/lesskey
+/usr/bin/tic -x dotfiles/tmux-256color.terminfo
 ```
