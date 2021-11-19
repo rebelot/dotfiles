@@ -458,6 +458,14 @@ return require("packer").startup(function(use)
 
 	use({ "tpope/vim-surround" })
 
+	use({
+		"ThePrimeagen/refactoring.nvim",
+		after = "nvim-treesitter",
+		config = function()
+			require("refactoring").setup({})
+		end,
+	})
+
 	-- use {'raimondi/delimitmate',
 	--   config = function()
 	--     vim.g.delimitMate_expand_inside_quotes = 0
