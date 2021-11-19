@@ -7,3 +7,4 @@ vim.g.vista_executive_for = {
     markdown = 'nvim_lsp',
     lua = 'nvim_lsp'
 }
+vim.api.nvim_set_keymap('n', '<leader>vv', '<cmd>Vista!!<CR>', {noremap = true})

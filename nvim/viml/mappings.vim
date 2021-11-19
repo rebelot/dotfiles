@@ -27,7 +27,7 @@ nnoremap <leader>ev :edit $MYVIMRC<CR>
 " imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
 " inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
 " inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-inoremap <C-l> <Right>
+" inoremap <C-l> <Right>
 
 " remap <Esc> to jk in insert mode
 " inoremap jk <Esc>
@@ -144,32 +144,10 @@ xnoremap <C-U> :m'<-2<CR>gv=gv
 " WindowSwap
 " nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
  
-" toggle tagbar
-nnoremap <silent><F8> :TagbarToggle<CR>
-
-" Toggle [Mu]ndo
-nnoremap <silent><leader>mu :MundoToggle<CR>
 
 "Folds
 nnoremap zR zRz.
 nnoremap zM zMz.
-
-" Vimux
-xnoremap <leader>vs "vy :call VimuxSlime()<CR>
-nnoremap <leader>vp :VimuxPromptCommand<CR>
-
-" EasyAlign
-xmap ga <Plug>(EasyAlign)
-
-" Vista
-nnoremap <leader>vv :Vista!!<CR>
-nnoremap <leader>vf :Vista finder<CR>
-
-" gitgutter
-" nnoremap <leader>sd :SignifyHunkDiff<CR>
-nnoremap <leader>hd :Gitsigns preview_hunk<CR>
-nnoremap ]h :Gitsigns next_hunk<CR>
-nnoremap [h :Gitsigns next_hunk<CR>
 
 " Menu
 nnoremap <F2> :emenu <C-Z>

@@ -133,6 +133,7 @@ return require("packer").startup(function(use)
 	use({
 		"liuchengxu/vista.vim",
 		cmd = "Vista",
+		keys = '<leader>vv',
 		config = function()
 			require("plugins.vista")
 		end,
@@ -392,11 +393,19 @@ return require("packer").startup(function(use)
 	use({
 		"majutsushi/tagbar",
 		cmd = { "TagbarToggle" },
+		keys = '<F8>',
+		config = function()
+            vim.api.nvim_set_keymap('n', '<F8>', '<cmd>TagbarToggle<CR>', {noremap = true})
+        end
 	})
 
 	use({
 		"simnalamburt/vim-mundo",
 		cmd = { "MundoToggle" },
+		keys = '<leader>mu',
+		config = function()
+            vim.api.nvim_set_keymap('n', '<leader>mu', '<cmd>MundoToggle<CR>', {noremap=true})
+        end
 	})
 
 	use({
@@ -442,7 +451,11 @@ return require("packer").startup(function(use)
 		cmd = { "Tabularize" },
 	})
 
-	use({ "junegunn/vim-easy-align" })
+	use({ "junegunn/vim-easy-align",
+	    config=function()
+        vim.cmd('xmap ga <Plug>(EasyAlign)')
+        end
+    })
 
 	use({
 		"dhruvasagar/vim-table-mode",
@@ -524,7 +537,12 @@ return require("packer").startup(function(use)
 	----------
 	-- Tmux --
 	----------
-	use({ "benmills/vimux" })
+	use({ "benmills/vimux",
+        config = function()
+            vim.api.nvim_set_keymap('x', '<leader>vs', '"vy :call VimuxSlime()<CR>', {noremap = true})
+            vim.api.nvim_set_keymap('n', '<leader>vp', '<cmd>VimuxPromptCommand<CR>', {noremap = true})
+        end
+    })
 
 	use({ "tmux-plugins/vim-tmux" })
 	-- use 'tmux-plugins/vim-tmux-focus-events'
