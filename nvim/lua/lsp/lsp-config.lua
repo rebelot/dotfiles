@@ -68,6 +68,7 @@ local on_attach = function(client, bufnr)
         noremap = true,
         silent = true
     }
+    buf_set_option('tagfunc', 'v:lua.vim.lsp.tagfunc')
     -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     -- buf_set_keymap('n', '<leader>li', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     -- buf_set_keymap('n', '<leader>la', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
