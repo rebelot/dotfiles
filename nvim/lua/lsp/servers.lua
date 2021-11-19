@@ -4,6 +4,7 @@ local pyright = {
     flags = {
         allow_incremental_sync = true
     },
+    single_file_support = true,
     settings = {
         -- pyright = { completeFunctionParens = true },
         python = {
@@ -11,7 +12,7 @@ local pyright = {
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
                 useLibraryCodeForTypes = true,
-                stubsPath = "$HOME/typings"
+                -- stubsPath = "$HOME/typings"
             }
         }
     }
@@ -136,16 +137,16 @@ local jsonls = {
 }
 
 
-local servers = {}
+local configs = {}
 
-servers.pyright = pyright
-servers.bashls = bashls
-servers.vimls = vimls
-servers.julials = julials
-servers.ccls = ccls
+configs.pyright = pyright
+configs.bashls = bashls
+configs.vimls = vimls
+configs.julials = julials
+configs.ccls = ccls
 -- servers.efm = efm
-servers.texlab = texlab
-servers.sumneko_lua = sumneko_lua
-servers.jsonls = jsonls
+configs.texlab = texlab
+configs.sumneko_lua = sumneko_lua
+configs.jsonls = jsonls
 
-return servers
+return configs
