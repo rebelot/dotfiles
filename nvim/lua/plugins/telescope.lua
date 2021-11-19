@@ -87,6 +87,7 @@ require('telescope').setup {
             }
         },
         lsp_code_actions = themes.get_cursor(),
+        lsp_range_code_actions = themes.get_cursor(),
         lsp_references = {
             timeout = 100000
         },
