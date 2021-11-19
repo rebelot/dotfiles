@@ -254,7 +254,6 @@ alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1
 # }}}
 
 # compinit / compdef {{{
-eval "$(pip completion --zsh)"
 autoload -Uz compinit
 compinit -i
 zinit cdreplay -q
@@ -263,6 +262,8 @@ zinit cdreplay -q
 # other sources  {{{
 source /opt/local/etc/profile.d/z.sh
 source ~/.fzf.zsh
+eval "$(kitty +complete setup zsh)"
+eval "$(pip completion --zsh)"
 # }}}
 
 # Remove duplicates from PATH (Unique)
