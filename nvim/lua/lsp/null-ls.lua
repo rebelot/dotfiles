@@ -31,14 +31,14 @@ local sources = {
 
     null_ls.builtins.code_actions.gitsigns,
 
-    -- null_ls.builtins.code_actions.refactoring,
+    null_ls.builtins.code_actions.refactoring,
     -- null_ls.builtins.completion.spell,
 }
 
 
 null_ls.config({
     sources = sources,
-    debug = true})
+    debug = false})
 require("lspconfig")["null-ls"].setup({
     on_attach = require'lsp.lsp-config'.on_attach,
     -- capabilities = require'lsp.lsp-config'.capabilities
