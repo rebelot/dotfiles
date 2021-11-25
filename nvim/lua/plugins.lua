@@ -108,12 +108,7 @@ return require("packer").startup(function(use)
 
 	use({
 		"SirVer/ultisnips",
-		requires = {
-			{
-				"honza/vim-snippets",
-				rtp = ".",
-			},
-		},
+		requires = "honza/vim-snippets",
 		config = function()
 			vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
 			vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
@@ -133,7 +128,7 @@ return require("packer").startup(function(use)
 	use({
 		"liuchengxu/vista.vim",
 		cmd = "Vista",
-		keys = '<leader>vv',
+		keys = "<leader>vv",
 		config = function()
 			require("plugins.vista")
 		end,
@@ -229,7 +224,6 @@ return require("packer").startup(function(use)
 
 	use({
 		"kyazdani42/nvim-tree.lua",
-		rtp = ".",
 		config = function()
 			require("plugins.nvim-tree")
 		end,
@@ -288,6 +282,9 @@ return require("packer").startup(function(use)
 
 	-- use 'ryanoasis/vim-devicons'
 	use({
+		"/Users/laurenzi/usr/src/kanagawa",
+	})
+	use({
 		"kyazdani42/nvim-web-devicons",
 		config = function()
 			require("nvim-web-devicons").setup()
@@ -308,6 +305,8 @@ return require("packer").startup(function(use)
 	-- use 'gruvbox-community/gruvbox'
 	use({
 		"famiu/feline.nvim",
+		after = { "nvim-lspconfig", "tokyonight.nvim", "gitsigns.nvim", "nvim-dap", "vim-ultest"},
+		event = {"BufEnter"},
 		config = function()
 			require("plugins.feline")
 		end,
@@ -343,10 +342,48 @@ return require("packer").startup(function(use)
 	})
 
 	use({
+		"rcarriga/vim-ultest",
+		requires = { "vim-test/vim-test" },
+		run = ":UpdateRemotePlugins",
+		config = function()
+            require("ultest").setup({
+                builders = {
+                    ['python#pytest'] = function(cmd)
+                        -- The command can start with python command directly or an env manager
+                        local non_modules = {'python', 'pipenv', 'poetry'}
+                        -- Index of the python module to run the test.
+                        local module_index = 1
+                        if vim.tbl_contains(non_modules, cmd[1]) then
+                            module_index = 3
+                        end
+                        local module = cmd[module_index]
+                        
+                        -- Remaining elements are arguments to the module
+                        local args = vim.list_slice(cmd, module_index + 1)
+                        return {
+                            dap = {
+                            type = 'python',
+                            request = 'launch',
+                            module = module,
+                            args = args
+                            }
+                        }
+                    end
+                }
+            })
+			vim.cmd('let test#python#runner = "pytest"')
+			vim.cmd('let test#strategy = "neovim"')
+			vim.cmd('let test#python#pytest#options = "--color=yes"')
+			vim.cmd("let g:ultest_use_pty = 1")
+		end,
+	})
+
+	use({
 		"mfussenegger/nvim-dap-python",
 		after = "nvim-dap",
 		config = function()
 			require("dap-python").setup("~/venvs/debugpy/bin/python")
+			require('dap-python').test_runner = 'pytest'
 		end,
 	})
 
@@ -393,19 +430,19 @@ return require("packer").startup(function(use)
 	use({
 		"majutsushi/tagbar",
 		cmd = { "TagbarToggle" },
-		keys = '<F8>',
+		keys = "<F8>",
 		config = function()
-            vim.api.nvim_set_keymap('n', '<F8>', '<cmd>TagbarToggle<CR>', {noremap = true})
-        end
+			vim.api.nvim_set_keymap("n", "<F8>", "<cmd>TagbarToggle<CR>", { noremap = true })
+		end,
 	})
 
 	use({
 		"simnalamburt/vim-mundo",
 		cmd = { "MundoToggle" },
-		keys = '<leader>mu',
+		keys = "<leader>mu",
 		config = function()
-            vim.api.nvim_set_keymap('n', '<leader>mu', '<cmd>MundoToggle<CR>', {noremap=true})
-        end
+			vim.api.nvim_set_keymap("n", "<leader>mu", "<cmd>MundoToggle<CR>", { noremap = true })
+		end,
 	})
 
 	use({
@@ -451,11 +488,12 @@ return require("packer").startup(function(use)
 		cmd = { "Tabularize" },
 	})
 
-	use({ "junegunn/vim-easy-align",
-	    config=function()
-        vim.cmd('xmap ga <Plug>(EasyAlign)')
-        end
-    })
+	use({
+		"junegunn/vim-easy-align",
+		config = function()
+			vim.cmd("xmap ga <Plug>(EasyAlign)")
+		end,
+	})
 
 	use({
 		"dhruvasagar/vim-table-mode",
@@ -465,7 +503,7 @@ return require("packer").startup(function(use)
 	use({
 		"numToStr/Comment.nvim",
 		config = function()
-			require("Comment").setup()
+			require("Comment").setup({ mappings = { extended = true } })
 		end,
 	})
 
@@ -523,7 +561,6 @@ return require("packer").startup(function(use)
 		"phaazon/hop.nvim",
 		as = "hop",
 		disable = false,
-		rtp = ".",
 		config = function()
 			require("plugins.hop")
 		end,
@@ -537,12 +574,13 @@ return require("packer").startup(function(use)
 	----------
 	-- Tmux --
 	----------
-	use({ "benmills/vimux",
-        config = function()
-            vim.api.nvim_set_keymap('x', '<leader>vs', '"vy :call VimuxSlime()<CR>', {noremap = true})
-            vim.api.nvim_set_keymap('n', '<leader>vp', '<cmd>VimuxPromptCommand<CR>', {noremap = true})
-        end
-    })
+	use({
+		"benmills/vimux",
+		config = function()
+			vim.api.nvim_set_keymap("x", "<leader>vs", '"vy :call VimuxSlime()<CR>', { noremap = true })
+			vim.api.nvim_set_keymap("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { noremap = true })
+		end,
+	})
 
 	use({ "tmux-plugins/vim-tmux" })
 	-- use 'tmux-plugins/vim-tmux-focus-events'

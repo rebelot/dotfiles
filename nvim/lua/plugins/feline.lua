@@ -449,6 +449,44 @@ local Gps = {
     hl = {fg = 'gray4'}
 }
 
+local UltestPassed = {
+    enabled = function()
+        return vim.api.nvim_call_function('ultest#is_test_file', {}) ~= 0
+    end,
+    icon = {str = vim.fn.sign_getdefined('test_pass')[1].text, hl = {fg = get_color('UltestPass', 'fg')}},
+    provider = function()
+        local status = vim.api.nvim_call_function('ultest#status', {})
+        return tostring(status.passed)
+    end,
+    left_sep = '  ',
+    right_sep = ' '
+}
+
+local UltestFailed = {
+    enabled = function()
+        return vim.api.nvim_call_function('ultest#is_test_file', {}) ~= 0
+    end,
+    icon = {str = vim.fn.sign_getdefined('test_fail')[1].text, hl = {fg = get_color('UltestFail', 'fg')}},
+    provider = function()
+        local status = vim.api.nvim_call_function('ultest#status', {})
+        return tostring(status.failed)
+    end,
+    right_sep = ' '
+}
+
+local UltestTests = {
+    enabled = function()
+        return vim.api.nvim_call_function('ultest#is_test_file', {}) ~= 0
+    end,
+    provider = function()
+        local status = vim.api.nvim_call_function('ultest#status', {})
+        return tostring(status.tests - 1)
+    end,
+    left_sep = {str = 'of ', hl = {fg = colors.fg}}
+}
+
+
+
 local components = {
     active = {
         {
@@ -466,7 +504,10 @@ local components = {
             DiagErr,
             DiagWarn,
             DiagHint,
-            DiagInfo
+            DiagInfo,
+            UltestPassed,
+            UltestFailed,
+            UltestTests
         },
         {
             LSPMessages,
