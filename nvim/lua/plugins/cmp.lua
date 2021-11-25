@@ -157,7 +157,7 @@ cmp.setup {
         { name = 'ultisnips' },
         { name = 'path' },
         { name = 'buffer' },
-        { name = 'tmux', opts = { all_panes = true } }
+        { name = 'tmux', option = { all_panes = true } }
         -- { name = "latex_symbols" },
         -- { name = "dictionary", keyword_length = 2 },
     }
@@ -168,7 +168,7 @@ cmp.setup.cmdline('/', {
     completion = { autocomplete = false },
     sources = {
         -- { name = 'buffer' }
-        { name = 'buffer', opts = { keyword_pattern = [=[[^[:blank:]].*]=] } }
+        { name = 'buffer', option = { keyword_pattern = [=[[^[:blank:]].*]=] } }
     }
 })
 
@@ -197,7 +197,7 @@ local default_sources = {
     { name = 'ultisnips' },
     { name = 'path' },
     { name = 'buffer' },
-    { name = 'tmux', opts = { all_panes = true } }
+    { name = 'tmux', option = { all_panes = true } }
 }
 
 local spell_sources = {
