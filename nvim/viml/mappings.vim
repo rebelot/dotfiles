@@ -46,6 +46,8 @@ nnoremap <m-s-h> <C-W><
 nnoremap <m-s-j> <C-W>+
 nnoremap <m-s-k> <C-W>-
 nnoremap <m-z> :call WinZoomToggle()<CR>
+nnoremap <c-w>S :bo split<cr>
+nnoremap <c-w>V :bo vert split<cr>
 
 " Vertical/Horizontal Scrolling
 nnoremap <m-l> zl
@@ -138,8 +140,10 @@ nnoremap ]<CR> :call append(line('.'), '')<CR>
 nnoremap [<CR> :call append(line('.')-1, '')<CR>
 
 " Move selection up/down
-xnoremap <C-D> :m'>+1<CR>gv=gv
-xnoremap <C-U> :m'<-2<CR>gv=gv
+" xnoremap <C-D> :m'>+1<CR>gv=gv
+" xnoremap <C-U> :m'<-2<CR>gv=gv
+xnoremap <C-D> :m'>+1<CR>gv
+xnoremap <C-U> :m'<-2<CR>gv
 
 " WindowSwap
 " nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
@@ -170,3 +174,9 @@ nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> t
 
 " netrw_gx fix
 " nmap gx yiW:!open <cWORD><CR> <C-r>" & <CR><CR>
+
+cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
+cnoreabbrev prinspect lua print(vim.inspect())<Left><Left>
+cnoremap ( ()<Left>
+cnoremap [ []<Left>
+cnoremap { {}<Left>

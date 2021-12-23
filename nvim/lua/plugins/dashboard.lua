@@ -26,7 +26,7 @@ augroup dashboard_au
 augroup END
 ]]
 
-vim.cmd("hi! link DashboardHeader Error")
+-- vim.cmd("hi! link DashboardHeader Error")
 
 g.dashboard_custom_header = {
        "            :h-                                  Nhy`               ",

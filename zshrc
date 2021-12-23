@@ -23,7 +23,7 @@ export PATH="$HOME/.npm-packages/bin:$PATH"                   # (node installer)
 # export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
-source /opt/anaconda3/etc/profile.d/conda.sh                  # <-- Anaconda
+source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
 [[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
 export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
@@ -59,31 +59,29 @@ source $ZSH/prompt.zsh
 # check esc/conda-zsh-completion
 # check git prompt at https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 # or use vcs_info zsh builtin module
-source "$HOME/.zinit/bin/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
+
+# autoload -Uz _zinit
+# (( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
 zinit light-mode for \
-    zinit-zsh/z-a-rust \
-    zinit-zsh/z-a-as-monitor \
-    zinit-zsh/z-a-patch-dl \
-    zinit-zsh/z-a-bin-gem-node
-
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
 ### End of Zinit's installer chunk
 
-zinit ice as"completion" mv"hub* -> _hub"; zinit snippet '/opt/local/share/zsh/site-functions/hub.zsh_completion'
-# zinit ice as"completion"; zinit snippet 'https://github.com/rebelot/BioTools/blob/master/schrodinger_scripts/_schrun'
-zinit ice as"completion"; zinit snippet 'https://github.com/malramsay64/conda-zsh-completion/blob/master/_conda'
 zinit ice as"completion"; zinit snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
 zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zinit snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
-# zinit ice as"completion"; zinit snippet /opt/src/nnn/scripts/auto-completion/zsh/_nnn
 zinit load hlissner/zsh-autopair
 zinit load bric3/oh-my-zsh-git
 # zinit load srijanshetty/zsh-pandoc-completion
+zinit light esc/conda-zsh-completion
 zinit ice blockf; zinit light zsh-users/zsh-completions
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 # }}}
 
 # plugin Opts {{{
@@ -135,13 +133,14 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2021-3"
+export SCHRODINGER="/opt/schrodinger/suites2021-4"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 # export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 # export JULIA_PKGDIR="/Users/laurenzi/.julia"
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
 export SCHRODINGER_SCRIPTS="$HOME/usr/src/schrodinger_utils/scripts"
+export XLSCRIPTS="$HOME/usr/src/xlence_scripts"
 export BIOTOOLS="$HOME/usr/src/BioTools"
 export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython"
 
@@ -243,13 +242,15 @@ alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
-alias debugpy="python $HOME/venvs/debugpy/lib/python3.8/site-packages/debugpy --listen localhost:5678 --wait-for-client"
+alias debugpy="python /Users/laurenzi/venvs/debugpy/lib/python3.9/site-packages/debugpy --listen localhost:5678 --wait-for-client"
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
 alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
 alias luamake=/Users/laurenzi/usr/src/lua-language-server/3rd/luamake/luamake
 alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/lldb/lib/liblldb.dylib; done"
+alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
+alias fuck='killall -9'
 
 # }}}
 
@@ -275,3 +276,4 @@ unset MANPATH
 # zprof
 
 # vim:set et sw=2 ts=2 fdm=marker:
+

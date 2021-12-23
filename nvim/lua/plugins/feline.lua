@@ -286,25 +286,37 @@ local DiagSep = {
 }
 
 local DiagErr = {
-    provider = 'diagnostic_errors',
+    provider = function()
+        local count = #vim.diagnostic.get(0, {severity = vim.diagnostic.severity.ERROR})
+        return count ~= 0 and tostring(count) or ''
+    end,
     icon = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
     hl = {fg = 'diag_error'},
     right_sep = ' '
 }
 local DiagWarn = {
-    provider = 'diagnostic_warnings',
+    provider = function()
+        local count = #vim.diagnostic.get(0, {severity = vim.diagnostic.severity.WARN})
+        return count ~= 0 and tostring(count) or ''
+    end,
     icon = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
     hl = {fg = 'diag_warn'},
     right_sep = ' '
 }
 local DiagHint = {
-    provider = 'diagnostic_hints',
+    provider = function()
+        local count = #vim.diagnostic.get(0, {severity = vim.diagnostic.severity.HINT})
+        return count ~= 0 and tostring(count) or ''
+    end,
     icon = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
     hl = {fg = 'diag_hint'},
     right_sep = ' '
 }
 local DiagInfo = {
-    provider = 'diagnostic_info',
+    provider = function()
+        local count = #vim.diagnostic.get(0, {severity = vim.diagnostic.severity.INFO})
+        return count ~= 0 and tostring(count) or ''
+    end,
     icon = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
     hl = {fg = 'diag_info'},
     right_sep = ' '
@@ -531,7 +543,8 @@ local components = {
 }
 
 require"feline".setup{
-    colors = colors,
+    -- colors = colors,
+    theme = colors,
     components = components,
     force_inactive = force_inactive,
     -- highlight_reset_triggers = {}

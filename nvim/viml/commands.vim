@@ -6,10 +6,6 @@ command! Reload source $MYVIMRC | noh
 
 command! -range=% Wc <line1>,<line2>w ! wc
 
-function! VimuxSlime()
- call VimuxRunCommand(@v, 0)
-endfunction
-
 function! WinZoomToggle() abort
     if ! exists('w:WinZoomIsZoomed') 
       let w:WinZoomIsZoomed = 0

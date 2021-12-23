@@ -10,7 +10,8 @@ cargo instal stylua
 # go install 'github.com/mattn/efm-langserver@latest'
 
 # ccls
-# port upgrade ccls-clang-11
+# port upgrade ccls-clang-11 
+port upgrade lua-language-server
 
 cd "$HOME/usr/src/ccls" || exit
 git pull
@@ -19,11 +20,12 @@ cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/Users/lauren
 cmake --build Release
 
 # sumneko_lua
-cd "$HOME/usr/src" || exit
-git clone https://github.com/sumneko/lua-language-server
-cd lua-language-server || exit
-git submodule update --init --recursive
-cd 3rd/luamake || exit
-compile/install.sh
-cd ../.. || exit
-./3rd/luamake/luamake rebuild
+# provided by macports
+# cd "$HOME/usr/src" || exit
+# git clone https://github.com/sumneko/lua-language-server
+# cd lua-language-server || exit
+# git submodule update --init --recursive
+# cd 3rd/luamake || exit
+# compile/install.sh
+# cd ../.. || exit
+# ./3rd/luamake/luamake rebuild

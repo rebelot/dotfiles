@@ -1,7 +1,7 @@
 local copts = {noremap = true}
 
 require'trouble'.setup {
-    use_lsp_diagnostic_signs = true
+    use_diagnostic_signs = true
 }
 vim.api.nvim_set_keymap('n', '<leader>xx', '<cmd>TroubleToggle<CR>', copts)
 vim.api.nvim_set_keymap('n', '<leader>xD', '<cmd>TroubleToggle lsp_workspace_diagnostics<CR>', copts)

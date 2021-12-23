@@ -11,12 +11,16 @@
 -- try nvim which-key
 -- check out vim.quickui
 -- folke/todo-comments.nvim
+-- dashboard -> goolord/alpha-nvim.git
+-- check telescope project for bookmars
 
 -- Plugins
 require "plugins"
 
 -- Colors
-require"colors".tokyonight()
+-- require'kanagawa'.setup{ overrides = { TSKeywordReturn = { style = "none" } }}
+vim.cmd "colorscheme kanagawa"
+-- require"colors".tokyonight()
 -- require"colors".catppuccin()
 require"colors".overrides()
 
