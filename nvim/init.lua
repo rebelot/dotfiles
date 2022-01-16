@@ -1,4 +1,3 @@
-
 -- ██╗███╗   ██╗██╗████████╗██╗     ██╗   ██╗ █████╗
 -- ██║████╗  ██║██║╚══██╔══╝██║     ██║   ██║██╔══██╗
 -- ██║██╔██╗ ██║██║   ██║   ██║     ██║   ██║███████║
@@ -12,30 +11,32 @@
 -- check out vim.quickui
 -- folke/todo-comments.nvim
 -- dashboard -> goolord/alpha-nvim.git
--- check telescope project for bookmars
+-- check telescope project for bookmarks
+-- maybe it's time for a session plugin
+-- play with foldtext function to customize it
+-- check out sidebar-nvim/sidebar.nvim
 
 -- Plugins
-require "plugins"
+require("plugins")
 
--- Colors
--- require'kanagawa'.setup{ overrides = { TSKeywordReturn = { style = "none" } }}
-vim.cmd "colorscheme kanagawa"
--- require"colors".tokyonight()
--- require"colors".catppuccin()
-require"colors".overrides()
+--
+require'kanagawa'.setup({
+  dimInactive = true
+})
+vim.cmd("colorscheme kanagawa")
+require("colors").overrides()
 
 -- general configurations
-require "options"
+require("options")
 
 -- Diagnostics
-require "diagnostics"
+require("diagnostics")
 
 -- Functions, Commands, Autocommands
-vim.cmd "source ~/.config/nvim/viml/commands.vim"
-vim.cmd "source ~/.config/nvim/viml/autocommands.vim"
+vim.cmd("source ~/.config/nvim/viml/commands.vim")
+vim.cmd("source ~/.config/nvim/viml/autocommands.vim")
 
 -- Mappings
-vim.cmd "source ~/.config/nvim/viml/mappings.vim"
+vim.cmd("source ~/.config/nvim/viml/mappings.vim")
 
 -- vim: sw=2 ts=2 fdm=marker:
-

@@ -54,7 +54,7 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "simrat39/symbols-outline.nvim" })
+    -- use({ "simrat39/symbols-outline.nvim" })
 
     -- use({ "b0o/SchemaStore.nvim" })
 
@@ -267,7 +267,12 @@ return require("packer").startup(function(use)
             require("plugins.telescope")
         end,
     })
-
+    use({
+        "nvim-telescope/telescope-file-browser.nvim",
+        config = function()
+            require("telescope").load_extension("file_browser")
+        end,
+    })
     use({
         "nvim-telescope/telescope-dap.nvim",
         after = { "telescope.nvim", "nvim-dap" },
@@ -305,8 +310,8 @@ return require("packer").startup(function(use)
     -------------------------------------------
 
     -- use 'ryanoasis/vim-devicons'
-    -- use ({"/Users/laurenzi/usr/src/kanagawa.nvim", branch="dev"})
-    use({ "rebelot/kanagawa.nvim", branch = "dev" })
+    use({ "/Users/laurenzi/usr/src/kanagawa.nvim", branch = "master" })
+    -- use({ "rebelot/kanagawa.nvim", branch = "master" })
 
     use({
         "kyazdani42/nvim-web-devicons",
@@ -329,13 +334,20 @@ return require("packer").startup(function(use)
     -- use "projekt0n/github-nvim-theme"
     -- use 'gruvbox-community/gruvbox'
     use({
-        "famiu/feline.nvim",
-        after = { "nvim-lspconfig", "tokyonight.nvim", "gitsigns.nvim", "nvim-dap", "vim-ultest" },
-        event = { "BufEnter" },
+        "/Users/laurenzi/usr/src/heirline.nvim",
+        event = {"VimEnter"},
         config = function()
-            require("plugins.feline")
+            require("plugins.heirline")
         end,
     })
+    -- use({
+    --     "famiu/feline.nvim",
+    --     after = { "nvim-lspconfig", "tokyonight.nvim", "gitsigns.nvim", "nvim-dap", "vim-ultest" },
+    --     event = { "BufEnter" },
+    --     config = function()
+    --         require("plugins.feline")
+    --     end,
+    -- })
 
     use({
         "akinsho/nvim-bufferline.lua",
@@ -421,6 +433,8 @@ return require("packer").startup(function(use)
         end,
     })
 
+    use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
+
     use({ "tpope/vim-fugitive" })
     -- use 'mhinz/vim-signify'
     -- use 'ludovicchabant/vim-gutentags'
@@ -450,6 +464,9 @@ return require("packer").startup(function(use)
         end,
     })
     -- use 'kassio/neoterm'
+    use("voldikss/vim-floaterm")
+    -- use "numToStr/FTerm.nvim"
+
     use({ "moll/vim-bbye" })
 
     use({ "lambdalisue/suda.vim" })

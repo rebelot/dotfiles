@@ -148,6 +148,10 @@ local on_attach = function(client, bufnr)
             augroup END
         ]])
 	end
+
+    -- if client.name == "pyright" then
+    --     vim.api.nvim_buf_add_user_command(bufnr, "PythonInterpreter", require'lsp.utilities'.change_python_interpreter, {nargs = 1, complete = require'lsp.utilities'.get_python_interpreters})
+    -- end
 end
 
 for server, config in pairs(configs) do
@@ -160,13 +164,14 @@ end
 -- Commands --
 --------------
 
-vim.cmd([[
-command! -nargs=1 -complete=customlist,PythonInterpreterComplete PythonInterpreter lua require'lsp.utilities'.change_python_interpreter(<q-args>)
-
-function! PythonInterpreterComplete(A,L,P) abort
-  return v:lua.require('lsp.utilities').get_python_interpreters()
-endfunction
-]])
+vim.api.nvim_add_user_command("PythonInterpreter", require'lsp.utilities'.change_python_interpreter, {nargs = 1, complete = require'lsp.utilities'.get_python_interpreters})
+-- vim.cmd([[
+-- command! -nargs=1 -complete=customlist,PythonInterpreterComplete PythonInterpreter lua require'lsp.utilities'.change_python_interpreter(<q-args>)
+--
+-- function! PythonInterpreterComplete(A,L,P) abort
+--   return v:lua.require('lsp.utilities').get_python_interpreters()
+-- endfunction
+-- ]])
 
 local M = {}
 M.on_attach = on_attach

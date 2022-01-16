@@ -36,7 +36,7 @@ end
 
 require("telescope").setup({
     defaults = {
-        dynamic_preview_title = true,
+        -- dynamic_preview_title = true,
         layout_strategy = "flex",
         layout_config = {
             vertical = {
@@ -131,22 +131,6 @@ require("telescope").setup({
                 },
             },
         },
-        file_browser = {
-            hidden = true,
-            depth = 2,
-            mappings = {
-                i = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-                n = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-            },
-        },
         buffers = {
             sort_mru = true,
             mappings = {
@@ -185,10 +169,28 @@ require("telescope").setup({
             timeout = 100000,
         },
     },
+    extension = {
+        file_browser = {
+            hidden = true,
+            depth = 2,
+            mappings = {
+                i = {
+                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
+                    ["<C-s>"] = custom_actions.multi_selection_open_split,
+                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
+                },
+                n = {
+                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
+                    ["<C-s>"] = custom_actions.multi_selection_open_split,
+                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
+                },
+            },
+        },
+    }
 })
 vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>Telescope find_files<CR>", copts)
 -- vim.api.nvim_set_keymap("n", "<leader>fF", ":Telescope find_files cwd=", {noremap=true})
-vim.api.nvim_set_keymap("n", "<leader>f.", "<cmd>Telescope file_browser<CR>", copts)
+vim.api.nvim_set_keymap("n", "<leader>f.", "<cmd>lua require'telescope'.extensions.file_browser.file_browser()<CR>", copts)
 vim.api.nvim_set_keymap("n", "<leader>fl", "<cmd>Telescope current_buffer_fuzzy_find<CR>", copts)
 vim.api.nvim_set_keymap("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", copts)
 vim.api.nvim_set_keymap("n", "<leader>fh", "<cmd>Telescope oldfiles<CR>", copts)
