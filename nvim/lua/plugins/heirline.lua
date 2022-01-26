@@ -134,21 +134,31 @@ function M.setup()
     }
 
     local FileName = {
-        provider = function(self)
+        init = function(self)
             -- first, trim the pattern relative to the current directory. For other
             -- options, see :h filename-modifers
-            local filename = vim.fn.fnamemodify(self.filename, ":.")
-            if filename == "" then
-                return "[No Name]"
+            self.lfilename = vim.fn.fnamemodify(self.filename, ":.")
+            if self.lfilename == "" then
+                self.lfilename = "[No Name]"
             end
             -- now, if the filename would occupy more than 1/4th of the available
             -- space, we trim the file path to its initials
-            if not conditions.width_percent_below(#filename, 0.25) then
-                filename = vim.fn.pathshorten(filename)
-            end
-            return filename
+            -- if not conditions.width_percent_below(#filename, 0.25) then
+            --     filename = vim.fn.pathshorten(filename)
+            -- end
+            -- return filename
         end,
         hl = { fg = utils.get_highlight("Directory").fg },
+
+        utils.make_elastic_component(2, {
+            provider = function(self)
+                return self.lfilename
+            end,
+        }, {
+            provider = function(self)
+                return vim.fn.pathshorten(self.lfilename)
+            end,
+        }),
     }
 
     local FileFlags = {
@@ -189,8 +199,8 @@ function M.setup()
         FileNameBlock,
         FileIcon,
         utils.insert(FileNameModifer, FileName), -- a new table where FileName is a child of FileNameModifier
-        unpack(FileFlags), -- A small optimisation, since their parent does nothing
-        { provider = "%<" } -- this means that the statusline is cut here when there's not enough space
+        unpack(FileFlags) -- A small optimisation, since their parent does nothing
+        -- { provider = "%<" } -- this means that the statusline is cut here when there's not enough space
     )
 
     local FileType = {
@@ -274,15 +284,15 @@ function M.setup()
         hl = { fg = colors.green, style = "bold" },
     }
 
-    local LSPMessages = {
-        provider = function()
-            local status = require("lsp-status").status()
-            if status ~= " " then
-                return status
-            end
-        end,
-        hl = { fg = colors.gray },
-    }
+    -- local LSPMessages = {
+    --     provider = function()
+    --         local status = require("lsp-status").status()
+    --         if status ~= " " then
+    --             return status
+    --         end
+    --     end,
+    --     hl = { fg = colors.gray },
+    -- }
 
     local Gps = {
         condition = require("nvim-gps").is_available,
@@ -464,17 +474,27 @@ function M.setup()
     }
 
     local WorkDir = {
-        provider = function()
-            local icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
+        provider = function(self)
+            self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
             local cwd = vim.fn.getcwd(0)
-            cwd = vim.fn.fnamemodify(cwd, ":~")
-            if not conditions.width_percent_below(#cwd, 0.25) then
-                cwd = vim.fn.pathshorten(cwd)
-            end
-            local trail = cwd:sub(-1) == "/" and "" or "/"
-            return icon .. cwd .. trail
+            self.cwd = vim.fn.fnamemodify(cwd, ":~")
         end,
         hl = { fg = colors.blue, style = "bold" },
+
+        utils.make_elastic_component(1, {
+            provider = function(self)
+                local trail = self.cwd:sub(-1) == "/" and "" or "/"
+                return self.icon .. self.cwd .. trail
+            end,
+        }, {
+            provider = function(self)
+                local cwd = vim.fn.pathshorten(self.cwd)
+                local trail = self.cwd:sub(-1) == "/" and "" or "/"
+                return self.icon .. cwd .. trail
+            end,
+        }, {
+            provider = "",
+        }),
     }
 
     local HelpFilename = {
@@ -508,19 +528,22 @@ function M.setup()
     local DefaultStatusline = {
         ViMode,
         Space,
+        WorkDir,
         FileNameBlock,
+        { provider = "%<" },
         Space,
         Git,
         Space,
         Diagnostics,
         Align,
-        Gps,
+        utils.make_elastic_component(3, Gps, { provider = "" }),
         DAPMessages,
         Align,
         LSPActive,
         Space,
-        LSPMessages,
-        Space,
+        -- utils.surround({ "%1.50(" , "%)" }, nil, LSPMessages),
+        -- LSPMessages,
+        -- Space,
         UltTest,
         Space,
         FileType,
@@ -543,7 +566,7 @@ function M.setup()
     local SpecialStatusline = {
         condition = function()
             return conditions.buffer_matches({
-                buftype = { "nofile", "help", "quickfix" },
+                buftype = { "nofile", "prompt", "help", "quickfix" },
                 filetype = { "^git.*", "fugitive" },
             })
         end,
@@ -581,7 +604,10 @@ function M.setup()
             end
         end,
 
-        stop_at_first = true,
+        -- stop_at_first = true,
+        stop_when = function(self, out)
+            return out ~= ""
+        end,
 
         SpecialStatusline,
         TerminalStatusline,
@@ -589,7 +615,7 @@ function M.setup()
         DefaultStatusline,
     }
 
-    require("heirline").setup(StatusLines)
+    require("heirline").setup(StatusLines, { before = utils.elastic_before })
 end
 
 vim.cmd([[
