@@ -150,7 +150,7 @@ function M.setup()
         end,
         hl = { fg = utils.get_highlight("Directory").fg },
 
-        utils.make_elastic_component(2, {
+        utils.make_flexible_component(2, {
             provider = function(self)
                 return self.lfilename
             end,
@@ -241,7 +241,7 @@ function M.setup()
     local FileLastModified = {
         -- did you know? Vim is full of functions!
         provider = function()
-            local ftime = vim.fn.getftime(vim.api.nvim_buf_gett_name(0))
+            local ftime = vim.fn.getftime(vim.api.nvim_buf_get_name(0))
             return (ftime > 0) and os.date("%c", ftime)
         end,
     }
@@ -481,16 +481,16 @@ function M.setup()
         end,
         hl = { fg = colors.blue, style = "bold" },
 
-        utils.make_elastic_component(1, {
+        utils.make_flexible_component(1, {
             provider = function(self)
                 local trail = self.cwd:sub(-1) == "/" and "" or "/"
-                return self.icon .. self.cwd .. trail
+                return self.icon .. self.cwd .. trail .." "
             end,
         }, {
             provider = function(self)
                 local cwd = vim.fn.pathshorten(self.cwd)
                 local trail = self.cwd:sub(-1) == "/" and "" or "/"
-                return self.icon .. cwd .. trail
+                return self.icon .. cwd .. trail .. " "
             end,
         }, {
             provider = "",
@@ -520,6 +520,14 @@ function M.setup()
         hl = { fg = colors.blue, style = "bold" },
     }
 
+    local Spell = {
+        condition = function()
+            return vim.wo.spell
+        end,
+        provider = 'SPELL ',
+        hl = { style = 'bold', fg = colors.orange}
+    }
+
     ViMode = utils.surround({ "", "" }, colors.bright_bg, { ViMode, Snippets })
 
     local Align = { provider = "%=" }
@@ -528,6 +536,7 @@ function M.setup()
     local DefaultStatusline = {
         ViMode,
         Space,
+        Spell,
         WorkDir,
         FileNameBlock,
         { provider = "%<" },
@@ -536,7 +545,7 @@ function M.setup()
         Space,
         Diagnostics,
         Align,
-        utils.make_elastic_component(3, Gps, { provider = "" }),
+        utils.make_flexible_component(3, Gps, { provider = "" }),
         DAPMessages,
         Align,
         LSPActive,
@@ -604,10 +613,7 @@ function M.setup()
             end
         end,
 
-        -- stop_at_first = true,
-        stop_when = function(self, out)
-            return out ~= ""
-        end,
+        init = utils.pick_child_on_condition,
 
         SpecialStatusline,
         TerminalStatusline,
@@ -615,7 +621,7 @@ function M.setup()
         DefaultStatusline,
     }
 
-    require("heirline").setup(StatusLines, { before = utils.elastic_before })
+    require("heirline").setup(StatusLines)
 end
 
 vim.cmd([[

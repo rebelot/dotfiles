@@ -66,10 +66,17 @@ return require("packer").startup(function(use)
     })
 
     use({
+        "j-hui/fidget.nvim",
+        config = function()
+            require("fidget").setup({})
+        end,
+    })
+
+    use({
         "onsails/lspkind-nvim",
         config = function()
             require("lspkind").init({
-                with_text = true,
+                mode = "symbol_text",
                 preset = "codicons",
                 -- preset = "default",
             })
@@ -335,7 +342,7 @@ return require("packer").startup(function(use)
     -- use 'gruvbox-community/gruvbox'
     use({
         "/Users/laurenzi/usr/src/heirline.nvim",
-        event = {"VimEnter"},
+        event = { "VimEnter" },
         config = function()
             require("plugins.heirline")
         end,
@@ -351,6 +358,7 @@ return require("packer").startup(function(use)
 
     use({
         "akinsho/nvim-bufferline.lua",
+        event = { "VimEnter" },
         config = function()
             require("plugins.bufferline")
         end,
@@ -375,6 +383,36 @@ return require("packer").startup(function(use)
         "mfussenegger/nvim-dap",
         config = function()
             require("dap-config")
+        end,
+    })
+
+    use({
+        "jbyuki/one-small-step-for-vimkind",
+        config = function()
+            local dap = require("dap")
+            dap.configurations.lua = {
+                {
+                    type = "nlua",
+                    request = "attach",
+                    name = "Attach to running Neovim instance",
+                    host = function()
+                        local value = vim.fn.input("Host [127.0.0.1]: ")
+                        if value ~= "" then
+                            return value
+                        end
+                        return "127.0.0.1"
+                    end,
+                    port = function()
+                        local val = tonumber(vim.fn.input("Port: "))
+                        assert(val, "Please provide a port number")
+                        return val
+                    end,
+                },
+            }
+
+            dap.adapters.nlua = function(callback, config)
+                callback({ type = "server", host = config.host, port = config.port })
+            end
         end,
     })
 

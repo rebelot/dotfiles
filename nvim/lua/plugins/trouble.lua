@@ -4,8 +4,8 @@ require'trouble'.setup {
     use_diagnostic_signs = true
 }
 vim.api.nvim_set_keymap('n', '<leader>xx', '<cmd>TroubleToggle<CR>', copts)
-vim.api.nvim_set_keymap('n', '<leader>xD', '<cmd>TroubleToggle lsp_workspace_diagnostics<CR>', copts)
-vim.api.nvim_set_keymap('n', '<leader>xd', '<cmd>TroubleToggle lsp_document_diagnostics<CR>', copts)
+vim.api.nvim_set_keymap('n', '<leader>xD', '<cmd>TroubleToggle workspace_diagnostics<CR>', copts)
+vim.api.nvim_set_keymap('n', '<leader>xd', '<cmd>TroubleToggle document_diagnostics<CR>', copts)
 vim.api.nvim_set_keymap('n', '<leader>xc', '<cmd>TroubleToggle quickfix<CR>', copts)
 vim.api.nvim_set_keymap('n', '<leader>xl', '<cmd>TroubleToggle loclist<CR>', copts)
 vim.api.nvim_set_keymap('n', '<leader>xr', '<cmd>TroubleToggle lsp_references<CR>', copts)
