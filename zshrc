@@ -248,7 +248,7 @@ alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
 alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
 alias luamake=/Users/laurenzi/usr/src/lua-language-server/3rd/luamake/luamake
-alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.6.8/lldb/lib/liblldb.dylib; done"
+alias codelldb="while sleep 1; do $(find $HOME/.vscode/extensions -name codelldb) --port 13000 --liblldb $(find $HOME/.vscode/extensions/ -name liblldb.dylib); done"
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
 

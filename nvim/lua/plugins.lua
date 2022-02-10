@@ -114,6 +114,7 @@ return require("packer").startup(function(use)
             "hrsh7th/cmp-nvim-lua",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-nvim-lsp-signature-help",
             {
                 "uga-rosa/cmp-dictionary",
                 config = function()
@@ -347,14 +348,6 @@ return require("packer").startup(function(use)
             require("plugins.heirline")
         end,
     })
-    -- use({
-    --     "famiu/feline.nvim",
-    --     after = { "nvim-lspconfig", "tokyonight.nvim", "gitsigns.nvim", "nvim-dap", "vim-ultest" },
-    --     event = { "BufEnter" },
-    --     config = function()
-    --         require("plugins.feline")
-    --     end,
-    -- })
 
     use({
         "akinsho/nvim-bufferline.lua",
@@ -502,8 +495,24 @@ return require("packer").startup(function(use)
         end,
     })
     -- use 'kassio/neoterm'
-    use("voldikss/vim-floaterm")
-    -- use "numToStr/FTerm.nvim"
+    -- use({ "voldikss/vim-floaterm",
+    --     config = function()
+    --         vim.api.nvim_set_keymap("n", "<leader>T", "<cmd>FloatermToggle<CR>", {noremap = true})
+    --         vim.api.nvim_set_keymap("n", "<leader>TN", "<cmd>FloatermNew<CR>", {noremap = true})
+    --         vim.api.nvim_set_keymap("n", "<leader>Tn", "<cmd>FloatermNext<CR>", {noremap = true})
+    --         vim.api.nvim_set_keymap("n", "<leader>Tp", "<cmd>FloatermPrev<CR>", {noremap = true})
+    --     end
+    -- })
+    use({
+        "numToStr/FTerm.nvim",
+        config = function()
+            vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>lua require'FTerm'.toggle()<CR>", { noremap = true })
+            vim.api.nvim_add_user_command("FTermRun", function(cmd)
+                require("FTerm").run(cmd.args)
+            end, { nargs = "*", complete = "shellcmd" })
+            vim.api.nvim_set_keymap("n", "<leader>tr", ":FTermRun ", { noremap = true })
+        end,
+    })
 
     use({ "moll/vim-bbye" })
 
@@ -599,16 +608,6 @@ return require("packer").startup(function(use)
 
     use({ "michaeljsmith/vim-indent-object" })
     -- use 'justinmk/vim-sneak'
-    -- use {'ggandor/lightspeed.nvim', rtp = '.',
-    --   config = function()
-    --   vim.cmd [[
-    --     nmap <expr> f reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_f" : "f"
-    --     nmap <expr> F reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_F" : "F"
-    --     nmap <expr> t reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_t" : "t"
-    --     nmap <expr> T reg_recording() . reg_executing() == "" ? "<Plug>Lightspeed_T" : "T"
-    --   ]]
-    -- end
-    -- }
     use({
         "phaazon/hop.nvim",
         as = "hop",

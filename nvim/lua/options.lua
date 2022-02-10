@@ -63,4 +63,10 @@ vim.o.splitbelow           = true
 vim.o.splitright           = true
 
 vim.o.dictionary           = '/usr/share/dict/words'
+
+function _G.CustomFoldText()
+    return vim.fn.getline(vim.v.foldstart) .. ' ... ' .. vim.fn.getline(vim.v.foldend):gsub("^%s*", "")
+end
+
+vim.opt.foldtext = 'v:lua.CustomFoldText()'
 -- }}}

@@ -139,6 +139,7 @@ cmp.setup({
                 nvim_lua = "Lua",
                 tmux = "tmux",
                 latex_symbols = "Latex",
+                nvim_lsp_signature_help = "LSP Signature"
             }
 
             if entry.source.name == "nvim_lsp" then
@@ -150,6 +151,7 @@ cmp.setup({
         end,
     },
     sources = {
+        { name = 'nvim_lsp_signature_help'},
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
@@ -189,6 +191,7 @@ cmp.setup.cmdline(":", {
 -- ]]
 
 local default_sources = {
+    { name = 'nvim_lsp_signature_help'},
     { name = "nvim_lsp" },
     { name = "ultisnips" },
     { name = "path" },
@@ -210,7 +213,7 @@ function M.set_sources(source_set)
     end
     require("cmp").setup.buffer({ sources = sources })
 end
-
+print( )
 -- vim.cmd("autocmd OptionSet spell lua require'plugins.cmp'.set_sources('spell')")
 -- vim.cmd("autocmd OptionSet nospell lua require'plugins.cmp'.set_sources()")
 

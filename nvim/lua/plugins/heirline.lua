@@ -135,18 +135,10 @@ function M.setup()
 
     local FileName = {
         init = function(self)
-            -- first, trim the pattern relative to the current directory. For other
-            -- options, see :h filename-modifers
             self.lfilename = vim.fn.fnamemodify(self.filename, ":.")
             if self.lfilename == "" then
                 self.lfilename = "[No Name]"
             end
-            -- now, if the filename would occupy more than 1/4th of the available
-            -- space, we trim the file path to its initials
-            -- if not conditions.width_percent_below(#filename, 0.25) then
-            --     filename = vim.fn.pathshorten(filename)
-            -- end
-            -- return filename
         end,
         hl = { fg = utils.get_highlight("Directory").fg },
 
@@ -179,11 +171,6 @@ function M.setup()
             hl = { fg = colors.orange },
         },
     }
-
-    -- Now, let's say that we want the filename color to change if the buffer is
-    -- modified. Of course, we could do that directly using the FileName.hl field,
-    -- but we'll see how easy it is to alter existing components using a "modifier"
-    -- component
 
     local FileNameModifer = {
         hl = function()
@@ -319,7 +306,8 @@ function M.setup()
         end,
 
         {
-            provider = "![",
+            provider = "!(",
+            hl = { fg = colors.gray, style = "bold" },
         },
         {
             provider = function(self)
@@ -346,7 +334,8 @@ function M.setup()
             hl = { fg = colors.diag.hint },
         },
         {
-            provider = "]",
+            provider = ")",
+            hl = { fg = colors.gray, style = "bold" },
         },
     }
 
@@ -484,7 +473,7 @@ function M.setup()
         utils.make_flexible_component(1, {
             provider = function(self)
                 local trail = self.cwd:sub(-1) == "/" and "" or "/"
-                return self.icon .. self.cwd .. trail .." "
+                return self.icon .. self.cwd .. trail .. " "
             end,
         }, {
             provider = function(self)
@@ -524,8 +513,8 @@ function M.setup()
         condition = function()
             return vim.wo.spell
         end,
-        provider = 'SPELL ',
-        hl = { style = 'bold', fg = colors.orange}
+        provider = "SPELL ",
+        hl = { style = "bold", fg = colors.orange },
     }
 
     ViMode = utils.surround({ "", "" }, colors.bright_bg, { ViMode, Snippets })
@@ -550,9 +539,6 @@ function M.setup()
         Align,
         LSPActive,
         Space,
-        -- utils.surround({ "%1.50(" , "%)" }, nil, LSPMessages),
-        -- LSPMessages,
-        -- Space,
         UltTest,
         Space,
         FileType,
@@ -566,9 +552,20 @@ function M.setup()
         condition = function()
             return not conditions.is_active()
         end,
-        FileType,
-        Space,
-        FileNameBlock,
+        { hl = { fg = colors.gray, force = true }, WorkDir },
+
+        {
+            init = function(self)
+                self.filename = vim.api.nvim_buf_get_name(0)
+            end,
+            FileIcon,
+            {
+                hl = {fg = colors.gray, force = true },
+                utils.insert(FileNameModifer, FileName),
+            },
+            unpack(FileFlags)
+        },
+        { provider = "%<" },
         Align,
     }
 

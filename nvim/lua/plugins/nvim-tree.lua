@@ -59,7 +59,7 @@ require("nvim-tree").setup({
 	auto_close = false,
 	open_on_tab = false,
 	hijack_cursor = false,
-	update_cwd = false,
+	update_cwd = true,
 	hide_dotfiles = false,
 	-- ignore  = {".git", "node_modules", ".cache"},
 	diagnostics = { enable = false },
