@@ -22,13 +22,12 @@ function M.echo_cursor_diagnostic()
     for i, diagnostic in ipairs(line_diagnostics) do
         local diag_col = diagnostic.col
         local diag_end_col = diagnostic.end_col
-        if diag_col <= col and col <= diag_end_col then
-            local source = diagnostic.source or ""
+        if diag_col <= col and col < diag_end_col then
             local severity = severity_prefix[diagnostic.severity] .. " "
+            local source = diagnostic.source or ""
             local msg = source .. ": " .. diagnostic.message:gsub("\n", "")
-            local avail_space = vim.v.echospace - (#severity + #msg)
             table.insert(message, { severity, severity_hl[diagnostic.severity] })
-            table.insert(message, { msg:gsub(1, avail_space), "Normal" })
+            table.insert(message, { msg:sub(1, vim.v.echospace - #severity), "Normal" })
             vim.api.nvim_echo(message, false, {})
         end
     end
