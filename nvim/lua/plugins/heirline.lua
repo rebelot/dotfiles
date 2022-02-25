@@ -43,7 +43,7 @@ function M.setup()
                 no = "N?",
                 nov = "N?",
                 noV = "N?",
-                ["no"] = "N?",
+                ["no\22"] = "N?",
                 niI = "Ni",
                 niR = "Nr",
                 niV = "Nv",
@@ -52,11 +52,11 @@ function M.setup()
                 vs = "Vs",
                 V = "V_",
                 Vs = "Vs",
-                [""] = "^V",
-                ["s"] = "^V",
+                ["\22"] = "^V",
+                ["\22s"] = "^V",
                 s = "S",
                 S = "S_",
-                [""] = "^S",
+                ["\19"] = "^S",
                 i = "I",
                 ic = "Ic",
                 ix = "Ix",
@@ -79,11 +79,11 @@ function M.setup()
                 i = colors.green,
                 v = colors.cyan,
                 V = colors.cyan,
-                [""] = colors.cyan, -- this is an actual ^V, type <C-v><C-v> in insert mode
+                ["\22"] = colors.cyan, -- this is an actual ^V, type <C-v><C-v> in insert mode
                 c = colors.orange,
                 s = colors.purple,
                 S = colors.purple,
-                [""] = colors.purple, -- this is an actual ^S, type <C-v><C-s> in insert mode
+                ["\19"] = colors.purple, -- this is an actual ^S, type <C-v><C-s> in insert mode
                 R = colors.orange,
                 r = colors.orange,
                 ["!"] = colors.red,
@@ -305,10 +305,10 @@ function M.setup()
             self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
         end,
 
-        {
-            provider = "!(",
-            hl = { fg = colors.gray, style = "bold" },
-        },
+        -- {
+        --     provider = "!(",
+        --     hl = { fg = colors.gray, style = "bold" },
+        -- },
         {
             provider = function(self)
                 return self.errors > 0 and (self.error_icon .. self.errors .. " ")
@@ -333,10 +333,10 @@ function M.setup()
             end,
             hl = { fg = colors.diag.hint },
         },
-        {
-            provider = ")",
-            hl = { fg = colors.gray, style = "bold" },
-        },
+        -- {
+        --     provider = ")",
+        --     hl = { fg = colors.gray, style = "bold" },
+        -- },
     }
 
     -- DiagBlock = utils.surround({"![", "]"}, nil, DiagBlock)
@@ -531,6 +531,13 @@ function M.setup()
         { provider = "%<" },
         Space,
         Git,
+        -- {
+        --     static = { name = "culo", toggle = true },
+        --     condition = function(self)
+        --         return self.toggle
+        --     end,
+        --     provider = 'culooooo',
+        -- },
         Space,
         Diagnostics,
         Align,
@@ -553,18 +560,7 @@ function M.setup()
             return not conditions.is_active()
         end,
         { hl = { fg = colors.gray, force = true }, WorkDir },
-
-        {
-            init = function(self)
-                self.filename = vim.api.nvim_buf_get_name(0)
-            end,
-            FileIcon,
-            {
-                hl = {fg = colors.gray, force = true },
-                utils.insert(FileNameModifer, FileName),
-            },
-            unpack(FileFlags)
-        },
+        FileNameBlock,
         { provider = "%<" },
         Align,
     }

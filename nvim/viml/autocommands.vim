@@ -16,8 +16,8 @@ augroup MyAutoCommands
   autocmd BufNewFile,BufRead *.cms,*.mae setlocal foldmarker={,} | setlocal fdm=marker
 
   " Distraction Free
-  autocmd User GoyoEnter Limelight
-  autocmd User GoyoLeave Limelight!
+  " autocmd User GoyoEnter Limelight
+  " autocmd User GoyoLeave Limelight!
   
   " Competions Preview
   " autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
@@ -49,7 +49,7 @@ augroup MyAutoCommands
 
   " Terminal
   autocmd TermOpen * setlocal nonumber norelativenumber
-  autocmd TermOpen * setlocal filetype=terminal
+  " autocmd TermOpen * setlocal filetype=terminal
 
   " Diagnostics
   " autocmd User DiagnosticsChanged lua vim.diagnostic.setqflist({open = false })

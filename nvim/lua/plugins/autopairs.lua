@@ -3,7 +3,7 @@ require('nvim-autopairs').setup {
         chars = {'{', '[', '(', '"', "'", '`'},
         map = '<M-l>',
         keys = "asdfghjklqwertyuiop",
-        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,%:] ]], '%s+', ''),
+        pattern = string.gsub([[ [%'%"%)%,>%]%)%}%,%:] ]], '%s+', ''),
         check_comma = true,
         end_key = 'L',
         highlight = 'HopNextKey',
@@ -22,6 +22,8 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({
 }))
 
 function EscapePair()
+    -- vim.fn.searchpos
+    -- vim.fn.searchpairpos
     local closers = {")", "]", "}", ">", "'", '"', "`", ","}
     local line = vim.api.nvim_get_current_line()
     local row, col = unpack(vim.api.nvim_win_get_cursor(0))

@@ -16,15 +16,32 @@
 -- play with foldtext function to customize it
 -- check out sidebar-nvim/sidebar.nvim
 
+require("impatient")
+
 -- Plugins
 require("plugins")
 
 --
-require'kanagawa'.setup({
-  dimInactive = true
-})
+-- require("kanagawa").setup({
+--     dimInactive = true,
+-- })
 vim.cmd("colorscheme kanagawa")
 require("colors").overrides()
+
+-- function _G.filebuftypes_au(filebuftypes)
+--     local bt = vim.bo.buftype
+--     local ft = vim.bo.filetype
+--     if vim.tbl_contains(filebuftypes.filetypes, ft) or vim.tbl_contains(filebuftypes.buftypes, bt) then
+--         vim.cmd([[set winhighlight=Normal:NormalFloat]])
+--     end
+-- end
+--
+vim.cmd([[
+augroup FileTypeHighlight
+  autocmd!
+  au FileType git*,dap*,vista_kind,tagbar,fugitive set winhighlight=Normal:NormalFloat
+augroup END
+]])
 
 -- general configurations
 require("options")
@@ -38,5 +55,3 @@ vim.cmd("source ~/.config/nvim/viml/autocommands.vim")
 
 -- Mappings
 vim.cmd("source ~/.config/nvim/viml/mappings.vim")
-
--- vim: sw=2 ts=2 fdm=marker:

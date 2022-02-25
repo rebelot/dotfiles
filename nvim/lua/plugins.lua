@@ -33,6 +33,10 @@ return require("packer").startup(function(use)
 
     use({ "nvim-lua/popup.nvim" })
 
+    use({ "lewis6991/impatient.nvim" })
+
+    use({ "dstein64/vim-startuptime" })
+
     --------------------------------------------
     -- LSP, Diagnostics, Snippets, Completion --
     --------------------------------------------
@@ -43,27 +47,16 @@ return require("packer").startup(function(use)
             require("lsp.lsp-config")
         end,
     })
-    -- use "ray-x/lsp_signature.nvim"
 
     use({
         "jose-elias-alvarez/null-ls.nvim",
         after = "nvim-lspconfig",
-        disable = false,
         config = function()
             require("lsp.null-ls")
         end,
     })
 
-    -- use({ "simrat39/symbols-outline.nvim" })
-
     -- use({ "b0o/SchemaStore.nvim" })
-
-    use({
-        "nvim-lua/lsp-status.nvim",
-        config = function()
-            require("lsp.lsp-status")
-        end,
-    })
 
     use({
         "j-hui/fidget.nvim",
@@ -115,6 +108,7 @@ return require("packer").startup(function(use)
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lsp-signature-help",
+            "hrsh7th/cmp-nvim-lsp-document-symbol",
             {
                 "uga-rosa/cmp-dictionary",
                 config = function()
@@ -174,10 +168,7 @@ return require("packer").startup(function(use)
     -- use 'plasticboy/vim-markdown'
     use({ "JuliaEditorSupport/julia-vim" })
 
-    use({
-        "chrisbra/vim-zsh",
-        ft = "zsh",
-    })
+    use({ "chrisbra/vim-zsh" })
 
     use({
         "andymass/vim-matchup",
@@ -195,15 +186,15 @@ return require("packer").startup(function(use)
         cmd = "CSVInit",
     })
 
-    use({
-        "vim-python/python-syntax",
-        ft = "python",
-        config = function()
-            vim.g.python_highlight_all = 1
-            vim.g.python_highlight_file_headers_as_comments = 1
-            vim.g.python_highlight_space_errors = 0
-        end,
-    })
+    -- use({
+    --     "vim-python/python-syntax",
+    --     ft = "python",
+    --     config = function()
+    --         vim.g.python_highlight_all = 1
+    --         vim.g.python_highlight_file_headers_as_comments = 1
+    --         vim.g.python_highlight_space_errors = 0
+    --     end,
+    -- })
 
     use({
         "tmhedberg/SimpylFold",
@@ -248,6 +239,7 @@ return require("packer").startup(function(use)
         config = function()
             require("plugins.indent-blankline")
         end,
+        event = "BufEnter",
     })
 
     -------------------------
@@ -262,25 +254,19 @@ return require("packer").startup(function(use)
     })
 
     use({
-        "junegunn/fzf",
-        dir = "~/.fzf",
-        run = "./install --all",
-    })
-
-    use({ "junegunn/fzf.vim" })
-
-    use({
         "nvim-telescope/telescope.nvim",
         config = function()
             require("plugins.telescope")
         end,
     })
+
     use({
         "nvim-telescope/telescope-file-browser.nvim",
         config = function()
             require("telescope").load_extension("file_browser")
         end,
     })
+
     use({
         "nvim-telescope/telescope-dap.nvim",
         after = { "telescope.nvim", "nvim-dap" },
@@ -317,7 +303,6 @@ return require("packer").startup(function(use)
     -- Colors, Icons, StatusLine, BufferLine --
     -------------------------------------------
 
-    -- use 'ryanoasis/vim-devicons'
     use({ "/Users/laurenzi/usr/src/kanagawa.nvim", branch = "master" })
     -- use({ "rebelot/kanagawa.nvim", branch = "master" })
 
@@ -327,8 +312,6 @@ return require("packer").startup(function(use)
             require("nvim-web-devicons").setup()
         end,
     })
-    -- use 'rktjmp/lush.nvim'
-    -- use 'npxbr/gruvbox.nvim'
     -- use 'sainnhe/gruvbox-material'
     use({ "folke/tokyonight.nvim" })
 
@@ -357,20 +340,20 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "junegunn/goyo.vim" })
-
-    use({ "junegunn/limelight.vim" })
+    -- use({ "junegunn/goyo.vim" })
+    --
+    -- use({ "junegunn/limelight.vim" })
 
     --------------------------
     -- Editor Utilities, UI --
     --------------------------
 
-    use({
-        "w0rp/ale",
-        config = function()
-            require("plugins.ale")
-        end,
-    })
+    -- use({
+    --     "w0rp/ale",
+    --     config = function()
+    --         require("plugins.ale")
+    --     end,
+    -- })
 
     use({
         "mfussenegger/nvim-dap",
@@ -421,6 +404,7 @@ return require("packer").startup(function(use)
     use({
         "mfussenegger/nvim-dap-python",
         after = "nvim-dap",
+        ft = 'python',
         config = function()
             require("dap-python").setup("~/venvs/debugpy/bin/python")
             require("dap-python").test_runner = "pytest"
@@ -462,13 +446,13 @@ return require("packer").startup(function(use)
         config = function()
             require("plugins.gitsigns")
         end,
+        event = "BufEnter",
     })
 
     use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
     use({ "tpope/vim-fugitive" })
-    -- use 'mhinz/vim-signify'
-    -- use 'ludovicchabant/vim-gutentags'
+
     use({
         "majutsushi/tagbar",
         cmd = { "TagbarToggle" },
@@ -487,13 +471,13 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({
-        "junegunn/vim-peekaboo",
-        config = function()
-            vim.g.peekaboo_compact = 0
-            vim.g.peekaboo_window = "vert bo 30 new"
-        end,
-    })
+    -- use({
+    --     "junegunn/vim-peekaboo",
+    --     config = function()
+    --         vim.g.peekaboo_compact = 0
+    --         vim.g.peekaboo_window = "vert bo 30 new"
+    --     end,
+    -- })
     -- use 'kassio/neoterm'
     -- use({ "voldikss/vim-floaterm",
     --     config = function()
@@ -508,15 +492,15 @@ return require("packer").startup(function(use)
         config = function()
             vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>lua require'FTerm'.toggle()<CR>", { noremap = true })
             vim.api.nvim_add_user_command("FTermRun", function(cmd)
-                require("FTerm").run(cmd.args)
+                require("FTerm").run(vim.fn.expandcmd(cmd.args))
             end, { nargs = "*", complete = "shellcmd" })
             vim.api.nvim_set_keymap("n", "<leader>tr", ":FTermRun ", { noremap = true })
         end,
     })
 
-    use({ "moll/vim-bbye" })
+    use({ "moll/vim-bbye", cmd = "Bdelete" })
 
-    use({ "lambdalisue/suda.vim" })
+    use({ "lambdalisue/suda.vim", cmd = { "SudaRead, SudaWrite" } })
     -- use {'wesQ3/vim-windowswap', config = function() g.windowswap_map_keys = 0 end }
     -- use 'fsharpasharp/nvim-historian'
     -- use 'neomake/neomake'
@@ -531,6 +515,7 @@ return require("packer").startup(function(use)
         config = function()
             require("plugins.dashboard")
         end,
+        event = "VimEnter",
     })
 
     use({
@@ -538,6 +523,7 @@ return require("packer").startup(function(use)
         config = function()
             require("colorizer").setup()
         end,
+        event = "BufEnter",
     })
 
     -------------------
@@ -554,6 +540,8 @@ return require("packer").startup(function(use)
         config = function()
             vim.cmd("xmap ga <Plug>(EasyAlign)")
         end,
+        cmd = "EasyAlign",
+        keys = {'x', 'ga'}
     })
 
     use({
@@ -570,13 +558,13 @@ return require("packer").startup(function(use)
 
     use({ "tpope/vim-surround" })
 
-    use({
-        "ThePrimeagen/refactoring.nvim",
-        after = "nvim-treesitter",
-        config = function()
-            require("refactoring").setup({})
-        end,
-    })
+    -- use({
+    --     "ThePrimeagen/refactoring.nvim",
+    --     after = "nvim-treesitter",
+    --     config = function()
+    --         require("refactoring").setup({})
+    --     end,
+    -- })
 
     -- use {'raimondi/delimitmate',
     --   config = function()
@@ -602,6 +590,7 @@ return require("packer").startup(function(use)
         config = function()
             require("plugins.autopairs")
         end,
+        event = "InsertCharPre",
     })
 
     use({ "wellle/targets.vim" })
@@ -611,15 +600,14 @@ return require("packer").startup(function(use)
     use({
         "phaazon/hop.nvim",
         as = "hop",
-        disable = false,
         config = function()
             require("plugins.hop")
         end,
     })
 
-    use({ "tpope/vim-repeat" })
+    use({ "tpope/vim-repeat" })--, keys = "." })
 
-    use({ "chrisbra/NrrwRgn" })
+    -- use({ "chrisbra/NrrwRgn" })
     -- }}}
 
     ----------
@@ -630,7 +618,7 @@ return require("packer").startup(function(use)
         config = function()
             vim.cmd([[
             function! VimuxSlime()
-            call VimuxRunCommand(@v, 0)
+                call VimuxRunCommand(@v, 0)
             endfunction
             ]])
             vim.api.nvim_set_keymap("x", "<leader>vs", '"vy :call VimuxSlime()<CR>', { noremap = true })
@@ -638,7 +626,7 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "tmux-plugins/vim-tmux" })
+    -- use({ "tmux-plugins/vim-tmux" })
     -- use 'tmux-plugins/vim-tmux-focus-events'
     -- }}}
 end)

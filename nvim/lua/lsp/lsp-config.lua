@@ -49,10 +49,8 @@ capabilities.textDocument.codeAction = {
     },
 }
 
--- lsp-status
-require("lsp-status").register_progress()
-capabilities.textDocument.completion.completionItem.workDoneProgress = true
-capabilities.window.workDoneProgress = true
+-- capabilities.textDocument.completion.completionItem.workDoneProgress = true
+-- capabilities.window.workDoneProgress = true
 
 ---------------
 -- On Attach --
@@ -66,7 +64,6 @@ local on_attach = function(client, bufnr)
         vim.api.nvim_buf_set_option(bufnr, ...)
     end
 
-    require("lsp-status").on_attach(client)
     -- mappings
     local opts = {
         noremap = true,
@@ -92,7 +89,7 @@ local on_attach = function(client, bufnr)
     buf_set_keymap(
         "n",
         "<leader>lwl",
-        '<cmd>lua print(table.concat(vim.lsp.buf.list_workspace_folders(), "; "))<CR>',
+        '<cmd>lua print(table.concat(vim.lsp.buf.list_workspace_folders(), ", "))<CR>',
         opts
     )
     buf_set_keymap("n", "<leader>lwa", '<cmd>lua require"lsp.utilities".addWsFolder()<CR>', opts)

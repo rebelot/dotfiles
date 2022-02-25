@@ -89,6 +89,7 @@ nnoremap <leader>vn :rightbelow vnew<CR>
 nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
 nnoremap <leader>st :split <bar> terminal <cr>
+nnoremap <leader>vt :vertical split <bar> terminal <cr>
 
 " Edit or select [R/r]egister
 " nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>

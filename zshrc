@@ -99,7 +99,7 @@ print_unactive_flags_space=false
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap"
 # export FZF_CTRL_T_OPTS=""
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
-export FZF_DEFAULT_COMMAND="fd --follow --hidden --color=always --ignore-file=$HOME/.gitignore"
+export FZF_DEFAULT_COMMAND="fd --follow --hidden --color=always" #--ignore-file=$HOME/.gitignore"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="$(echo \
 "--ansi \

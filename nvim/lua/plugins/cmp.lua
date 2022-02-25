@@ -1,5 +1,7 @@
 vim.o.completeopt = "menu,menuone,noselect"
 
+-- TODO: cmp.complete_common_string
+
 local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
@@ -121,7 +123,7 @@ cmp.setup({
         }),
     },
     experimental = {
-        native_menu = false,
+        -- native_menu = false,
         ghost_text = true,
     },
 
@@ -139,7 +141,7 @@ cmp.setup({
                 nvim_lua = "Lua",
                 tmux = "tmux",
                 latex_symbols = "Latex",
-                nvim_lsp_signature_help = "LSP Signature"
+                nvim_lsp_signature_help = "LSP Signature",
             }
 
             if entry.source.name == "nvim_lsp" then
@@ -151,7 +153,7 @@ cmp.setup({
         end,
     },
     sources = {
-        { name = 'nvim_lsp_signature_help'},
+        { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
@@ -163,11 +165,13 @@ cmp.setup({
 })
 
 -- Use buffer source for `/`.
+-- { name = "buffer", option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
 cmp.setup.cmdline("/", {
     completion = { autocomplete = false },
     sources = {
-        -- { name = 'buffer' }
-        { name = "buffer", option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
+        { name = "nvim_lsp_document_symbol" },
+        { name = "buffer" }--, option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
+        -- { name = "buffer" },
     },
 })
 
@@ -181,48 +185,16 @@ cmp.setup.cmdline(":", {
         { name = "path" },
     },
 })
--- vim.cmd [[
--- augroup cmp-confg
---     autocmd!
---     autocmd InsertEnter * lua if vim.fn.bufname("%") == "[Command Line]" then
---     \   require'cmp'.setup.buffer { experimental = {native_menu = true} }
---     \   end
--- augroup END
--- ]]
 
-local default_sources = {
-    { name = 'nvim_lsp_signature_help'},
-    { name = "nvim_lsp" },
-    { name = "ultisnips" },
-    { name = "path" },
-    { name = "buffer" },
-    { name = "tmux", option = { all_panes = true } },
-}
-
-local spell_sources = {
-    { name = "latex_symbols" },
-    { name = "dictionary", keyword_length = 2 },
-}
-
-local M = {}
-function M.set_sources(source_set)
-    source_set = source_set or ""
-    local sources = default_sources
-    if source_set == "spell" then
-        sources = vim.tbl_extend("force", default_sources, spell_sources)
-    end
-    require("cmp").setup.buffer({ sources = sources })
-end
-print( )
--- vim.cmd("autocmd OptionSet spell lua require'plugins.cmp'.set_sources('spell')")
--- vim.cmd("autocmd OptionSet nospell lua require'plugins.cmp'.set_sources()")
-
--- vim.cmd [[ hi! link CmpItemKind Keyword]]
--- vim.cmd [[ hi! link CmpItemMenu Cursorlinenr]]
-
--- vim.cmd [[ hi! link CmpItemAbbrMatch Directory]]
--- vim.cmd [[ hi! link CmpItemAbbrMatchFuzzy Directory]]
-
--- vim.cmd [[ hi! link CmpItemAbbr Normal]]
-
-return M
+cmp.setup.filetype({"markdown", "pandoc", "text", "latex"}, {
+    sources = {
+        { name = "nvim_lsp_signature_help" },
+        { name = "nvim_lsp" },
+        { name = "ultisnips" },
+        { name = "path" },
+        { name = "buffer" },
+        { name = "dictionary", keyword_length = 2 },
+        { name = "latex_symbols" },
+        { name = "tmux", option = { all_panes = true } },
+    },
+})
