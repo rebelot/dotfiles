@@ -83,11 +83,10 @@ end
 --                         function(err, _, result) print(vim.inspect(result)) end)
 -- end
 
-function M.change_python_interpreter(cmd)
-    local path = cmd.args
+function M.change_python_interpreter(path, plsp)
     vim.lsp.stop_client(vim.lsp.get_active_clients())
-    configs.pyright.settings.python.pythonPath = path
-    lspconfig.pyright.setup(configs.pyright)
+    configs[plsp].settings.python.pythonPath = path
+    lspconfig[plsp].setup(configs[plsp])
     vim.cmd("e%")
 end
 

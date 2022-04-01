@@ -1,4 +1,7 @@
 local lspconfig = require("lspconfig")
+local configs = require("lspconfig.configs")
+local lsputil = require('lspconfig/util')
+
 
 local pyright = {
     flags = {
@@ -12,7 +15,20 @@ local pyright = {
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
                 useLibraryCodeForTypes = true,
+                reportMissingTypeStubs = true,
                 -- stubsPath = "$HOME/typings"
+            },
+        },
+    },
+}
+
+local pylance = {
+    settings = {
+        python = {
+            analysis = {
+                indexing = true,
+                typeCheckingMode = "basic",
+                diagnosticMode = "workspace",
             },
         },
     },
@@ -153,7 +169,8 @@ local sumneko_lua = {
 
 local configs = {}
 
-configs.pyright = pyright
+-- configs.pyright = pyright
+configs.pylance = pylance
 configs.bashls = bashls
 configs.vimls = vimls
 configs.julials = julials

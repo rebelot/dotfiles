@@ -139,6 +139,8 @@ return require("packer").startup(function(use)
         end,
     })
 
+    -- use("github/copilot.vim")
+
     use({
         "folke/trouble.nvim",
         config = function()
@@ -154,6 +156,13 @@ return require("packer").startup(function(use)
             require("plugins.vista")
         end,
     })
+    use({
+        "danymat/neogen",
+        config = function()
+            require("neogen").setup({})
+        end,
+        cmd = "Neogen",
+    })
 
     -- use 'saadparwaiz1/cmp_luasnip'
     -- use 'L3MON4D3/LuaSnip'
@@ -166,7 +175,7 @@ return require("packer").startup(function(use)
     ----------------------
 
     -- use 'plasticboy/vim-markdown'
-    use({ "JuliaEditorSupport/julia-vim" })
+    -- use({ "JuliaEditorSupport/julia-vim" })
 
     use({ "chrisbra/vim-zsh" })
 
@@ -201,7 +210,7 @@ return require("packer").startup(function(use)
         ft = "python",
     })
 
-    use({ "Konfekt/FastFold" })
+    -- use({ "Konfekt/FastFold" })
 
     use({ "jaredsampson/vim-pymol" })
 
@@ -404,7 +413,7 @@ return require("packer").startup(function(use)
     use({
         "mfussenegger/nvim-dap-python",
         after = "nvim-dap",
-        ft = 'python',
+        ft = "python",
         config = function()
             require("dap-python").setup("~/venvs/debugpy/bin/python")
             require("dap-python").test_runner = "pytest"
@@ -510,12 +519,18 @@ return require("packer").startup(function(use)
         cmd = { "UnicodeName", "UnicodeTable", "UnicodeSearch" },
     })
 
-    use({
-        "glepnir/dashboard-nvim",
+    -- use({
+    --     "glepnir/dashboard-nvim",
+    --     config = function()
+    --         require("plugins.dashboard")
+    --     end,
+    --     event = "VimEnter",
+    -- })
+
+    use({ "goolord/alpha-nvim",
         config = function()
             require("plugins.dashboard")
-        end,
-        event = "VimEnter",
+        end
     })
 
     use({
@@ -541,7 +556,7 @@ return require("packer").startup(function(use)
             vim.cmd("xmap ga <Plug>(EasyAlign)")
         end,
         cmd = "EasyAlign",
-        keys = {'x', 'ga'}
+        keys = { "x", "ga" },
     })
 
     use({
@@ -605,7 +620,7 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "tpope/vim-repeat" })--, keys = "." })
+    use({ "tpope/vim-repeat" }) --, keys = "." })
 
     -- use({ "chrisbra/NrrwRgn" })
     -- }}}

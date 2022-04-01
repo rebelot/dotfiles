@@ -22,9 +22,11 @@ require("impatient")
 require("plugins")
 
 --
--- require("kanagawa").setup({
---     dimInactive = true,
--- })
+vim.opt.laststatus = 3
+require("kanagawa").setup({
+    dimInactive = true,
+    globalStatus = true
+})
 vim.cmd("colorscheme kanagawa")
 require("colors").overrides()
 
@@ -36,12 +38,12 @@ require("colors").overrides()
 --     end
 -- end
 --
-vim.cmd([[
-augroup FileTypeHighlight
-  autocmd!
-  au FileType git*,dap*,vista_kind,tagbar,fugitive set winhighlight=Normal:NormalFloat
-augroup END
-]])
+-- vim.cmd([[
+-- augroup FileTypeHighlight
+--   autocmd!
+--   au FileType git*,dap*,vista_kind,tagbar,fugitive set winhighlight=Normal:NormalFloat
+-- augroup END
+-- ]])
 
 -- general configurations
 require("options")

@@ -70,6 +70,7 @@ nnoremap gbs :ls<CR>:sb
 nnoremap gbv :ls<CR>:vertical sb 
 nnoremap gbt :ls<CR>:tab sb 
 nnoremap gbd :ls<CR>:bdelete 
+nnoremap gbh :browse oldfiles<CR>
 nnoremap gbp :BufferLinePick<CR>
 
 " [w]rite buffer 
@@ -93,7 +94,7 @@ nnoremap <leader>vt :vertical split <bar> terminal <cr>
 
 " Edit or select [R/r]egister
 " nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
-nnoremap <leader>" :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
+nnoremap <leader>e" :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
 
 " Easier increase/decrease indents
 xnoremap > >gv
@@ -148,7 +149,10 @@ xnoremap <C-U> :m'<-2<CR>gv
 
 " WindowSwap
 " nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
- 
+
+"fast macro
+nnoremap @ <cmd>execute "noautocmd norm! " . v:count1 . "@" . getcharstr()<cr>
+xnoremap @ :<C-U>execute "noautocmd '<,'>norm! " . v:count1 . "@" . getcharstr()<cr>
 
 "Folds
 nnoremap zR zRz.

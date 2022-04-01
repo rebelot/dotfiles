@@ -139,6 +139,9 @@ function M.setup()
             if self.lfilename == "" then
                 self.lfilename = "[No Name]"
             end
+            if not conditions.width_percent_below(#self.lfilename, 0.27) then
+                self.lfilename = vim.fn.pathshorten(self.lfilename)
+            end
         end,
         hl = { fg = utils.get_highlight("Directory").fg },
 
@@ -467,6 +470,9 @@ function M.setup()
             self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
             local cwd = vim.fn.getcwd(0)
             self.cwd = vim.fn.fnamemodify(cwd, ":~")
+            if not conditions.width_percent_below(#self.cwd, 0.27) then
+                self.cwd = vim.fn.pathshorten(self.cwd)
+            end
         end,
         hl = { fg = colors.blue, style = "bold" },
 
@@ -502,11 +508,19 @@ function M.setup()
         --     return vim.bo.buftype == 'terminal'
         -- end,
         -- icon = ' ', -- 
-        provider = function()
-            local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
-            return " " .. tname
-        end,
-        hl = { fg = colors.blue, style = "bold" },
+        {
+            provider = function()
+                local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
+                return " " .. tname
+            end,
+            hl = { fg = colors.blue, style = "bold" },
+        },
+        { provider = " - " },
+        {
+            provider = function()
+                return vim.b.term_title
+            end,
+        },
     }
 
     local Spell = {

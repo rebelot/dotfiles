@@ -3,7 +3,7 @@ augroup MyAutoCommands
 
   " zsh!
   " autocmd vimenter * let &shell='"/opt/local/bin/zsh" -i'
-  autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup="Search", timeout=500}
+  autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=500}
 
   "QfL
   autocmd FileType qf set nobuflisted  

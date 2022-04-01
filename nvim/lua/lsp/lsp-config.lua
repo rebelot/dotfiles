@@ -1,6 +1,56 @@
 local lspconfig = require("lspconfig")
 local configs = require("lsp.servers")
-local utils = require("lsp.utilities")
+local lsputil = require("lspconfig.util")
+
+require'lspconfig.configs'.pylance = {
+    default_config = {
+        name = "pylance",
+        autostart = true,
+        single_file_support = true,
+        cmd = {
+            "node",
+            vim.fn.expand("~/.vscode/extensions/ms-python.vscode-pylance-*/dist/server.bundle.crak.js", false, true)[1],
+            "--stdio",
+        },
+        filetypes = { "python" },
+        root_dir = function(fname)
+            local markers = {
+                "Pipfile",
+                "pyproject.toml",
+                "setup.py",
+                "setup.cfg",
+                "requirements.txt",
+            }
+            return lsputil.root_pattern(unpack(markers))(fname)
+                or lsputil.find_git_ancestor(fname)
+                or lsputil.path.dirname(fname)
+        end,
+        settings = {
+            python = {
+                analysis = vim.empty_dict(),
+            },
+        },
+        -- before_init = function(_, config)
+        --     if not config.settings.python then
+        --         config.settings.python = {}
+        --     end
+        --     if not config.settings.python.pythonPath then
+        --         config.settings.python.pythonPath = "/Users/laurenzi/venvs/base/bin/python"
+        --     end
+        -- end,
+    },
+}
+
+local borders = {
+    { "🭽", "FloatBorder" },
+    { "▔", "FloatBorder" },
+    { "🭾", "FloatBorder" },
+    { "▕", "FloatBorder" },
+    { "🭿", "FloatBorder" },
+    { "▁", "FloatBorder" },
+    { "🭼", "FloatBorder" },
+    { "▏", "FloatBorder" },
+}
 
 -----------------------
 -- Handlers override --
@@ -9,11 +59,11 @@ local utils = require("lsp.utilities")
 vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
     silent = true,
     max_height = "10",
-    border = "rounded",
+    border = borders,
 })
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded",
+    border = borders,
 })
 
 vim.lsp.util.close_preview_autocmd = function(events, winnr)
@@ -163,7 +213,9 @@ end
 
 vim.api.nvim_add_user_command(
     "PythonInterpreter",
-    require("lsp.utilities").change_python_interpreter,
+    function(cmd)
+        require("lsp.utilities").change_python_interpreter(cmd.args, 'pylance')
+    end,
     { nargs = 1, complete = require("lsp.utilities").get_python_interpreters }
 )
 -- vim.cmd([[
@@ -174,7 +226,8 @@ vim.api.nvim_add_user_command(
 -- endfunction
 -- ]])
 
-local M = {}
+M = {}
 M.on_attach = on_attach
 M.capabilites = capabilities
+M.borders = borders
 return M

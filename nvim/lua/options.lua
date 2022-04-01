@@ -4,6 +4,9 @@ vim.g.python3_host_prog        = '/Users/laurenzi/venvs/base/bin/python'
 vim.g.python_host_prog         = '/Users/laurenzi/venvs/base27/bin/python'
 -- vim.g.netrw_browsex_viewer  = 'open'
 
+vim.g.do_filetype_lua = 1
+vim.g.did_load_filetypes = 0
+
 vim.o.termguicolors        = true             -- enable gui colors for terminal
 vim.g.vimsyn_embed         = 'lPr'
 vim.g.tex_flavor           = 'latex'
@@ -47,10 +50,20 @@ vim.o.conceallevel         = 2                -- conceal marked text
 vim.o.completeopt          = "menuone,noinsert,noselect"
 vim.o.pumheight            = 15               -- set menu max height
 
-vim.opt.fillchars:append({vert = '┃', fold = ' '})
+vim.opt.fillchars:append({
+    fold = ' ',
+    horiz =	'━',-- '▃',--'═', --'─',
+    horizup ='┻', --'╩',-- '┴',
+    horizdown =	'┳', --'╦', --'┬',
+    vert = '┃',--'▐', --'║', --'┃',
+    vertleft = '┨',--'╣', --'┤',
+    vertright =	'┣',--'╠', --'├',
+    verthoriz =	'╋', --'╬',--'┼','
+})
+
 vim.opt.fillchars:append({foldopen = '▾', foldsep = '│', foldclose = '▸'})
 
-vim.o.inccommand           = 'split'     -- real time preview of substitution commands
+vim.o.inccommand           = 'nosplit'     -- real time preview of substitution commands
 vim.o.showmode             = false          -- Do not show -- MODE -- in cmdline--
 vim.o.cmdheight            = 1          -- Height of the command line
 vim.o.updatetime           = 250       -- time required to update CursorHold hook

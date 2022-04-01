@@ -3,40 +3,48 @@ local action_state = require("telescope.actions.state")
 local previewers = require("telescope.previewers")
 local themes = require("telescope.themes")
 local trouble = require("trouble.providers.telescope")
-local copts = { noremap = true }
+local transform_mod = require('telescope.actions.mt').transform_mod
 
-local custom_actions = {}
+-- local custom_actions = {}
 
-function custom_actions._multiopen(prompt_bufnr, open_cmd)
+local function multiopen(prompt_bufnr, open_cmd)
     local picker = action_state.get_current_picker(prompt_bufnr)
     local num_selections = #picker:get_multi_selection()
     if num_selections > 1 then
-        local picker = action_state.get_current_picker(prompt_bufnr)
         for _, entry in ipairs(picker:get_multi_selection()) do
             vim.cmd(string.format("%s %s", open_cmd, entry.value))
         end
-        vim.cmd("stopinsert")
     else
-        actions.file_edit(prompt_bufnr)
+        vim.cmd(string.format("%s %s", open_cmd, action_state.get_selected_entry().value))
     end
+    vim.cmd("stopinsert")
+    vim.o.winhighlight = ''
 end
 
-function custom_actions.multi_selection_open_vsplit(prompt_bufnr)
-    custom_actions._multiopen(prompt_bufnr, ":vsplit")
-end
-function custom_actions.multi_selection_open_split(prompt_bufnr)
-    custom_actions._multiopen(prompt_bufnr, ":split")
-end
-function custom_actions.multi_selection_open_tab(prompt_bufnr)
-    custom_actions._multiopen(prompt_bufnr, ":tabe")
-end
-function custom_actions.multi_selection_open(prompt_bufnr)
-    custom_actions._multiopen(prompt_bufnr, ":edit")
-end
+local custom_actions = transform_mod({
+    multi_selection_open_vsplit = function(prompt_bufnr) multiopen(prompt_bufnr, ":vsplit") end,
+    multi_selection_open_split = function(prompt_bufnr) multiopen(prompt_bufnr, ":split") end,
+    multi_selection_open_tab =  function(prompt_bufnr) multiopen(prompt_bufnr, ":tabe") end,
+    multi_selection_open = function(prompt_bufnr) multiopen(prompt_bufnr, ":edit") end,
+})
+
+-- function custom_actions.multi_selection_open_vsplit(prompt_bufnr)
+--     multiopen(prompt_bufnr, ":vsplit")
+-- end
+-- function custom_actions.multi_selection_open_split(prompt_bufnr)
+--     multiopen(prompt_bufnr, ":split")
+-- end
+-- function custom_actions.multi_selection_open_tab(prompt_bufnr)
+--     multiopen(prompt_bufnr, ":tabe")
+-- end
+-- function custom_actions.multi_selection_open(prompt_bufnr)
+--     multiopen(prompt_bufnr, ":edit")
+-- end
 
 require("telescope").setup({
     defaults = {
         -- dynamic_preview_title = true,
+        -- borderchars = { "▔", "▕", "▁", "▏", "🭽", "🭾", "🭿", "🭼" },
         layout_strategy = "flex",
         layout_config = {
             vertical = {
@@ -186,11 +194,18 @@ require("telescope").setup({
                 },
             },
         },
-    }
+    },
 })
+
+local copts = { noremap = true }
 vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>Telescope find_files<CR>", copts)
 -- vim.api.nvim_set_keymap("n", "<leader>fF", ":Telescope find_files cwd=", {noremap=true})
-vim.api.nvim_set_keymap("n", "<leader>f.", "<cmd>lua require'telescope'.extensions.file_browser.file_browser()<CR>", copts)
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>f.",
+    "<cmd>lua require'telescope'.extensions.file_browser.file_browser()<CR>",
+    copts
+)
 vim.api.nvim_set_keymap("n", "<leader>fl", "<cmd>Telescope current_buffer_fuzzy_find<CR>", copts)
 vim.api.nvim_set_keymap("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", copts)
 vim.api.nvim_set_keymap("n", "<leader>fh", "<cmd>Telescope oldfiles<CR>", copts)

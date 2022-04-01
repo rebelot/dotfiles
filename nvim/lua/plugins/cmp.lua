@@ -19,6 +19,9 @@ cmp.setup({
     --     local command_line = vim.fn.bufname("%") ~= '[Command Line]'
     --     return prompt and command_line
     -- end,
+    documentation = {
+        border = require'lsp.lsp-config'.borders
+    },
 
     mapping = {
         ["<Tab>"] = cmp.mapping({
@@ -108,6 +111,13 @@ cmp.setup({
         ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
         ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+        -- ["<C-Space>"] = cmp.mapping(function()
+        --     cmp.complete({ config = { sources = { { name = "nvim_lsp" }, { name = "ultisnips" } } } })
+        --     -- if not cmp.get_entries() then
+        --     --     print("no entries")
+        --     --     cmp.complete()
+        --     -- end
+        -- end, { "i" }),
         -- ['<C-e>']  = cmp.mapping.close(),
         ["<C-e>"] = cmp.mapping({ i = cmp.mapping.close(), c = cmp.mapping.close() }),
         ["<CR>"] = cmp.mapping({
@@ -170,7 +180,7 @@ cmp.setup.cmdline("/", {
     completion = { autocomplete = false },
     sources = {
         { name = "nvim_lsp_document_symbol" },
-        { name = "buffer" }--, option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
+        { name = "buffer" }, --, option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
         -- { name = "buffer" },
     },
 })
@@ -186,7 +196,7 @@ cmp.setup.cmdline(":", {
     },
 })
 
-cmp.setup.filetype({"markdown", "pandoc", "text", "latex"}, {
+cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
     sources = {
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" },
