@@ -26,7 +26,7 @@ augroup END
 " }}}
 
 set laststatus=2
-set stl=%-(%f%h%w%q%m%r%)%=%(%y\ %l/%L\ (%p%%)\ :\ %c%)
+set statusline=%-(%f%h%w%q%m%r%)%=%(%y\ %l/%L\ (%p%%)\ :\ %c%)
 
 " Settings {{{
 
@@ -105,7 +105,7 @@ noremap L $
 noremap H ^
 
 inoremap <C-l> <Right>
-nnoremap <silent><M-l> :noh<bar>diffupdate<CR><C-L>
+nnoremap <silent><M-/> :noh<bar>diffupdate<CR><C-L>
 
 cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"
 cnoremap <expr><C-p> wildmenumode() ? "\<C-p>" : "\<Up>"
@@ -173,7 +173,7 @@ nnoremap <leader>st :split <bar> terminal <cr>
 
 " Edit or select [R/r]egister
 nnoremap <silent><leader>" :reg<CR>:execute 'norm! "' . input("Select [register][action]: ")<CR>
-nnoremap <leader>R :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
+nnoremap <leader>e" :<C-U><C-R><C-R>='let @'. v:register .' = '. string(getreg(v:register))<CR><C-F><left>
 
 " Easier increase/decrease indents
 xnoremap > >gv
