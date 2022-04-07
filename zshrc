@@ -133,7 +133,7 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2021-4"
+export SCHRODINGER="/opt/schrodinger/suites2022-1"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 # export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
@@ -226,6 +226,11 @@ EOF
 function pman {
   tmux display-popup -KR "man $@"
 }
+
+function neovim_remote {
+  nvim --server $NVIM_LISTEN_ADDRESS --remote $(realpath "$@")
+  # $(realpath ${1:-.})
+}
 # }}}
 
 # Aliases {{{
@@ -252,6 +257,9 @@ alias codelldb="while sleep 1; do $(find $HOME/.vscode/extensions -name codelldb
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
 alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
+alias nvr=neovim_remote
+alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
+alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"
 
 # }}}
 

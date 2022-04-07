@@ -25,7 +25,7 @@ function M.echo_cursor_diagnostic()
         if diag_col <= col and col < diag_end_col then
             local severity = severity_prefix[diagnostic.severity] .. " "
             local source = diagnostic.source or ""
-            local msg = source .. ": " .. diagnostic.message:gsub("\n", "")
+            local msg = source .. ": " .. diagnostic.message:gsub("\n", "") .. " "
             table.insert(message, { severity, severity_hl[diagnostic.severity] })
             table.insert(message, { msg:sub(1, vim.v.echospace - #severity), "Normal" })
             vim.api.nvim_echo(message, false, {})
@@ -84,10 +84,18 @@ end
 -- end
 
 function M.change_python_interpreter(path, plsp)
-    vim.lsp.stop_client(vim.lsp.get_active_clients())
+    local servers = vim.lsp.buf_get_clients(0)
+    for _, server in pairs(servers) do
+        if server.name == plsp then
+            vim.lsp.stop_client(server.id)
+            -- server.config.settings.python.pythonPath = path
+            -- vim.lsp.start_client(server.config)
+            break
+        end
+    end
     configs[plsp].settings.python.pythonPath = path
     lspconfig[plsp].setup(configs[plsp])
-    vim.cmd("e%")
+    vim.cmd("LspStart "..plsp)
 end
 
 function M.get_python_interpreters(a, l, p)

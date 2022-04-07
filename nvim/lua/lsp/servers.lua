@@ -1,6 +1,4 @@
 local lspconfig = require("lspconfig")
-local configs = require("lspconfig.configs")
-local lsputil = require('lspconfig/util')
 
 
 local pyright = {

@@ -563,6 +563,7 @@ function M.setup()
         UltTest,
         Space,
         FileType,
+        utils.make_flexible_component(3, {Space, FileEncoding}, { provider = "" }),
         Space,
         Ruler,
         Space,
