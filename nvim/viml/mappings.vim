@@ -128,14 +128,8 @@ nnoremap <leader>lC :lexpr []<CR>
 " Text Formatting
 nnoremap <leader>gq vipgq
 
-" Search visual selection
-xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
-
 " Set @/ to word under cursor
 nnoremap <silent><leader>/ :call setreg('/', expand('<cword>'))<CR>
-
-" Poor men refactoring
-nnoremap cr *``cgn
 
 " Add blank lines above/below cursor
 nnoremap ]<CR> :call append(line('.'), '')<CR>
@@ -147,12 +141,20 @@ nnoremap [<CR> :call append(line('.')-1, '')<CR>
 xnoremap <C-D> :m'>+1<CR>gv
 xnoremap <C-U> :m'<-2<CR>gv
 
-" WindowSwap
-" nnoremap <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
+" Search visual selection
+xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
 
 "fast macro
 nnoremap @ <cmd>execute "noautocmd norm! " . v:count1 . "@" . getcharstr()<cr>
 xnoremap @ :<C-U>execute "noautocmd '<,'>norm! " . v:count1 . "@" . getcharstr()<cr>
+
+" http://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-bytes-of-vimscript/
+" Poor men refactoring
+nnoremap cr *``cgn
+xnoremap <leader>r y/\V<C-R>=escape(@", '/')<CR><CR>``cgn
+
+nnoremap cq *``qz
+xnoremap <leader>q y/\V<C-R>=escape(@", '/')<CR><CR>``qz
 
 "Folds
 nnoremap zR zRz.
@@ -174,14 +176,8 @@ nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> t
   \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
   \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-" Debugger
-" see dap-config.lua
-
-" netrw_gx fix
-" nmap gx yiW:!open <cWORD><CR> <C-r>" & <CR><CR>
-
 cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
 cnoreabbrev prinspect lua print(vim.inspect())<Left><Left>
-cnoremap ( ()<Left>
-cnoremap [ []<Left>
-cnoremap { {}<Left>
+" cnoremap ( ()<Left>
+" cnoremap [ []<Left>
+" cnoremap { {}<Left>

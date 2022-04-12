@@ -500,7 +500,7 @@ return require("packer").startup(function(use)
         "numToStr/FTerm.nvim",
         config = function()
             vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>lua require'FTerm'.toggle()<CR>", { noremap = true })
-            vim.api.nvim_add_user_command("FTermRun", function(cmd)
+            vim.api.nvim_create_user_command("FTermRun", function(cmd)
                 require("FTerm").run(vim.fn.expandcmd(cmd.args))
             end, { nargs = "*", complete = "shellcmd" })
             vim.api.nvim_set_keymap("n", "<leader>tr", ":FTermRun ", { noremap = true })
@@ -541,6 +541,18 @@ return require("packer").startup(function(use)
         event = "BufEnter",
     })
 
+    -- use {
+    --     's1n7ax/nvim-window-picker',
+    --     config = function()
+    --         require'window-picker'.setup({
+    --             other_win_hl_color = '#232323',
+    --         })
+    --     vim.keymap.set('n', '<C-w><C-w>', function()
+    --         local win = require'window-picker'.pick_window()
+    --         vim.api.nvim_set_current_win(win)
+    --     end, {noremap = true})
+    -- end
+    -- }
     -------------------
     -- Editing Tools --
     -------------------

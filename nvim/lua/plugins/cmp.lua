@@ -208,3 +208,15 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
         { name = "tmux", option = { all_panes = true } },
     },
 })
+
+cmp.setup.filetype({'lua'}, {
+    sources = {
+        { name = "nvim_lsp_signature_help" },
+        { name = "nvim_lua" },
+        { name = "nvim_lsp" },
+        { name = "ultisnips" },
+        { name = "path" },
+        { name = "buffer" },
+        { name = "tmux", option = { all_panes = true } },
+    },
+})

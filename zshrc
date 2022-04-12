@@ -227,10 +227,10 @@ function pman {
   tmux display-popup -KR "man $@"
 }
 
-function neovim_remote {
-  nvim --server $NVIM_LISTEN_ADDRESS --remote $(realpath "$@")
-  # $(realpath ${1:-.})
-}
+# function neovim_remote {
+#   nvim --server $NVIM_LISTEN_ADDRESS --remote $(realpath "$@")
+#   # $(realpath ${1:-.})
+# }
 # }}}
 
 # Aliases {{{
@@ -253,13 +253,13 @@ alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
 alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
 alias luamake=/Users/laurenzi/usr/src/lua-language-server/3rd/luamake/luamake
-alias codelldb="while sleep 1; do $(find $HOME/.vscode/extensions -name codelldb) --port 13000 --liblldb $(find $HOME/.vscode/extensions/ -name liblldb.dylib); done"
+alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/lldb/lib/liblldb.dylib; done"
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
 alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
-alias nvr=neovim_remote
-alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
-alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"
+# alias nvr=neovim_remote
+# alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
+# alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"
 
 # }}}
 
