@@ -499,11 +499,33 @@ return require("packer").startup(function(use)
     use({
         "numToStr/FTerm.nvim",
         config = function()
+            require'FTerm'.setup({
+                border = require'lsp.lsp-config'.borders,
+            })
+
             vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>lua require'FTerm'.toggle()<CR>", { noremap = true })
+
             vim.api.nvim_create_user_command("FTermRun", function(cmd)
                 require("FTerm").run(vim.fn.expandcmd(cmd.args))
             end, { nargs = "*", complete = "shellcmd" })
+
+            local lazygit = require("FTerm"):new({
+                ft = "fterm_lazygit", -- You can also override the default filetype, if you want
+                cmd = "lazygit",
+                dimensions = {
+                    height = 0.95,
+                    width = 0.95,
+                },
+            })
+
+            vim.cmd[[let $GIT_EDITOR = "nvr --cc close -cc split --remote-wait +'set bufhidden=wipe'"]]
+            vim.api.nvim_create_user_command("LazyGit", function(cmd)
+                lazygit:toggle()
+            end, {})
+
             vim.api.nvim_set_keymap("n", "<leader>tr", ":FTermRun ", { noremap = true })
+            -- vim.cmd[[au FileType fterm setl winhl=Normal:NormalFloat]]
+            vim.api.nvim_create_autocmd("FileType", {pattern = 'fterm*', group = 'MyAutoCommands', command = "set winhl=Normal:NormalFloat"})
         end,
     })
 
@@ -527,10 +549,11 @@ return require("packer").startup(function(use)
     --     event = "VimEnter",
     -- })
 
-    use({ "goolord/alpha-nvim",
+    use({
+        "goolord/alpha-nvim",
         config = function()
             require("plugins.dashboard")
-        end
+        end,
     })
 
     use({

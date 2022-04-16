@@ -12,4 +12,12 @@ end
 
 -- nvim_buf_get_text(buffer, start_row, start_col, end_row, end_col, opts)
 
+function Filter(cmd)
+    local sr, sc, er, ec = M.visual_selection_range()
+    local text = vim.api.nvim_buf_get_text(0, sr, sc, er, ec, {})
+    local ret = vim.fn.split(vim.fn.system(cmd.fargs, text), '\n')
+    vim.api.nvim_buf_set_text(0, sr, sc, er, ec, ret)
+end
+
+vim.api.nvim_create_user_command('Filter', Filter, {nargs='+', range=true, complete='shellcmd'})
 return M

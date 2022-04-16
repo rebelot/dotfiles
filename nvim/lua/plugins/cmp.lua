@@ -19,8 +19,16 @@ cmp.setup({
     --     local command_line = vim.fn.bufname("%") ~= '[Command Line]'
     --     return prompt and command_line
     -- end,
-    documentation = {
-        border = require'lsp.lsp-config'.borders
+    window = {
+        -- completion = cmp.config.window.bordered(),
+        documentation = {
+            winhighlight = "",
+            border = require'lsp.lsp-config'.borders
+        },
+        -- completion = {
+        --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:PmenuSel,Search:None",
+        --     border = require'lsp.lsp-config'.borders
+        -- }
     },
 
     mapping = {
@@ -209,7 +217,7 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
     },
 })
 
-cmp.setup.filetype({'lua'}, {
+cmp.setup.filetype({ "lua" }, {
     sources = {
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lua" },
@@ -220,3 +228,13 @@ cmp.setup.filetype({'lua'}, {
         { name = "tmux", option = { all_panes = true } },
     },
 })
+
+-- vim.api.nvim_create_augroup('CmpRecording', { clear = true })
+-- vim.api.nvim_create_autocmd('RecordingEnter', {
+--     group = 'CmpRecording',
+--     command = [[lua require'cmp'.setup.buffer({ enabled = false })]]
+-- })
+-- vim.api.nvim_create_autocmd('RecordingLeave', {
+--     group = 'CmpRecording',
+--     command = [[lua require'cmp'.setup.buffer({ enabled = true })]]
+-- })

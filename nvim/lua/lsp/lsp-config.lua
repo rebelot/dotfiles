@@ -1,56 +1,7 @@
 local lspconfig = require("lspconfig")
-local configs = require("lsp.servers")
-local lsputil = require("lspconfig.util")
 
-require'lspconfig.configs'.pylance = {
-    default_config = {
-        name = "pylance",
-        autostart = true,
-        single_file_support = true,
-        cmd = {
-            "node",
-            vim.fn.expand("~/.vscode/extensions/ms-python.vscode-pylance-*/dist/server.bundle.crak.js", false, true)[1],
-            "--stdio",
-        },
-        filetypes = { "python" },
-        root_dir = function(fname)
-            local markers = {
-                "Pipfile",
-                "pyproject.toml",
-                "setup.py",
-                "setup.cfg",
-                "requirements.txt",
-            }
-            return lsputil.root_pattern(unpack(markers))(fname)
-                or lsputil.find_git_ancestor(fname)
-                or lsputil.path.dirname(fname)
-        end,
-        settings = {
-            python = {
-                analysis = vim.empty_dict(),
-            },
-        },
-        -- before_init = function(_, config)
-        --     if not config.settings.python then
-        --         config.settings.python = {}
-        --     end
-        --     if not config.settings.python.pythonPath then
-        --         config.settings.python.pythonPath = "/Users/laurenzi/venvs/base/bin/python"
-        --     end
-        -- end,
-    },
-}
 
-local borders = {
-    { "🭽", "FloatBorder" },
-    { "▔", "FloatBorder" },
-    { "🭾", "FloatBorder" },
-    { "▕", "FloatBorder" },
-    { "🭿", "FloatBorder" },
-    { "▁", "FloatBorder" },
-    { "🭼", "FloatBorder" },
-    { "▏", "FloatBorder" },
-}
+local borders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
 
 -----------------------
 -- Handlers override --
@@ -133,7 +84,7 @@ local on_attach = function(client, bufnr)
     buf_set_keymap("n", "<leader>lt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     buf_set_keymap("n", "<leader>li", "<cmd>Telescope lsp_implementations<CR>", opts)
     buf_set_keymap("n", "<leader>la", "<cmd>Telescope lsp_code_actions<CR>", opts)
-    buf_set_keymap("x", "<leader>la", "<cmd>Telescope lsp_range_code_actions<CR>", opts)
+    buf_set_keymap("x", "<leader>la", "<cmd>lua require'telescope.builtin'.lsp_range_code_actions({start_line = vim.fn.line(\"'<\"), end_line = vim.fn.line(\"'>\")})<CR>", opts)
     buf_set_keymap("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<CR>", opts)
     buf_set_keymap("n", "<leader>lS", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", opts)
     buf_set_keymap(
@@ -201,9 +152,39 @@ local on_attach = function(client, bufnr)
     -- end
 end
 
-for server, config in pairs(configs) do
-    config.capabilities = capabilities
-    config.on_attach = on_attach
+local function make_config(server_name)
+    local ok, config = pcall(require, 'lsp.server_configurations.'..server_name)
+    if not ok then config = {} end
+    local client_on_attach = config.on_attach
+    -- wrap client-specific on_attach with default custom on_attach
+    if client_on_attach then
+        config.on_attach = function(client, bufnr)
+            on_attach(client, bufnr)
+            client_on_attach(client, bufnr)
+        end
+    else
+        config.on_attach = on_attach
+    end
+    config.capabilites = capabilities
+    return config
+end
+
+local servers = {
+    "ccls",
+    "pylance",
+    -- "pyright",
+    "sumneko_lua",
+    "texlab",
+    "ltex",
+    "vimls",
+    "bashls",
+    "julials"
+}
+
+for _, server in ipairs(servers) do
+    -- call make_config() before trying to access lspconfig[server] to ensure
+    -- registering custom servers
+    local config = make_config(server)
     lspconfig[server].setup(config)
 end
 
@@ -211,20 +192,6 @@ end
 -- Commands --
 --------------
 
-vim.api.nvim_create_user_command(
-    "PythonInterpreter",
-    function(cmd)
-        require("lsp.utilities").change_python_interpreter(cmd.args, 'pylance')
-    end,
-    { nargs = 1, complete = require("lsp.utilities").get_python_interpreters }
-)
--- vim.cmd([[
--- command! -nargs=1 -complete=customlist,PythonInterpreterComplete PythonInterpreter lua require'lsp.utilities'.change_python_interpreter(<q-args>)
---
--- function! PythonInterpreterComplete(A,L,P) abort
---   return v:lua.require('lsp.utilities').get_python_interpreters()
--- endfunction
--- ]])
 
 M = {}
 M.on_attach = on_attach
