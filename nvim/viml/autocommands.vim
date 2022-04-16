@@ -48,7 +48,7 @@ augroup MyAutoCommands
   autocmd FileType tex let g:surround_92 = "\\\1\\\1{\r}"
 
   " Terminal
-  autocmd TermOpen * setlocal nonumber norelativenumber
+  autocmd TermOpen * setlocal nonumber norelativenumber winhl=Normal:NormalFloat
   " autocmd TermOpen * setlocal filetype=terminal
 
   " Diagnostics
