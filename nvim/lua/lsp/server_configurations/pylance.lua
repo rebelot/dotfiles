@@ -154,21 +154,34 @@ end
 
 return {
     on_attach = function(client, bufnr)
+        client.commands["pylance.extractVariableWithRename"] = function(command, enriched_ctx)
+            command.command = "pylance.extractVariable"
+            vim.lsp.buf.execute_command(command)
+        end
+
+        client.commands["pylance.extractMethodWithRename"] = function(command, enriched_ctx)
+            command.command = "pylance.extractMethod"
+            vim.lsp.buf.execute_command(command)
+        end
+
         vim.api.nvim_buf_create_user_command(0, "PythonInterpreter", function(cmd)
             change_python_interpreter(cmd.args)
         end, { nargs = 1, complete = get_python_interpreters })
+
         vim.api.nvim_buf_create_user_command(
             0,
             "PylanceOrganizeImports",
             organize_imports,
             { desc = "Organize Imports" }
         )
+
         vim.api.nvim_buf_create_user_command(
             0,
             "PylanceExtractVariable",
             extract_variable,
             { range = true, desc = "Extract variable" }
         )
+
         vim.api.nvim_buf_create_user_command(
             0,
             "PylanceExtractMethod",
