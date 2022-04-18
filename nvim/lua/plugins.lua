@@ -518,7 +518,7 @@ return require("packer").startup(function(use)
                 },
             })
 
-            vim.cmd[[let $GIT_EDITOR = "nvr --cc close -cc split --remote-wait +'set bufhidden=wipe'"]]
+            vim.cmd[[let $GIT_EDITOR = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"]]
             vim.api.nvim_create_user_command("LazyGit", function(cmd)
                 lazygit:toggle()
             end, {})

@@ -1,6 +1,5 @@
 local lspconfig = require("lspconfig")
 
-
 local borders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
 
 -----------------------
@@ -36,6 +35,14 @@ end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+    properties = {
+        "documentation",
+        "detail",
+        "additionalTextEdits",
+    },
+}
 
 capabilities.textDocument.codeAction = {
     dynamicRegistration = true,
@@ -61,6 +68,7 @@ local on_attach = function(client, bufnr)
     local function buf_set_keymap(...)
         vim.api.nvim_buf_set_keymap(bufnr, ...)
     end
+
     local function buf_set_option(...)
         vim.api.nvim_buf_set_option(bufnr, ...)
     end
@@ -84,7 +92,12 @@ local on_attach = function(client, bufnr)
     buf_set_keymap("n", "<leader>lt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     buf_set_keymap("n", "<leader>li", "<cmd>Telescope lsp_implementations<CR>", opts)
     buf_set_keymap("n", "<leader>la", "<cmd>Telescope lsp_code_actions<CR>", opts)
-    buf_set_keymap("x", "<leader>la", "<cmd>lua require'telescope.builtin'.lsp_range_code_actions({start_line = vim.fn.line(\"'<\"), end_line = vim.fn.line(\"'>\")})<CR>", opts)
+    buf_set_keymap(
+        "x",
+        "<leader>la",
+        "<cmd>lua require'telescope.builtin'.lsp_range_code_actions({start_line = vim.fn.line(\"'<\"), end_line = vim.fn.line(\"'>\")})<CR>",
+        opts
+    )
     buf_set_keymap("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<CR>", opts)
     buf_set_keymap("n", "<leader>lS", "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", opts)
     buf_set_keymap(
@@ -153,8 +166,10 @@ local on_attach = function(client, bufnr)
 end
 
 local function make_config(server_name)
-    local ok, config = pcall(require, 'lsp.server_configurations.'..server_name)
-    if not ok then config = {} end
+    local ok, config = pcall(require, "lsp.server_configurations." .. server_name)
+    if not ok then
+        config = {}
+    end
     local client_on_attach = config.on_attach
     -- wrap client-specific on_attach with default custom on_attach
     if client_on_attach then
@@ -178,7 +193,7 @@ local servers = {
     "ltex",
     "vimls",
     "bashls",
-    "julials"
+    "julials",
 }
 
 for _, server in ipairs(servers) do
@@ -192,9 +207,8 @@ end
 -- Commands --
 --------------
 
-
 M = {}
 M.on_attach = on_attach
-M.capabilites = capabilities
+M.capabilities = capabilities
 M.borders = borders
 return M

@@ -1,12 +1,57 @@
 local lspconfig = require("lspconfig")
 local lsputil = require("lspconfig.util")
 
+-- client.server_capabilities.executeCommandProvider
+local _commands = {
+    "pyright.createtypestub",
+    "pyright.organizeimports",
+    "pyright.addoptionalforparam",
+    "python.createTypeStub",
+    "python.orderImports",
+    "python.addOptionalForParam",
+    "python.removeUnusedImport",
+    "python.addImport",
+    "python.intellicode.completionItemSelected",
+    "python.intellicode.loadLanguageServerExtension",
+    "pylance.extractMethod",
+    "pylance.extractVariable",
+    "pylance.dumpFileDebugInfo",
+    "pylance.completionAccepted",
+    "pylance.executedClientCommand",
+}
+
 local function organize_imports()
     local params = {
         command = "pyright.organizeimports",
         arguments = { vim.uri_from_bufnr(0) },
     }
     vim.lsp.buf.execute_command(params)
+end
+
+local function extract_variable()
+    local pos_params = vim.lsp.util.make_given_range_params()
+    local params = {
+        command = "pylance.extractVariable",
+        arguments = {
+            vim.api.nvim_buf_get_name(0),
+            pos_params.range,
+        },
+    }
+    vim.lsp.buf.execute_command(params)
+    -- vim.lsp.buf.rename()
+end
+
+local function extract_method()
+    local pos_params = vim.lsp.util.make_given_range_params()
+    local params = {
+        command = "pylance.extractMethod",
+        arguments = {
+            vim.api.nvim_buf_get_name(0),
+            pos_params.range,
+        },
+    }
+    vim.lsp.buf.execute_command(params)
+    -- vim.lsp.buf.rename()
 end
 
 require("lspconfig.configs").pylance = {
@@ -16,7 +61,7 @@ require("lspconfig.configs").pylance = {
         single_file_support = true,
         cmd = {
             "node",
-            vim.fn.expand("~/.vscode/extensions/ms-python.vscode-pylance-*/dist/server.bundle.crak.js", false, true)[1],
+            vim.fn.expand("~/.vscode/extensions/ms-python.vscode-pylance-*/dist/server.bundle.crack.js", false, true)[1],
             "--stdio",
         },
         filetypes = { "python" },
@@ -41,18 +86,16 @@ require("lspconfig.configs").pylance = {
                 telemetryLevel = "off",
             },
         },
-        commands = {
-            PyrightOrganizeImports = {
-                organize_imports,
-                description = "Organize Imports",
-            },
-        },
         docs = {
-            package_json = vim.fn.expand("$HOME/.vscode/extensions/ms-python.vscode-pylance-*/package.json", false, true)[1],
+            package_json = vim.fn.expand(
+                "$HOME/.vscode/extensions/ms-python.vscode-pylance-*/package.json",
+                false,
+                true
+            )[1],
             description = [[
          https://github.com/microsoft/pyright
          `pyright`, a static type checker and language server for python
-         ]],
+         ]]  ,
         },
         -- before_init = function(_, config)
         --     if not config.settings.python then
@@ -114,6 +157,24 @@ return {
         vim.api.nvim_buf_create_user_command(0, "PythonInterpreter", function(cmd)
             change_python_interpreter(cmd.args)
         end, { nargs = 1, complete = get_python_interpreters })
+        vim.api.nvim_buf_create_user_command(
+            0,
+            "PylanceOrganizeImports",
+            organize_imports,
+            { desc = "Organize Imports" }
+        )
+        vim.api.nvim_buf_create_user_command(
+            0,
+            "PylanceExtractVariable",
+            extract_variable,
+            { range = true, desc = "Extract variable" }
+        )
+        vim.api.nvim_buf_create_user_command(
+            0,
+            "PylanceExtractMethod",
+            extract_method,
+            { range = true, desc = "Extract methdod" }
+        )
     end,
     settings = {
         python = {
