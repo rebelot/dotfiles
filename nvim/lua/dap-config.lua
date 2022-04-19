@@ -8,65 +8,28 @@ vim.fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", l
 vim.fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "" })
 
 vim.cmd([[au FileType dap-repl lua require('dap.ext.autocompl').attach()]])
-
--- local M = {}
--- function M.DapEditConfig()
---     if vim.fn.filereadable("nvim-dap_launch.json") == 1 then
---         vim.cmd("vsplit nvim-dap_launch.json")
---         return
---     end
---     local buf = vim.api.nvim_create_buf(true, false)
---     vim.bo[buf].filetype = "json"
---     vim.api.nvim_buf_set_name(buf, "nvim-dap_launch.json")
---     local lines = {
---         "{",
---         '   "version": "0.2.0",',
---         '   "configurations": [',
---         "       {",
---         '           "type": "type",',
---         '           "request": "launch",',
---         '           "name": "Debug",',
---         '           "program": "executable name"',
---         "       }",
---         "   ]",
---         "}",
---     }
---     vim.api.nvim_buf_set_lines(buf, 0, 0, false, lines)
---
---     vim.cmd("vsplit")
---     local win = vim.api.nvim_get_current_win()
---     vim.api.nvim_win_set_buf(win, buf)
---     vim.cmd([[au BufWritePost <buffer> lua require'dap.ext.vscode'.load_launchjs('nvim-dap_launch.json')]])
--- end
---
--- vim.cmd([[command! DapEditConfig lua require'dap-config'.DapEditConfig()]])
--- vim.cmd([[command! DapReloadConfig lua require'dap'.configurations = {}; vim.cmd("luafile ~/.config/nvim/lua/dap-config.lua"); require'dap.ext.vscode'.load_launchjs('nvim-dap_launch.json')]])
-vim.cmd([[command! DapClose lua require'dap'.terminate(); require'dapui'.close(); vim.cmd("bd! \\[dap-repl]") ]])
-vim.cmd([[command! DapStart lua require'dap'.continue()]])
+-- vim.cmd([[command! DapClose lua require'dap'.terminate(); require'dapui'.close(); vim.cmd("bd! \\[dap-repl]") ]])
 
 -- mappings
-local map_opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<leader>dC", '<cmd>lua require"dap".continue()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>db", '<cmd>lua require"dap".toggle_breakpoint()<CR>', map_opts)
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>dB",
-    ':lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<cr>',
-    map_opts
-)
-vim.api.nvim_set_keymap("n", "<leader>do", '<cmd>lua require"dap".step_over()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dO", '<cmd>lua require"dap".step_out()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dn", '<cmd>lua require"dap".step_into()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dN", '<cmd>lua require"dap".step_back()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dr", '<cmd>lua require"dap".repl.toggle()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>d.", '<cmd>lua require"dap".goto_()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dh", '<cmd>lua require"dap".run_to_cursor()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>de", '<cmd>lua require"dap".set_exception_breakpoints()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dv", "<cmd>Telescope dap variables<CR>", map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dc", "<cmd>Telescope dap commands<CR>", map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dx", '<cmd>lua require"dapui".eval()<CR>', map_opts)
-vim.api.nvim_set_keymap("n", "<leader>dX", '<cmd>lua require"dapui".eval(vim.fn.input("expression: "))<CR>', map_opts)
-vim.api.nvim_set_keymap("x", "<leader>dx", '<cmd>lua require"dapui".eval()<CR>', map_opts)
+vim.keymap.set("n", "<leader>dC", require("dap").continue, { desc = "DAP: Continue" })
+vim.keymap.set("n", "<leader>db", require("dap").toggle_breakpoint, { desc = "DAP: Toggle breackpoint" })
+vim.keymap.set("n", "<leader>dB", function()
+    require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
+end, { desc = "DAP: Set breakpoint" })
+vim.keymap.set("n", "<leader>do", require("dap").step_over, { desc = "DAP: Step over" })
+vim.keymap.set("n", "<leader>dO", require("dap").step_out, { desc = "DAP: Step out" })
+vim.keymap.set("n", "<leader>dn", require("dap").step_into, { desc = "DAP: Step into" })
+vim.keymap.set("n", "<leader>dN", require("dap").step_back, { desc = "DAP: Step back" })
+vim.keymap.set("n", "<leader>dr", require("dap").repl.toggle, { desc = "DAP: Toggle REPL" })
+vim.keymap.set("n", "<leader>d.", require("dap").goto_, { desc = "DAP: Go to" })
+vim.keymap.set("n", "<leader>dh", require("dap").run_to_cursor, { desc = "DAP: Run to cursor" })
+vim.keymap.set("n", "<leader>de", require("dap").set_exception_breakpoints, { desc = "DAP: Set exception breakpoints" })
+vim.keymap.set("n", "<leader>dv", require("telescope").extensions.dap.variables, { desc = "DAP-Telescope: Variables" })
+vim.keymap.set("n", "<leader>dc", require("telescope").extensions.dap.commands, { desc = "DAP-Telescope: Commands" })
+vim.keymap.set("n", "<leader>dx", require("dapui").eval, { desc = "DAP-UI: Eval" })
+vim.keymap.set("n", "<leader>dX", function()
+    require("dapui").eval(vim.fn.input("expression: "))
+end, { desc = "DAP-UI: Eval expression" })
 
 dap.listeners.after["event_initialized"]["dapui"] = function()
     require("dapui").open()
@@ -82,7 +45,7 @@ table.insert(dap.configurations.python, {
     request = "attach",
     name = "attach PID",
     processId = require("dap.utils").pick_process,
-    console = 'integratedTerminal'
+    console = "integratedTerminal",
 })
 table.insert(dap.configurations.python, {
     type = "python",
@@ -95,29 +58,31 @@ table.insert(dap.configurations.python, {
         return tonumber(vim.fn.input("Port [5678]: ", "5678"))
     end,
     justMyCode = false,
-    console = 'integratedTerminal'
+    console = "integratedTerminal",
 })
 table.insert(dap.configurations.python, {
-    type = 'python',
-    request = 'launch',
-    name = 'launch with options',
-    program = '${file}';
+    type = "python",
+    request = "launch",
+    name = "launch with options",
+    program = "${file}",
     python = function() end,
     pythonPath = function()
         local path
         for _, server in pairs(vim.lsp.buf_get_clients()) do
-            path = vim.tbl_get(server, 'config', 'settings', 'python', 'pythonPath')
-            if path then break end
+            path = vim.tbl_get(server, "config", "settings", "python", "pythonPath")
+            if path then
+                break
+            end
         end
-        path = vim.fn.input('Python path: ', path or '', 'file')
-        return path ~= '' and vim.fn.expand(path) or nil
+        path = vim.fn.input("Python path: ", path or "", "file")
+        return path ~= "" and vim.fn.expand(path) or nil
     end,
     args = function()
         local args = {}
         local i = 1
         while true do
             local arg = vim.fn.input("Argument [" .. i .. "]: ")
-            if arg == '' then
+            if arg == "" then
                 break
             end
             args[i] = arg
@@ -126,12 +91,12 @@ table.insert(dap.configurations.python, {
         return args
     end,
     justMyCode = function()
-        return vim.fn.input('justMyCode? [y/n]: ') == 'y'
+        return vim.fn.input("justMyCode? [y/n]: ") == "y"
     end,
     stopOnEntry = function()
-        return vim.fn.input('justMyCode? [y/n]: ') == 'y'
+        return vim.fn.input("justMyCode? [y/n]: ") == "y"
     end,
-    console = 'integratedTerminal'
+    console = "integratedTerminal",
 })
 
 -- dap.adapters.lldb = {

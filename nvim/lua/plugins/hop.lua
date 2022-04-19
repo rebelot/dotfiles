@@ -1,20 +1,19 @@
-local copts = {noremap = true}
+local copts = { noremap = true }
 -- local ac = require'hop.hint'.HintDirection['AFTER_CURSOR']
 -- local bc = require'hop.hint'.HintDirection['BEFORE_CURSOR']
 
-vim.api.nvim_set_keymap('n', 's', "<cmd>lua require'hop'.hint_char1()<cr>", copts)
-vim.api.nvim_set_keymap('x', 's', "<cmd>lua require'hop'.hint_char1()<cr>", copts)
-vim.api.nvim_set_keymap('o', 'x', "<cmd>lua require'hop'.hint_char1()<cr>", copts)
+vim.keymap.set("n", "s", require("hop").hint_char1, { desc = "Hop: Hint char1" })
+vim.keymap.set("x", "s", require("hop").hint_char1, { desc = "Hop: Hint char1" })
+vim.keymap.set("o", "x", require("hop").hint_char1, { desc = "Hop: Hint char1" })
 
-vim.api.nvim_set_keymap('n', '<C-s>', "<cmd>lua require'hop'.hint_char2()<cr>", copts)
-vim.api.nvim_set_keymap('x', '<C-s>', "<cmd>lua require'hop'.hint_char2()<cr>", copts)
-vim.api.nvim_set_keymap('o', '<C-x>',
-                        "<cmd>lua require'hop'.hint_char2()<cr>", copts)
+vim.keymap.set("n", "<C-s>", require("hop").hint_char2, { desc = "Hop: Hint char2" })
+vim.keymap.set("x", "<C-s>", require("hop").hint_char2, { desc = "Hop: Hint char2" })
+vim.keymap.set("o", "<C-x>", require("hop").hint_char2, { desc = "Hop: Hint char2" })
 
-vim.api.nvim_set_keymap('n', 'S', "<cmd>lua require'hop'.hint_lines()<cr>", copts)
-vim.api.nvim_set_keymap('x', 'SS', "<cmd>lua require'hop'.hint_lines()<cr>", copts)
-vim.api.nvim_set_keymap('o', 'X', "<cmd>lua require'hop'.hint_lines()<cr>", copts)
+vim.keymap.set("n", "S", require("hop").hint_lines, { desc = "Hop: Hint lines" })
+vim.keymap.set("x", "SS", require("hop").hint_lines, { desc = "Hop: Hint lines" })
+vim.keymap.set("o", "X", require("hop").hint_lines, { desc = "Hop: Hint lines" })
 
-require'hop'.setup({
-    teasing = false
+require("hop").setup({
+    teasing = false,
 })

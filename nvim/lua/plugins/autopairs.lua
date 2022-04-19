@@ -1,30 +1,33 @@
-require('nvim-autopairs').setup {
+require("nvim-autopairs").setup({
     fast_wrap = {
-        chars = {'{', '[', '(', '"', "'", '`'},
-        map = '<M-l>',
+        chars = { "{", "[", "(", '"', "'", "`" },
+        map = "<M-l>",
         keys = "asdfghjklqwertyuiop",
-        pattern = string.gsub([[ [%'%"%)%,>%]%)%}%,%:] ]], '%s+', ''),
+        pattern = string.gsub([[ [%'%"%)%,>%]%)%}%,%:] ]], "%s+", ""),
         check_comma = true,
-        end_key = 'L',
-        highlight = 'HopNextKey',
-        hightlight_grey = 'HopUnmatched'
+        end_key = "L",
+        highlight = "HopNextKey",
+        hightlight_grey = "HopUnmatched",
     },
     check_ts = true,
-    enable_check_bracket_line = false
-}
+    enable_check_bracket_line = false,
+})
 
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-local cmp = require('cmp')
-cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({
-    map_char = {
-        tex = ''
-    }
-}))
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+local cmp = require("cmp")
+cmp.event:on(
+    "confirm_done",
+    cmp_autopairs.on_confirm_done({
+        map_char = {
+            tex = "",
+        },
+    })
+)
 
-function EscapePair()
+local function escape_pair()
     -- vim.fn.searchpos
     -- vim.fn.searchpairpos
-    local closers = {")", "]", "}", ">", "'", '"', "`", ","}
+    local closers = { ")", "]", "}", ">", "'", '"', "`", "," }
     local line = vim.api.nvim_get_current_line()
     local row, col = unpack(vim.api.nvim_win_get_cursor(0))
     local after = line:sub(col + 1, -1)
@@ -38,13 +41,10 @@ function EscapePair()
         end
     end
     if closer_i then
-        vim.api.nvim_win_set_cursor(0, {row, col + closer_col})
+        vim.api.nvim_win_set_cursor(0, { row, col + closer_col })
     else
-        vim.api.nvim_win_set_cursor(0, {row, col + 1})
+        vim.api.nvim_win_set_cursor(0, { row, col + 1 })
     end
 end
 
-vim.api.nvim_set_keymap('i', '<C-l>', '<cmd>lua EscapePair()<CR>', {
-    noremap = true,
-    silent = true
-})
+vim.keymap.set("i", "<C-l>", escape_pair, { desc = "Autpairs: escape pair" })

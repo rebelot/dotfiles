@@ -95,7 +95,7 @@ require("lspconfig.configs").pylance = {
             description = [[
          https://github.com/microsoft/pyright
          `pyright`, a static type checker and language server for python
-         ]]  ,
+         ]],
         },
         -- before_init = function(_, config)
         --     if not config.settings.python then
@@ -164,26 +164,26 @@ return {
             vim.lsp.buf.execute_command(command)
         end
 
-        vim.api.nvim_buf_create_user_command(0, "PythonInterpreter", function(cmd)
+        vim.api.nvim_buf_create_user_command(bufnr, "PythonInterpreter", function(cmd)
             change_python_interpreter(cmd.args)
-        end, { nargs = 1, complete = get_python_interpreters })
+        end, { nargs = 1, complete = get_python_interpreters, desc = "Change python interpreter" })
 
         vim.api.nvim_buf_create_user_command(
-            0,
+            bufnr,
             "PylanceOrganizeImports",
             organize_imports,
             { desc = "Organize Imports" }
         )
 
         vim.api.nvim_buf_create_user_command(
-            0,
+            bufnr,
             "PylanceExtractVariable",
             extract_variable,
             { range = true, desc = "Extract variable" }
         )
 
         vim.api.nvim_buf_create_user_command(
-            0,
+            bufnr,
             "PylanceExtractMethod",
             extract_method,
             { range = true, desc = "Extract methdod" }

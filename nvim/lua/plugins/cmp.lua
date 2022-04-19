@@ -20,10 +20,9 @@ cmp.setup({
     --     return prompt and command_line
     -- end,
     window = {
-        -- completion = cmp.config.window.bordered(),
         documentation = {
             winhighlight = "",
-            border = require'lsp.lsp-config'.borders
+            border = require("lsp.lsp-config").borders,
         },
         -- completion = {
         --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:PmenuSel,Search:None",
@@ -172,6 +171,7 @@ cmp.setup({
     },
     sources = {
         { name = "nvim_lsp_signature_help" },
+        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
@@ -207,6 +207,7 @@ cmp.setup.cmdline(":", {
 cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
     sources = {
         { name = "nvim_lsp_signature_help" },
+        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
@@ -220,6 +221,7 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
 cmp.setup.filetype({ "lua" }, {
     sources = {
         { name = "nvim_lsp_signature_help" },
+        { name = "copilot" },
         { name = "nvim_lua" },
         { name = "nvim_lsp" },
         { name = "ultisnips" },
@@ -229,12 +231,12 @@ cmp.setup.filetype({ "lua" }, {
     },
 })
 
--- vim.api.nvim_create_augroup('CmpRecording', { clear = true })
+-- local rec_au = vim.api.nvim_create_augroup('CmpRecording', { clear = true })
 -- vim.api.nvim_create_autocmd('RecordingEnter', {
---     group = 'CmpRecording',
+--     group = rec_au,
 --     command = [[lua require'cmp'.setup.buffer({ enabled = false })]]
 -- })
 -- vim.api.nvim_create_autocmd('RecordingLeave', {
---     group = 'CmpRecording',
+--     group = rec_au,
 --     command = [[lua require'cmp'.setup.buffer({ enabled = true })]]
 -- })

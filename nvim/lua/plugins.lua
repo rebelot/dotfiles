@@ -139,6 +139,20 @@ return require("packer").startup(function(use)
         end,
     })
 
+    use({
+        "zbirenbaum/copilot.lua",
+        event = { "VimEnter" },
+        config = function()
+            vim.defer_fn(function()
+                require("copilot").setup()
+            end, 100)
+        end,
+    })
+
+    use({
+        "zbirenbaum/copilot-cmp",
+        after = { "copilot.lua", "nvim-cmp" },
+    })
     -- use("github/copilot.vim")
 
     use({
@@ -467,7 +481,7 @@ return require("packer").startup(function(use)
         cmd = { "TagbarToggle" },
         keys = "<F8>",
         config = function()
-            vim.api.nvim_set_keymap("n", "<F8>", "<cmd>TagbarToggle<CR>", { noremap = true })
+            vim.keymap.set("n", "<F8>", "<cmd>TagbarToggle<CR>", { desc = "Tagbar: toggle" })
         end,
     })
 
@@ -476,7 +490,7 @@ return require("packer").startup(function(use)
         cmd = { "MundoToggle" },
         keys = "<leader>mu",
         config = function()
-            vim.api.nvim_set_keymap("n", "<leader>mu", "<cmd>MundoToggle<CR>", { noremap = true })
+            vim.keymap.set("n", "<leader>mu", "<cmd>MundoToggle<CR>", { desc = "Mundo: toggle" })
         end,
     })
 
@@ -499,15 +513,15 @@ return require("packer").startup(function(use)
     use({
         "numToStr/FTerm.nvim",
         config = function()
-            require'FTerm'.setup({
-                border = require'lsp.lsp-config'.borders,
+            require("FTerm").setup({
+                border = require("lsp.lsp-config").borders,
             })
 
-            vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>lua require'FTerm'.toggle()<CR>", { noremap = true })
+            vim.keymap.set("n", "<leader>tt", require("FTerm").toggle, { desc = "FTerm: toggle" })
 
             vim.api.nvim_create_user_command("FTermRun", function(cmd)
                 require("FTerm").run(vim.fn.expandcmd(cmd.args))
-            end, { nargs = "*", complete = "shellcmd" })
+            end, { nargs = "*", complete = "shellcmd", desc = "FTerm: run command" })
 
             local lazygit = require("FTerm"):new({
                 ft = "fterm_lazygit", -- You can also override the default filetype, if you want
@@ -518,14 +532,16 @@ return require("packer").startup(function(use)
                 },
             })
 
-            vim.cmd[[let $GIT_EDITOR = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"]]
+            vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
             vim.api.nvim_create_user_command("LazyGit", function(cmd)
                 lazygit:toggle()
-            end, {})
+            end, { desc = "FTerm: Lazygit toggle" })
 
-            vim.api.nvim_set_keymap("n", "<leader>tr", ":FTermRun ", { noremap = true })
-            -- vim.cmd[[au FileType fterm setl winhl=Normal:NormalFloat]]
-            vim.api.nvim_create_autocmd("FileType", {pattern = 'fterm*', group = 'MyAutoCommands', command = "set winhl=Normal:NormalFloat"})
+            vim.keymap.set("n", "<leader>tr", ":FTermRun ", { desc = "FTerm: run command" })
+            vim.api.nvim_create_autocmd(
+                "FileType",
+                { pattern = "fterm*", group = "MyAutoCommands", command = "set winhl=Normal:NormalFloat" }
+            )
         end,
     })
 
@@ -671,8 +687,8 @@ return require("packer").startup(function(use)
                 call VimuxRunCommand(@v, 0)
             endfunction
             ]])
-            vim.api.nvim_set_keymap("x", "<leader>vs", '"vy :call VimuxSlime()<CR>', { noremap = true })
-            vim.api.nvim_set_keymap("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { noremap = true })
+            vim.keymap.set("x", "<leader>vs", '"vy :call VimuxSlime()<CR>', { desc = "Vimux: send selection" })
+            vim.keymap.set("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { desc = "Vimux: prompt command" })
         end,
     })
 

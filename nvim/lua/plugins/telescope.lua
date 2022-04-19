@@ -3,7 +3,7 @@ local action_state = require("telescope.actions.state")
 local previewers = require("telescope.previewers")
 local themes = require("telescope.themes")
 local trouble = require("trouble.providers.telescope")
-local transform_mod = require('telescope.actions.mt').transform_mod
+local transform_mod = require("telescope.actions.mt").transform_mod
 
 -- local custom_actions = {}
 
@@ -18,28 +18,23 @@ local function multiopen(prompt_bufnr, open_cmd)
         vim.cmd(string.format("%s %s", open_cmd, action_state.get_selected_entry().value))
     end
     vim.cmd("stopinsert")
-    vim.o.winhighlight = ''
+    vim.o.winhighlight = ""
 end
 
 local custom_actions = transform_mod({
-    multi_selection_open_vsplit = function(prompt_bufnr) multiopen(prompt_bufnr, ":vsplit") end,
-    multi_selection_open_split = function(prompt_bufnr) multiopen(prompt_bufnr, ":split") end,
-    multi_selection_open_tab =  function(prompt_bufnr) multiopen(prompt_bufnr, ":tabe") end,
-    multi_selection_open = function(prompt_bufnr) multiopen(prompt_bufnr, ":edit") end,
+    multi_selection_open_vsplit = function(prompt_bufnr)
+        multiopen(prompt_bufnr, ":vsplit")
+    end,
+    multi_selection_open_split = function(prompt_bufnr)
+        multiopen(prompt_bufnr, ":split")
+    end,
+    multi_selection_open_tab = function(prompt_bufnr)
+        multiopen(prompt_bufnr, ":tabe")
+    end,
+    multi_selection_open = function(prompt_bufnr)
+        multiopen(prompt_bufnr, ":edit")
+    end,
 })
-
--- function custom_actions.multi_selection_open_vsplit(prompt_bufnr)
---     multiopen(prompt_bufnr, ":vsplit")
--- end
--- function custom_actions.multi_selection_open_split(prompt_bufnr)
---     multiopen(prompt_bufnr, ":split")
--- end
--- function custom_actions.multi_selection_open_tab(prompt_bufnr)
---     multiopen(prompt_bufnr, ":tabe")
--- end
--- function custom_actions.multi_selection_open(prompt_bufnr)
---     multiopen(prompt_bufnr, ":edit")
--- end
 
 require("telescope").setup({
     defaults = {
@@ -156,6 +151,7 @@ require("telescope").setup({
                 },
             },
         },
+        spell_suggest = themes.get_cursor(),
         lsp_code_actions = themes.get_cursor(),
         lsp_range_code_actions = themes.get_cursor(),
         lsp_references = {
@@ -197,30 +193,25 @@ require("telescope").setup({
     },
 })
 
-local copts = { noremap = true }
-vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>Telescope find_files<CR>", copts)
--- vim.api.nvim_set_keymap("n", "<leader>fF", ":Telescope find_files cwd=", {noremap=true})
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>f.",
-    "<cmd>lua require'telescope'.extensions.file_browser.file_browser()<CR>",
-    copts
-)
-vim.api.nvim_set_keymap("n", "<leader>fl", "<cmd>Telescope current_buffer_fuzzy_find<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fh", "<cmd>Telescope oldfiles<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fr", "<cmd>Telescope frecency<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd>Telescope buffers<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader><space>", "<cmd>Telescope commands<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>ft", "<cmd>Telescope treesitter<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fj", "<cmd>Telescope jumplist<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>T", "<cmd>Telescope<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>z", "<cmd>Telescope spell_suggest<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>fm", "<cmd>Telescope marks<CR>", copts)
-vim.api.nvim_set_keymap("n", '<leader>t"', "<cmd>Telescope registers<CR>", copts)
+vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, {desc = "Telescope: Find files"})
+vim.keymap.set("n", "<leader>f.", require("telescope").extensions.file_browser.file_browser, {desc = "Telescope: File browser"})
+vim.keymap.set("n", "<leader>fl", require("telescope.builtin").current_buffer_fuzzy_find, {desc = "Telescope: Find current buffer"})
+vim.keymap.set("n", "<leader>fq", require("telescope.builtin").quickfix, {desc = "Telescope: Quickfix"})
+vim.keymap.set("n", "<leader>fh", require("telescope.builtin").oldfiles, {desc = "Telescope: Old files"})
+vim.keymap.set("n", "<leader>fr", require("telescope").extensions.frecency.frecency, {desc = "Telescope: Frecency"})
+vim.keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, {desc = "Telescope: Buffers"})
+vim.keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, {desc = "Telescope: Live Grep"})
+vim.keymap.set("n", "<leader><space>", require("telescope.builtin").commands, {desc = "Telescope: Commands"})
+vim.keymap.set("n", "<leader>ft", require("telescope.builtin").treesitter, {desc = "Telescope: Treesitter"})
+vim.keymap.set("n", "<leader>fj", require("telescope.builtin").jumplist, {desc = "Telescope: Jump list"})
+vim.keymap.set("n", "<leader>T", function()
+    require("telescope.builtin").builtin({ include_extensions = true })
+end, {desc = "Telescope: List pickers"})
+vim.keymap.set("n", "<leader>z", require("telescope.builtin").spell_suggest, {desc = "Telescope: Spell suggestions"})
+vim.keymap.set("n", "<leader>fm", require("telescope.builtin").marks, {desc = "Telescope: Marks"})
+vim.keymap.set("n", '<leader>t"', require("telescope.builtin").registers, {desc = "Telescope: Registers"})
 
-vim.cmd([[ command! -nargs=1 -complete=dir FindFiles Telescope find_files cwd=<args>]])
-vim.api.nvim_set_keymap("n", "<leader>fF", ":FindFiles ", copts)
--- nnoremap <leader>tr :Telescope lsp_references<CR>
--- nnoremap <leader>ts :Telescope lsp_document_symbols<CR>
+vim.api.nvim_create_user_command('FindFiles', function(args)
+    require'telescope.builtin'.find_files({cwd = args.args})
+end, {nargs = "?", complete = 'dir', desc = "Telescope: Find files"})
+vim.keymap.set("n", "<leader>fF", ":FindFiles ", {desc = "Telescope: Find files (directory)"})
