@@ -36,12 +36,12 @@ local on_attach = function(client, bufnr)
     -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
     -- vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation, opts)
     -- vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, opts)
-    vim.keymap.set(
-        "x",
-        "<leader>la",
-        vim.lsp.buf.range_code_action,
-        { unpack(opts), desc = "List LSP Code Actions for selected range." }
-    )
+    -- vim.keymap.set(
+    --     "x",
+    --     "<leader>la",
+    --     vim.lsp.buf.range_code_action,
+    --     { unpack(opts), desc = "List LSP Code Actions for selected range." }
+    -- )
     -- vim.keymap.set('n', '<leader>ls', vim.lsp.buf.document_symbol, opts)
     -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     -- vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, opts)
@@ -82,7 +82,17 @@ local on_attach = function(client, bufnr)
         require("telescope.builtin").lsp_code_actions,
         { unpack(opts), desc = "List LSP Code Actions" }
     )
-    -- vim.keymap.set("x", "<leader>la", require("telescope.builtin").lsp_range_code_actions, opts)
+    vim.keymap.set(
+        "x",
+        "<leader>la",
+        [[:<C-U>lua require("telescope.builtin").lsp_code_actions({ params = vim.lsp.util.make_given_range_params() })<CR>]],
+        -- function()
+        --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, false, true), "n", false)
+        --     local params = vim.lsp.util.make_given_range_params()
+        --     require("telescope.builtin").lsp_code_actions({ params = params })
+        -- end,
+        { unpack(opts), desc = "List LSP Code Actions for selected range" }
+    )
     vim.keymap.set(
         "n",
         "<leader>ls",
