@@ -23,33 +23,10 @@ require("plugins")
 
 --
 vim.opt.laststatus = 3
-require("kanagawa").setup({
-    dimInactive = true,
-    globalStatus = true
-})
-vim.cmd("colorscheme kanagawa")
-require("colors").overrides()
-
--- function _G.filebuftypes_au(filebuftypes)
---     local bt = vim.bo.buftype
---     local ft = vim.bo.filetype
---     if vim.tbl_contains(filebuftypes.filetypes, ft) or vim.tbl_contains(filebuftypes.buftypes, bt) then
---         vim.cmd([[set winhighlight=Normal:NormalFloat]])
---     end
--- end
---
--- vim.cmd([[
--- augroup FileTypeHighlight
---   autocmd!
---   au FileType git*,dap*,vista_kind,tagbar,fugitive set winhighlight=Normal:NormalFloat
--- augroup END
--- ]])
+require("colors").kanagawa()
 
 -- general configurations
 require("options")
-
--- Diagnostics
-require("diagnostics")
 
 -- Functions, Commands, Autocommands
 vim.cmd("source ~/.config/nvim/viml/commands.vim")
@@ -57,3 +34,9 @@ vim.cmd("source ~/.config/nvim/viml/autocommands.vim")
 
 -- Mappings
 vim.cmd("source ~/.config/nvim/viml/mappings.vim")
+
+-- Diagnostics
+require("diagnostics")
+
+-- UI
+require("win_ui_input")

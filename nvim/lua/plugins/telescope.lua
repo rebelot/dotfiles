@@ -1,4 +1,5 @@
 local actions = require("telescope.actions")
+local actions_layout = require("telescope.actions.layout")
 local action_state = require("telescope.actions.state")
 local previewers = require("telescope.previewers")
 local themes = require("telescope.themes")
@@ -62,11 +63,25 @@ local function on_execute_action(action, offset_encoding)
     end
 end
 
+local multi_open_mappings = {
+    i = {
+        ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
+        ["<C-s>"] = custom_actions.multi_selection_open_split,
+        ["<C-t>"] = custom_actions.multi_selection_open_tab,
+    },
+    n = {
+        ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
+        ["<C-s>"] = custom_actions.multi_selection_open_split,
+        ["<C-t>"] = custom_actions.multi_selection_open_tab,
+    },
+}
+
 require("telescope").setup({
     defaults = {
         -- dynamic_preview_title = true,
         -- borderchars = { "▔", "▕", "▁", "▏", "🭽", "🭾", "🭿", "🭼" },
         layout_strategy = "flex",
+        cycle_layout_list = {"horizontal", "vertical" },
         layout_config = {
             vertical = {
                 preview_height = 0.5,
@@ -91,20 +106,13 @@ require("telescope").setup({
         -- file_previewer = previewers.cat.new,
         -- grep_previewer = previewers.vim_buffer_vimgrep.new,
         -- qflist_previewer = previewers.qflist.new,
-        history = {
-            mappings = {
-                i = {
-                    ["<C-Down>"] = actions.cycle_history_next,
-                    ["<C-Up>"] = actions.cycle_history_prev,
-                },
-            },
-        },
+        -- history = {},
         mappings = {
             i = {
                 ["<C-j>"] = actions.move_selection_next,
                 ["<C-k>"] = actions.move_selection_previous,
-                ["<Tab>"] = actions.move_selection_previous,
-                ["<S-Tab>"] = actions.move_selection_next,
+                ["<Tab>"] = actions.move_selection_next,
+                ["<S-Tab>"] = actions.move_selection_previous,
                 ["<C-z>"] = actions.toggle_selection,
                 ["<C-s>"] = actions.select_horizontal,
                 ["<C-x>"] = trouble.smart_open_with_trouble,
@@ -115,6 +123,9 @@ require("telescope").setup({
                 ["<M-a>"] = actions.toggle_all,
                 ["<C-Down>"] = actions.cycle_history_next,
                 ["<C-Up>"] = actions.cycle_history_prev,
+                ["<M-right>"] = actions_layout.cycle_layout_next,
+                ["<M-left>"] = actions_layout.cycle_layout_prev,
+                ["<C-o>"] = actions_layout.toggle_preview
             },
             n = {
                 ["<C-z>"] = actions.toggle_selection,
@@ -127,55 +138,23 @@ require("telescope").setup({
                 end,
                 ["<C-Down>"] = actions.cycle_history_next,
                 ["<C-Up>"] = actions.cycle_history_prev,
+                ["<M-right>"] = actions_layout.cycle_layout_next,
+                ["<M-left>"] = actions_layout.cycle_layout_prev,
+                ["<C-o>"] = actions_layout.toggle_preview
             },
         },
     },
     pickers = {
         oldfiles = {
-            mappings = {
-                i = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-                n = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-            },
+            mappings = multi_open_mappings,
         },
         find_files = {
             follow = true,
-            mappings = {
-                i = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-                n = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-            },
+            mappings = multi_open_mappings,
         },
         buffers = {
             sort_mru = true,
-            mappings = {
-                i = {
-                    ["<C-r>"] = actions.delete_buffer,
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-                n = {
-                    ["<C-r>"] = actions.delete_buffer,
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-            },
+            mappings = multi_open_mappings,
         },
         spell_suggest = themes.get_cursor(),
         lsp_code_actions = themes.get_cursor({
@@ -185,40 +164,29 @@ require("telescope").setup({
             execute_action = on_execute_action,
         }),
         lsp_references = {
-            timeout = 100000,
+            timeout = 10000,
         },
         lsp_definitions = {
-            timeout = 100000,
+            timeout = 10000,
         },
         lsp_type_definitions = {
-            timeout = 100000,
+            timeout = 10000,
         },
         lsp_implementations = {
-            timeout = 100000,
+            timeout = 10000,
         },
         lsp_workspace_symbols = {
-            timeout = 100000,
+            timeout = 10000,
         },
         lsp_dynamic_workspace_symbols = {
-            timeout = 100000,
+            timeout = 10000,
         },
     },
     extension = {
         file_browser = {
             hidden = true,
             depth = 2,
-            mappings = {
-                i = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-                n = {
-                    ["<C-v>"] = custom_actions.multi_selection_open_vsplit,
-                    ["<C-s>"] = custom_actions.multi_selection_open_split,
-                    ["<C-t>"] = custom_actions.multi_selection_open_tab,
-                },
-            },
+            mappings = multi_open_mappings,
         },
     },
 })

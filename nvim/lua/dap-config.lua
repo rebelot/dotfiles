@@ -7,7 +7,7 @@ vim.fn.sign_define("DapBreakpointRejected", { text = " ", texthl = "Diagnosti
 vim.fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "" })
 
-vim.cmd([[au FileType dap-repl lua require('dap.ext.autocompl').attach()]])
+-- vim.cmd([[au FileType dap-repl lua require('dap.ext.autocompl').attach()]])
 -- vim.cmd([[command! DapClose lua require'dap'.terminate(); require'dapui'.close(); vim.cmd("bd! \\[dap-repl]") ]])
 
 -- mappings

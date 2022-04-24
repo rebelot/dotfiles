@@ -85,15 +85,21 @@ function M.catppuccin()
     vim.cmd('colorscheme catppuccin')
 end
 
+function M.kanagawa()
+    require("kanagawa").setup({
+        dimInactive = false,
+        globalStatus = true,
+        overrides = {
+            TroubleText = { fg = 'fg', bg = 'none' },
+        },
+        theme = 'default',
+        -- theme = 'light'
+    })
+    vim.cmd("colorscheme kanagawa")
+end
+
 -- tokyonight()
 -- gruvbox()
-function M.overrides()
-
-    vim.fn.sign_define('DiagnosticSignError', { text = "" , texthl= 'DiagnosticSignError'})
-    vim.fn.sign_define('DiagnosticSignWarn', { text = "", texthl= 'DiagnosticSignWarn'})
-    vim.fn.sign_define('DiagnosticSignInfo', { text = "", texthl= 'DiagnosticSignInfo'})
-    vim.fn.sign_define('DiagnosticSignHint', { text = "" , texthl= 'DiagnosticSignHint'})
-
-end
+-- kanagawa()
 
 return M

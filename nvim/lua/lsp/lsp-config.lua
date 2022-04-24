@@ -111,20 +111,16 @@ local on_attach = function(client, bufnr)
     vim.keymap.set(
         "n",
         "<leader>lwa",
-        require("lsp.utilities").addWsFolder,
+        vim.lsp.buf.add_workspace_folder,
         { unpack(opts), desc = "Add LSP workspace folder" }
     )
     vim.keymap.set(
         "n",
         "<leader>lwr",
-        require("lsp.utilities").removeWsFolder,
+        vim.lsp.buf.remove_workspace_folder,
         { unpack(opts), desc = "Remove LSP workspace folder" }
     )
     vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { unpack(opts), desc = "LSP rename" })
-    vim.keymap.set("n", "<leader>ld", function()
-        vim.diagnostic.open_float(nil, { scope = "line", border = borders })
-    end, { unpack(opts), desc = "Show line diagnostics" })
-    vim.keymap.set("n", "<leader>lq", vim.diagnostic.setqflist, { unpack(opts), desc = "Send diagnostics to quickfix" })
     vim.keymap.set("n", "K", vim.lsp.buf.hover, { unpack(opts), desc = "LSP Hover" })
     vim.keymap.set(
         { "n", "i" },
@@ -132,8 +128,6 @@ local on_attach = function(client, bufnr)
         vim.lsp.buf.signature_help,
         { unpack(opts), desc = "Show LSP signature help" }
     )
-    vim.keymap.set("n", "[d", vim.lsp.diagnostic.goto_prev, { unpack(opts), desc = "Go to previous diagnostic" })
-    vim.keymap.set("n", "]d", vim.lsp.diagnostic.goto_next, { unpack(opts), desc = "Go to next diagnostic" })
     -- buf_set_keymap('n', '<leader>lg', peek_definition, opts) -- treesitter does it better atm
 
     if client.resolved_capabilities.document_formatting then
@@ -156,18 +150,6 @@ local on_attach = function(client, bufnr)
             { range = true, desc = "LSP range format" }
         )
     end
-
-    local lsp_diag_au_id = vim.api.nvim_create_augroup("LSP_diagnostics", { clear = true })
-    vim.api.nvim_create_autocmd("CursorHold", {
-        callback = require("lsp.utilities").echo_cursor_diagnostic,
-        group = lsp_diag_au_id,
-        buffer = bufnr,
-        desc = "Echo cursor diagnostics",
-    })
-    vim.api.nvim_create_autocmd(
-        "CursorMoved",
-        { command = 'echo ""', group = lsp_diag_au_id, buffer = bufnr, desc = "Clear cursor diagnostics" }
-    )
 
     -- if client.resolved_capabilities.signature_help then
     --     local lsp_signature_help_au_id = vim.api.nvim_create_augroup("LSP_signature_help", { clear = true })
