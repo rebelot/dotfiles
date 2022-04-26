@@ -125,6 +125,9 @@ nnoremap <leader>cC :cexpr []<CR>
 " nnoremap <leader>lc :lclose<CR>
 nnoremap <leader>lC :lexpr []<CR>
 
+" Tab / S-Tab as <C-I> / <C-O>
+nnoremap <S-Tab> <C-o>
+
 " Text Formatting
 nnoremap <leader>gq vipgq
 
