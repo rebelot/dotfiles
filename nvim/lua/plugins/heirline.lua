@@ -103,7 +103,7 @@ function M.setup()
         -- Same goes for the highlight. Now the foreground will change according to the current mode.
         hl = function(self)
             local mode = self.mode:sub(1, 1) -- get only the first mode character
-            return { fg = self.mode_colors[mode], style = "bold" }
+            return { fg = self.mode_colors[mode], bold = true }
         end,
     }
 
@@ -179,7 +179,7 @@ function M.setup()
         hl = function()
             if vim.bo.modified then
                 -- use `force` because we need to override the child's hl foreground
-                return { fg = colors.cyan, style = "bold", force = true }
+                return { fg = colors.cyan, bold = true, force = true }
             end
         end,
     }
@@ -271,7 +271,7 @@ function M.setup()
         --     end
         --     return " [" .. table.concat(names, " ") .. "]"
         -- end,
-        hl = { fg = colors.green, style = "bold" },
+        hl = { fg = colors.green, bold = true },
     }
 
     -- local LSPMessages = {
@@ -310,7 +310,7 @@ function M.setup()
 
         -- {
         --     provider = "!(",
-        --     hl = { fg = colors.gray, style = "bold" },
+        --     hl = { fg = colors.gray, bold = true },
         -- },
         {
             provider = function(self)
@@ -338,7 +338,7 @@ function M.setup()
         },
         -- {
         --     provider = ")",
-        --     hl = { fg = colors.gray, style = "bold" },
+        --     hl = { fg = colors.gray, bold = true },
         -- },
     }
 
@@ -361,7 +361,7 @@ function M.setup()
             provider = function(self)
                 return " " .. self.status_dict.head
             end,
-            hl = { style = "bold" },
+            hl = { bold = true },
         },
         {
             condition = function(self)
@@ -408,7 +408,7 @@ function M.setup()
             local backward = (vim.fn["UltiSnips#CanJumpBackwards"]() == 1) and " " or ""
             return backward .. forward
         end,
-        hl = { fg = colors.red, syle = "bold" },
+        hl = { fg = colors.red, bold = true },
     }
 
     local DAPMessages = {
@@ -474,7 +474,7 @@ function M.setup()
                 self.cwd = vim.fn.pathshorten(self.cwd)
             end
         end,
-        hl = { fg = colors.blue, style = "bold" },
+        hl = { fg = colors.blue, bold = true },
 
         utils.make_flexible_component(1, {
             provider = function(self)
@@ -513,7 +513,7 @@ function M.setup()
                 local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
                 return " " .. tname
             end,
-            hl = { fg = colors.blue, style = "bold" },
+            hl = { fg = colors.blue,  bold = true },
         },
         { provider = " - " },
         {
@@ -528,7 +528,7 @@ function M.setup()
             return vim.wo.spell
         end,
         provider = "SPELL ",
-        hl = { style = "bold", fg = colors.orange },
+        hl = { bold = true, fg = colors.orange },
     }
 
     ViMode = utils.surround({ "", "" }, colors.bright_bg, { ViMode, Snippets })

@@ -40,3 +40,6 @@ require("diagnostics")
 
 -- UI
 require("win_ui_input")
+
+-- Other
+require("grep")

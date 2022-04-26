@@ -79,13 +79,15 @@ local on_attach = function(client, bufnr)
     vim.keymap.set(
         "n",
         "<leader>la",
-        require("telescope.builtin").lsp_code_actions,
+        -- require("telescope.builtin").lsp_code_actions,
+        vim.lsp.buf.code_action,
         { unpack(opts), desc = "List LSP Code Actions" }
     )
     vim.keymap.set(
         "x",
         "<leader>la",
-        [[:<C-U>lua require("telescope.builtin").lsp_code_actions({ params = vim.lsp.util.make_given_range_params() })<CR>]],
+        vim.lsp.buf.range_code_action,
+        -- [[:<C-U>lua require("telescope.builtin").lsp_code_actions({ params = vim.lsp.util.make_given_range_params() })<CR>]],
         -- function()
         --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, false, true), "n", false)
         --     local params = vim.lsp.util.make_given_range_params()

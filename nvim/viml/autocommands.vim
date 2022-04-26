@@ -23,7 +23,7 @@ augroup MyAutoCommands
   " autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
   
   " Set SpellCheck
-  autocmd FileType latex,tex,markdown,txt setlocal spell
+  " autocmd FileType latex,tex,markdown,txt setlocal spell
 
   " Line Wrapping
   " autocmd FileType latex,tex,markdown,txt,text setlocal wrap 

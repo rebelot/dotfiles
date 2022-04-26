@@ -285,6 +285,7 @@ return require("packer").startup(function(use)
 
     use({
         "nvim-telescope/telescope-file-browser.nvim",
+        after = "telescope.nvim",
         config = function()
             require("telescope").load_extension("file_browser")
         end,
@@ -319,6 +320,14 @@ return require("packer").startup(function(use)
         "tami5/sqlite.lua",
         config = function()
             vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
+        end,
+    })
+
+    use({
+        "nvim-telescope/telescope-ui-select.nvim",
+        after = "telescope.nvim",
+        config = function()
+            require("telescope").load_extension("ui-select")
         end,
     })
 

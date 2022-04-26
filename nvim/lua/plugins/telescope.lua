@@ -81,7 +81,7 @@ require("telescope").setup({
         -- dynamic_preview_title = true,
         -- borderchars = { "▔", "▕", "▁", "▏", "🭽", "🭾", "🭿", "🭼" },
         layout_strategy = "flex",
-        cycle_layout_list = {"horizontal", "vertical" },
+        cycle_layout_list = { "horizontal", "vertical" },
         layout_config = {
             vertical = {
                 preview_height = 0.5,
@@ -125,7 +125,7 @@ require("telescope").setup({
                 ["<C-Up>"] = actions.cycle_history_prev,
                 ["<M-right>"] = actions_layout.cycle_layout_next,
                 ["<M-left>"] = actions_layout.cycle_layout_prev,
-                ["<C-o>"] = actions_layout.toggle_preview
+                ["<C-o>"] = actions_layout.toggle_preview,
             },
             n = {
                 ["<C-z>"] = actions.toggle_selection,
@@ -140,7 +140,7 @@ require("telescope").setup({
                 ["<C-Up>"] = actions.cycle_history_prev,
                 ["<M-right>"] = actions_layout.cycle_layout_next,
                 ["<M-left>"] = actions_layout.cycle_layout_prev,
-                ["<C-o>"] = actions_layout.toggle_preview
+                ["<C-o>"] = actions_layout.toggle_preview,
             },
         },
     },
@@ -157,12 +157,6 @@ require("telescope").setup({
             mappings = multi_open_mappings,
         },
         spell_suggest = themes.get_cursor(),
-        lsp_code_actions = themes.get_cursor({
-            execute_action = on_execute_action,
-        }),
-        lsp_range_code_actions = themes.get_cursor({
-            execute_action = on_execute_action,
-        }),
         lsp_references = {
             timeout = 10000,
         },
@@ -182,12 +176,13 @@ require("telescope").setup({
             timeout = 10000,
         },
     },
-    extension = {
+    extensions = {
         file_browser = {
             hidden = true,
-            depth = 2,
+            depth = 3,
             mappings = multi_open_mappings,
         },
+        ["ui-select"] = themes.get_dropdown()
     },
 })
 

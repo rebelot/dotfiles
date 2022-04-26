@@ -50,19 +50,15 @@ require("nvim-tree").setup({
     hijack_netrw = true,
     open_on_setup = false,
     ignore_ft_on_setup = {},
-    auto_close = false,
     open_on_tab = false,
-    hijack_cursor = false,
+    hijack_cursor = true,
     update_cwd = true,
-    hide_dotfiles = false,
-    -- ignore  = {".git", "node_modules", ".cache"},
-    diagnostics = { enable = false },
-    git = { enabled = true, ignore = true },
-
-    update_to_buf_dir = {
-        enable = true,
-        auto_open = true,
+    filters = {
+        dotfiles = false,
     },
+    diagnostics = { enable = false },
+    git = { enable = true, ignore = true },
+
     update_focused_file = {
         enable = true,
         update_cwd = false,
