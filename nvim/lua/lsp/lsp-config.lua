@@ -30,18 +30,12 @@ capabilities.textDocument.completion.completionItem.workDoneProgress = true
 
 local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+    -- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     -- mappings
     local opts = { noremap = true, silent = true, buffer = bufnr }
     -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
     -- vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation, opts)
-    -- vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, opts)
-    -- vim.keymap.set(
-    --     "x",
-    --     "<leader>la",
-    --     vim.lsp.buf.range_code_action,
-    --     { unpack(opts), desc = "List LSP Code Actions for selected range." }
-    -- )
     -- vim.keymap.set('n', '<leader>ls', vim.lsp.buf.document_symbol, opts)
     -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     -- vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, opts)
@@ -86,13 +80,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set(
         "x",
         "<leader>la",
-        vim.lsp.buf.range_code_action,
-        -- [[:<C-U>lua require("telescope.builtin").lsp_code_actions({ params = vim.lsp.util.make_given_range_params() })<CR>]],
-        -- function()
-        --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, false, true), "n", false)
-        --     local params = vim.lsp.util.make_given_range_params()
-        --     require("telescope.builtin").lsp_code_actions({ params = params })
-        -- end,
+        ":<C-u>lua vim.lsp.buf.range_code_action()<cr>", --https://github.com/neovim/neovim/issues/18340
         { unpack(opts), desc = "List LSP Code Actions for selected range" }
     )
     vim.keymap.set(
@@ -132,28 +120,28 @@ local on_attach = function(client, bufnr)
     )
     -- buf_set_keymap('n', '<leader>lg', peek_definition, opts) -- treesitter does it better atm
 
-    if client.resolved_capabilities.document_formatting then
-        vim.keymap.set("n", "<leader>lf", vim.lsp.buf.formatting_seq_sync, { unpack(opts), desc = "LSP format" })
+    if client.server_capabilities.documentFormattingProvider then
+        vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP format" })
         vim.api.nvim_buf_create_user_command(
             bufnr,
             "LspFormat",
-            vim.lsp.buf.formatting_seq_sync,
-            { desc = "LSP format" }
+            vim.lsp.buf.format,
+            { range = false, desc = "LSP format" }
         )
     end
 
-    if client.resolved_capabilities.document_range_formatting then
+    if client.server_capabilities.documentRangeFormattingProvider then
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
         vim.keymap.set("x", "<leader>lf", vim.lsp.buf.range_formatting, { unpack(opts), desc = "LSP range format" })
         vim.api.nvim_buf_create_user_command(
             bufnr,
             "LspRangeFormat",
-            vim.lsp.buf.formatting_seq_sync,
+            vim.lsp.buf.range_formatting,
             { range = true, desc = "LSP range format" }
         )
     end
 
-    -- if client.resolved_capabilities.signature_help then
+    -- if client.server_capabilities.signatureHelpProvider then
     --     local lsp_signature_help_au_id = vim.api.nvim_create_augroup("LSP_signature_help", { clear = true })
     --     vim.api.nvim_create_autocmd(
     --         { "CursorHoldI" },
@@ -161,7 +149,7 @@ local on_attach = function(client, bufnr)
     --     )
     -- end
 
-    if client.resolved_capabilities.document_highlight then
+    if client.server_capabilities.documentHighlightProvider then
         local lsp_references_au_id = vim.api.nvim_create_augroup("LSP_references", { clear = true })
         vim.api.nvim_create_autocmd("CursorHold", {
             callback = vim.lsp.buf.document_highlight,
@@ -207,6 +195,7 @@ local servers = {
     "vimls",
     "bashls",
     "julials",
+    "tsserver"
 }
 
 for _, server in ipairs(servers) do

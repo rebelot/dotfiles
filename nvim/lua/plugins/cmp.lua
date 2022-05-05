@@ -140,7 +140,6 @@ cmp.setup({
         }),
     },
     experimental = {
-        -- native_menu = false,
         ghost_text = true,
     },
 
@@ -177,8 +176,6 @@ cmp.setup({
         { name = "path" },
         { name = "buffer" },
         { name = "tmux", option = { all_panes = true } },
-        -- { name = "latex_symbols" },
-        -- { name = "dictionary", keyword_length = 2 },
     },
 })
 
@@ -196,15 +193,22 @@ cmp.setup.cmdline("/", {
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(":", {
     completion = { autocomplete = false },
-    sources = {
-        -- { name = 'cmdline_history', max_item_count = 2 },
-        { name = "cmdline" },
-        { name = "nvim_lua" },
+    sources = cmp.config.sources({
         { name = "path" },
-    },
+    }, {
+        { name = "nvim_lua" },
+    }, {
+        { name = "cmdline" },
+    }),
+    -- sources = {
+    --     -- { name = 'cmdline_history', max_item_count = 2 },
+    --     { name = "cmdline" },
+    --     { name = "nvim_lua" },
+    --     { name = "path" },
+    -- },
 })
 
-cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
+cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
     sources = {
         { name = "nvim_lsp_signature_help" },
         { name = "copilot" },
@@ -212,7 +216,7 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "latex" }, {
         { name = "ultisnips" },
         { name = "path" },
         { name = "buffer" },
-        { name = "dictionary", keyword_length = 2 },
+        -- { name = "dictionary", keyword_length = 2 },
         { name = "latex_symbols" },
         { name = "tmux", option = { all_panes = true } },
     },

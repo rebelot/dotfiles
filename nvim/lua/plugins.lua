@@ -109,16 +109,17 @@ return require("packer").startup(function(use)
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lsp-signature-help",
             "hrsh7th/cmp-nvim-lsp-document-symbol",
-            {
-                "uga-rosa/cmp-dictionary",
-                config = function()
-                    require("cmp_dictionary").setup({
-                        dic = {
-                            ["*"] = "/usr/share/dict/words",
-                        },
-                    })
-                end,
-            },
+            -- {
+            --     "uga-rosa/cmp-dictionary",
+            --     ft = { 'markdown' },
+            --     config = function()
+            --         require("cmp_dictionary").setup({
+            --             dic = {
+            --                 ["*"] = "/usr/share/dict/words",
+            --             },
+            --         })
+            --     end,
+            -- },
             "kdheepak/cmp-latex-symbols",
             "dmitmel/cmp-cmdline-history",
             "andersevenrud/cmp-tmux",
@@ -134,7 +135,7 @@ return require("packer").startup(function(use)
             vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
             vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
             vim.g.UltiSnipsJumpBackwardTrigger = "<Plug>(ultisnips_jump_backward)"
-            vim.g.UltiSnipsListSnippets = "<c-x><c-s>"
+            vim.g.UltiSnipsListSnippets = "<Plug>(utlisnips_list_snippets)"
             vim.g.UltiSnipsRemoveSelectModeMappings = 0
         end,
     })
@@ -145,7 +146,7 @@ return require("packer").startup(function(use)
         config = function()
             vim.defer_fn(function()
                 require("copilot").setup()
-            end, 100)
+            end, 1000)
         end,
     })
 
@@ -153,7 +154,6 @@ return require("packer").startup(function(use)
         "zbirenbaum/copilot-cmp",
         after = { "copilot.lua", "nvim-cmp" },
     })
-    -- use("github/copilot.vim")
 
     use({
         "folke/trouble.nvim",
@@ -208,16 +208,6 @@ return require("packer").startup(function(use)
         "chrisbra/csv.vim",
         cmd = "CSVInit",
     })
-
-    -- use({
-    --     "vim-python/python-syntax",
-    --     ft = "python",
-    --     config = function()
-    --         vim.g.python_highlight_all = 1
-    --         vim.g.python_highlight_file_headers_as_comments = 1
-    --         vim.g.python_highlight_space_errors = 0
-    --     end,
-    -- })
 
     use({
         "tmhedberg/SimpylFold",
@@ -372,20 +362,9 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use({ "junegunn/goyo.vim" })
-    --
-    -- use({ "junegunn/limelight.vim" })
-
     --------------------------
     -- Editor Utilities, UI --
     --------------------------
-
-    -- use({
-    --     "w0rp/ale",
-    --     config = function()
-    --         require("plugins.ale")
-    --     end,
-    -- })
 
     use({
         "mfussenegger/nvim-dap",
@@ -503,13 +482,6 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use({
-    --     "junegunn/vim-peekaboo",
-    --     config = function()
-    --         vim.g.peekaboo_compact = 0
-    --         vim.g.peekaboo_window = "vert bo 30 new"
-    --     end,
-    -- })
     -- use 'kassio/neoterm'
     -- use({ "voldikss/vim-floaterm",
     --     config = function()
@@ -533,7 +505,7 @@ return require("packer").startup(function(use)
             end, { nargs = "*", complete = "shellcmd", desc = "FTerm: run command" })
 
             local lazygit = require("FTerm"):new({
-                ft = "fterm_lazygit", -- You can also override the default filetype, if you want
+                ft = "fterm_lazygit",
                 cmd = "lazygit",
                 dimensions = {
                     height = 0.95,
@@ -547,9 +519,10 @@ return require("packer").startup(function(use)
             end, { desc = "FTerm: Lazygit toggle" })
 
             vim.keymap.set("n", "<leader>tr", ":FTermRun ", { desc = "FTerm: run command" })
+            local au_id = vim.api.nvim_create_augroup('FTerm_winhighlight', {clear = true})
             vim.api.nvim_create_autocmd(
                 "FileType",
-                { pattern = "fterm*", group = "MyAutoCommands", command = "set winhl=Normal:NormalFloat" }
+                { pattern = "fterm*", group = au_id, command = "set winhl=Normal:NormalFloat", desc = 'FTerm winhighlight' }
             )
         end,
     })
@@ -557,22 +530,11 @@ return require("packer").startup(function(use)
     use({ "moll/vim-bbye", cmd = "Bdelete" })
 
     use({ "lambdalisue/suda.vim", cmd = { "SudaRead, SudaWrite" } })
-    -- use {'wesQ3/vim-windowswap', config = function() g.windowswap_map_keys = 0 end }
-    -- use 'fsharpasharp/nvim-historian'
     -- use 'neomake/neomake'
-    -- use {'jmcantrell/vim-virtualenv', config = function() g.virtualenv_directory = '~/venvs/' end}
     use({
         "chrisbra/unicode.vim",
         cmd = { "UnicodeName", "UnicodeTable", "UnicodeSearch" },
     })
-
-    -- use({
-    --     "glepnir/dashboard-nvim",
-    --     config = function()
-    --         require("plugins.dashboard")
-    --     end,
-    --     event = "VimEnter",
-    -- })
 
     use({
         "goolord/alpha-nvim",
@@ -589,18 +551,6 @@ return require("packer").startup(function(use)
         event = "BufEnter",
     })
 
-    -- use {
-    --     's1n7ax/nvim-window-picker',
-    --     config = function()
-    --         require'window-picker'.setup({
-    --             other_win_hl_color = '#232323',
-    --         })
-    --     vim.keymap.set('n', '<C-w><C-w>', function()
-    --         local win = require'window-picker'.pick_window()
-    --         vim.api.nvim_set_current_win(win)
-    --     end, {noremap = true})
-    -- end
-    -- }
     -------------------
     -- Editing Tools --
     -------------------
@@ -671,7 +621,6 @@ return require("packer").startup(function(use)
     use({ "wellle/targets.vim" })
 
     use({ "michaeljsmith/vim-indent-object" })
-    -- use 'justinmk/vim-sneak'
     use({
         "phaazon/hop.nvim",
         as = "hop",
@@ -682,7 +631,6 @@ return require("packer").startup(function(use)
 
     use({ "tpope/vim-repeat" }) --, keys = "." })
 
-    -- use({ "chrisbra/NrrwRgn" })
     -- }}}
 
     ----------
@@ -700,8 +648,5 @@ return require("packer").startup(function(use)
             vim.keymap.set("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { desc = "Vimux: prompt command" })
         end,
     })
-
-    -- use({ "tmux-plugins/vim-tmux" })
-    -- use 'tmux-plugins/vim-tmux-focus-events'
     -- }}}
 end)

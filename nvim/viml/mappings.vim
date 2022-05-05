@@ -50,10 +50,15 @@ nnoremap <c-w>S :bo split<cr>
 nnoremap <c-w>V :bo vert split<cr>
 
 " Vertical/Horizontal Scrolling
-nnoremap <m-l> zl
-nnoremap <m-h> zh
-nnoremap <m-j> <C-E>
-nnoremap <m-k> <C-Y>
+noremap <m-l> zl
+noremap <m-h> zh
+noremap <m-j> <C-E>
+noremap <m-k> <C-Y>
+noremap <ScrollWheelUp> <C-Y>
+noremap <ScrollWheelDown> <C-E>
+noremap <S-ScrollWheelUp> <C-U>
+noremap <S-ScrollWheelDown> <C-D>
+
 
 " close window/buffer
 nnoremap <leader>q :close<CR>

@@ -203,7 +203,7 @@ function lessc {
 }
 
 function tedit {
-  tmux splitw 'zsh -lic "nvim "'$@'; read'
+  tmux splitw "nvim $@"
 }
 
 function cythonsetup {
@@ -224,7 +224,15 @@ EOF
 }
 
 function pman {
-  tmux display-popup -KR "man $@"
+  tmux display-popup -E "man $@"
+}
+
+function attach_notebook(){
+  ssh -N -f -L localhost:$2:localhost:$1 $3
+}
+
+function remote_notebook(){
+  jupyter notebook --no-browser --port=$1
 }
 
 # function neovim_remote {

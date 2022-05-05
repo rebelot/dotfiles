@@ -588,6 +588,7 @@ function M.setup()
             })
         end,
         FileType,
+        {provider = "%q"},
         Space,
         HelpFilename,
         Align,

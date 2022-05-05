@@ -55,7 +55,12 @@ end
 --     {}
 -- )
 
+local orig_ui_input = vim.ui.input
 vim.api.nvim_create_namespace('winui')
 vim.ui.input = function(opts, on_confirm)
-    wininput(opts, on_confirm, { border = require'lsp.lsp-config'.borders, relative = "cursor", row = 1, col = 0, width = 0 })
+    if vim.bo.filetype == 'TelescopePrompt' then
+        orig_ui_input(opts, on_confirm)
+    else
+        wininput(opts, on_confirm, { border = require'lsp.lsp-config'.borders, relative = "cursor", row = 1, col = 0, width = 0 })
+    end
 end
