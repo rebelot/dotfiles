@@ -2,7 +2,6 @@ local conditions = require("heirline.conditions")
 local utils = require("heirline.utils")
 
 local M = {}
-
 function M.setup()
     local colors = {
         bright_bg = utils.get_highlight("Folded").bg,
@@ -74,21 +73,6 @@ function M.setup()
                 ["!"] = "!",
                 t = "T",
             },
-            mode_colors = {
-                n = colors.red,
-                i = colors.green,
-                v = colors.cyan,
-                V = colors.cyan,
-                ["\22"] = colors.cyan, -- this is an actual ^V, type <C-v><C-v> in insert mode
-                c = colors.orange,
-                s = colors.purple,
-                S = colors.purple,
-                ["\19"] = colors.purple, -- this is an actual ^S, type <C-v><C-s> in insert mode
-                R = colors.orange,
-                r = colors.orange,
-                ["!"] = colors.red,
-                t = colors.red,
-            },
         },
         -- We can now access the value of mode() that, by now, would have been
         -- computed by `init()` and use it to index our strings dictionary.
@@ -102,8 +86,9 @@ function M.setup()
         end,
         -- Same goes for the highlight. Now the foreground will change according to the current mode.
         hl = function(self)
-            local mode = self.mode:sub(1, 1) -- get only the first mode character
-            return { fg = self.mode_colors[mode], bold = true }
+            local color = self:mode_color()
+            -- return { fg = self.mode_colors[mode], bold = true }
+            return { fg = color, bold = true }
         end,
     }
 
@@ -513,13 +498,20 @@ function M.setup()
                 local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*:", "")
                 return " " .. tname
             end,
-            hl = { fg = colors.blue,  bold = true },
+            hl = { fg = colors.blue, bold = true },
         },
         { provider = " - " },
         {
             provider = function()
                 return vim.b.term_title
             end,
+        },
+        {
+            provider = function()
+                local id = require("terminal"):current_term_index() --[[ .active_terminals':get_current_buf_terminal():get_index() ]]
+                return " " .. (id or "Exited")
+            end,
+            hl = { bold = true, fg = colors.blue },
         },
     }
 
@@ -563,8 +555,9 @@ function M.setup()
         UltTest,
         Space,
         FileType,
-        utils.make_flexible_component(3, {Space, FileEncoding}, { provider = "" }),
+        utils.make_flexible_component(3, { Space, FileEncoding }, { provider = "" }),
         Space,
+        -- utils.surround({ "", "" }, function(self) return self:mode_color() end, {Ruler, hl = {fg = 'black'}} ),
         Ruler,
         Space,
         ScrollBar,
@@ -588,7 +581,7 @@ function M.setup()
             })
         end,
         FileType,
-        {provider = "%q"},
+        { provider = "%q" },
         Space,
         HelpFilename,
         Align,
@@ -622,6 +615,28 @@ function M.setup()
             end
         end,
 
+        static = {
+            mode_colors = {
+                n = colors.red,
+                i = colors.green,
+                v = colors.cyan,
+                V = colors.cyan,
+                ["\22"] = colors.cyan, -- this is an actual ^V, type <C-v><C-v> in insert mode
+                c = colors.orange,
+                s = colors.purple,
+                S = colors.purple,
+                ["\19"] = colors.purple, -- this is an actual ^S, type <C-v><C-s> in insert mode
+                R = colors.orange,
+                r = colors.orange,
+                ["!"] = colors.red,
+                t = colors.green,
+            },
+            mode_color = function(self)
+                local mode = conditions.is_active() and vim.fn.mode() or "n"
+                return self.mode_colors[mode]
+            end,
+        },
+
         init = utils.pick_child_on_condition,
 
         SpecialStatusline,
@@ -630,7 +645,37 @@ function M.setup()
         DefaultStatusline,
     }
 
-    require("heirline").setup(StatusLines)
+    local WinBar = {
+        init = utils.pick_child_on_condition,
+        {
+            condition = function()
+                return conditions.buffer_matches({
+                    buftype = { "nofile", "prompt", "help", "quickfix" },
+                    filetype = { "^git.*", "fugitive" },
+                })
+            end,
+            provider = "",
+        },
+        {
+            condition = function()
+                return conditions.buffer_matches({ buftype = { "terminal" } })
+            end,
+            utils.surround({ "", "" }, colors.dark_red, {
+                FileType,
+                Space,
+                TerminalName,
+            }),
+        },
+        {
+            condition = function()
+                return not conditions.is_active()
+            end,
+            utils.surround({ "", "" }, colors.bright_bg, { hl = { fg = "gray", force = true }, FileNameBlock }),
+        },
+        utils.surround({ "", "" }, colors.bright_bg, FileNameBlock),
+    }
+
+    require("heirline").setup(StatusLines, WinBar)
 end
 
 vim.cmd([[

@@ -30,7 +30,8 @@ require("options")
 
 -- Functions, Commands, Autocommands
 vim.cmd("source ~/.config/nvim/viml/commands.vim")
-vim.cmd("source ~/.config/nvim/viml/autocommands.vim")
+require("autocommands")
+-- vim.cmd("source ~/.config/nvim/viml/autocommands.vim")
 
 -- Mappings
 vim.cmd("source ~/.config/nvim/viml/mappings.vim")

@@ -1,6 +1,6 @@
-local runtime_path = vim.split(package.path, ";")
-table.insert(runtime_path, "lua/?.lua")
-table.insert(runtime_path, "lua/?/init.lua")
+-- local runtime_path = vim.split(package.path, ";")
+-- table.insert(runtime_path, "lua/?.lua")
+-- table.insert(runtime_path, "lua/?/init.lua")
 
 return {
     cmd = {
@@ -10,7 +10,7 @@ return {
         Lua = {
             runtime = {
                 version = "LuaJIT",
-                path = runtime_path,
+                -- path = runtime_path,
             },
             diagnostics = {
                 globals = { "vim", "use" },

@@ -81,6 +81,9 @@ require("lspconfig.configs").pylance = {
         settings = {
             python = {
                 analysis = vim.empty_dict(),
+                telemetry = {
+                    enable = false
+                }
             },
             telemetry = {
                 telemetryLevel = "off",

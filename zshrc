@@ -74,14 +74,28 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 ### End of Zinit's installer chunk
 
-zinit ice as"completion"; zinit snippet 'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
-zinit ice mv"zsh_completion.tpl -> _pandoc" as"completion"; zinit snippet 'https://gist.githubusercontent.com/doronbehar/134d83ae75309182d9fad8ecd7a55daa/raw/665108d3d4aa72f978fee1de10401e52e4cc54b6/zsh_completion.tpl'
-zinit load hlissner/zsh-autopair
-zinit load bric3/oh-my-zsh-git
 # zinit load srijanshetty/zsh-pandoc-completion
+
+zinit light bric3/oh-my-zsh-git
 zinit light esc/conda-zsh-completion
-zinit ice blockf; zinit light zsh-users/zsh-completions
-zinit light zdharma-continuum/fast-syntax-highlighting
+zinit ice lucid wait blockf atpull'zinit creinstall -q .' atload"zicdreplay"; zinit light zsh-users/zsh-completions
+zinit ice lucid wait; zinit light hlissner/zsh-autopair
+zinit ice lucid wait atload"_zsh_autosuggest_start"; zinit light zsh-users/zsh-autosuggestions
+zinit ice lucid wait; zinit light zdharma-continuum/fast-syntax-highlighting
+# }}}
+
+
+# compinit / compdef {{{
+autoload -Uz compinit
+compinit -i
+# zinit cdreplay -q # zicdreplay
+# }}}
+
+# other sources  {{{
+source /opt/local/etc/profile.d/z.sh
+source ~/.fzf.zsh
+eval "$(kitty +complete setup zsh)"
+eval "$(pip completion --zsh)"
 # }}}
 
 # plugin Opts {{{
@@ -244,12 +258,8 @@ function remote_notebook(){
 # Aliases {{{
 # see $ZSH/aliases.zsh
 
-# alias juliapro=/Applications/JuliaPro-1.0.1.1.app/Contents/Resources/julia/Contents/Resources/julia/bin/julia
-# alias julia=/Applications/Julia-1.0.app/Contents/Resources/julia/bin/julia
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
-# alias valve.py=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/valve.py
 alias vmd='/Applications/VMD\ 1.9.4a51-x86_64-Rev9.app/Contents/MacOS/startup.command'
-# alias spritz="~/Desktop/tommy/nsfw/spritz.py"
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
@@ -260,7 +270,6 @@ alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
 alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
-alias luamake=/Users/laurenzi/usr/src/lua-language-server/3rd/luamake/luamake
 alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/lldb/lib/liblldb.dylib; done"
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
@@ -269,19 +278,6 @@ alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
 # alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
 # alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"
 
-# }}}
-
-# compinit / compdef {{{
-autoload -Uz compinit
-compinit -i
-zinit cdreplay -q
-# }}}
-
-# other sources  {{{
-source /opt/local/etc/profile.d/z.sh
-source ~/.fzf.zsh
-eval "$(kitty +complete setup zsh)"
-eval "$(pip completion --zsh)"
 # }}}
 
 # Remove duplicates from PATH (Unique)

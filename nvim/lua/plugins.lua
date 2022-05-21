@@ -191,7 +191,7 @@ return require("packer").startup(function(use)
     -- use 'plasticboy/vim-markdown'
     -- use({ "JuliaEditorSupport/julia-vim" })
 
-    use({ "chrisbra/vim-zsh" })
+    -- use({ "chrisbra/vim-zsh" })
 
     use({
         "andymass/vim-matchup",
@@ -482,50 +482,80 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use 'kassio/neoterm'
-    -- use({ "voldikss/vim-floaterm",
-    --     config = function()
-    --         vim.api.nvim_set_keymap("n", "<leader>T", "<cmd>FloatermToggle<CR>", {noremap = true})
-    --         vim.api.nvim_set_keymap("n", "<leader>TN", "<cmd>FloatermNew<CR>", {noremap = true})
-    --         vim.api.nvim_set_keymap("n", "<leader>Tn", "<cmd>FloatermNext<CR>", {noremap = true})
-    --         vim.api.nvim_set_keymap("n", "<leader>Tp", "<cmd>FloatermPrev<CR>", {noremap = true})
-    --     end
-    -- })
     use({
-        "numToStr/FTerm.nvim",
+        "/Users/laurenzi/usr/src/terminal.nvim",
+        -- event = "TermOpen",
+        -- keys = {"<leader>to", '<leader>st'},
         config = function()
-            require("FTerm").setup({
-                border = require("lsp.lsp-config").borders,
+            local term_map = require("terminal.mappings")
+            require("terminal").setup()
+            vim.keymap.set({ "n", "x" }, "<leader>ts", term_map.operator_send, { expr = true })
+            vim.keymap.set("n", "<leader>to", term_map.toggle)
+            vim.keymap.set("n", "<leader>tO", term_map.toggle({ open_cmd = "enew" }))
+            vim.keymap.set("n", "<leader>tr", term_map.run)
+            vim.keymap.set("n", "<leader>tR", term_map.run(nil, { layout = { open_cmd = "enew" } }))
+            vim.keymap.set("n", "<leader>tk", term_map.kill)
+            vim.keymap.set("n", "<leader>t]", term_map.cycle_next)
+            vim.keymap.set("n", "<leader>t[", term_map.cycle_prev)
+            local ipython = require("terminal").terminal:new({
+                layout = { open_cmd = "botright vertical new" },
+                cmd = { "ipython" },
+                autoclose = true,
             })
-
-            vim.keymap.set("n", "<leader>tt", require("FTerm").toggle, { desc = "FTerm: toggle" })
-
-            vim.api.nvim_create_user_command("FTermRun", function(cmd)
-                require("FTerm").run(vim.fn.expandcmd(cmd.args))
-            end, { nargs = "*", complete = "shellcmd", desc = "FTerm: run command" })
-
-            local lazygit = require("FTerm"):new({
-                ft = "fterm_lazygit",
-                cmd = "lazygit",
-                dimensions = {
-                    height = 0.95,
-                    width = 0.95,
-                },
+            local lazygit = require("terminal").terminal:new({
+                layout = { open_cmd = "float", height = 0.9, width = 0.9 },
+                cmd = { "lazygit" },
+                autoclose = true,
             })
-
-            vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
-            vim.api.nvim_create_user_command("LazyGit", function(cmd)
-                lazygit:toggle()
-            end, { desc = "FTerm: Lazygit toggle" })
-
-            vim.keymap.set("n", "<leader>tr", ":FTermRun ", { desc = "FTerm: run command" })
-            local au_id = vim.api.nvim_create_augroup('FTerm_winhighlight', {clear = true})
-            vim.api.nvim_create_autocmd(
-                "FileType",
-                { pattern = "fterm*", group = au_id, command = "set winhl=Normal:NormalFloat", desc = 'FTerm winhighlight' }
-            )
+            vim.api.nvim_create_user_command("IPython", function()
+                ipython:open(nil, true)
+            end, {})
+            vim.api.nvim_create_user_command("Lazygit", function()
+                lazygit:open(nil, true)
+            end, {})
+            -- vim.keymap.set("x", "<leader>ts", [["+y<cmd>lua require'terminal'.send(0, "%paste")<CR>]])
+            -- vim.keymap.set("n", "<leader>t?", function()
+            --     require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
+            -- end)
         end,
     })
+    -- use({
+    --     "numToStr/FTerm.nvim",
+    --     config = function()
+    --         require("FTerm").setup({
+    --             border = require("lsp.lsp-config").borders,
+    --         })
+    --
+    --         vim.keymap.set("n", "<leader>tt", require("FTerm").toggle, { desc = "FTerm: toggle" })
+    --
+    --         vim.api.nvim_create_user_command("FTermRun", function(cmd)
+    --             require("FTerm").run(vim.fn.expandcmd(cmd.args))
+    --         end, { nargs = "*", complete = "shellcmd", desc = "FTerm: run command" })
+    --
+    --         local lazygit = require("FTerm"):new({
+    --             ft = "fterm_lazygit",
+    --             cmd = "lazygit",
+    --             dimensions = {
+    --                 height = 0.95,
+    --                 width = 0.95,
+    --             },
+    --         })
+    --
+    --         vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
+    --         vim.api.nvim_create_user_command("LazyGit", function(cmd)
+    --             lazygit:toggle()
+    --         end, { desc = "FTerm: Lazygit toggle" })
+    --
+    --         vim.keymap.set("n", "<leader>tr", ":FTermRun ", { desc = "FTerm: run command" })
+    --         local au_id = vim.api.nvim_create_augroup("FTerm_winhighlight", { clear = true })
+    --         vim.api.nvim_create_autocmd("FileType", {
+    --             pattern = "fterm*",
+    --             group = au_id,
+    --             command = "set winhl=Normal:NormalFloat",
+    --             desc = "FTerm winhighlight",
+    --         })
+    --     end,
+    -- })
 
     use({ "moll/vim-bbye", cmd = "Bdelete" })
 
@@ -563,10 +593,10 @@ return require("packer").startup(function(use)
     use({
         "junegunn/vim-easy-align",
         config = function()
-            vim.cmd("xmap ga <Plug>(EasyAlign)")
+            vim.keymap.set("x", "ga", "<Plug>(EasyAlign)")
         end,
         cmd = "EasyAlign",
-        keys = { "x", "ga" },
+        keys = { "ga" },
     })
 
     use({
@@ -581,7 +611,15 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "tpope/vim-surround" })
+    use({
+        "tpope/vim-surround",
+        config = function()
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "tex",
+                command = [[let g:surround_92 = "\\\1\\\1{\r}"]],
+            })
+        end,
+    })
 
     -- use({
     --     "ThePrimeagen/refactoring.nvim",
@@ -646,6 +684,10 @@ return require("packer").startup(function(use)
             ]])
             vim.keymap.set("x", "<leader>vs", '"vy :call VimuxSlime()<CR>', { desc = "Vimux: send selection" })
             vim.keymap.set("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { desc = "Vimux: prompt command" })
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "python",
+                command = [[xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>]],
+            })
         end,
     })
     -- }}}

@@ -1,8 +1,8 @@
 require("bufferline").setup({
     options = {
-        numbers = function(opts)
-            return opts.id .. "."
-        end,
+        -- numbers = function(opts)
+        --     return opts.id .. "."
+        -- end,
         max_name_length = 30,
         right_mouse_command = "vertical sbuffer %d",
         -- name_formatter = function(buf)
@@ -15,15 +15,7 @@ require("bufferline").setup({
         left_trunc_marker = "<",
         right_trunc_marker = ">",
         separator_style = "slant",
-        offsets = { { filetype = "NvimTree" }, { filetype = "Vista" } },
-        diagnostics_indicator = function(_, _, diagnostics_dict)
-            local s = " "
-            for e, n in pairs(diagnostics_dict) do
-                local sym = e == "error" and " " or (e == "warning" and " " or "")
-                s = s .. sym .. n
-            end
-            return s
-        end,
+        offsets = { { filetype = "NvimTree", text = "File Explorer", text_align = "center" }, { filetype = "Vista" } },
     },
     -- custom_filter = function(buf_number)
     --   -- filter out filetypes you don't want to see
@@ -35,9 +27,9 @@ require("bufferline").setup({
     --     end
     -- end,
     highlights = {
-        fill = {guibg = {attribute = 'bg', highlight = 'Normal'}},
-        separator = {guifg = {attribute = "bg", highlight = 'Normal'}},
-        separator_selected = {guifg = {attribute = "bg", highlight = 'Normal'}},
-        separator_visible = {guifg = {attribute="bg", highlight='Normal'}},
-    }
+        fill = { guibg = { attribute = "bg", highlight = "Normal" } },
+        separator = { guifg = { attribute = "bg", highlight = "Normal" } },
+        separator_selected = { guifg = { attribute = "bg", highlight = "Normal" } },
+        separator_visible = { guifg = { attribute = "bg", highlight = "Normal" } },
+    },
 })

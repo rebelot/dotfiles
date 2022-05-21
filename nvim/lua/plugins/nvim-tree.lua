@@ -29,16 +29,8 @@ vim.g.nvim_tree_icons = {
         symlink = "",
         symlink_open = "",
     },
-    lsp = {
-        hint = "",
-        info = "",
-        warning = "",
-        error = "",
-    },
 }
 
-vim.g.nvim_tree_auto_ignore_ft = {} -- don't open tree on specific fiypes.
-vim.g.nvim_tree_respect_buf_cwd = 0
 vim.g.nvim_tree_git_hl = 1
 vim.g.nvim_tree_highlight_opened_files = 1 -- 3
 vim.g.nvim_tree_root_folder_modifier = table.concat({ ":t:gs?$?/..", string.rep(" ", 1000), "?:gs?^??" })
@@ -48,9 +40,6 @@ vim.g.nvim_tree_add_trailing = 1 -- append a trailing slash to folder names
 require("nvim-tree").setup({
     disable_netrw = false,
     hijack_netrw = true,
-    open_on_setup = false,
-    ignore_ft_on_setup = {},
-    open_on_tab = false,
     hijack_cursor = true,
     update_cwd = true,
     filters = {
@@ -68,6 +57,14 @@ require("nvim-tree").setup({
         cmd = nil,
         args = {},
     },
+    actions = {
+        change_dir = {
+            global = true
+        },
+        open_file = {
+            resize_window = true
+        }
+    }
 })
 
 vim.keymap.set("n", "<leader>nt", "<cmd>NvimTreeToggle<CR>", { desc = "NvimTree: toggle" })

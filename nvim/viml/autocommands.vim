@@ -15,13 +15,13 @@ augroup MyAutoCommands
   autocmd BufNewFile,BufRead *.msj set filetype=config
   autocmd BufNewFile,BufRead *.cms,*.mae setlocal foldmarker={,} | setlocal fdm=marker
 
-  " Distraction Free
-  " autocmd User GoyoEnter Limelight
-  " autocmd User GoyoLeave Limelight!
-  
-  " Competions Preview
-  " autocmd CompleteDone * silent if pumvisible() == 0 && bufname("%") != "[Command Line]" | pclose | endif
-  
+
+  autocmd WinEnter,Filetype * if index(['terminal', 'prompt', 'nofile', 'help'], &buftype) < 0 | setl cursorline relativenumber | endif "else | setl nocul nornu| endif
+  autocmd WinLeave * setl nocursorline norelativenumber
+  autocmd WinEnter * let &scrolloff = winheight(0) / 3
+  autocmd WinEnter * if &buftype == 'terminal' | startinsert | endif
+  " autocmd BufEnter,WinNew * if index(['terminal', 'prompt', 'nofile', 'help'], &buftype) < 0 | let b:winbar_ok = v:true | endif
+
   " Set SpellCheck
   " autocmd FileType latex,tex,markdown,txt setlocal spell
 
@@ -48,7 +48,7 @@ augroup MyAutoCommands
   autocmd FileType tex let g:surround_92 = "\\\1\\\1{\r}"
 
   " Terminal
-  autocmd TermOpen * setlocal nonumber norelativenumber winhl=Normal:NormalFloat
+  autocmd TermOpen * startinsert | setlocal nonumber norelativenumber winhl=Normal:NormalFloat 
   " autocmd TermOpen * setlocal filetype=terminal
 
   " Diagnostics

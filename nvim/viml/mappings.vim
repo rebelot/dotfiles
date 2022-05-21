@@ -1,8 +1,13 @@
 let mapleader = ','
 xnoremap <Space> :
 nnoremap <Space> :
-noremap L $
-noremap H ^
+nnoremap L $
+xnoremap L $
+nnoremap H ^
+xnoremap H ^
+nnoremap <S-CR> -
+xnoremap <S-CR> -
+
 " noremap <M-S-H> H
 " noremap <M-S-L> L
 " noremap <M-S-M> M
@@ -49,6 +54,12 @@ nnoremap <m-z> :call WinZoomToggle()<CR>
 nnoremap <c-w>S :bo split<cr>
 nnoremap <c-w>V :bo vert split<cr>
 
+tnoremap <c-\><c-\> <c-\><c-n>
+tnoremap <c-h> <c-\><c-n><c-w>h
+tnoremap <c-j> <c-\><c-n><c-w>j
+tnoremap <c-k> <c-\><c-n><c-w>k
+tnoremap <c-l> <c-\><c-n><c-w>l
+
 " Vertical/Horizontal Scrolling
 noremap <m-l> zl
 noremap <m-h> zh
@@ -94,7 +105,7 @@ nnoremap <leader>en :enew<CR>
 nnoremap <leader>vn :rightbelow vnew<CR>
 nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
-nnoremap <leader>st :split <bar> terminal <cr>
+" nnoremap <leader>st :split <bar> terminal <cr>
 nnoremap <leader>vt :vertical split <bar> terminal <cr>
 
 " Edit or select [R/r]egister

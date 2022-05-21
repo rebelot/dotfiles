@@ -16,7 +16,8 @@ local function multiopen(prompt_bufnr, open_cmd)
             vim.cmd(string.format("%s %s", open_cmd, entry.value))
         end
     else
-        vim.cmd(string.format("%s %s", open_cmd, action_state.get_selected_entry().value))
+        local entry = action_state.get_selected_entry()
+        vim.cmd(string.format("%s %s", open_cmd, entry.value))
     end
     vim.cmd("stopinsert")
     vim.o.winhighlight = ""
@@ -24,44 +25,15 @@ end
 
 local custom_actions = transform_mod({
     multi_selection_open_vsplit = function(prompt_bufnr)
-        multiopen(prompt_bufnr, ":vsplit")
+        multiopen(prompt_bufnr, "vsplit")
     end,
     multi_selection_open_split = function(prompt_bufnr)
-        multiopen(prompt_bufnr, ":split")
+        multiopen(prompt_bufnr, "split")
     end,
     multi_selection_open_tab = function(prompt_bufnr)
-        multiopen(prompt_bufnr, ":tabe")
-    end,
-    multi_selection_open = function(prompt_bufnr)
-        multiopen(prompt_bufnr, ":edit")
+        multiopen(prompt_bufnr, "tabe")
     end,
 })
-
-local function on_execute_action(action, offset_encoding)
-    local getfn = function(command)
-        if vim.lsp.commands[command] then
-            return vim.lsp.commands[command]
-        end
-        for _, client in ipairs(vim.lsp.buf_get_clients(0)) do
-            if client.commands[command] then
-                return client.commands[command]
-            end
-        end
-    end
-
-    if action.edit then
-        vim.lsp.util.apply_workspace_edit(action.edit, offset_encoding)
-    end
-    if action.command then
-        local command = type(action.command) == "table" and action.command or action
-        local fn = getfn(command.command)
-        if fn then
-            fn(command, {})
-        else
-            vim.lsp.buf.execute_command(command)
-        end
-    end
-end
 
 local multi_open_mappings = {
     i = {

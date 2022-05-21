@@ -16,6 +16,22 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = borders,
 })
 
+local lsprename = vim.lsp.buf.rename
+
+vim.lsp.buf.rename = function(new_name, options)
+    options = options or {}
+
+    local filter = function(clients)
+        return vim.tbl_filter(function(client)
+            return not vim.tbl_contains({'null-ls', 'copilot'}, client.name)
+        end, clients)
+    end
+
+    options.filter = options.filter or filter
+
+    lsprename(new_name, options)
+end
+
 ------------------
 -- Capabilities --
 ------------------
@@ -73,7 +89,6 @@ local on_attach = function(client, bufnr)
     vim.keymap.set(
         "n",
         "<leader>la",
-        -- require("telescope.builtin").lsp_code_actions,
         vim.lsp.buf.code_action,
         { unpack(opts), desc = "List LSP Code Actions" }
     )
@@ -121,6 +136,7 @@ local on_attach = function(client, bufnr)
     -- buf_set_keymap('n', '<leader>lg', peek_definition, opts) -- treesitter does it better atm
 
     if client.server_capabilities.documentFormattingProvider then
+        -- set eventignore=all
         vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP format" })
         vim.api.nvim_buf_create_user_command(
             bufnr,
