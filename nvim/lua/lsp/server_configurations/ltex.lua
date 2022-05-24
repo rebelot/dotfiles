@@ -79,6 +79,7 @@ return {
                 path = vim.fn.expand("$HOME/usr/src/ltex-ls/lib/ltex-ls-15.2.0"),
             },
             language = "en-US",
+            checkFrequency = "save"
             -- dictionary = {
             --     ["en-US"] = read_spellfile("en.utf-8.add"),
             -- },

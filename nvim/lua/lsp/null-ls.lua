@@ -27,8 +27,8 @@ local sources = {
 
     null_ls.builtins.diagnostics.cppcheck,
 
-    null_ls.builtins.diagnostics.proselint,
-    null_ls.builtins.diagnostics.write_good,
+    -- null_ls.builtins.diagnostics.proselint,
+    -- null_ls.builtins.diagnostics.write_good,
 
     null_ls.builtins.diagnostics.vint,
 
