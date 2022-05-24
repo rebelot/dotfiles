@@ -73,13 +73,11 @@ autocmd("WinEnter", {
 --     group = au_id,
 -- })
 
-autocmd({'WinEnter', "BufWinEnter"}, {
+autocmd({"WinEnter", "BufWinEnter"}, {
     callback = function(args)
         local buf = args.buf
-        if not vim.tbl_contains({'terminal', 'prompt', 'nofile', 'help'}, vim.bo[buf].buftype) then
-            -- vim.cmd('setlocal nocursorline norelativenumber')
-        -- if vim.bo[buf].buftype == "" then
-            vim.cmd('setlocal cursorline relativenumber')
+        if not vim.tbl_contains({'terminal', 'prompt', 'nofile'}, vim.bo[buf].buftype) then
+            vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
         end
     end,
     group = au_id
