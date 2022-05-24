@@ -3,10 +3,13 @@ xnoremap <Space> :
 nnoremap <Space> :
 nnoremap L $
 xnoremap L $
+onoremap L $
 nnoremap H ^
 xnoremap H ^
+onoremap H ^
 nnoremap <S-CR> -
 xnoremap <S-CR> -
+onoremap <S-CR> -
 
 " noremap <M-S-H> H
 " noremap <M-S-L> L
