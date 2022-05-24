@@ -507,6 +507,7 @@ return require("packer").startup(function(use)
                 cmd = { "lazygit" },
                 autoclose = true,
             })
+            vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
             vim.api.nvim_create_user_command("IPython", function()
                 ipython:open(nil, true)
             end, {})
