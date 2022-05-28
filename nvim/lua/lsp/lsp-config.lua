@@ -21,10 +21,8 @@ local lsprename = vim.lsp.buf.rename
 vim.lsp.buf.rename = function(new_name, options)
     options = options or {}
 
-    local filter = function(clients)
-        return vim.tbl_filter(function(client)
-            return not vim.tbl_contains({'null-ls', 'copilot'}, client.name)
-        end, clients)
+    local filter = function(client)
+        return not vim.tbl_contains({ "null-ls", "copilot" }, client.name)
     end
 
     options.filter = options.filter or filter
@@ -86,12 +84,7 @@ local on_attach = function(client, bufnr)
         require("telescope.builtin").lsp_implementations,
         { unpack(opts), desc = "Go to LSP implementations" }
     )
-    vim.keymap.set(
-        "n",
-        "<leader>la",
-        vim.lsp.buf.code_action,
-        { unpack(opts), desc = "List LSP Code Actions" }
-    )
+    vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { unpack(opts), desc = "List LSP Code Actions" })
     vim.keymap.set(
         "x",
         "<leader>la",
@@ -211,7 +204,7 @@ local servers = {
     "vimls",
     "bashls",
     "julials",
-    "tsserver"
+    "tsserver",
 }
 
 for _, server in ipairs(servers) do
