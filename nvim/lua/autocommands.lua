@@ -73,14 +73,14 @@ autocmd("WinEnter", {
 --     group = au_id,
 -- })
 
-autocmd({"WinEnter", "BufWinEnter"}, {
+autocmd({ "WinEnter", "BufWinEnter" }, {
     callback = function(args)
         local buf = args.buf
-        if not vim.tbl_contains({'terminal', 'prompt', 'nofile'}, vim.bo[buf].buftype) then
+        if not vim.tbl_contains({ "terminal", "prompt", "nofile" }, vim.bo[buf].buftype) then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
         end
     end,
-    group = au_id
+    group = au_id,
 })
 
 autocmd("WinLeave", {
@@ -95,15 +95,14 @@ autocmd("WinLeave", {
 
 autocmd("TermOpen", {
     command = [[startinsert | setlocal nonumber norelativenumber winhl=Normal:NormalFloat]],
-    group = au_id
+    group = au_id,
 })
-autocmd({"WinEnter", "BufWinEnter"}, {
+autocmd({ "WinEnter", "BufWinEnter" }, {
     command = [[ if &buftype == 'terminal' | startinsert | endif ]],
-    group = au_id
+    group = au_id,
 })
-
 
 -- autocmd FileType latex,tex,markdown,txt setlocal spell
--- autocmd FileType latex,tex,markdown,txt,text setlocal wrap 
+-- autocmd FileType latex,tex,markdown,txt,text setlocal wrap
 -- autocmd BufWrite *.md :! pandoc -f gfm -t html -o /tmp/%:t.html %
 -- autocmd User DiagnosticsChanged lua vim.diagnostic.setqflist({open = false })

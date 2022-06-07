@@ -198,6 +198,7 @@ local servers = {
     "ccls",
     "pylance",
     -- "pyright",
+    "marksman",
     "sumneko_lua",
     "texlab",
     "ltex",
