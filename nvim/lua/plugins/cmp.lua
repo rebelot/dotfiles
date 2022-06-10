@@ -175,7 +175,7 @@ cmp.setup({
         { name = "ultisnips" },
         { name = "path" },
         { name = "buffer" },
-        { name = "tmux", option = { all_panes = true } },
+        -- { name = "tmux", option = { all_panes = true } },
     },
 })
 
@@ -195,9 +195,11 @@ cmp.setup.cmdline(":", {
     completion = { autocomplete = false },
     sources = cmp.config.sources({
         { name = "path" },
-    }, {
-        { name = "nvim_lua" },
-    }, {
+    },
+    -- {
+    --     { name = "nvim_lua" },
+    -- },
+    {
         { name = "cmdline" },
     }),
     -- sources = {
@@ -218,22 +220,22 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
         { name = "buffer" },
         -- { name = "dictionary", keyword_length = 2 },
         { name = "latex_symbols" },
-        { name = "tmux", option = { all_panes = true } },
+        -- { name = "tmux", option = { all_panes = true } },
     },
 })
 
-cmp.setup.filetype({ "lua" }, {
-    sources = {
-        { name = "nvim_lsp_signature_help" },
-        { name = "copilot" },
-        { name = "nvim_lua" },
-        { name = "nvim_lsp" },
-        { name = "ultisnips" },
-        { name = "path" },
-        { name = "buffer" },
-        { name = "tmux", option = { all_panes = true } },
-    },
-})
+-- cmp.setup.filetype({ "lua" }, {
+--     sources = {
+--         { name = "nvim_lsp_signature_help" },
+--         { name = "copilot" },
+--         -- { name = "nvim_lua" },
+--         { name = "nvim_lsp" },
+--         { name = "ultisnips" },
+--         { name = "path" },
+--         { name = "buffer" },
+--         -- { name = "tmux", option = { all_panes = true } },
+--     },
+-- })
 
 -- local rec_au = vim.api.nvim_create_augroup('CmpRecording', { clear = true })
 -- vim.api.nvim_create_autocmd('RecordingEnter', {

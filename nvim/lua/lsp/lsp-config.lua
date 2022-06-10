@@ -44,7 +44,7 @@ capabilities.textDocument.completion.completionItem.workDoneProgress = true
 
 local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-    -- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     -- mappings
     local opts = { noremap = true, silent = true, buffer = bufnr }

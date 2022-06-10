@@ -66,7 +66,7 @@ vim.opt.fillchars:append({ foldopen = "▾", foldsep = "│", foldclose = "▸" 
 vim.o.inccommand = "nosplit" -- real time preview of substitution commands
 vim.o.showmode = false -- Do not show -- MODE -- in cmdline--
 vim.o.cmdheight = 1 -- Height of the command line
-vim.o.updatetime = 250 -- time required to update CursorHold hook
+-- vim.o.updatetime = 250 -- time required to update CursorHold hook
 vim.opt.shortmess:append({ c = true })
 -- -- vim.o.printdevice       = "OLIVETTI_d_COPIA4500MF_plus__2_"
 vim.o.showbreak = "↪ "

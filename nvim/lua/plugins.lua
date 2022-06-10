@@ -31,11 +31,23 @@ return require("packer").startup(function(use)
 
     use({ "nvim-lua/plenary.nvim" })
 
-    use({ "nvim-lua/popup.nvim" })
-
     use({ "lewis6991/impatient.nvim" })
 
     use({ "dstein64/vim-startuptime" })
+
+    use({
+        "tami5/sqlite.lua",
+        config = function()
+            vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
+        end,
+    })
+
+    use({
+        "antoinemadec/FixCursorHold.nvim",
+        config = function()
+            vim.g.cursorhold_updatetime = 250
+        end,
+    })
 
     --------------------------------------------
     -- LSP, Diagnostics, Snippets, Completion --
@@ -104,7 +116,7 @@ return require("packer").startup(function(use)
         requires = {
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
-            "hrsh7th/cmp-nvim-lua",
+            -- "hrsh7th/cmp-nvim-lua",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lsp-signature-help",
@@ -122,7 +134,7 @@ return require("packer").startup(function(use)
             -- },
             "kdheepak/cmp-latex-symbols",
             "dmitmel/cmp-cmdline-history",
-            "andersevenrud/cmp-tmux",
+            -- "andersevenrud/cmp-tmux",
             "quangnguyen30192/cmp-nvim-ultisnips",
         },
     })
@@ -145,7 +157,7 @@ return require("packer").startup(function(use)
         event = { "VimEnter" },
         config = function()
             vim.defer_fn(function()
-                require("copilot").setup()
+                require("copilot").setup({ ft_disable = { "julia" } })
             end, 1000)
         end,
     })
@@ -177,6 +189,17 @@ return require("packer").startup(function(use)
         end,
         cmd = "Neogen",
     })
+    -- use({
+    --     "ldelossa/litee.nvim",
+    --     requires = {
+    --         -- "ldelossa/litee-symboltree.nvim",
+    --         "ldelossa/litee-calltree.nvim" },
+    --     config = function()
+    --         require('litee.lib').setup({})
+    --         require('litee.calltree').setup({})
+    --         -- require('litee.symboltree').setup({})
+    --     end
+    -- })
 
     -- use 'saadparwaiz1/cmp_luasnip'
     -- use 'L3MON4D3/LuaSnip'
@@ -300,16 +323,15 @@ return require("packer").startup(function(use)
 
     use({
         "nvim-telescope/telescope-frecency.nvim",
-        after = { "telescope.nvim", "sqlite.lua" },
+        after = { "telescope.nvim" }, --, "sqlite.lua" },
         config = function()
             require("telescope").load_extension("frecency")
-        end,
-    })
-
-    use({
-        "tami5/sqlite.lua",
-        config = function()
-            vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
+            vim.keymap.set(
+                "n",
+                "<leader>fr",
+                require("telescope").extensions.frecency.frecency,
+                { desc = "Telescope: Frecency" }
+            )
         end,
     })
 
@@ -403,12 +425,28 @@ return require("packer").startup(function(use)
         end,
     })
 
+    -- use({
+    --     "rcarriga/vim-ultest",
+    --     requires = { "vim-test/vim-test" },
+    --     run = ":UpdateRemotePlugins",
+    --     config = function()
+    --         require("plugins.ultest")
+    --     end,
+    -- })
+
     use({
-        "rcarriga/vim-ultest",
-        requires = { "vim-test/vim-test" },
-        run = ":UpdateRemotePlugins",
+        "rcarriga/neotest",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "antoinemadec/FixCursorHold.nvim",
+            "rcarriga/neotest-python",
+            "rcarriga/neotest-vim-test",
+            "rcarriga/neotest-plenary",
+            "vim-test/vim-test",
+        },
         config = function()
-            require("plugins.ultest")
+            require("plugins.neotest")
         end,
     })
 
@@ -509,54 +547,18 @@ return require("packer").startup(function(use)
             })
             vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
             vim.api.nvim_create_user_command("IPython", function()
-                ipython:open(nil, true)
+                ipython:toggle(nil, true)
             end, {})
-            vim.api.nvim_create_user_command("Lazygit", function()
-                lazygit:open(nil, true)
-            end, {})
+            vim.api.nvim_create_user_command("Lazygit", function(args)
+                lazygit.cwd = args.args and vim.fn.expand(args.args)
+                lazygit:toggle(nil, true)
+            end, { nargs = "?" })
             -- vim.keymap.set("x", "<leader>ts", [["+y<cmd>lua require'terminal'.send(0, "%paste")<CR>]])
             -- vim.keymap.set("n", "<leader>t?", function()
             --     require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
             -- end)
         end,
     })
-    -- use({
-    --     "numToStr/FTerm.nvim",
-    --     config = function()
-    --         require("FTerm").setup({
-    --             border = require("lsp.lsp-config").borders,
-    --         })
-    --
-    --         vim.keymap.set("n", "<leader>tt", require("FTerm").toggle, { desc = "FTerm: toggle" })
-    --
-    --         vim.api.nvim_create_user_command("FTermRun", function(cmd)
-    --             require("FTerm").run(vim.fn.expandcmd(cmd.args))
-    --         end, { nargs = "*", complete = "shellcmd", desc = "FTerm: run command" })
-    --
-    --         local lazygit = require("FTerm"):new({
-    --             ft = "fterm_lazygit",
-    --             cmd = "lazygit",
-    --             dimensions = {
-    --                 height = 0.95,
-    --                 width = 0.95,
-    --             },
-    --         })
-    --
-    --         vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
-    --         vim.api.nvim_create_user_command("LazyGit", function(cmd)
-    --             lazygit:toggle()
-    --         end, { desc = "FTerm: Lazygit toggle" })
-    --
-    --         vim.keymap.set("n", "<leader>tr", ":FTermRun ", { desc = "FTerm: run command" })
-    --         local au_id = vim.api.nvim_create_augroup("FTerm_winhighlight", { clear = true })
-    --         vim.api.nvim_create_autocmd("FileType", {
-    --             pattern = "fterm*",
-    --             group = au_id,
-    --             command = "set winhl=Normal:NormalFloat",
-    --             desc = "FTerm winhighlight",
-    --         })
-    --     end,
-    -- })
 
     use({ "moll/vim-bbye", cmd = "Bdelete" })
 

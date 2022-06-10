@@ -65,7 +65,7 @@ table.insert(dap.configurations.python, {
     request = "launch",
     name = "launch with options",
     program = "${file}",
-    python = function() end,
+    -- python = function() end,
     pythonPath = function()
         local path
         for _, server in pairs(vim.lsp.buf_get_clients()) do
@@ -94,7 +94,7 @@ table.insert(dap.configurations.python, {
         return vim.fn.input("justMyCode? [y/n]: ") == "y"
     end,
     stopOnEntry = function()
-        return vim.fn.input("justMyCode? [y/n]: ") == "y"
+        return vim.fn.input("stopOnEntry? [y/n]: ") == "y"
     end,
     console = "integratedTerminal",
 })

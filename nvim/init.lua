@@ -23,7 +23,7 @@ require("plugins")
 
 --
 vim.opt.laststatus = 3
-require("colors").kanagawa()
+require("colors")
 
 -- general configurations
 require("options")

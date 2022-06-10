@@ -94,7 +94,12 @@ autocmd("WinLeave", {
 ----------------
 
 autocmd("TermOpen", {
-    command = [[startinsert | setlocal nonumber norelativenumber winhl=Normal:NormalFloat]],
+    callback = function(args)
+        vim.cmd([[setlocal nonumber norelativenumber winhl=Normal:NormalFloat]])
+        if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
+            vim.cmd("startinsert")
+        end
+    end,
     group = au_id,
 })
 autocmd({ "WinEnter", "BufWinEnter" }, {

@@ -397,41 +397,41 @@ local DAPMessages = {
     --       ﰇ  
 }
 
-local UltTest = {
-    condition = function()
-        return vim.api.nvim_call_function("ultest#is_test_file", {}) ~= 0
-    end,
-    static = {
-        passed_icon = vim.fn.sign_getdefined("test_pass")[1].text,
-        failed_icon = vim.fn.sign_getdefined("test_fail")[1].text,
-        passed_hl = { fg = utils.get_highlight("UltestPass").fg },
-        failed_hl = { fg = utils.get_highlight("UltestFail").fg },
-    },
-    init = function(self)
-        self.status = vim.api.nvim_call_function("ultest#status", {})
-    end,
-    {
-        provider = function(self)
-            return self.passed_icon .. self.status.passed .. " "
-        end,
-        hl = function(self)
-            return self.passed_hl
-        end,
-    },
-    {
-        provider = function(self)
-            return self.failed_icon .. self.status.failed .. " "
-        end,
-        hl = function(self)
-            return self.failed_hl
-        end,
-    },
-    {
-        provider = function(self)
-            return "of " .. self.status.tests - 1
-        end,
-    },
-}
+-- local UltTest = {
+--     condition = function()
+--         return vim.api.nvim_call_function("ultest#is_test_file", {}) ~= 0
+--     end,
+--     static = {
+--         passed_icon = vim.fn.sign_getdefined("test_pass")[1].text,
+--         failed_icon = vim.fn.sign_getdefined("test_fail")[1].text,
+--         passed_hl = { fg = utils.get_highlight("UltestPass").fg },
+--         failed_hl = { fg = utils.get_highlight("UltestFail").fg },
+--     },
+--     init = function(self)
+--         self.status = vim.api.nvim_call_function("ultest#status", {})
+--     end,
+--     {
+--         provider = function(self)
+--             return self.passed_icon .. self.status.passed .. " "
+--         end,
+--         hl = function(self)
+--             return self.passed_hl
+--         end,
+--     },
+--     {
+--         provider = function(self)
+--             return self.failed_icon .. self.status.failed .. " "
+--         end,
+--         hl = function(self)
+--             return self.failed_hl
+--         end,
+--     },
+--     {
+--         provider = function(self)
+--             return "of " .. self.status.tests - 1
+--         end,
+--     },
+-- }
 
 local WorkDir = {
     provider = function(self)
@@ -525,7 +525,7 @@ local DefaultStatusline = {
     Align,
     LSPActive,
     Space,
-    UltTest,
+    -- UltTest,
     Space,
     FileType,
     utils.make_flexible_component(3, { Space, FileEncoding }, { provider = "" }),

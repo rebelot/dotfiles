@@ -15,6 +15,7 @@ vim.keymap.set("n", "[x", function()
     pcall(require("trouble").previous, { skip_groups = true, jump = true })
 end, copts)
 
+vim.cmd[[hi TroubleText guifg=fg guibg=none]]
 vim.cmd([[
     augroup trouble_au
     autocmd!
