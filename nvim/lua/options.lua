@@ -74,6 +74,7 @@ vim.o.listchars = "tab:|.,trail:_,extends:>,precedes:<,nbsp:~,eol:¬"
 vim.o.signcolumn = "yes"
 vim.o.splitbelow = true
 vim.o.splitright = true
+vim.o.foldenable = false
 
 vim.o.dictionary = "/usr/share/dict/words"
 

@@ -254,6 +254,42 @@ local Gps = {
     hl = { fg = "gray" },
 }
 
+local Gps2 = {
+    condition = require("nvim-gps").is_available,
+    static = {
+        type_map = {
+            ["container-name"] = "Identifier",
+            ["method-name"] = "Method",
+            ["function-name"] = "Function",
+            ["class-name"] = "Type",
+            ["tag-name"] = 'Tag',
+        },
+    },
+    init = function(self)
+        local data = require("nvim-gps").get_data()
+        local children = {}
+        for i, d in ipairs(data) do
+            local child = {
+                {
+                    provider = d.icon,
+                    hl = self.type_map[d.type],
+                },
+                {
+                    provider = d.text,
+                },
+            }
+            if #data > 1 and i < #data then
+                table.insert(child, {
+                    provider = " > ",
+                })
+            end
+            table.insert(children, child)
+        end
+        self[1] = self:new(children, 1)
+    end,
+    hl = { fg = "gray" },
+}
+
 local Diagnostics = {
 
     condition = conditions.has_diagnostics,
@@ -520,7 +556,7 @@ local DefaultStatusline = {
     Space,
     Diagnostics,
     Align,
-    utils.make_flexible_component(3, Gps, { provider = "" }),
+    utils.make_flexible_component(3, Gps2, { provider = "" }),
     DAPMessages,
     Align,
     LSPActive,

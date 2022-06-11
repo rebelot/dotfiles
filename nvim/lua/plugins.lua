@@ -271,6 +271,14 @@ return require("packer").startup(function(use)
     })
 
     use({
+        "nvim-treesitter/nvim-treesitter-context",
+        after = "nvim-treesitter",
+        config = function()
+            vim.api.nvim_set_hl(0, 'TreesitterContext', { link = 'Folded' })
+        end
+    })
+
+    use({
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("plugins.indent-blankline")
