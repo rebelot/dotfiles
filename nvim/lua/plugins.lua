@@ -109,6 +109,38 @@ return require("packer").startup(function(use)
     })
 
     use({
+        "SmiteshP/nvim-navic",
+        after = { "lspkind-nvim" },
+        config = function()
+            require("nvim-navic").setup({ icons = require("lspkind").symbol_map })
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    local bufnr = args.buf
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    if not vim.tbl_contains({ "copilot", "null-ls", "ltex" }, client.name) then
+                        require("nvim-navic").attach(client, bufnr)
+                    end
+                end,
+            })
+        end,
+    })
+
+    use({
+        "stevearc/aerial.nvim",
+        cmd = "AerialToggle",
+        config = function()
+            require("aerial").setup()
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    local bufnr = args.buf
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    require("aerial").on_attach(client, bufnr)
+                end,
+            })
+        end,
+    })
+
+    use({
         "hrsh7th/nvim-cmp",
         config = function()
             require("plugins.cmp")
@@ -164,7 +196,7 @@ return require("packer").startup(function(use)
 
     use({
         "zbirenbaum/copilot-cmp",
-        after = { "copilot.lua", "nvim-cmp" },
+        module = "copilot_cmp",
     })
 
     use({
@@ -274,8 +306,8 @@ return require("packer").startup(function(use)
         "nvim-treesitter/nvim-treesitter-context",
         after = "nvim-treesitter",
         config = function()
-            vim.api.nvim_set_hl(0, 'TreesitterContext', { link = 'Folded' })
-        end
+            vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Folded" })
+        end,
     })
 
     use({
@@ -548,23 +580,39 @@ return require("packer").startup(function(use)
                 cmd = { "ipython" },
                 autoclose = true,
             })
+            local htop = require("terminal").terminal:new({
+                layout = { open_cmd = "float" },
+                cmd = { "htop" },
+                autoclose = true,
+            })
             local lazygit = require("terminal").terminal:new({
                 layout = { open_cmd = "float", height = 0.9, width = 0.9 },
                 cmd = { "lazygit" },
                 autoclose = true,
             })
             vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
+
             vim.api.nvim_create_user_command("IPython", function()
+                local bufnr = vim.api.nvim_get_current_buf()
+                vim.keymap.set("x", "<leader>ts", function()
+                    vim.api.nvim_feedkeys('"+y', "n", false)
+                    ipython:send("%paste")
+                end, { buffer = bufnr })
+                vim.keymap.set("n", "<leader>t?", function()
+                    require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
+                end, { buffer = bufnr })
                 ipython:toggle(nil, true)
             end, {})
+
             vim.api.nvim_create_user_command("Lazygit", function(args)
                 lazygit.cwd = args.args and vim.fn.expand(args.args)
                 lazygit:toggle(nil, true)
             end, { nargs = "?" })
-            -- vim.keymap.set("x", "<leader>ts", [["+y<cmd>lua require'terminal'.send(0, "%paste")<CR>]])
-            -- vim.keymap.set("n", "<leader>t?", function()
-            --     require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
-            -- end)
+
+            vim.api.nvim_create_user_command("Htop", function()
+                htop:toggle(nil, true)
+            end, { nargs = "?" })
+
         end,
     })
 

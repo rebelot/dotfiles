@@ -60,7 +60,7 @@ autocmd("FileType", {
 -----------------
 
 autocmd("WinEnter", {
-    command = [[let &scrolloff = winheight(0) / 3]],
+    command = [[let &l:scrolloff = winheight(0) / 3]],
     group = au_id,
 })
 
@@ -73,11 +73,13 @@ autocmd("WinEnter", {
 --     group = au_id,
 -- })
 
-autocmd({ "WinEnter", "BufWinEnter" }, {
+autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
     callback = function(args)
         local buf = args.buf
         if not vim.tbl_contains({ "terminal", "prompt", "nofile" }, vim.bo[buf].buftype) then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
+        -- else
+        --     vim.cmd([[setl nocursorline | let &l:relativenumber = &l:number]])
         end
     end,
     group = au_id,

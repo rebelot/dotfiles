@@ -30,6 +30,8 @@ vim.lsp.buf.rename = function(new_name, options)
     lsprename(new_name, options)
 end
 
+require("lsp.inlay_hints")
+
 ------------------
 -- Capabilities --
 ------------------
@@ -166,7 +168,7 @@ local on_attach = function(client, bufnr)
             group = lsp_references_au_id,
             desc = "LSP document highlight",
         })
-        vim.api.nvim_create_autocmd("CursorMoved", {
+        vim.api.nvim_create_autocmd({ "CursorMoved", "WinLeave" }, {
             callback = vim.lsp.buf.clear_references,
             buffer = bufnr,
             group = lsp_references_au_id,

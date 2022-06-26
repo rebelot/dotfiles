@@ -82,8 +82,8 @@ require("lspconfig.configs").pylance = {
             python = {
                 analysis = vim.empty_dict(),
                 telemetry = {
-                    enable = false
-                }
+                    enable = false,
+                },
             },
             telemetry = {
                 telemetryLevel = "off",
@@ -98,7 +98,7 @@ require("lspconfig.configs").pylance = {
             description = [[
          https://github.com/microsoft/pyright
          `pyright`, a static type checker and language server for python
-         ]],
+         ]]  ,
         },
         -- before_init = function(_, config)
         --     if not config.settings.python then
@@ -192,12 +192,19 @@ return {
             { range = true, desc = "Extract methdod" }
         )
     end,
+    handlers = {
+        ["textDocument/inlayHint"] = require("lsp.inlay_hints").handler,
+    },
     settings = {
         python = {
             analysis = {
                 indexing = true,
                 typeCheckingMode = "basic",
                 diagnosticMode = "workspace",
+                inlayHints = {
+                    variableTypes = true,
+                    functionReturnTypes = true,
+                },
                 stubPath = vim.fn.expand("$HOME/typings"),
                 diagnosticSeverityOverrides = {
                     reportMissingTypeStubs = "information",

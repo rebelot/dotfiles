@@ -62,6 +62,7 @@ vim.opt.fillchars:append({
 })
 
 vim.opt.fillchars:append({ foldopen = "▾", foldsep = "│", foldclose = "▸" })
+vim.opt.fillchars:append({ diff = "╲" })
 
 vim.o.inccommand = "nosplit" -- real time preview of substitution commands
 vim.o.showmode = false -- Do not show -- MODE -- in cmdline--
@@ -83,4 +84,3 @@ function _G.CustomFoldText()
 end
 
 vim.opt.foldtext = "v:lua.CustomFoldText()"
-
