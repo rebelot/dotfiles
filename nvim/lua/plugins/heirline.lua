@@ -74,12 +74,12 @@ local ViMode = {
         local color = self:mode_color()
         return { fg = color, bold = true }
     end,
-    update = {
-        "ModeChanged",
-        callback = function()
-            vim.cmd("redrawstatus")
-        end,
-    },
+    -- update = {
+    --     "ModeChanged",
+    --     callback = function()
+    --         vim.cmd("redrawstatus")
+    --     end,
+    -- },
 }
 
 local FileNameBlock = {
@@ -236,46 +236,60 @@ local LSPActive = {
     --     return " [" .. table.concat(names, " ") .. "]"
     -- end,
     hl = { fg = "green", bold = true },
+    on_click = {
+        name = "heirline_LSP",
+        callback = function()
+            vim.defer_fn(function()
+                vim.cmd("LspInfo")
+            end, 100)
+        end,
+    },
 }
 
--- local LSPMessages = {
---     provider = function()
---         local status = require("lsp-status").status()
---         if status ~= " " then
---             return status
---         end
---     end,
---     hl = { fg = "gray" },
--- }
-
-local Gps = {
-    condition = require("nvim-gps").is_available,
-    provider = require("nvim-gps").get_location,
-    hl = { fg = "gray" },
-}
-
-local Gps2 = {
-    condition = require("nvim-gps").is_available,
+local Navic = {
+    condition = require("nvim-navic").is_available,
     static = {
-        type_map = {
-            ["container-name"] = "Identifier",
-            ["method-name"] = "Method",
-            ["function-name"] = "Function",
-            ["class-name"] = "Type",
-            ["tag-name"] = 'Tag',
+        type_hl = {
+            File = "Directory",
+            Module = "Include",
+            Namespace = "TSNamespace",
+            Package = "Include",
+            Class = "Struct",
+            Method = "Method",
+            Property = "TSProperty",
+            Field = "TSField",
+            Constructor = "TSConstructor ",
+            Enum = "TSField",
+            Interface = "Type",
+            Function = "Function",
+            Variable = "TSVariable",
+            Constant = "Constant",
+            String = "String",
+            Number = "Number",
+            Boolean = "Boolean",
+            Array = "TSField",
+            Object = "Type",
+            Key = "TSKeyword",
+            Null = "Comment",
+            EnumMember = "TSField",
+            Struct = "Struct",
+            Event = "Keyword",
+            Operator = "Operator",
+            TypeParameter = "Type",
         },
     },
     init = function(self)
-        local data = require("nvim-gps").get_data()
+        local data = require("nvim-navic").get_data() or {}
         local children = {}
         for i, d in ipairs(data) do
             local child = {
                 {
-                    provider = d.icon,
-                    hl = self.type_map[d.type],
+                    provider = d.icon .. " ",
+                    hl = self.type_hl[d.type],
                 },
                 {
-                    provider = d.text,
+                    provider = d.name,
+                    -- hl = self.type_hl[d.type],
                 },
             }
             if #data > 1 and i < #data then
@@ -479,6 +493,12 @@ local WorkDir = {
         end
     end,
     hl = { fg = "blue", bold = true },
+    on_click = {
+        callback = function()
+            vim.cmd('NvimTreeToggle')
+        end,
+        name = "heirline_workdir",
+    },
 
     utils.make_flexible_component(1, {
         provider = function(self)
@@ -556,7 +576,7 @@ local DefaultStatusline = {
     Space,
     Diagnostics,
     Align,
-    utils.make_flexible_component(3, Gps2, { provider = "" }),
+    utils.make_flexible_component(3, Navic, { provider = "" }),
     DAPMessages,
     Align,
     LSPActive,
