@@ -21,7 +21,7 @@ cmp.setup({
     -- end,
     window = {
         documentation = {
-            winhighlight = "",
+            winhighlight = "Search:None",
             border = require("lsp.lsp-config").borders,
         },
         -- completion = {
@@ -144,9 +144,10 @@ cmp.setup({
     },
 
     formatting = {
+        fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-            -- vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
-            vim_item = require("lspkind").cmp_format()(entry, vim_item)
+            -- vim_item = require("lspkind").cmp_format()(entry, vim_item)
+            local icon = require("lspkind").symbol_map[vim_item.kind] .. " "
 
             local alias = {
                 buffer = "buffer",
@@ -165,13 +166,20 @@ cmp.setup({
             else
                 vim_item.menu = alias[entry.source.name] or entry.source.name
             end
+
+            if entry.source.name == "copilot" then
+                icon = " " --  
+                vim_item.kind_hl_group = "String"
+            end
+            vim_item.menu = vim_item.kind -- .. " (" .. vim_item.menu .. ')'
+            vim_item.kind = icon
             return vim_item
         end,
     },
     sources = {
         { name = "nvim_lsp_signature_help" },
-        { name = "copilot" },
         { name = "nvim_lsp" },
+        { name = "copilot" },
         { name = "ultisnips" },
         { name = "path" },
         { name = "buffer" },
@@ -193,15 +201,17 @@ cmp.setup.cmdline("/", {
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(":", {
     completion = { autocomplete = false },
-    sources = cmp.config.sources({
-        { name = "path" },
-    },
-    -- {
-    --     { name = "nvim_lua" },
-    -- },
-    {
-        { name = "cmdline" },
-    }),
+    sources = cmp.config.sources(
+        {
+            { name = "path" },
+        },
+        -- {
+        --     { name = "nvim_lua" },
+        -- },
+        {
+            { name = "cmdline" },
+        }
+    ),
     -- sources = {
     --     -- { name = 'cmdline_history', max_item_count = 2 },
     --     { name = "cmdline" },

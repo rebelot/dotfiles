@@ -89,26 +89,6 @@ return require("packer").startup(function(use)
     })
 
     use({
-        "SmiteshP/nvim-gps",
-        after = { "nvim-treesitter", "lspkind-nvim" },
-        config = function()
-            local getkind = function(kind)
-                local kinds = vim.lsp.protocol.CompletionItemKind
-                return kinds[kinds[kind]]:match("^.*%s")
-            end
-            require("nvim-gps").setup({
-                icons = {
-                    ["class-name"] = getkind("Class"),
-                    ["function-name"] = getkind("Function"),
-                    ["method-name"] = getkind("Method"),
-                    ["container-name"] = getkind("Enum"),
-                    -- ["tag-name"] = ' '
-                },
-            })
-        end,
-    })
-
-    use({
         "SmiteshP/nvim-navic",
         after = { "lspkind-nvim" },
         config = function()
@@ -424,6 +404,12 @@ return require("packer").startup(function(use)
         end,
     })
 
+    use ({"ziontee113/color-picker.nvim",
+    config = function()
+        require("color-picker")
+    end,
+})
+
     --------------------------
     -- Editor Utilities, UI --
     --------------------------
@@ -612,7 +598,6 @@ return require("packer").startup(function(use)
             vim.api.nvim_create_user_command("Htop", function()
                 htop:toggle(nil, true)
             end, { nargs = "?" })
-
         end,
     })
 

@@ -68,10 +68,10 @@ noremap <m-l> zl
 noremap <m-h> zh
 noremap <m-j> <C-E>
 noremap <m-k> <C-Y>
-noremap <ScrollWheelUp> <C-Y>
-noremap <ScrollWheelDown> <C-E>
-noremap <S-ScrollWheelUp> <C-U>
-noremap <S-ScrollWheelDown> <C-D>
+" noremap <ScrollWheelUp> <C-Y>
+" noremap <ScrollWheelDown> <C-E>
+" noremap <S-ScrollWheelUp> <C-U>
+" noremap <S-ScrollWheelDown> <C-D>
 
 
 " close window/buffer

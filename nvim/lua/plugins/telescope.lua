@@ -154,7 +154,7 @@ require("telescope").setup({
             depth = 3,
             mappings = multi_open_mappings,
         },
-        ["ui-select"] = themes.get_dropdown()
+        ["ui-select"] = themes.get_dropdown(),
     },
 })
 
@@ -175,6 +175,9 @@ vim.keymap.set("n", "<leader>fq", require("telescope.builtin").quickfix, { desc 
 vim.keymap.set("n", "<leader>fh", require("telescope.builtin").oldfiles, { desc = "Telescope: Old files" })
 vim.keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, { desc = "Telescope: Buffers" })
 vim.keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, { desc = "Telescope: Live Grep" })
+vim.keymap.set("n", "<leader>fG", function()
+    require("telescope.builtin").live_grep({ grep_open_files = true })
+end, { desc = "Telescope: Live Grep open_files" })
 vim.keymap.set("n", "<leader><space>", require("telescope.builtin").commands, { desc = "Telescope: Commands" })
 vim.keymap.set("n", "<leader>ft", require("telescope.builtin").treesitter, { desc = "Telescope: Treesitter" })
 vim.keymap.set("n", "<leader>fj", require("telescope.builtin").jumplist, { desc = "Telescope: Jump list" })

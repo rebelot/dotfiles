@@ -33,6 +33,14 @@ function M.toggle()
     end
 end
 
+function set_mark(bufnr, ns, line, text)
+    vim.api.nvim_buf_set_extmark(bufnr, namespace, line, 0, {
+        virt_text = { { text, M.config.highlight } },
+        virt_text_pos = "eol",
+        hl_mode = "combine",
+    })
+end
+
 function M.handler(err, result, ctx, config)
     if err then
         return
@@ -46,11 +54,7 @@ function M.handler(err, result, ctx, config)
         local label = value.label
 
         if not (M.config.current_line_only and line + 1 ~= vim.api.nvim_win_get_cursor(0)[1]) then
-            vim.api.nvim_buf_set_extmark(bufnr, namespace, line, 0, {
-                virt_text = { { label, M.config.highlight } },
-                virt_text_pos = "eol",
-                hl_mode = "combine",
-            })
+            pcall(set_mark, {bufnr, namespace, line, label})
         end
     end
 end
@@ -69,7 +73,7 @@ local function setup_au(bufnr)
             end
         end,
         group = augrp,
-        buffer = bufnr
+        buffer = bufnr,
     })
 end
 

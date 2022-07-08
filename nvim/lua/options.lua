@@ -11,6 +11,7 @@ vim.g.tex_flavor = "latex"
 vim.o.encoding = "utf-8"
 vim.o.modeline = true
 vim.o.mouse = "a" -- enable mouse for all modes
+vim.o.mousescroll = 'ver:1,hor:1'
 vim.o.errorbells = false -- remove all errors
 vim.o.visualbell = false
 vim.o.history = 1000 -- remember more commands and search history
@@ -76,6 +77,7 @@ vim.o.signcolumn = "yes"
 vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.foldenable = false
+vim.opt.jumpoptions:append({ "view" })
 
 vim.o.dictionary = "/usr/share/dict/words"
 
