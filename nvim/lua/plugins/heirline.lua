@@ -92,11 +92,8 @@ local FileIcon = {
     init = function(self)
         local filename = self.filename
         local extension = vim.fn.fnamemodify(filename, ":e")
-        self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(
-            filename,
-            extension,
-            { default = true }
-        )
+        self.icon, self.icon_color =
+        require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
     end,
     provider = function(self)
         return self.icon and (self.icon .. " ")
@@ -431,57 +428,49 @@ local Snippets = {
 local DAPMessages = {
     condition = function()
         local session = require("dap").session()
-        if session then
-            local filename = vim.api.nvim_buf_get_name(0)
-            if session.config then
-                local progname = session.config.program
-                return filename == progname
-            end
-        end
-        return false
+        return session ~= nil
     end,
     provider = function()
         return " " .. require("dap").status()
     end,
     hl = "Debug",
+    {
+        provider = "",
+        on_click = {
+            callback = function()
+                require'dap'.step_into()
+            end
+        }
+    },
+    {provider = ' '},
+    {
+        provider = "",
+        on_click = {
+            callback = function()
+                require'dap'.step_out()
+            end
+        }
+    },
+    {provider = ' '},
+    {
+        provider = " ",
+        on_click = {
+            callback = function()
+                require'dap'.step_over()
+            end
+        }
+    },
+    {provider = ' '},
+    {
+        provider = " ",
+        on_click = {
+            callback = function()
+                require'dap'.close()
+            end
+        }
+    },
     --       ﰇ  
 }
-
--- local UltTest = {
---     condition = function()
---         return vim.api.nvim_call_function("ultest#is_test_file", {}) ~= 0
---     end,
---     static = {
---         passed_icon = vim.fn.sign_getdefined("test_pass")[1].text,
---         failed_icon = vim.fn.sign_getdefined("test_fail")[1].text,
---         passed_hl = { fg = utils.get_highlight("UltestPass").fg },
---         failed_hl = { fg = utils.get_highlight("UltestFail").fg },
---     },
---     init = function(self)
---         self.status = vim.api.nvim_call_function("ultest#status", {})
---     end,
---     {
---         provider = function(self)
---             return self.passed_icon .. self.status.passed .. " "
---         end,
---         hl = function(self)
---             return self.passed_hl
---         end,
---     },
---     {
---         provider = function(self)
---             return self.failed_icon .. self.status.failed .. " "
---         end,
---         hl = function(self)
---             return self.failed_hl
---         end,
---     },
---     {
---         provider = function(self)
---             return "of " .. self.status.tests - 1
---         end,
---     },
--- }
 
 local WorkDir = {
     provider = function(self)
@@ -495,7 +484,7 @@ local WorkDir = {
     hl = { fg = "blue", bold = true },
     on_click = {
         callback = function()
-            vim.cmd('NvimTreeToggle')
+            vim.cmd("NvimTreeToggle")
         end,
         name = "heirline_workdir",
     },

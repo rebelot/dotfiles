@@ -2,6 +2,9 @@ local copts = { noremap = true }
 require("gitsigns").setup({
     trouble = true,
     keymaps = {},
+    preview_config = {
+        border = require("lsp.lsp-config").borders,
+    },
 })
 vim.api.nvim_set_keymap("n", "<leader>hd", "<cmd>Gitsigns preview_hunk<CR>", copts)
 vim.api.nvim_set_keymap("n", "]h", "<cmd>Gitsigns next_hunk<CR>", copts)

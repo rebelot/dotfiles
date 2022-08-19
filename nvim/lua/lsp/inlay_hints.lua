@@ -33,7 +33,7 @@ function M.toggle()
     end
 end
 
-function set_mark(bufnr, ns, line, text)
+local function set_mark(bufnr, line, text)
     vim.api.nvim_buf_set_extmark(bufnr, namespace, line, 0, {
         virt_text = { { text, M.config.highlight } },
         virt_text_pos = "eol",
@@ -54,7 +54,8 @@ function M.handler(err, result, ctx, config)
         local label = value.label
 
         if not (M.config.current_line_only and line + 1 ~= vim.api.nvim_win_get_cursor(0)[1]) then
-            pcall(set_mark, {bufnr, namespace, line, label})
+            pcall(function() set_mark(bufnr, line, label) end)
+            -- set_mark(bufnr, ns, line, label)
         end
     end
 end
@@ -64,7 +65,7 @@ local augrp = vim.api.nvim_create_augroup("LspInlayHints", { clear = true })
 local function setup_au(bufnr)
     vim.api.nvim_create_autocmd({
         "TextChanged",
-        "ModeChanged",
+        "InsertLeave",
         M.config.current_line_only and unpack(M.config.current_line_au) or nil,
     }, {
         callback = function()

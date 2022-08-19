@@ -38,6 +38,11 @@ source "$HOME/venvs/base/bin/activate"                       	# <-- Activate the
 # export MANPATH="$MANPATH:/opt/anaconda3/man:/opt/anaconda3/share/man"
 # }}} no need, man smart, man good, if set, man breaks in tmux
 
+# LS_COLORS
+# (( $+commands[dircolors] )) && eval "$(dircolors -b $HOME/.LS_COLORS)" # coreutils tool, exports LS_COLORS
+# (( $+commands[dircolors] )) && eval "$(dircolors -b)" # coreutils tool, exports LS_COLORS
+(( $+commands[vivid] )) && export LS_COLORS="$(vivid generate tokyonight)" # coreutils tool, exports LS_COLORS
+
 # ZSH init {{{
 export ZSH="$HOME/.zsh"
 ZSH_CACHE_DIR="$ZSH/cache"

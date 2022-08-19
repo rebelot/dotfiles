@@ -83,6 +83,9 @@ return require("packer").startup(function(use)
             require("lspkind").init({
                 mode = "symbol_text",
                 preset = "codicons",
+                symbol_map = {
+                    Copilot = "",
+                },
                 -- preset = "default",
             })
         end,
@@ -146,7 +149,7 @@ return require("packer").startup(function(use)
             -- },
             "kdheepak/cmp-latex-symbols",
             "dmitmel/cmp-cmdline-history",
-            -- "andersevenrud/cmp-tmux",
+            "andersevenrud/cmp-tmux",
             "quangnguyen30192/cmp-nvim-ultisnips",
         },
     })
@@ -377,15 +380,15 @@ return require("packer").startup(function(use)
         end,
     })
     -- use 'sainnhe/gruvbox-material'
-    use({ "folke/tokyonight.nvim" })
+    -- use({ "folke/tokyonight.nvim" })
 
-    use({
-        "catppuccin/nvim",
-        as = "catppuccin",
-    })
+    -- use({
+    --     "catppuccin/nvim",
+    --     as = "catppuccin",
+    -- })
     -- use 'rmehri01/onenord.nvim'
     -- use 'arcticicestudio/nord-vim'
-    use("shaunsingh/nord.nvim")
+    -- use("shaunsingh/nord.nvim")
     -- use "projekt0n/github-nvim-theme"
     -- use 'gruvbox-community/gruvbox'
     use({
@@ -404,11 +407,12 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use ({"ziontee113/color-picker.nvim",
-    config = function()
-        require("color-picker")
-    end,
-})
+    use({
+        "ziontee113/color-picker.nvim",
+        config = function()
+            require("color-picker")
+        end,
+    })
 
     --------------------------
     -- Editor Utilities, UI --
@@ -527,6 +531,8 @@ return require("packer").startup(function(use)
     use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
     use({ "tpope/vim-fugitive" })
+
+    use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
 
     use({
         "majutsushi/tagbar",
@@ -655,13 +661,19 @@ return require("packer").startup(function(use)
         end,
     })
 
+    -- use({
+    --     "tpope/vim-surround",
+    --     config = function()
+    --         vim.api.nvim_create_autocmd("FileType", {
+    --             pattern = "tex",
+    --             command = [[let g:surround_92 = "\\\1\\\1{\r}"]],
+    --         })
+    --     end,
+    -- })
     use({
-        "tpope/vim-surround",
+        "kylechui/nvim-surround",
         config = function()
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "tex",
-                command = [[let g:surround_92 = "\\\1\\\1{\r}"]],
-            })
+            require("nvim-surround").setup({})
         end,
     })
 

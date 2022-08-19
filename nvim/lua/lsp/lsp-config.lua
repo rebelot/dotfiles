@@ -86,13 +86,13 @@ local on_attach = function(client, bufnr)
         require("telescope.builtin").lsp_implementations,
         { unpack(opts), desc = "Go to LSP implementations" }
     )
-    vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { unpack(opts), desc = "List LSP Code Actions" })
-    vim.keymap.set(
-        "x",
-        "<leader>la",
-        ":<C-u>lua vim.lsp.buf.range_code_action()<cr>", --https://github.com/neovim/neovim/issues/18340
-        { unpack(opts), desc = "List LSP Code Actions for selected range" }
-    )
+    vim.keymap.set({"n", "x"}, "<leader>la", vim.lsp.buf.code_action, { unpack(opts), desc = "List LSP Code Actions" })
+    -- vim.keymap.set(
+    --     "x",
+    --     "<leader>la",
+    --     ":<C-u>lua vim.lsp.buf.range_code_action()<cr>", --https://github.com/neovim/neovim/issues/18340
+    --     { unpack(opts), desc = "List LSP Code Actions for selected range" }
+    -- )
     vim.keymap.set(
         "n",
         "<leader>ls",

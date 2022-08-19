@@ -35,7 +35,7 @@ local function wininput(opts, on_confirm, win_opts)
     win_opts.width = #default_text + #prompt + 5 < win_opts.width and win_opts.width or #default_text + #prompt + 5
 
     local win = vim.api.nvim_open_win(buf, true, win_opts)
-    vim.api.nvim_win_set_option(win, "winhighlight", "Search:None")
+    vim.wo[win].winhighlight = "Search:None"
 
     vim.cmd("startinsert!")
     vim.defer_fn(function()
@@ -43,7 +43,6 @@ local function wininput(opts, on_confirm, win_opts)
         vim.cmd("startinsert!")
     end, 10)
 end
-
 
 -- wininput({
 --     prompt = "Enter a number: ",
@@ -56,11 +55,15 @@ end
 -- )
 
 local orig_ui_input = vim.ui.input
-vim.api.nvim_create_namespace('winui')
+vim.api.nvim_create_namespace("winui")
 vim.ui.input = function(opts, on_confirm)
-    if vim.bo.filetype == 'TelescopePrompt' then
+    if vim.bo.filetype == "TelescopePrompt" then
         orig_ui_input(opts, on_confirm)
     else
-        wininput(opts, on_confirm, { border = require'lsp.lsp-config'.borders, relative = "cursor", row = 1, col = 0, width = 0 })
+        wininput(
+            opts,
+            on_confirm,
+            { border = require("lsp.lsp-config").borders, relative = "cursor", row = 1, col = 0, width = 1 }
+        )
     end
 end

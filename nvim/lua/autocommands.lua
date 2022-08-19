@@ -1,6 +1,9 @@
-local autocmd = vim.api.nvim_create_autocmd
-
 local au_id = vim.api.nvim_create_augroup("MyAutoCommands", { clear = true })
+
+local autocmd = function(pattern, opts)
+    opts.group = au_id
+    vim.api.nvim_create_autocmd(pattern, opts)
+end
 
 -------------------------
 --  Highlight On Yank  --
@@ -10,7 +13,6 @@ autocmd("TextYankPost", {
     callback = function()
         vim.highlight.on_yank({ higroup = "IncSearch", timeout = 500 })
     end,
-    group = au_id,
 })
 
 --------------------------
@@ -20,7 +22,6 @@ autocmd("TextYankPost", {
 autocmd("FileType", {
     pattern = "qf",
     command = "set nobuflisted",
-    group = au_id,
 })
 
 ------------------------
@@ -30,13 +31,11 @@ autocmd("FileType", {
 autocmd({ "BufNewFile", "BufRead" }, {
     pattern = { "*.cms", "*.mae" },
     command = "setlocal foldmarker={,} foldmethod=marker",
-    group = au_id,
 })
 
 autocmd({ "BufNewFile", "BufRead" }, {
     pattern = "*.msj",
     command = "set filetype=config",
-    group = au_id,
 })
 
 -----------------------------
@@ -46,22 +45,19 @@ autocmd({ "BufNewFile", "BufRead" }, {
 autocmd("FileType", {
     pattern = "json",
     command = [[syntax match Comment +\/\/.\+$+]],
-    group = au_id,
 })
 
 autocmd("FileType", {
     pattern = { "markdown", "pandoc" },
     command = [[setlocal makeprg=pandoc\ -f\ gfm\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf]],
-    group = au_id,
 })
 
 -----------------
 --  Scrolloff  --
 -----------------
 
-autocmd("WinEnter", {
+autocmd({"WinEnter", "BufWinEnter"}, {
     command = [[let &l:scrolloff = winheight(0) / 3]],
-    group = au_id,
 })
 
 -----------------------------------
@@ -78,16 +74,14 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
         local buf = args.buf
         if not vim.tbl_contains({ "terminal", "prompt", "nofile" }, vim.bo[buf].buftype) then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
-        -- else
-        --     vim.cmd([[setl nocursorline | let &l:relativenumber = &l:number]])
+        else
+            vim.cmd([[setl nocursorline | let &l:relativenumber = &l:number]])
         end
     end,
-    group = au_id,
 })
 
 autocmd("WinLeave", {
     command = "setlocal nocursorline norelativenumber",
-    group = au_id,
 })
 -- autocmd("FileType", {})
 
@@ -102,12 +96,20 @@ autocmd("TermOpen", {
             vim.cmd("startinsert")
         end
     end,
-    group = au_id,
 })
 autocmd({ "WinEnter", "BufWinEnter" }, {
     command = [[ if &buftype == 'terminal' | startinsert | endif ]],
-    group = au_id,
 })
+
+-------------
+--  Folds  --
+-------------
+
+-- fix for Telescope #699
+-- autocmd("BufWinEnter", {
+--     command = 'normal! zx',
+-- })
+
 
 -- autocmd FileType latex,tex,markdown,txt setlocal spell
 -- autocmd FileType latex,tex,markdown,txt,text setlocal wrap

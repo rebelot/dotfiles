@@ -2,8 +2,8 @@ vim.g.python3_host_prog = "/Users/laurenzi/venvs/base/bin/python"
 vim.g.python_host_prog = "/Users/laurenzi/venvs/base27/bin/python"
 -- vim.g.netrw_browsex_viewer  = 'open'
 
-vim.g.do_filetype_lua = 1
-vim.g.did_load_filetypes = 0
+-- vim.g.do_filetype_lua = 1
+-- vim.g.did_load_filetypes = 0
 
 vim.o.termguicolors = true -- enable gui colors for terminal
 vim.g.vimsyn_embed = "lPr"
@@ -11,7 +11,7 @@ vim.g.tex_flavor = "latex"
 vim.o.encoding = "utf-8"
 vim.o.modeline = true
 vim.o.mouse = "a" -- enable mouse for all modes
-vim.o.mousescroll = 'ver:1,hor:1'
+vim.o.mousescroll = "ver:1,hor:1"
 vim.o.errorbells = false -- remove all errors
 vim.o.visualbell = false
 vim.o.history = 1000 -- remember more commands and search history
@@ -50,6 +50,7 @@ vim.o.sidescroll = 1 -- smooth side scrolling
 vim.o.conceallevel = 2 -- conceal marked text
 vim.o.completeopt = "menuone,noinsert,noselect"
 vim.o.pumheight = 15 -- set menu max height
+vim.o.maxmempattern = 5000
 
 vim.opt.fillchars:append({
     fold = " ",
@@ -80,6 +81,7 @@ vim.o.foldenable = false
 vim.opt.jumpoptions:append({ "view" })
 
 vim.o.dictionary = "/usr/share/dict/words"
+-- vim.opt.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor2/lCursor2,r-cr:hor20,o:hor50"
 
 function _G.CustomFoldText()
     return vim.fn.getline(vim.v.foldstart) .. " ... " .. vim.fn.getline(vim.v.foldend):gsub("^%s*", "")

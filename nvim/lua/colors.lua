@@ -85,19 +85,37 @@ function M.catppuccin()
     vim.cmd("colorscheme catppuccin")
 end
 
-function M.kanagawa()
+function M.kanagawa(theme)
+    local colors = require("kanagawa.colors").setup({theme = theme})
     require("kanagawa").setup({
         dimInactive = false,
         globalStatus = true,
-        overrides = {},
-        theme = "default",
-        -- theme = 'light'
+        overrides = {
+            -- Pmenu = { fg = colors.fg_dark, bg = colors.bg_light0 },
+            -- PmenuSel = { fg = "NONE", bg = colors.bg_light1 },
+            -- PmenuSbar = { bg = colors.bg_dim },
+            -- PmenuThumb = { bg = colors.bg_light1 },
+
+            TelescopeNormal = { bg = colors.bg_dim },
+            TelescopeBorder = { fg = colors.bg_dim, bg = colors.bg_dim},
+            TelescopeTitle = { fg = colors.bg_light3, bold=true},
+
+            TelescopePromptNormal = { bg = colors.bg_light0 },
+            TelescopePromptBorder = { fg = colors.bg_light0, bg = colors.bg_light0},
+
+            TelescopeResultsNormal = { bg = "#1a1a22" },
+            TelescopeResultsBorder = { fg = "#1a1a22", bg = "#1a1a22" },
+
+            TelescopePreviewNormal = { bg = colors.bg_dark },
+            TelescopePreviewBorder = { bg = colors.bg_dark, fg = colors.bg_dark }
+        },
+        theme = theme
     })
     vim.cmd("colorscheme kanagawa")
 end
 
 -- tokyonight()
 -- gruvbox()
-M.kanagawa()
+M.kanagawa('default')
 
 return M

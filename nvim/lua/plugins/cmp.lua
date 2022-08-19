@@ -25,9 +25,10 @@ cmp.setup({
             border = require("lsp.lsp-config").borders,
         },
         -- completion = {
-        --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:PmenuSel,Search:None",
-        --     border = require'lsp.lsp-config'.borders
-        -- }
+        --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:CmpCompletionSel,Search:None",
+        --     border = 'none'
+        -- border = require("lsp.lsp-config").borders,
+        -- },
     },
 
     mapping = {
@@ -146,78 +147,60 @@ cmp.setup({
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-            -- vim_item = require("lspkind").cmp_format()(entry, vim_item)
-            local icon = require("lspkind").symbol_map[vim_item.kind] .. " "
+            local menu
+            local kind = require("lspkind").symbol_map[vim_item.kind] --.. " " .. vim_item.kind
 
             local alias = {
-                buffer = "buffer",
-                path = "path",
-                nvim_lsp = "LSP",
-                luasnip = "LuaSnip",
-                ultisnips = "UltiSnips",
+                buffer = "[B]",
+                path = "[P]",
+                nvim_lsp = "[LSP]",
+                luasnip = "[LS]",
+                ultisnips = "[US]",
                 nvim_lua = "Lua",
-                tmux = "tmux",
-                latex_symbols = "Latex",
-                nvim_lsp_signature_help = "LSP Signature",
+                tmux = "[T]",
+                latex_symbols = "[TX]",
+                nvim_lsp_signature_help = "[S]",
             }
 
             if entry.source.name == "nvim_lsp" then
-                vim_item.menu = entry.source.source.client.name
+                menu = entry.source.source.client.name
             else
-                vim_item.menu = alias[entry.source.name] or entry.source.name
+                menu = alias[entry.source.name] or entry.source.name
             end
-
-            if entry.source.name == "copilot" then
-                icon = " " --  
-                vim_item.kind_hl_group = "String"
-            end
-            vim_item.menu = vim_item.kind -- .. " (" .. vim_item.menu .. ')'
-            vim_item.kind = icon
+            vim_item.menu = vim_item.kind
+            vim_item.kind = kind
             return vim_item
         end,
     },
-    sources = {
+    sources = cmp.config.sources({
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" },
         { name = "copilot" },
         { name = "ultisnips" },
         { name = "path" },
+    }, {
         { name = "buffer" },
-        -- { name = "tmux", option = { all_panes = true } },
-    },
+        { name = "tmux", option = { all_panes = true } },
+    }),
 })
 
--- Use buffer source for `/`.
 -- { name = "buffer", option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
 cmp.setup.cmdline("/", {
     completion = { autocomplete = false },
     sources = {
         { name = "nvim_lsp_document_symbol" },
         { name = "buffer" }, --, option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
-        -- { name = "buffer" },
     },
 })
 
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(":", {
     completion = { autocomplete = false },
-    sources = cmp.config.sources(
-        {
-            { name = "path" },
-        },
-        -- {
-        --     { name = "nvim_lua" },
-        -- },
-        {
-            { name = "cmdline" },
-        }
-    ),
-    -- sources = {
-    --     -- { name = 'cmdline_history', max_item_count = 2 },
-    --     { name = "cmdline" },
-    --     { name = "nvim_lua" },
-    --     { name = "path" },
-    -- },
+    sources = cmp.config.sources({
+        { name = "path" },
+    }, {
+        { name = "cmdline" },
+    }),
 })
 
 cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
@@ -233,19 +216,6 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
         -- { name = "tmux", option = { all_panes = true } },
     },
 })
-
--- cmp.setup.filetype({ "lua" }, {
---     sources = {
---         { name = "nvim_lsp_signature_help" },
---         { name = "copilot" },
---         -- { name = "nvim_lua" },
---         { name = "nvim_lsp" },
---         { name = "ultisnips" },
---         { name = "path" },
---         { name = "buffer" },
---         -- { name = "tmux", option = { all_panes = true } },
---     },
--- })
 
 -- local rec_au = vim.api.nvim_create_augroup('CmpRecording', { clear = true })
 -- vim.api.nvim_create_autocmd('RecordingEnter', {
