@@ -53,6 +53,31 @@ return require("packer").startup(function(use)
     -- LSP, Diagnostics, Snippets, Completion --
     --------------------------------------------
 
+    -- use({
+    --     "theHamsta/nvim-semantic-tokens",
+    --     config = function()
+    --         require("nvim-semantic-tokens").setup({
+    --             preset = "default",
+    --             highlighters = { require("nvim-semantic-tokens.table-highlighter") },
+    --         })
+    --         vim.api.nvim_create_autocmd("LspAttach", {
+    --             callback = function(args)
+    --                 local bufnr = args.buf
+    --                 local client = vim.lsp.get_client_by_id(args.data.client_id)
+    --                 local caps = client.server_capabilities
+    --                 if caps.semanticTokensProvider and caps.semanticTokensProvider.full then
+    --                     local augrp = vim.api.nvim_create_augroup("LSP_Semantic_tokens", { clear = true })
+    --                     vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+    --                         callback = vim.lsp.buf.semantic_tokens_full,
+    --                         buffer = bufnr,
+    --                         group = augrp,
+    --                     })
+    --                 end
+    --             end,
+    --         })
+    --     end,
+    -- })
+
     use({
         "neovim/nvim-lspconfig",
         config = function()
@@ -110,7 +135,7 @@ return require("packer").startup(function(use)
 
     use({
         "stevearc/aerial.nvim",
-        cmd = "AerialToggle",
+        -- event = { "LspAttach" },
         config = function()
             require("aerial").setup()
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -399,13 +424,13 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({
-        "akinsho/nvim-bufferline.lua",
-        event = { "VimEnter" },
-        config = function()
-            require("plugins.bufferline")
-        end,
-    })
+    -- use({
+    --     "akinsho/nvim-bufferline.lua",
+    --     event = { "VimEnter" },
+    --     config = function()
+    --         require("plugins.bufferline")
+    --     end,
+    -- })
 
     use({
         "ziontee113/color-picker.nvim",
@@ -551,7 +576,12 @@ return require("packer").startup(function(use)
             vim.keymap.set("n", "<leader>mu", "<cmd>MundoToggle<CR>", { desc = "Mundo: toggle" })
         end,
     })
-
+    -- use({
+    --     "akinsho/toggleterm.nvim",
+    --     config = function()
+    --         require("toggleterm").setup()
+    --     end,
+    -- })
     use({
         "/Users/laurenzi/usr/src/terminal.nvim",
         -- event = "TermOpen",

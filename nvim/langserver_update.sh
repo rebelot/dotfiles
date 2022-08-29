@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # pyright
 # vim-language-server
 # bash-language-server
@@ -29,6 +30,7 @@ cmake --build Release
 
 # ltex-ls
 # https://github.com/valentjn/ltex-ls/releases
+
 # marksman
 # https://github.com/artempyanykh/marksman/releases/
 

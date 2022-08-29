@@ -65,7 +65,7 @@ dashboard.section.buttons.val = {
 --     spacing = 1
 -- }
 
-dashboard.section.footer.val = { "type  :help<Enter>  or  <F1>  for on-line help" }
+dashboard.section.footer.val =  "type  :help<Enter>  or  <F1>  for on-line help"
 dashboard.section.footer.opts = {
     hl = "DashboardFooter",
     position = "center"

@@ -89,6 +89,13 @@ require("lspconfig.configs").pylance = {
                 telemetryLevel = "off",
             },
         },
+        capabilities = {
+            textDocument = {
+                semanticTokensProvider = {
+                    full = true,
+                },
+            },
+        },
         docs = {
             package_json = vim.fn.expand(
                 "$HOME/.vscode/extensions/ms-python.vscode-pylance-*/package.json",

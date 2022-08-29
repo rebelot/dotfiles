@@ -5,6 +5,7 @@ local constructors = require("heirline.constructors")
 local function setup_colors()
     return {
         bright_bg = utils.get_highlight("Folded").bg,
+        bright_fg = utils.get_highlight("Folded").fg,
         red = utils.get_highlight("DiagnosticError").fg,
         dark_red = utils.get_highlight("DiffDelete").bg,
         green = utils.get_highlight("String").fg,
@@ -28,6 +29,10 @@ require("heirline").load_colors(setup_colors())
 local ViMode = {
     init = function(self)
         self.mode = vim.fn.mode(1)
+        if not self.once then
+            vim.cmd("au ModeChanged *:*o redrawstatus")
+        end
+        self.once = true
     end,
     static = {
         mode_names = {
@@ -74,12 +79,9 @@ local ViMode = {
         local color = self:mode_color()
         return { fg = color, bold = true }
     end,
-    -- update = {
-    --     "ModeChanged",
-    --     callback = function()
-    --         vim.cmd("redrawstatus")
-    --     end,
-    -- },
+    update = {
+        "ModeChanged",
+    },
 }
 
 local FileNameBlock = {
@@ -93,7 +95,7 @@ local FileIcon = {
         local filename = self.filename
         local extension = vim.fn.fnamemodify(filename, ":e")
         self.icon, self.icon_color =
-        require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+            require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
     end,
     provider = function(self)
         return self.icon and (self.icon .. " ")
@@ -207,7 +209,9 @@ local Ruler = {
 
 local ScrollBar = {
     static = {
-        sbar = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" },
+        -- sbar = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" },
+        sbar = { '🭶', '🭷', '🭸', '🭹', '🭺', '🭻' }
+
     },
     provider = function(self)
         local curr_line = vim.api.nvim_win_get_cursor(0)[1]
@@ -220,14 +224,14 @@ local ScrollBar = {
 
 local LSPActive = {
     condition = conditions.lsp_attached,
-    update = { "LspAttach", "LspDetach" },
+    update = { "LspAttach", "LspDetach", "WinEnter" },
 
     provider = " [LSP]",
 
     -- Or complicate things a bit and get the servers names
     -- provider  = function(self)
     --     local names = {}
-    --     for i, server in ipairs(vim.lsp.buf_get_clients(0)) do
+    --     for i, server in pairs(vim.lsp.buf_get_clients(0)) do
     --         table.insert(names, server.name)
     --     end
     --     return " [" .. table.concat(names, " ") .. "]"
@@ -236,9 +240,9 @@ local LSPActive = {
     on_click = {
         name = "heirline_LSP",
         callback = function()
-            vim.defer_fn(function()
+            vim.schedule(function()
                 vim.cmd("LspInfo")
-            end, 100)
+            end)
         end,
     },
 }
@@ -292,6 +296,7 @@ local Navic = {
             if #data > 1 and i < #data then
                 table.insert(child, {
                     provider = " > ",
+                    hl = { fg = "bright_fg" },
                 })
             end
             table.insert(children, child)
@@ -438,36 +443,36 @@ local DAPMessages = {
         provider = "",
         on_click = {
             callback = function()
-                require'dap'.step_into()
-            end
-        }
+                require("dap").step_into()
+            end,
+        },
     },
-    {provider = ' '},
+    { provider = " " },
     {
         provider = "",
         on_click = {
             callback = function()
-                require'dap'.step_out()
-            end
-        }
+                require("dap").step_out()
+            end,
+        },
     },
-    {provider = ' '},
+    { provider = " " },
     {
         provider = " ",
         on_click = {
             callback = function()
-                require'dap'.step_over()
-            end
-        }
+                require("dap").step_over()
+            end,
+        },
     },
-    {provider = ' '},
+    { provider = " " },
     {
         provider = " ",
         on_click = {
             callback = function()
-                require'dap'.close()
-            end
-        }
+                require("dap").close()
+            end,
+        },
     },
     --       ﰇ  
 }
@@ -578,12 +583,15 @@ local DefaultStatusline = {
     Ruler,
     Space,
     ScrollBar,
+    -- {
+    --     provider = function()
+    --         return vim.inspect(utils.get_highlight('StatusLine'))
+    --     end
+    -- }
 }
 
 local InactiveStatusline = {
-    condition = function()
-        return not conditions.is_active()
-    end,
+    condition = conditions.is_not_active,
     { hl = { fg = "gray", force = true }, WorkDir },
     FileNameBlock,
     { provider = "%<" },
@@ -685,13 +693,13 @@ local CloseButton = {
         provider = "",
         hl = { fg = "gray" },
         on_click = {
-            callback = function(_, winid)
-                vim.api.nvim_win_close(winid, true)
+            callback = function(_, minwid)
+                vim.api.nvim_win_close(minwid, true)
             end,
-            name = function(self)
-                return "heirline_close_button_" .. self.winnr
+            minwid = function()
+                return vim.api.nvim_get_current_win()
             end,
-            update = true,
+            name = "heirline_winbar_close_button",
         },
     },
 }
@@ -722,7 +730,7 @@ local WinBar = {
     },
     utils.surround({ "", "" }, "bright_bg", {
         hl = function()
-            if not conditions.is_active() then
+            if conditions.is_not_active() then
                 return { fg = "gray", force = true }
             end
         end,
@@ -732,15 +740,174 @@ local WinBar = {
     }),
 }
 
-require("heirline").setup(StatusLines, WinBar)
+local TablineBufnr = {
+    provider = function(self)
+        return tostring(self.bufnr) .. ". "
+    end,
+    hl = "Comment",
+}
+
+local TablineFileName = {
+    provider = function(self)
+        local filename = self.filename
+        filename = filename == "" and "[No Name]" or vim.fn.fnamemodify(filename, ":t")
+        return filename
+    end,
+    hl = function(self)
+        return { bold = self.is_active or self.is_visible, italic = true }
+    end,
+}
+
+local TablineFileFlags = {
+    {
+        provider = function(self)
+            if vim.bo[self.bufnr].modified then
+                return "[+]"
+            end
+        end,
+        hl = { fg = "green" },
+    },
+    {
+        provider = function(self)
+            if not vim.bo[self.bufnr].modifiable or vim.bo[self.bufnr].readonly then
+                return ""
+            end
+        end,
+        hl = { fg = "orange" },
+    },
+}
+
+local TablineFileNameBlock = {
+    init = function(self)
+        self.filename = vim.api.nvim_buf_get_name(self.bufnr)
+    end,
+    hl = function(self)
+        if self.is_active then
+            return "TabLineSel"
+        else
+            return "TabLine"
+        end
+    end,
+    on_click = {
+        callback = function(_, minwid)
+            vim.api.nvim_win_set_buf(0, minwid)
+        end,
+        minwid = function(self)
+            return self.bufnr
+        end,
+        name = "heirline_tabline_buffer_callback",
+    },
+    TablineBufnr,
+    FileIcon,
+    TablineFileName,
+    TablineFileFlags,
+}
+
+local TablineCloseButton = {
+    condition = function(self)
+        return not vim.bo[self.bufnr].modified
+    end,
+    { provider = " " },
+    {
+        provider = "",
+        hl = { fg = "gray" },
+        on_click = {
+            callback = function(_, minwid)
+                vim.api.nvim_buf_delete(minwid, { force = false })
+            end,
+            minwid = function(self)
+                return self.bufnr
+            end,
+            name = "heirline_tabline_close_buffer_callback",
+        },
+    },
+}
+
+local TablineBufferBlock = utils.surround({ "", "" }, function(self)
+    if self.is_active then
+        return utils.get_highlight("TabLineSel").bg
+    else
+        return utils.get_highlight("TabLine").bg
+    end
+end, { TablineFileNameBlock, TablineCloseButton })
+
+local BufferLine = utils.make_buflist(
+    TablineBufferBlock,
+    { provider = "", hl = { fg = "gray" } },
+    { provider = "", hl = { fg = "gray" } }
+)
+
+local Tabpage = {
+    provider = function(self)
+        return "%" .. self.tabnr .. "T " .. self.tabnr .. " %T"
+    end,
+    hl = function(self)
+        if not self.is_active then
+            return "TabLine"
+        else
+            return "TabLineSel"
+        end
+    end,
+}
+
+local TabpageClose = {
+    provider = "%999X  %X",
+    hl = "TabLine",
+}
+
+local TabPages = {
+    condition = function()
+        return #vim.api.nvim_list_tabpages() >= 2
+    end,
+    {
+        provider = "%=",
+    },
+    utils.make_tablist(Tabpage),
+    TabpageClose,
+}
+
+local TabLineOffset = {
+    condition = function(self)
+        local win = vim.api.nvim_tabpage_list_wins(0)[1]
+        local bufnr = vim.api.nvim_win_get_buf(win)
+        self.winid = win
+
+        if vim.bo[bufnr].filetype == "NvimTree" then
+            self.title = "NvimTree"
+            return true
+        end
+    end,
+
+    provider = function(self)
+        local title = self.title
+        local width = vim.api.nvim_win_get_width(self.winid)
+        local pad = math.ceil((width - #title) / 2)
+        return string.rep(" ", pad) .. title .. string.rep(" ", pad)
+    end,
+
+    hl = function(self)
+        if vim.api.nvim_get_current_win() == self.winid then
+            return "TablineSel"
+        else
+            return "Tabline"
+        end
+    end,
+}
+
+local TabLine = { TabLineOffset, BufferLine, TabPages }
+
+require("heirline").setup(StatusLines, WinBar, TabLine)
 
 vim.api.nvim_create_augroup("Heirline", { clear = true })
+
+vim.cmd([[au Heirline FileType * if index(['wipe', 'delete', 'unload'], &bufhidden) >= 0 | set nobuflisted | endif]])
+
 vim.api.nvim_create_autocmd("User", {
     pattern = "HeirlineInitWinbar",
     callback = function(args)
         local buf = args.buf
         local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
-        local filetype = vim.tbl_contains({ "gitcommit", "fugitive" }, vim.bo[buf].filetype)
+        local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
         if buftype or filetype then
             vim.opt_local.winbar = nil
         end
@@ -751,6 +918,7 @@ vim.api.nvim_create_autocmd("User", {
 vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
         require("heirline").reset_highlights()
+        require("heirline").clear_colors()
         require("heirline").load_colors(setup_colors())
         require("heirline").statusline:broadcast(function(self)
             self._win_stl = nil
