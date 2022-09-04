@@ -61,7 +61,8 @@ require("lspconfig.configs").pylance = {
         single_file_support = true,
         cmd = {
             "node",
-            vim.fn.expand("~/.vscode/extensions/ms-python.vscode-pylance-*/dist/server.bundle.crack.js", false, true)[1],
+            -- vim.fn.expand("~/.vscode/extensions/ms-python.vscode-pylance-*/dist/server.bundle.crack.js", false, true)[1],
+            vim.fn.expand("~/usr/src/pylance_langserver/extension/dist/server.bundle.crack.js"),
             "--stdio",
         },
         filetypes = { "python" },
@@ -199,9 +200,9 @@ return {
             { range = true, desc = "Extract methdod" }
         )
     end,
-    handlers = {
-        ["textDocument/inlayHint"] = require("lsp.inlay_hints").handler,
-    },
+    -- handlers = {
+    --     ["textDocument/inlayHint"] = require("lsp.inlay_hints").show_handler,
+    -- },
     settings = {
         python = {
             analysis = {

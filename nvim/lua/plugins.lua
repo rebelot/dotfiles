@@ -26,6 +26,12 @@ require("packer").init({
     max_jobs = 50,
 })
 
+-- vim.opt.rtp:append({
+--     "/Users/laurenzi/usr/src/kanagawa.nvim",
+--     "/Users/laurenzi/usr/src/heirline.nvim",
+--     "/Users/laurenzi/usr/src/terminal.nvim",
+-- })
+
 return require("packer").startup(function(use)
     use({ "wbthomason/packer.nvim" })
 
@@ -395,7 +401,10 @@ return require("packer").startup(function(use)
     -- Colors, Icons, StatusLine, BufferLine --
     -------------------------------------------
 
-    use({ "/Users/laurenzi/usr/src/kanagawa.nvim", branch = "master" })
+    use({
+        "/Users/laurenzi/usr/src/kanagawa.nvim",
+        branch = "master",
+    })
     -- use({ "rebelot/kanagawa.nvim", branch = "master" })
 
     use({
@@ -774,6 +783,12 @@ return require("packer").startup(function(use)
                 pattern = "python",
                 command = [[xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>]],
             })
+            -- vim.api.nvim_create_user_command("VimuxSetTarget", function(args)
+            --     vim.pretty_print(args)
+            --     vim.g.VimuxRunnerQuery = { pane = args.fargs[1], window = args.fargs[2] }
+            -- end, {
+            --     nargs = "+",
+            -- })
         end,
     })
     -- }}}

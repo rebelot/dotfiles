@@ -86,6 +86,7 @@ function M.catppuccin()
 end
 
 function M.kanagawa(theme)
+    vim.o.background = nil
     local colors = require("kanagawa.colors").setup({theme = theme})
     require("kanagawa").setup({
         dimInactive = false,
@@ -109,13 +110,13 @@ function M.kanagawa(theme)
             TelescopePreviewNormal = { bg = colors.bg_dark },
             TelescopePreviewBorder = { bg = colors.bg_dark, fg = colors.bg_dark }
         },
-        theme = theme
+        theme = theme,
     })
     vim.cmd("colorscheme kanagawa")
 end
 
 -- tokyonight()
 -- gruvbox()
-M.kanagawa('default')
+M.kanagawa("default")
 
 return M

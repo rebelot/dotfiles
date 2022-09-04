@@ -95,7 +95,7 @@ local FileIcon = {
         local filename = self.filename
         local extension = vim.fn.fnamemodify(filename, ":e")
         self.icon, self.icon_color =
-            require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+        require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
     end,
     provider = function(self)
         return self.icon and (self.icon .. " ")
@@ -210,8 +210,7 @@ local Ruler = {
 local ScrollBar = {
     static = {
         -- sbar = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" },
-        sbar = { '🭶', '🭷', '🭸', '🭹', '🭺', '🭻' }
-
+        sbar = { "🭶", "🭷", "🭸", "🭹", "🭺", "🭻" },
     },
     provider = function(self)
         local curr_line = vim.api.nvim_win_get_cursor(0)[1]
@@ -673,7 +672,8 @@ local StatusLines = {
         end,
     },
 
-    init = utils.pick_child_on_condition,
+    -- init = utils.pick_child_on_condition,
+    fallthrough = false,
 
     GitStatusline,
     SpecialStatusline,
@@ -705,7 +705,8 @@ local CloseButton = {
 }
 
 local WinBar = {
-    init = utils.pick_child_on_condition,
+    -- init = utils.pick_child_on_condition,
+    fallthrough = false,
     {
         condition = function()
             return conditions.buffer_matches({
@@ -894,7 +895,21 @@ local TabLineOffset = {
     end,
 }
 
-local TabLine = { TabLineOffset, BufferLine, TabPages }
+local TabLine = {
+    -- update = {
+    --     "BufNew",
+    --     "BufDelete",
+    --     "WinEnter",
+    --     "BufEnter",
+    --     "BufModifiedSet",
+    --     callback = function()
+    --         -- print("callback")
+    --     end,
+    -- },
+    TabLineOffset,
+    BufferLine,
+    TabPages,
+}
 
 require("heirline").setup(StatusLines, WinBar, TabLine)
 
@@ -917,12 +932,8 @@ vim.api.nvim_create_autocmd("User", {
 
 vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
-        require("heirline").reset_highlights()
-        require("heirline").clear_colors()
-        require("heirline").load_colors(setup_colors())
-        require("heirline").statusline:broadcast(function(self)
-            self._win_stl = nil
-        end)
+        local colors = setup_colors()
+        utils.on_colorscheme(colors)
     end,
     group = "Heirline",
 })
