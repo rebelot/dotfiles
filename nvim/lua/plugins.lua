@@ -59,31 +59,6 @@ return require("packer").startup(function(use)
     -- LSP, Diagnostics, Snippets, Completion --
     --------------------------------------------
 
-    -- use({
-    --     "theHamsta/nvim-semantic-tokens",
-    --     config = function()
-    --         require("nvim-semantic-tokens").setup({
-    --             preset = "default",
-    --             highlighters = { require("nvim-semantic-tokens.table-highlighter") },
-    --         })
-    --         vim.api.nvim_create_autocmd("LspAttach", {
-    --             callback = function(args)
-    --                 local bufnr = args.buf
-    --                 local client = vim.lsp.get_client_by_id(args.data.client_id)
-    --                 local caps = client.server_capabilities
-    --                 if caps.semanticTokensProvider and caps.semanticTokensProvider.full then
-    --                     local augrp = vim.api.nvim_create_augroup("LSP_Semantic_tokens", { clear = true })
-    --                     vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-    --                         callback = vim.lsp.buf.semantic_tokens_full,
-    --                         buffer = bufnr,
-    --                         group = augrp,
-    --                     })
-    --                 end
-    --             end,
-    --         })
-    --     end,
-    -- })
-
     use({
         "neovim/nvim-lspconfig",
         config = function()
@@ -210,7 +185,10 @@ return require("packer").startup(function(use)
 
     use({
         "zbirenbaum/copilot-cmp",
-        module = "copilot_cmp",
+        after = {"copilot.lua"},
+        config = function()
+            require("copilot_cmp").setup()
+        end,
     })
 
     use({
@@ -220,14 +198,14 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({
-        "liuchengxu/vista.vim",
-        cmd = "Vista",
-        keys = "<leader>vv",
-        config = function()
-            require("plugins.vista")
-        end,
-    })
+    -- use({
+    --     "liuchengxu/vista.vim",
+    --     cmd = "Vista",
+    --     keys = "<leader>vv",
+    --     config = function()
+    --         require("plugins.vista")
+    --     end,
+    -- })
     use({
         "danymat/neogen",
         config = function()
@@ -275,7 +253,7 @@ return require("packer").startup(function(use)
 
     use({
         "chrisbra/csv.vim",
-        cmd = "CSVInit",
+        ft = "csv",
     })
 
     use({
@@ -566,16 +544,16 @@ return require("packer").startup(function(use)
 
     use({ "tpope/vim-fugitive" })
 
-    use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
+    -- use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
 
-    use({
-        "majutsushi/tagbar",
-        cmd = { "TagbarToggle" },
-        keys = "<F8>",
-        config = function()
-            vim.keymap.set("n", "<F8>", "<cmd>TagbarToggle<CR>", { desc = "Tagbar: toggle" })
-        end,
-    })
+    -- use({
+    --     "majutsushi/tagbar",
+    --     cmd = { "TagbarToggle" },
+    --     keys = "<F8>",
+    --     config = function()
+    --         vim.keymap.set("n", "<F8>", "<cmd>TagbarToggle<CR>", { desc = "Tagbar: toggle" })
+    --     end,
+    -- })
 
     use({
         "simnalamburt/vim-mundo",
@@ -625,13 +603,15 @@ return require("packer").startup(function(use)
 
             vim.api.nvim_create_user_command("IPython", function()
                 local bufnr = vim.api.nvim_get_current_buf()
-                vim.keymap.set("x", "<leader>ts", function()
-                    vim.api.nvim_feedkeys('"+y', "n", false)
-                    ipython:send("%paste")
-                end, { buffer = bufnr })
-                vim.keymap.set("n", "<leader>t?", function()
-                    require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
-                end, { buffer = bufnr })
+                if vim.bo[bufnr].filetype == "python" then
+                    vim.keymap.set("x", "<leader>ts", function()
+                        vim.api.nvim_feedkeys('"+y', "n", false)
+                        ipython:send("%paste")
+                    end, { buffer = bufnr })
+                    vim.keymap.set("n", "<leader>t?", function()
+                        require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
+                    end, { buffer = bufnr })
+                end
                 ipython:toggle(nil, true)
             end, {})
 

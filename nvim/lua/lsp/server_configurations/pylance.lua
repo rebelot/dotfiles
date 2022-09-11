@@ -90,23 +90,12 @@ require("lspconfig.configs").pylance = {
                 telemetryLevel = "off",
             },
         },
-        capabilities = {
-            textDocument = {
-                semanticTokensProvider = {
-                    full = true,
-                },
-            },
-        },
         docs = {
-            package_json = vim.fn.expand(
-                "$HOME/.vscode/extensions/ms-python.vscode-pylance-*/package.json",
-                false,
-                true
-            )[1],
+            package_json = vim.fn.expand("$HOME/usr/src/pylance_langserver/extension/package.json"),
             description = [[
          https://github.com/microsoft/pyright
          `pyright`, a static type checker and language server for python
-         ]]  ,
+         ]],
         },
         -- before_init = function(_, config)
         --     if not config.settings.python then
@@ -165,6 +154,50 @@ end
 
 return {
     on_attach = function(client, bufnr)
+        client.server_capabilities.semanticTokensProvider = {
+            legend = {
+                tokenTypes = {
+                    "comment",
+                    "keyword",
+                    "string",
+                    "number",
+                    "regexp",
+                    "type",
+                    "class",
+                    "interface",
+                    "enum",
+                    "enumMember",
+                    "typeParameter",
+                    "function",
+                    "method",
+                    "property",
+                    "variable",
+                    "parameter",
+                    "module",
+                    "intrinsic",
+                    "selfParameter",
+                    "clsParameter",
+                    "magicFunction",
+                    "builtinConstant",
+                },
+                tokenModifiers = {
+                    "declaration",
+                    "static",
+                    "abstract",
+                    "async",
+                    "documentation",
+                    "typeHint",
+                    "typeHintComment",
+                    "readonly",
+                    "decorator",
+                    "builtin",
+                },
+            },
+            range = true,
+            full = {
+                delta = true,
+            },
+        }
         client.commands["pylance.extractVariableWithRename"] = function(command, enriched_ctx)
             command.command = "pylance.extractVariable"
             vim.lsp.buf.execute_command(command)

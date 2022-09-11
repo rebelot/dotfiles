@@ -39,8 +39,7 @@ require("lsp.inlay_hints")
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 capabilities.textDocument.completion.completionItem.workDoneProgress = true
--- capabilities.semanticTokensProvider = {}
--- capabilities.semanticTokensProvider.full = true
+capabilities = require'lsp.semantic_tokens'.extend_capabilities(capabilities)
 
 ---------------
 -- On Attach --
