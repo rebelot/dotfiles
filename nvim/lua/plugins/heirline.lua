@@ -95,7 +95,7 @@ local FileIcon = {
         local filename = self.filename
         local extension = vim.fn.fnamemodify(filename, ":e")
         self.icon, self.icon_color =
-        require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+            require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
     end,
     provider = function(self)
         return self.icon and (self.icon .. " ")
@@ -130,20 +130,18 @@ local FileName = {
 
 local FileFlags = {
     {
-        provider = function()
-            if vim.bo.modified then
-                return "[+]"
-            end
+        condition = function()
+            return vim.bo.modified
         end,
+        provider = "[+]",
         hl = { fg = "green" },
     },
     {
-        provider = function()
-            if not vim.bo.modifiable or vim.bo.readonly then
-                return ""
-            end
+        condition = function()
+            return not vim.bo.modifiable or vim.bo.readonly
         end,
-        hl = "Constant",
+        provider = "",
+        hl = { fg = "orange" },
     },
 }
 
@@ -435,7 +433,7 @@ local DAPMessages = {
         return session ~= nil
     end,
     provider = function()
-        return " " .. require("dap").status()
+        return " " .. require("dap").status() .. " "
     end,
     hl = "Debug",
     {
@@ -444,6 +442,7 @@ local DAPMessages = {
             callback = function()
                 require("dap").step_into()
             end,
+            name = "heirline_dap_step_into",
         },
     },
     { provider = " " },
@@ -453,6 +452,7 @@ local DAPMessages = {
             callback = function()
                 require("dap").step_out()
             end,
+            name = "heirline_dap_step_out",
         },
     },
     { provider = " " },
@@ -462,17 +462,31 @@ local DAPMessages = {
             callback = function()
                 require("dap").step_over()
             end,
+            name = "heirline_dap_step_over",
         },
     },
     { provider = " " },
     {
-        provider = " ",
+        provider = "ﰇ",
         on_click = {
             callback = function()
-                require("dap").close()
+                require("dap").restart()
             end,
+            name = "heirline_dap_restart",
         },
     },
+    { provider = " " },
+    {
+        provider = "",
+        on_click = {
+            callback = function()
+                require("dap").terminate()
+                require("dapui").close({})
+            end,
+            name = "heirline_dap_close",
+        },
+    },
+    { provider = " " },
     --       ﰇ  
 }
 
@@ -570,8 +584,8 @@ local DefaultStatusline = {
     Diagnostics,
     Align,
     utils.make_flexible_component(3, Navic, { provider = "" }),
-    DAPMessages,
     Align,
+    DAPMessages,
     LSPActive,
     Space,
     -- UltTest,
@@ -761,21 +775,34 @@ local TablineFileName = {
 
 local TablineFileFlags = {
     {
-        provider = function(self)
-            if vim.bo[self.bufnr].modified then
-                return "[+]"
-            end
+        condition = function(self)
+            return vim.api.nvim_buf_get_option(self.bufnr, "modified")
         end,
+        provider = "[+]",
         hl = { fg = "green" },
     },
     {
+        condition = function(self)
+            return not vim.api.nvim_buf_get_option(self.bufnr, "modifiable")
+                or vim.api.nvim_buf_get_option(self.bufnr, "readonly")
+        end,
         provider = function(self)
-            if not vim.bo[self.bufnr].modifiable or vim.bo[self.bufnr].readonly then
+            if vim.api.nvim_buf_get_option(self.bufnr, "buftype") == "terminal" then
+                return "  "
+            else
                 return ""
             end
         end,
         hl = { fg = "orange" },
     },
+    -- {
+    --     condition = function(self)
+    --         return not vim.api.nvim_buf_is_loaded(self.bufnr)
+    --     end,
+    --     -- a downright arrow
+    --     provider = "", -- 
+    --     hl = { fg = "gray" },
+    -- },
 }
 
 local TablineFileNameBlock = {
@@ -785,6 +812,8 @@ local TablineFileNameBlock = {
     hl = function(self)
         if self.is_active then
             return "TabLineSel"
+        elseif not vim.api.nvim_buf_is_loaded(self.bufnr) then
+            return { fg = "gray" }
         else
             return "TabLine"
         end
@@ -806,7 +835,8 @@ local TablineFileNameBlock = {
 
 local TablineCloseButton = {
     condition = function(self)
-        return not vim.bo[self.bufnr].modified
+        -- return not vim.bo[self.bufnr].modified
+        return not vim.api.nvim_buf_get_option(self.bufnr, "modified")
     end,
     { provider = " " },
     {
@@ -873,7 +903,7 @@ local TabLineOffset = {
         local bufnr = vim.api.nvim_win_get_buf(win)
         self.winid = win
 
-        if vim.bo[bufnr].filetype == "NvimTree" then
+        if vim.api.nvim_buf_get_option(bufnr, "filetype") == "NvimTree" then
             self.title = "NvimTree"
             return true
         end
@@ -915,7 +945,7 @@ require("heirline").setup(StatusLines, WinBar, TabLine)
 
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 
-vim.cmd([[au Heirline FileType * if index(['wipe', 'delete', 'unload'], &bufhidden) >= 0 | set nobuflisted | endif]])
+vim.cmd([[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])
 
 vim.api.nvim_create_autocmd("User", {
     pattern = "HeirlineInitWinbar",

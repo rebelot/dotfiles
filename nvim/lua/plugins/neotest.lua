@@ -8,18 +8,38 @@ require("neotest").setup({
             ignore_file_types = { "python", "vim", "lua" },
         }),
     },
+    consumers = {
+        statusline = function(client)
+            return {
+                statusline = function()
+                    local adapters = client:get_adapters()
+                    local results = {}
+                    for _, adapter in ipairs(adapters) do
+                        local res = client:get_results(adapter)
+                        for key, r in pairs(res) do
+                            results[key] = r
+                        end
+                    end
+                    local status = { total = 0, failed = 0, passed = 0}
+                    for _, res in pairs(results) do
+                        if res.status == 'failed' then
+                            status.failed = status.failed + 1
+                        elseif res.status == 'passed' then
+                            status.passed = status.passed + 1
+                        end
+                    end
+                    vim.pretty_print(status)
+                end,
+            }
+        end,
+    },
 })
 
-vim.api.nvim_create_user_command("NTestRun", function(args)
-    local fname = args.args ~= "" and vim.fn.expand(args.fargs[1])
-    local strategy = args.fargs[2] or "integrated"
-    require("neotest").run.run({ fname, strategy = strategy })
-end, { nargs = "*" })
-
-vim.api.nvim_create_user_command("NTestOpen", function()
-    require("neotest").output.open({ enter = true, short = true })
-end, {})
-
-vim.api.nvim_create_user_command("NTestSummary", function()
-    require("neotest").summary.toggle()
-end, {})
+vim.cmd([[
+command! NeotestSummary lua require("neotest").summary.toggle()
+command! NeotestFile lua require("neotest").run.run(vim.fn.expand("%"))
+command! Neotest lua require("neotest").run.run(vim.fn.getcwd())
+command! NeotestNearest lua require("neotest").run.run()
+command! NeotestDebug lua require("neotest").run.run({ strategy = "dap" })
+command! NeotestAttach lua require("neotest").run.attach()
+]])

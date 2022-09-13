@@ -18,17 +18,39 @@ require("nvim-tree").setup({
         update_cwd = false,
         ignore_list = {},
     },
+    live_filter = {
+        always_show_folders = false
+    },
     system_open = {
         cmd = nil,
         args = {},
     },
     actions = {
         change_dir = {
-            global = true
+            global = true,
         },
         open_file = {
-            resize_window = true
-        }
+            resize_window = true,
+        },
+    },
+    view = {
+        adaptive_size = false,
+    },
+    renderer = {
+        icons = {
+            git_placement = "before",
+            glyphs = {
+                git = {
+                    unstaged = "",
+                    staged = "",
+                    unmerged = "",
+                    renamed = "",
+                    untracked = "",
+                    deleted = "",
+                    ignored = "",
+                },
+            },
+        },
     },
 })
 

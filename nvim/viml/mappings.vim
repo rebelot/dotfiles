@@ -101,7 +101,7 @@ nnoremap <silent><M-/> :noh<bar>diffupdate<CR><C-L>
 
 " [re]load buffer
 " nnoremap <leader>re :e%<CR>
-nnoremap <leader>re :Bdelete<CR><C-O>zRzz
+nnoremap <leader>re :e%<CR>
 
 " [e]dit, [v]ertical, horizontal [s]plit or [t]ab a [n]ew buffer
 nnoremap <leader>en :enew<CR>
@@ -203,3 +203,24 @@ cnoreabbrev prinspect lua print(vim.inspect())<Left><Left>
 " cnoremap ( ()<Left>
 " cnoremap [ []<Left>
 " cnoremap { {}<Left>
+
+anoremenu LSP.Back                  <cmd>popup PopUp<cr>
+anoremenu LSP.-1-                   <Nop>
+nnoremenu LSP.&Definition             :lua vim.lsp.buf.definition()<CR>
+nnoremenu LSP.&References             :lua vim.lsp.buf.references()<CR>
+
+aunmenu PopUp
+vnoremenu PopUp.Cut                   "+x
+vnoremenu PopUp.Copy                  "+y
+anoremenu PopUp.&Paste                 "+gP
+vnoremenu PopUp.&Paste                 "+P
+vnoremenu PopUp.Search                "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
+vnoremenu PopUp.Replace               y/\V<C-r>=escape(@",'/\')<CR><CR>``cgn
+vnoremenu PopUp.Delete                "_x
+nnoremenu PopUp.&Select\ All>          ggVG
+vnoremenu PopUp.Select\ All>          gg0oG$
+inoremenu PopUp.Select\ All           <C-Home><C-O>VG
+anoremenu PopUp.-1-                   <Nop>
+anoremenu PopUp.&LSP                  <cmd>popup LSP<cr>
+" nnoremenu PopUp.LSP.&GoToDefinition          lua vim.lsp.buf.definition()
+" nnoremenu PopUp.LSP.&References              lua vim.lsp.buf.references()
