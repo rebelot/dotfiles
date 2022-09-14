@@ -185,7 +185,7 @@ return require("packer").startup(function(use)
 
     use({
         "zbirenbaum/copilot-cmp",
-        after = {"copilot.lua"},
+        after = { "copilot.lua" },
         config = function()
             require("copilot_cmp").setup()
         end,
@@ -419,12 +419,7 @@ return require("packer").startup(function(use)
     --     end,
     -- })
 
-    use({
-        "ziontee113/color-picker.nvim",
-        config = function()
-            require("color-picker")
-        end,
-    })
+    use({ "uga-rosa/ccc.nvim", cmd = 'CccPick' })
 
     --------------------------
     -- Editor Utilities, UI --

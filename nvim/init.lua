@@ -37,7 +37,7 @@ require("autocommands")
 vim.cmd("source ~/.config/nvim/viml/mappings.vim")
 
 -- Diagnostics
-require("diagnostics")
+require("diagnostics-config")
 
 -- UI
 require("win_ui_input")

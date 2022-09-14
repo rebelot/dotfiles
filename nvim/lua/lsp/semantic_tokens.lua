@@ -239,19 +239,10 @@ local function on_token(ctx, token)
     local linenr = token.line
     local start_col = vim.fn.virtcol2col(0, linenr + 1, token.start_char)
     local end_col = vim.fn.virtcol2col(0, linenr + 1, token.start_char + token.length)
-    if start_col * end_col >= 0  then
+    if start_col < 0 or end_col < 0 then
         return
     end
     local hl = resolve_hl(token)
-    -- local ok, err = pcall(vim.api.nvim_buf_set_extmark, ctx.bufnr, ns, linenr, start_col, {
-    --     end_col = end_col,
-    --     hl_group = hl,
-    --     priority = 110,
-    -- })
-    -- if not ok then
-    --     print(err)
-    --     print('ERROR ON LINE', linenr)
-    -- end
     vim.api.nvim_buf_set_extmark(ctx.bufnr, ns, linenr, start_col, {
         end_col = end_col,
         hl_group = hl,

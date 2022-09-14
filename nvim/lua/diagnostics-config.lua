@@ -40,7 +40,10 @@ local function echo_cursor_diagnostic()
     local avail_space = vim.v.echospace
     for _, diagnostic in ipairs(cursor_diagnostics) do
         local severity = severity_prefix[diagnostic.severity] .. " "
-        local msg = (diagnostic.source or "") .. ": " .. vim.fn.trim(vim.fn.substitute(diagnostic.message, "\n", "", "g")) .. " "
+        local msg = (diagnostic.source or "")
+            .. ": "
+            .. vim.fn.trim(vim.fn.substitute(diagnostic.message, "\n", "", "g"))
+            .. " "
 
         if avail_space > (#severity + #msg) then
             table.insert(message, { severity, severity_hl[diagnostic.severity] })
