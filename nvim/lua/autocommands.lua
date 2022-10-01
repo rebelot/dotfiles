@@ -56,7 +56,7 @@ autocmd("FileType", {
 --  Scrolloff  --
 -----------------
 
-autocmd({"WinEnter", "BufWinEnter"}, {
+autocmd({ "WinEnter", "BufWinEnter" }, {
     command = [[let &l:scrolloff = winheight(0) / 3]],
 })
 
@@ -110,6 +110,20 @@ autocmd({ "WinEnter", "BufWinEnter" }, {
 --     command = 'normal! zx',
 -- })
 
+-----------
+--  LSP  --
+-----------
+
+autocmd("LSPAttach", {
+    callback = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        vim.notify(
+            string.format("LSP: %s(%d) attached to buffer(%d)", client.name, client.id, bufnr),
+            vim.log.levels.INFO
+        )
+    end,
+})
 
 -- autocmd FileType latex,tex,markdown,txt setlocal spell
 -- autocmd FileType latex,tex,markdown,txt,text setlocal wrap

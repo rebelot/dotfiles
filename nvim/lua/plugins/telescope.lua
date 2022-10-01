@@ -214,12 +214,6 @@ require("telescope").setup({
 vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, { desc = "Telescope: Find files" })
 vim.keymap.set(
     "n",
-    "<leader>f.",
-    require("telescope").extensions.file_browser.file_browser,
-    { desc = "Telescope: File browser" }
-)
-vim.keymap.set(
-    "n",
     "<leader>fl",
     require("telescope.builtin").current_buffer_fuzzy_find,
     { desc = "Telescope: Find current buffer" }

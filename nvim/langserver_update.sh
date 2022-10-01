@@ -14,7 +14,8 @@ cargo install --git https://github.com/latex-lsp/texlab.git --locked
 cargo instal stylua
 
 # sumneko_lua
-port upgrade lua-language-server
+# https://github.com/sumneko/lua-language-server/releases/latest
+# port upgrade lua-language-server
 
 # ccls
 # cppcheck

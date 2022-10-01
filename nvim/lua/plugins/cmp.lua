@@ -6,7 +6,7 @@ local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
-local cmp = require("cmp")
+local cmp = require("cmp") or {}
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -185,7 +185,7 @@ cmp.setup({
 })
 
 -- { name = "buffer", option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
-cmp.setup.cmdline("/", {
+cmp.setup.cmdline({ "/", "?" }, {
     completion = { autocomplete = false },
     sources = {
         { name = "nvim_lsp_document_symbol" },

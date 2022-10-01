@@ -38,7 +38,7 @@ latest="$(git --no-pager log origin/master -n 1 --pretty=format:"%H")"
 echo "latest hash:  $latest"
 if [[ $current != "$latest" ]]; then
     git pull
-    make clean && make distclean && make -j8 CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$HOME/usr/src/neovim" && make install
+    make clean && make distclean && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$HOME/usr/local/nvim" && make install
     git log "$current"..HEAD
 else
     echo "Neovim is already at latest version"

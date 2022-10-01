@@ -33,6 +33,10 @@ require("packer").init({
 -- })
 
 return require("packer").startup(function(use)
+    ----------------
+    --  Required  --
+    ----------------
+
     use({ "wbthomason/packer.nvim" })
 
     use({ "nvim-lua/plenary.nvim" })
@@ -48,16 +52,22 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({
-        "antoinemadec/FixCursorHold.nvim",
-        config = function()
-            vim.g.cursorhold_updatetime = 250
-        end,
-    })
-
     --------------------------------------------
     -- LSP, Diagnostics, Snippets, Completion --
     --------------------------------------------
+    use({
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup()
+        end,
+    })
+
+    use({
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+            require("mason-lspconfig").setup()
+        end,
+    })
 
     use({
         "neovim/nvim-lspconfig",
@@ -74,10 +84,9 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use({ "b0o/SchemaStore.nvim" })
-
     use({
         "j-hui/fidget.nvim",
+        event = { "BufRead" },
         config = function()
             require("fidget").setup({})
         end,
@@ -116,7 +125,6 @@ return require("packer").startup(function(use)
 
     use({
         "stevearc/aerial.nvim",
-        -- event = { "LspAttach" },
         config = function()
             require("aerial").setup()
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -178,7 +186,17 @@ return require("packer").startup(function(use)
         event = { "VimEnter" },
         config = function()
             vim.defer_fn(function()
-                require("copilot").setup({ ft_disable = { "julia" } })
+                require("copilot").setup({
+                    ft_disable = { "julia", "dap-repl" },
+                    suggestion = {
+                        keymap = {
+                            accept = "<M-CR>",
+                            next = "<M-n>",
+                            prev = "<M-p>",
+                            dismiss = "<M-]>",
+                        },
+                    },
+                })
             end, 1000)
         end,
     })
@@ -187,7 +205,11 @@ return require("packer").startup(function(use)
         "zbirenbaum/copilot-cmp",
         after = { "copilot.lua" },
         config = function()
-            require("copilot_cmp").setup()
+            require("copilot_cmp").setup({
+                formatters = {
+                    insert_text = require("copilot_cmp.format").remove_existing,
+                },
+            })
         end,
     })
 
@@ -198,14 +220,6 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use({
-    --     "liuchengxu/vista.vim",
-    --     cmd = "Vista",
-    --     keys = "<leader>vv",
-    --     config = function()
-    --         require("plugins.vista")
-    --     end,
-    -- })
     use({
         "danymat/neogen",
         config = function()
@@ -213,17 +227,6 @@ return require("packer").startup(function(use)
         end,
         cmd = "Neogen",
     })
-    -- use({
-    --     "ldelossa/litee.nvim",
-    --     requires = {
-    --         -- "ldelossa/litee-symboltree.nvim",
-    --         "ldelossa/litee-calltree.nvim" },
-    --     config = function()
-    --         require('litee.lib').setup({})
-    --         require('litee.calltree').setup({})
-    --         -- require('litee.symboltree').setup({})
-    --     end
-    -- })
 
     -- use 'saadparwaiz1/cmp_luasnip'
     -- use 'L3MON4D3/LuaSnip'
@@ -234,9 +237,6 @@ return require("packer").startup(function(use)
     -- -------------------
     -- Syntax and Folds --
     ----------------------
-
-    -- use 'plasticboy/vim-markdown'
-    -- use({ "JuliaEditorSupport/julia-vim" })
 
     -- use({ "chrisbra/vim-zsh" })
 
@@ -266,8 +266,8 @@ return require("packer").startup(function(use)
     use({ "jaredsampson/vim-pymol" })
 
     -- use({ "vim-pandoc/vim-pandoc" })
-
     -- use({ "vim-pandoc/vim-pandoc-syntax" })
+
     -- use '/opt/plumed-2.4.3/lib/plumed/vim'
 
     use({
@@ -307,7 +307,7 @@ return require("packer").startup(function(use)
         config = function()
             require("plugins.indent-blankline")
         end,
-        event = "BufEnter",
+        event = "BufWinEnter",
     })
 
     -------------------------
@@ -333,6 +333,12 @@ return require("packer").startup(function(use)
         after = "telescope.nvim",
         config = function()
             require("telescope").load_extension("file_browser")
+            vim.keymap.set(
+                "n",
+                "<leader>f.",
+                require("telescope").extensions.file_browser.file_browser,
+                { desc = "Telescope: File browser" }
+            )
         end,
     })
 
@@ -383,7 +389,10 @@ return require("packer").startup(function(use)
         "/Users/laurenzi/usr/src/kanagawa.nvim",
         branch = "master",
     })
-    -- use({ "rebelot/kanagawa.nvim", branch = "master" })
+
+    use({
+        "/Users/laurenzi/usr/src/lucy.nvim",
+    })
 
     use({
         "kyazdani42/nvim-web-devicons",
@@ -391,35 +400,22 @@ return require("packer").startup(function(use)
             require("nvim-web-devicons").setup()
         end,
     })
-    -- use 'sainnhe/gruvbox-material'
-    -- use({ "folke/tokyonight.nvim" })
 
-    -- use({
-    --     "catppuccin/nvim",
-    --     as = "catppuccin",
-    -- })
-    -- use 'rmehri01/onenord.nvim'
-    -- use 'arcticicestudio/nord-vim'
-    -- use("shaunsingh/nord.nvim")
-    -- use "projekt0n/github-nvim-theme"
-    -- use 'gruvbox-community/gruvbox'
     use({
         "/Users/laurenzi/usr/src/heirline.nvim",
-        event = { "VimEnter" },
+        event = { "BufWinEnter" },
         config = function()
             require("plugins.heirline")
         end,
     })
 
-    -- use({
-    --     "akinsho/nvim-bufferline.lua",
-    --     event = { "VimEnter" },
-    --     config = function()
-    --         require("plugins.bufferline")
-    --     end,
-    -- })
-
-    use({ "uga-rosa/ccc.nvim", cmd = 'CccPick' })
+    use({
+        "uga-rosa/ccc.nvim",
+        cmd = "CccPick",
+        config = function()
+            require("ccc").setup({ bar_len = 60 })
+        end,
+    })
 
     --------------------------
     -- Editor Utilities, UI --
@@ -462,21 +458,12 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use({
-    --     "rcarriga/vim-ultest",
-    --     requires = { "vim-test/vim-test" },
-    --     run = ":UpdateRemotePlugins",
-    --     config = function()
-    --         require("plugins.ultest")
-    --     end,
-    -- })
-
     use({
         "rcarriga/neotest",
         requires = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
-            "antoinemadec/FixCursorHold.nvim",
+            -- "antoinemadec/FixCursorHold.nvim",
             "rcarriga/neotest-python",
             "rcarriga/neotest-vim-test",
             "rcarriga/neotest-plenary",
@@ -529,26 +516,15 @@ return require("packer").startup(function(use)
     use({
         "lewis6991/gitsigns.nvim",
         after = "trouble.nvim",
+        event = "BufRead",
         config = function()
             require("plugins.gitsigns")
         end,
-        event = "BufEnter",
     })
 
     use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
     use({ "tpope/vim-fugitive" })
-
-    -- use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
-
-    -- use({
-    --     "majutsushi/tagbar",
-    --     cmd = { "TagbarToggle" },
-    --     keys = "<F8>",
-    --     config = function()
-    --         vim.keymap.set("n", "<F8>", "<cmd>TagbarToggle<CR>", { desc = "Tagbar: toggle" })
-    --     end,
-    -- })
 
     use({
         "simnalamburt/vim-mundo",
@@ -558,73 +534,21 @@ return require("packer").startup(function(use)
             vim.keymap.set("n", "<leader>mu", "<cmd>MundoToggle<CR>", { desc = "Mundo: toggle" })
         end,
     })
-    -- use({
-    --     "akinsho/toggleterm.nvim",
-    --     config = function()
-    --         require("toggleterm").setup()
-    --     end,
-    -- })
+
     use({
         "/Users/laurenzi/usr/src/terminal.nvim",
+        event = "VimEnter",
         -- event = "TermOpen",
         -- keys = {"<leader>to", '<leader>st'},
         config = function()
-            local term_map = require("terminal.mappings")
-            require("terminal").setup()
-            vim.keymap.set({ "n", "x" }, "<leader>ts", term_map.operator_send, { expr = true })
-            vim.keymap.set("n", "<leader>to", term_map.toggle)
-            vim.keymap.set("n", "<leader>tO", term_map.toggle({ open_cmd = "enew" }))
-            vim.keymap.set("n", "<leader>tr", term_map.run)
-            vim.keymap.set("n", "<leader>tR", term_map.run(nil, { layout = { open_cmd = "enew" } }))
-            vim.keymap.set("n", "<leader>tk", term_map.kill)
-            vim.keymap.set("n", "<leader>t]", term_map.cycle_next)
-            vim.keymap.set("n", "<leader>t[", term_map.cycle_prev)
-            local ipython = require("terminal").terminal:new({
-                layout = { open_cmd = "botright vertical new" },
-                cmd = { "ipython" },
-                autoclose = true,
-            })
-            local htop = require("terminal").terminal:new({
-                layout = { open_cmd = "float" },
-                cmd = { "htop" },
-                autoclose = true,
-            })
-            local lazygit = require("terminal").terminal:new({
-                layout = { open_cmd = "float", height = 0.9, width = 0.9 },
-                cmd = { "lazygit" },
-                autoclose = true,
-            })
-            vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
-
-            vim.api.nvim_create_user_command("IPython", function()
-                local bufnr = vim.api.nvim_get_current_buf()
-                if vim.bo[bufnr].filetype == "python" then
-                    vim.keymap.set("x", "<leader>ts", function()
-                        vim.api.nvim_feedkeys('"+y', "n", false)
-                        ipython:send("%paste")
-                    end, { buffer = bufnr })
-                    vim.keymap.set("n", "<leader>t?", function()
-                        require("terminal").send(vim.v.count, vim.fn.expand("<cexpr>") .. "?")
-                    end, { buffer = bufnr })
-                end
-                ipython:toggle(nil, true)
-            end, {})
-
-            vim.api.nvim_create_user_command("Lazygit", function(args)
-                lazygit.cwd = args.args and vim.fn.expand(args.args)
-                lazygit:toggle(nil, true)
-            end, { nargs = "?" })
-
-            vim.api.nvim_create_user_command("Htop", function()
-                htop:toggle(nil, true)
-            end, { nargs = "?" })
+            require("plugins.terminal_nvim")
         end,
     })
 
     use({ "moll/vim-bbye", cmd = "Bdelete" })
 
     use({ "lambdalisue/suda.vim", cmd = { "SudaRead, SudaWrite" } })
-    -- use 'neomake/neomake'
+
     use({
         "chrisbra/unicode.vim",
         cmd = { "UnicodeName", "UnicodeTable", "UnicodeSearch" },
@@ -632,6 +556,7 @@ return require("packer").startup(function(use)
 
     use({
         "goolord/alpha-nvim",
+        event = "VimEnter",
         config = function()
             require("plugins.dashboard")
         end,
@@ -642,7 +567,14 @@ return require("packer").startup(function(use)
         config = function()
             require("colorizer").setup()
         end,
-        event = "BufEnter",
+        event = "BufWinEnter",
+    })
+
+    use({
+        "rcarriga/nvim-notify",
+        config = function()
+            vim.notify = require("notify")
+        end,
     })
 
     -------------------
@@ -667,23 +599,15 @@ return require("packer").startup(function(use)
         "dhruvasagar/vim-table-mode",
         cmd = { "TableModeToggle" },
     })
-    -- use 'tpope/vim-commentary'
+
     use({
         "numToStr/Comment.nvim",
+        event = "BufRead",
         config = function()
             require("Comment").setup({ mappings = { extended = true } })
         end,
     })
 
-    -- use({
-    --     "tpope/vim-surround",
-    --     config = function()
-    --         vim.api.nvim_create_autocmd("FileType", {
-    --             pattern = "tex",
-    --             command = [[let g:surround_92 = "\\\1\\\1{\r}"]],
-    --         })
-    --     end,
-    -- })
     use({
         "kylechui/nvim-surround",
         config = function()
@@ -691,44 +615,19 @@ return require("packer").startup(function(use)
         end,
     })
 
-    -- use({
-    --     "ThePrimeagen/refactoring.nvim",
-    --     after = "nvim-treesitter",
-    --     config = function()
-    --         require("refactoring").setup({})
-    --     end,
-    -- })
-
-    -- use {'raimondi/delimitmate',
-    --   config = function()
-    --     vim.g.delimitMate_expand_inside_quotes = 0
-    --     vim.g.delimitMate_jump_expansion = 1
-    --     vim.g.delimitMate_expand_cr = 2
-    --     vim.g.delimitMate_expand_space = 1
-    --     vim.g.delimitMate_nesting_quotes = {'"','`'}
-    --
-    --     vim.cmd [[
-    --       imap <C-l> <Plug>delimitMateS-Tab
-    --       augroup DelimitMateFT
-    --       autocmd!
-    --       autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
-    --       autocmd FileType markdown let b:delimitMate_nesting_quotes = ['`']
-    --       augroup end
-    --     ]]
-    --   end
-    -- }
     use({
         "windwp/nvim-autopairs",
         after = { "hop", "nvim-cmp" },
+        event = "InsertCharPre",
         config = function()
             require("plugins.autopairs")
         end,
-        event = "InsertCharPre",
     })
 
     use({ "wellle/targets.vim" })
 
     use({ "michaeljsmith/vim-indent-object" })
+
     use({
         "phaazon/hop.nvim",
         as = "hop",
@@ -737,9 +636,7 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "tpope/vim-repeat" }) --, keys = "." })
-
-    -- }}}
+    use({ "tpope/vim-repeat" })
 
     ----------
     -- Tmux --
@@ -758,13 +655,6 @@ return require("packer").startup(function(use)
                 pattern = "python",
                 command = [[xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>]],
             })
-            -- vim.api.nvim_create_user_command("VimuxSetTarget", function(args)
-            --     vim.pretty_print(args)
-            --     vim.g.VimuxRunnerQuery = { pane = args.fargs[1], window = args.fargs[2] }
-            -- end, {
-            --     nargs = "+",
-            -- })
         end,
     })
-    -- }}}
 end)

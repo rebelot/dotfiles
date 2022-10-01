@@ -1,14 +1,20 @@
 local dap = require("dap")
 -- require('dap.ext.vscode').load_launchjs()
 
-vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "" })
-vim.fn.sign_define("DapBreakpointCondition", { text = " ", texthl = "DiagnosticWarn", linehl = "", numhl = "" })
-vim.fn.sign_define("DapBreakpointRejected", { text = " ", texthl = "DiagnosticError", linehl = "", numhl = "" })
-vim.fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "" })
-vim.fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "" })
-
--- vim.cmd([[au FileType dap-repl lua require('dap.ext.autocompl').attach()]])
--- vim.cmd([[command! DapClose lua require'dap'.terminate(); require'dapui'.close(); vim.cmd("bd! \\[dap-repl]") ]])
+vim.fn.sign_define(
+    "DapBreakpoint",
+    { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" }
+)
+vim.fn.sign_define(
+    "DapBreakpointCondition",
+    { text = " ", texthl = "DiagnosticWarn", linehl = "", numhl = "debugBreakpoint" }
+)
+vim.fn.sign_define(
+    "DapBreakpointRejected",
+    { text = " ", texthl = "DiagnosticError", linehl = "", numhl = "debugBreakpoint" }
+)
+vim.fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
+vim.fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "Error" })
 
 -- mappings
 vim.keymap.set("n", "<leader>dC", require("dap").continue, { desc = "DAP: Continue" })
@@ -99,65 +105,14 @@ table.insert(dap.configurations.python, {
     console = "integratedTerminal",
 })
 
--- dap.adapters.lldb = {
---   type = 'executable',
---   command = "lldb-vscode-mp-12",
---   name = "lldb"
--- }
 dap.adapters.codelldb = {
     type = "server",
-    host = "127.0.0.1",
-    port = 13000,
+    port = "${port}",
+    executable = {
+        command = "codelldb",
+        args = { "--port", "${port}" },
+    },
 }
--- dap.adapters.codelldb = function(on_adapter)
---   local stdout = vim.loop.new_pipe(false)
---   local stderr = vim.loop.new_pipe(false)
---
---   -- CHANGE THIS!
---   local cmd = '/Users/laurenzi/.vscode/extensions/vadimcn.vscode-lldb-1.6.10/adapter/codelldb --liblldb /Users/laurenzi/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/lldb/lib/liblldb.dylib'
---
---   local handle, pid_or_err
---   local opts = {
---     stdio = {nil, stdout, stderr},
---     detached = true,
---   }
---   handle, pid_or_err = vim.loop.spawn(cmd, opts, function(code)
---     stdout:close()
---     stderr:close()
---     handle:close()
---     if code ~= 0 then
---       print("codelldb exited with code", code)
---     end
---   end)
---   assert(handle, "Error running codelldb: " .. tostring(pid_or_err))
---   stdout:read_start(function(err, chunk)
---     assert(not err, err)
---     if chunk then
---       local port = chunk:match('Listening on port (%d+)')
---       if port then
---         vim.schedule(function()
---           on_adapter({
---             type = 'server',
---             host = '127.0.0.1',
---             port = port
---           })
---         end)
---       else
---         vim.schedule(function()
---           require("dap.repl").append(chunk)
---         end)
---       end
---     end
---   end)
---   stderr:read_start(function(err, chunk)
---     assert(not err, err)
---     if chunk then
---       vim.schedule(function()
---         require("dap.repl").append(chunk)
---       end)
---     end
---   end)
--- end
 
 dap.configurations.cpp = {
     {
@@ -171,7 +126,19 @@ dap.configurations.cpp = {
         stopOnEntry = false,
         runInTerminal = true,
         terminal = "integrated",
-        args = {},
+        args = function()
+            local args = {}
+            local i = 1
+            while true do
+                local arg = vim.fn.input("Argument [" .. i .. "]: ")
+                if arg == "" then
+                    break
+                end
+                args[i] = arg
+                i = i + 1
+            end
+            return args
+        end,
     },
     {
         name = "attach PID",

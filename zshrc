@@ -10,10 +10,6 @@
 
 # $PATH {{{
 # /etc/paths: /usr/local/bin /usr/bin /bin /usr/sbin /sbin
-# export PATH="/opt/CHARMM/c38b2/exec/osx/:$PATH"               # <-- CHARMM
-# export PATH="/Developer/NVIDIA/CUDA-9.1/bin:$PATH"            # <-- CUDA
-# export PATH="/Applications/moe2018/bin:$PATH"                 # <-- Moe2018
-# export PATH="$HOME/.iterm2:$PATH"                             # <-- iterm2
 # export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
 export PATH="$HOME/usr/bin:$PATH"                             # <-- personal stuff
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
@@ -270,12 +266,12 @@ alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
-alias debugpy="python /Users/laurenzi/venvs/debugpy/lib/python3.9/site-packages/debugpy --listen localhost:5678 --wait-for-client"
+alias debugpy="python $HOME/venvs/debugpy/lib/python3.9/site-packages/debugpy --listen localhost:5678 --wait-for-client"
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
 alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
-alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/lldb/lib/liblldb.dylib; done"
+# alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/lldb/lib/liblldb.dylib; done"
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
 alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
@@ -294,4 +290,3 @@ unset MANPATH
 # zprof
 
 # vim:set et sw=2 ts=2 fdm=marker:
-

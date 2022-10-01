@@ -1,9 +1,6 @@
 return {
-    cmd = {
-        "lua-language-server",
-    },
-    -- handlers = {
-    --     ["textDocument/inlayHint"] = require("lsp.inlay_hints").show_handler,
+    -- cmd = {
+    --     "lua-language-server",
     -- },
     settings = {
         Lua = {

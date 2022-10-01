@@ -107,8 +107,8 @@ function M.kanagawa(theme)
             TelescopeResultsNormal = { bg = "#1a1a22" },
             TelescopeResultsBorder = { fg = "#1a1a22", bg = "#1a1a22" },
 
-            TelescopePreviewNormal = { bg = colors.bg_dark },
-            TelescopePreviewBorder = { bg = colors.bg_dark, fg = colors.bg_dark }
+            TelescopePreviewNormal = { bg = colors.bg_dim },
+            TelescopePreviewBorder = { bg = colors.bg_dim, fg = colors.bg_dim }
         },
         theme = theme,
     })

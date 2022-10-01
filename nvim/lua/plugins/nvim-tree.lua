@@ -6,7 +6,8 @@ require("nvim-tree").setup({
     disable_netrw = false,
     hijack_netrw = true,
     hijack_cursor = true,
-    update_cwd = true,
+    respect_buf_cwd = false,
+    sync_root_with_cwd = true,
     filters = {
         dotfiles = false,
     },
@@ -14,9 +15,9 @@ require("nvim-tree").setup({
     git = { enable = true, ignore = true },
 
     update_focused_file = {
-        enable = true,
-        update_cwd = false,
-        ignore_list = {},
+        enable = false,
+        update_root = true,
+        ignore_list = {"help"},
     },
     live_filter = {
         always_show_folders = false
@@ -55,4 +56,4 @@ require("nvim-tree").setup({
 })
 
 vim.keymap.set("n", "<leader>nt", "<cmd>NvimTreeToggle<CR>", { desc = "NvimTree: toggle" })
-vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile<CR>", { desc = "NvimTree: find file" })
+vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile!<CR>", { desc = "NvimTree: find file" })

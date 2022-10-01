@@ -301,12 +301,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local caps = client.server_capabilities
         if caps.semanticTokensProvider and caps.semanticTokensProvider.full then
             local augrp = vim.api.nvim_create_augroup("LspSemanticTokens", { clear = true })
-            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "TextChanged" }, {
+            vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
                 callback = vim.lsp.buf.semantic_tokens_full,
                 group = augrp,
                 buffer = bufnr,
                 desc = "LSP semantic tokens",
             })
+            vim.lsp.buf.semantic_tokens_full()
         end
     end,
 })
@@ -332,7 +333,7 @@ M.hl_map = {
     property = "TSProperty",
     enumMember = "TSField",
     event = "TSType",
-    ["function"] = { "TSFunction", defaultLibrary = "Special", builtin = "Special" },
+    ["function"] = { "TSFunction", defaultLibrary = "Special", builtin = "Special", static = 'TSFunction'},
     magicFunction = "Special",
     method = "TSMethod",
     macro = "TSPreProc",
