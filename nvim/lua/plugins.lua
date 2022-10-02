@@ -64,6 +64,7 @@ return require("packer").startup(function(use)
 
     use({
         "williamboman/mason-lspconfig.nvim",
+        after = "mason.nvim",
         config = function()
             require("mason-lspconfig").setup()
         end,
@@ -71,8 +72,9 @@ return require("packer").startup(function(use)
 
     use({
         "neovim/nvim-lspconfig",
+        after = "mason-lspconfig.nvim",
         config = function()
-            require("lsp.lsp-config")
+            require("lsp.server_setup")
         end,
     })
 
@@ -139,6 +141,7 @@ return require("packer").startup(function(use)
 
     use({
         "hrsh7th/nvim-cmp",
+        event = { "InsertEnter", "CmdLineEnter" },
         config = function()
             require("plugins.cmp")
         end,

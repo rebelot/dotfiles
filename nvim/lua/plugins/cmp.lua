@@ -22,12 +22,12 @@ cmp.setup({
     window = {
         documentation = {
             winhighlight = "Search:None",
-            border = require("lsp.lsp-config").borders,
+            border = require("lsp").borders,
         },
         -- completion = {
         --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:CmpCompletionSel,Search:None",
         --     border = 'none'
-        -- border = require("lsp.lsp-config").borders,
+        -- border = require("lsp").borders,
         -- },
     },
 

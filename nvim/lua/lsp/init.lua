@@ -1,5 +1,3 @@
-local lspconfig = require("lspconfig")
-
 local borders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
 
 -----------------------
@@ -174,48 +172,8 @@ local on_attach = function(client, bufnr)
     end
 end
 
-local function make_config(server_name)
-    local ok, config = pcall(require, "lsp.server_configurations." .. server_name)
-    if not ok then
-        config = {}
-    end
-    local client_on_attach = config.on_attach
-    -- wrap client-specific on_attach with default custom on_attach
-    if client_on_attach then
-        config.on_attach = function(client, bufnr)
-            on_attach(client, bufnr)
-            client_on_attach(client, bufnr)
-        end
-    else
-        config.on_attach = on_attach
-    end
-    config.capabilites = capabilities
-    return config
-end
-
-local servers = {
-    "ccls",
-    "pylance",
-    -- "pyright",
-    "marksman",
-    "sumneko_lua",
-    "texlab",
-    "ltex",
-    "vimls",
-    "bashls",
-    "julials",
-    "tsserver",
-}
-
-for _, server in ipairs(servers) do
-    -- call make_config() before trying to access lspconfig[server] to ensure
-    -- registering custom servers
-    local config = make_config(server)
-    lspconfig[server].setup(config)
-end
-
 M = {}
-M.on_attach = on_attach
-M.capabilities = capabilities
+M.default_on_attach = on_attach
+M.default_capabilities = capabilities
 M.borders = borders
 return M

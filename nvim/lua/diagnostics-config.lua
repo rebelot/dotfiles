@@ -4,7 +4,7 @@ vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
 vim.diagnostic.config({
-    float = { source = "always", border = require("lsp.lsp-config").borders },
+    float = { source = "always", border = require("lsp").borders },
     virtual_text = false, -- , source = 'always'},
     underline = true,
     signs = true,

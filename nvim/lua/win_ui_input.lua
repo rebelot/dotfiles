@@ -63,7 +63,7 @@ vim.ui.input = function(opts, on_confirm)
         wininput(
             opts,
             on_confirm,
-            { border = require("lsp.lsp-config").borders, relative = "cursor", row = 1, col = 0, width = 1 }
+            { border = require("lsp").borders, relative = "cursor", row = 1, col = 0, width = 1 }
         )
     end
 end

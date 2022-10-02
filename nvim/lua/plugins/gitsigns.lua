@@ -3,7 +3,7 @@ require("gitsigns").setup({
     trouble = true,
     keymaps = {},
     preview_config = {
-        border = require("lsp.lsp-config").borders,
+        border = require("lsp").borders,
     },
 })
 vim.api.nvim_set_keymap("n", "<leader>hd", "<cmd>Gitsigns preview_hunk<CR>", copts)
