@@ -1,4 +1,5 @@
-local copts = { noremap = true }
+local map = vim.keymap.set
+
 require("gitsigns").setup({
     trouble = true,
     keymaps = {},
@@ -6,7 +7,8 @@ require("gitsigns").setup({
         border = require("lsp").borders,
     },
 })
-vim.api.nvim_set_keymap("n", "<leader>hd", "<cmd>Gitsigns preview_hunk<CR>", copts)
-vim.api.nvim_set_keymap("n", "]h", "<cmd>Gitsigns next_hunk<CR>", copts)
-vim.api.nvim_set_keymap("n", "[h", "<cmd>Gitsigns prev_hunk<CR>", copts)
-vim.api.nvim_set_keymap("n", "<leader>xh", "<cmd>Gitsigns setloclist<CR>", copts) -- use trouble
+
+map("n", "<leader>hd", "<cmd>Gitsigns preview_hunk<CR>")
+map("n", "]h", "<cmd>Gitsigns next_hunk<CR>")
+map("n", "[h", "<cmd>Gitsigns prev_hunk<CR>")
+map("n", "<leader>xh", "<cmd>Gitsigns setqflist<CR>") -- use trouble

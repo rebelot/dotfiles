@@ -1,9 +1,9 @@
-local copts = { noremap = true }
+local map = vim.keymap.set
 -- local ac = require'hop.hint'.HintDirection['AFTER_CURSOR']
 -- local bc = require'hop.hint'.HintDirection['BEFORE_CURSOR']
 
-vim.keymap.set({"n", "x"}, "s", require("hop").hint_char2, { desc = "Hop: Hint char2" })
-vim.keymap.set({"o"}, "x", require("hop").hint_char2, { desc = "Hop: Hint char2" })
+map({"n", "x"}, "s", require("hop").hint_char2, { desc = "Hop: Hint char2" })
+map({"o"}, "x", require("hop").hint_char2, { desc = "Hop: Hint char2" })
 
 require("hop").setup({
     teasing = false,

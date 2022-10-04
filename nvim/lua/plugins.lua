@@ -1,6 +1,31 @@
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
+local disabled_built_ins = {
+    -- "netrw",
+    -- "netrwPlugin",
+    -- "netrwSettings",
+    -- "netrwFileHandlers",
+    "gzip",
+    "zip",
+    "zipPlugin",
+    "tar",
+    "tarPlugin",
+    "getscript",
+    "getscriptPlugin",
+    "vimball",
+    "vimballPlugin",
+    "2html_plugin",
+    "logipat",
+    "rrhelper",
+    "spellfile_plugin",
+    "matchit",
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+    vim.g["loaded_" .. plugin] = 1
+end
+
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
 -- bootstap
@@ -146,13 +171,13 @@ return require("packer").startup(function(use)
             require("plugins.cmp")
         end,
         requires = {
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
+            { "hrsh7th/cmp-buffer", after = "nvim-cmp" },
+            { "hrsh7th/cmp-path", after = "nvim-cmp" },
             -- "hrsh7th/cmp-nvim-lua",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-nvim-lsp-signature-help",
-            "hrsh7th/cmp-nvim-lsp-document-symbol",
+            { "hrsh7th/cmp-cmdline", after = "nvim-cmp" },
+            { "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" },
+            { "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" },
+            { "hrsh7th/cmp-nvim-lsp-document-symbol", after = "nvim-cmp" },
             -- {
             --     "uga-rosa/cmp-dictionary",
             --     ft = { 'markdown' },
@@ -164,16 +189,17 @@ return require("packer").startup(function(use)
             --         })
             --     end,
             -- },
-            "kdheepak/cmp-latex-symbols",
-            "dmitmel/cmp-cmdline-history",
-            "andersevenrud/cmp-tmux",
-            "quangnguyen30192/cmp-nvim-ultisnips",
+            { "kdheepak/cmp-latex-symbols", after = "nvim-cmp" },
+            { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" },
+            { "andersevenrud/cmp-tmux", after = "nvim-cmp" },
+            { "quangnguyen30192/cmp-nvim-ultisnips", after = "nvim-cmp" },
         },
     })
 
     use({
         "SirVer/ultisnips",
         requires = "honza/vim-snippets",
+        after = "nvim-cmp",
         config = function()
             vim.opt.rtp:append({ vim.fn.stdpath("data") .. "/site/pack/packer/start/vim-snippets" })
             vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
@@ -206,7 +232,7 @@ return require("packer").startup(function(use)
 
     use({
         "zbirenbaum/copilot-cmp",
-        after = { "copilot.lua" },
+        after = { "copilot.lua", "nvim-cmp" },
         config = function()
             require("copilot_cmp").setup({
                 formatters = {
@@ -577,6 +603,10 @@ return require("packer").startup(function(use)
         "rcarriga/nvim-notify",
         config = function()
             vim.notify = require("notify")
+            vim.keymap.set("n", "<esc>", function()
+                require("notify").dismiss()
+                vim.cmd.noh()
+            end)
         end,
     })
 

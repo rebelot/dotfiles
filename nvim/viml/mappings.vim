@@ -19,6 +19,8 @@ onoremap <S-CR> -
 nnoremap <leader>ev :edit $MYVIMRC<CR>
 " nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
+" clear search highlighting
+" nnoremap <silent> <esc> :noh<cr>
 
 " Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
 " C-l escape delimiters, C-Space invoke completion,
@@ -167,8 +169,8 @@ xnoremap <C-U> :m'<-2<CR>gv
 xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
 
 "fast macro
-nnoremap @ <cmd>execute "noautocmd norm! " . v:count1 . "@" . getcharstr()<cr>
-xnoremap @ :<C-U>execute "noautocmd '<,'>norm! " . v:count1 . "@" . getcharstr()<cr>
+nnoremap @ <cmd>set lazyredraw <bar> execute 'noautocmd norm! ' . v:count1 . '@' . getcharstr() <bar> set nolazyredraw<cr>
+xnoremap @ :<C-U>set lazyredraw <bar> execute "noautocmd '<,'>norm! " . v:count1 . "@" . getcharstr()<bar> set nolazyredraw<cr>
 
 " http://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-bytes-of-vimscript/
 " Poor men refactoring

@@ -60,13 +60,19 @@ autocmd({ "WinEnter", "BufWinEnter" }, {
     command = [[let &l:scrolloff = winheight(0) / 3]],
 })
 
+------------------------
+--  Better WinClosed  --
+------------------------
+
+autocmd("WinClosed", {
+    command = 'if win_getid() == expand("<amatch>") | wincmd p | endif' })
+
 -----------------------------------
 --  CursorLine, RelativeNumbers  --
 -----------------------------------
 
 -- autocmd({ "WinEnter", "BufWinEnter" }, {
 --     command = "setlocal cursorline relativenumber",
---     group = au_id,
 -- })
 
 autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
@@ -83,7 +89,6 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
 autocmd("WinLeave", {
     command = "setlocal nocursorline norelativenumber",
 })
--- autocmd("FileType", {})
 
 ----------------
 --  Terminal  --

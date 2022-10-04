@@ -32,7 +32,7 @@ local sources = {
 
     null_ls.builtins.diagnostics.vint,
 
-    null_ls.builtins.code_actions.gitsigns,
+    null_ls.builtins.code_actions.gitsigns.with({ disabled_filetypes = { "NvimTree" } }),
 
     -- null_ls.builtins.code_actions.refactoring,
     -- null_ls.builtins.completion.spell,
@@ -60,14 +60,9 @@ local on_attach = function(client, bufnr)
     if client.server_capabilities.documentRangeFormattingProvider then
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
         vim.keymap.set("x", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP range format" })
-        vim.api.nvim_buf_create_user_command(
-            bufnr,
-            "LspRangeFormat",
-            function(args)
-                vim.lsp.buf.format({{args.line1, 0}, {args.line2, 0}})
-            end,
-            { range = true, desc = "LSP range format" }
-        )
+        vim.api.nvim_buf_create_user_command(bufnr, "LspRangeFormat", function(args)
+            vim.lsp.buf.format({ { args.line1, 0 }, { args.line2, 0 } })
+        end, { range = true, desc = "LSP range format" })
     end
 end
 
