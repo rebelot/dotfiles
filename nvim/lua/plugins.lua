@@ -134,7 +134,7 @@ return require("packer").startup(function(use)
         event = "BufRead",
         config = function()
             require("nvim-navic").setup({
-                icons = require("lspkind").symbol_map,
+                -- icons = require("lspkind").symbol_map,
                 separator = "",
             })
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -166,8 +166,22 @@ return require("packer").startup(function(use)
     })
 
     use({
+        "SirVer/ultisnips",
+        requires = "honza/vim-snippets",
+        config = function()
+            vim.opt.rtp:append({ vim.fn.stdpath("data") .. "/site/pack/packer/start/vim-snippets" })
+            vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+            vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
+            vim.g.UltiSnipsJumpBackwardTrigger = "<Plug>(ultisnips_jump_backward)"
+            vim.g.UltiSnipsListSnippets = "<Plug>(utlisnips_list_snippets)"
+            vim.g.UltiSnipsRemoveSelectModeMappings = 0
+        end,
+    })
+
+    use({
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdLineEnter" },
+        after = 'ultisnips',
         config = function()
             require("plugins.cmp")
         end,
@@ -193,23 +207,10 @@ return require("packer").startup(function(use)
             { "kdheepak/cmp-latex-symbols", after = "nvim-cmp" },
             -- { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" },
             { "andersevenrud/cmp-tmux", after = "nvim-cmp" },
-            { "quangnguyen30192/cmp-nvim-ultisnips", after = "nvim-cmp" },
+            { "quangnguyen30192/cmp-nvim-ultisnips", after = "nvim-cmp"},
         },
     })
 
-    use({
-        "SirVer/ultisnips",
-        requires = "honza/vim-snippets",
-        after = "nvim-cmp",
-        config = function()
-            vim.opt.rtp:append({ vim.fn.stdpath("data") .. "/site/pack/packer/start/vim-snippets" })
-            vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
-            vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
-            vim.g.UltiSnipsJumpBackwardTrigger = "<Plug>(ultisnips_jump_backward)"
-            vim.g.UltiSnipsListSnippets = "<Plug>(utlisnips_list_snippets)"
-            vim.g.UltiSnipsRemoveSelectModeMappings = 0
-        end,
-    })
 
     use({
         "zbirenbaum/copilot.lua",
