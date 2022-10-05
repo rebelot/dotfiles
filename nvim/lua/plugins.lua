@@ -190,7 +190,7 @@ return require("packer").startup(function(use)
             --     end,
             -- },
             { "kdheepak/cmp-latex-symbols", after = "nvim-cmp" },
-            { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" },
+            -- { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" },
             { "andersevenrud/cmp-tmux", after = "nvim-cmp" },
             { "quangnguyen30192/cmp-nvim-ultisnips", after = "nvim-cmp" },
         },
@@ -234,11 +234,7 @@ return require("packer").startup(function(use)
         "zbirenbaum/copilot-cmp",
         after = { "copilot.lua", "nvim-cmp" },
         config = function()
-            require("copilot_cmp").setup({
-                formatters = {
-                    insert_text = require("copilot_cmp.format").remove_existing,
-                },
-            })
+            require("copilot_cmp").setup()
         end,
     })
 
