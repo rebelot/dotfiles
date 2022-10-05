@@ -26,18 +26,17 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-
 -- bootstap
-if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({
-        "git",
-        "clone",
-        "https://github.com/wbthomason/packer.nvim",
-        install_path,
-    })
-    execute("packadd packer.nvim")
-end
+-- local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+-- if fn.empty(fn.glob(install_path)) > 0 then
+--     fn.system({
+--         "git",
+--         "clone",
+--         "https://github.com/wbthomason/packer.nvim",
+--         install_path,
+--     })
+--     execute("packadd packer.nvim")
+-- end
 
 -- autocompile
 vim.cmd([[
@@ -51,24 +50,18 @@ require("packer").init({
     max_jobs = 50,
 })
 
--- vim.opt.rtp:append({
---     "/Users/laurenzi/usr/src/kanagawa.nvim",
---     "/Users/laurenzi/usr/src/heirline.nvim",
---     "/Users/laurenzi/usr/src/terminal.nvim",
--- })
-
 return require("packer").startup(function(use)
     ----------------
     --  Required  --
     ----------------
 
-    use({ "wbthomason/packer.nvim" })
+    use("wbthomason/packer.nvim")
 
-    use({ "nvim-lua/plenary.nvim" })
+    use("nvim-lua/plenary.nvim")
 
-    use({ "lewis6991/impatient.nvim" })
+    use("lewis6991/impatient.nvim")
 
-    use({ "dstein64/vim-startuptime" })
+    use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
 
     use({
         "tami5/sqlite.lua",
@@ -106,6 +99,7 @@ return require("packer").startup(function(use)
     use({
         "jose-elias-alvarez/null-ls.nvim",
         after = "nvim-lspconfig",
+        event = { "BufRead", "BufNewFile" },
         config = function()
             require("lsp.null-ls")
         end,
@@ -115,12 +109,13 @@ return require("packer").startup(function(use)
         "j-hui/fidget.nvim",
         event = { "BufRead" },
         config = function()
-            require("fidget").setup({})
+            require("fidget").setup()
         end,
     })
 
     use({
         "onsails/lspkind-nvim",
+        module = "lspkind",
         config = function()
             require("lspkind").init({
                 mode = "symbol_text",
@@ -136,6 +131,7 @@ return require("packer").startup(function(use)
     use({
         "SmiteshP/nvim-navic",
         after = { "lspkind-nvim" },
+        event = "BufRead",
         config = function()
             require("nvim-navic").setup({ icons = require("lspkind").symbol_map })
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -152,6 +148,8 @@ return require("packer").startup(function(use)
 
     use({
         "stevearc/aerial.nvim",
+        event = "BufRead",
+        cmd = { "AerialToggle", "AerialInfo" },
         config = function()
             require("aerial").setup()
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -288,7 +286,7 @@ return require("packer").startup(function(use)
 
     -- use({ "Konfekt/FastFold" })
 
-    use({ "jaredsampson/vim-pymol" })
+    use({ "jaredsampson/vim-pymol", ft = "pml" })
 
     -- use({ "vim-pandoc/vim-pandoc" })
     -- use({ "vim-pandoc/vim-pandoc-syntax" })
@@ -298,15 +296,11 @@ return require("packer").startup(function(use)
     use({
         "nvim-treesitter/nvim-treesitter",
         run = ":TSUpdate",
+        event = { "BufRead", "BufNewFile" },
+        cmd = { "TSInstall", "TSUpdate" },
         config = function()
             require("treesitter-config")
         end,
-    })
-
-    use({
-        "nvim-treesitter/playground",
-        after = "nvim-treesitter",
-        cmd = "TSPlaygroundToggle",
     })
 
     use({
@@ -328,11 +322,16 @@ return require("packer").startup(function(use)
     })
 
     use({
+        "nvim-treesitter/playground",
+        cmd = "TSPlaygroundToggle",
+    })
+
+    use({
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("plugins.indent-blankline")
         end,
-        event = "BufWinEnter",
+        event = "BufRead",
     })
 
     -------------------------
@@ -410,17 +409,13 @@ return require("packer").startup(function(use)
     -- Colors, Icons, StatusLine, BufferLine --
     -------------------------------------------
 
-    use({
-        "/Users/laurenzi/usr/src/kanagawa.nvim",
-        branch = "master",
-    })
+    use("/Users/laurenzi/usr/src/kanagawa.nvim")
 
-    use({
-        "/Users/laurenzi/usr/src/lucy.nvim",
-    })
+    use("/Users/laurenzi/usr/src/lucy.nvim")
 
     use({
         "kyazdani42/nvim-web-devicons",
+        module = "nvim-web-devicons",
         config = function()
             require("nvim-web-devicons").setup()
         end,
@@ -428,7 +423,7 @@ return require("packer").startup(function(use)
 
     use({
         "/Users/laurenzi/usr/src/heirline.nvim",
-        event = { "BufWinEnter" },
+        event = { "UIEnter" },
         config = function()
             require("plugins.heirline")
         end,
@@ -485,6 +480,7 @@ return require("packer").startup(function(use)
 
     use({
         "rcarriga/neotest",
+        cmd = { "Neotest", "NeotestSummary", "NeotestNearest", "NeotestAttach" },
         requires = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
@@ -504,7 +500,7 @@ return require("packer").startup(function(use)
         after = "nvim-dap",
         ft = "python",
         config = function()
-            require("dap-python").setup("~/venvs/debugpy/bin/python")
+            -- require("dap-python").setup("~/venvs/debugpy/bin/python")
             require("dap-python").test_runner = "pytest"
         end,
     })
@@ -547,9 +543,13 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
+    use({
+        "sindrets/diffview.nvim",
+        requires = "nvim-lua/plenary.nvim",
+        cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    })
 
-    use({ "tpope/vim-fugitive" })
+    use({ "tpope/vim-fugitive", cmd = "G" })
 
     use({
         "simnalamburt/vim-mundo",
@@ -562,15 +562,15 @@ return require("packer").startup(function(use)
 
     use({
         "/Users/laurenzi/usr/src/terminal.nvim",
-        event = "VimEnter",
+        -- cmd = { "TermOpen", "TermRun" },
+        -- keys = "<leader>t",
         -- event = "TermOpen",
-        -- keys = {"<leader>to", '<leader>st'},
         config = function()
             require("plugins.terminal_nvim")
         end,
     })
 
-    use({ "moll/vim-bbye", cmd = "Bdelete" })
+    use({ "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } })
 
     use({ "lambdalisue/suda.vim", cmd = { "SudaRead, SudaWrite" } })
 
@@ -589,14 +589,15 @@ return require("packer").startup(function(use)
 
     use({
         "norcalli/nvim-colorizer.lua",
+        event = { "BufRead", "BufNewFile" },
         config = function()
             require("colorizer").setup()
         end,
-        event = "BufWinEnter",
     })
 
     use({
         "rcarriga/nvim-notify",
+        event = "UIEnter",
         config = function()
             vim.notify = require("notify")
             vim.keymap.set("n", "<esc>", function()
@@ -631,7 +632,8 @@ return require("packer").startup(function(use)
 
     use({
         "numToStr/Comment.nvim",
-        event = "BufRead",
+        -- event = "BufRead",
+        keys = { "gc", "gb" },
         config = function()
             require("Comment").setup({ mappings = { extended = true } })
         end,
@@ -639,8 +641,9 @@ return require("packer").startup(function(use)
 
     use({
         "kylechui/nvim-surround",
+        keys = { "ys", "cs", "ds", { "i", "<C-g>" }, { "x", "S" } },
         config = function()
-            require("nvim-surround").setup({})
+            require("nvim-surround").setup()
         end,
     })
 
@@ -653,25 +656,31 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({ "wellle/targets.vim" })
+    use("wellle/targets.vim")
 
-    use({ "michaeljsmith/vim-indent-object" })
+    use({
+        "michaeljsmith/vim-indent-object",
+        keys = { { "x", "ai" }, { "x", "ii" }, { "o", "ai" }, { "o", "ii" } },
+    })
 
     use({
         "phaazon/hop.nvim",
         as = "hop",
+        keys = { "s", { "x", "s" }, { "o", "x" } },
         config = function()
             require("plugins.hop")
         end,
     })
 
-    use({ "tpope/vim-repeat" })
+    use("tpope/vim-repeat")
 
     ----------
     -- Tmux --
     ----------
     use({
         "benmills/vimux",
+        -- keys = '<leader>v',
+        -- cmd = {'VimuxPromptCommand', 'VimuxOpenRunner'},
         config = function()
             vim.cmd([[
             function! VimuxSlime()
@@ -687,3 +696,9 @@ return require("packer").startup(function(use)
         end,
     })
 end)
+
+-- vim.opt.rtp:append({
+--     "/Users/laurenzi/usr/src/kanagawa.nvim",
+--     "/Users/laurenzi/usr/src/heirline.nvim",
+--     "/Users/laurenzi/usr/src/terminal.nvim",
+-- })

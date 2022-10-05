@@ -1,9 +1,12 @@
+local api = vim.api
+local map = vim.keymap.set
+
 local function escape_pair()
     -- vim.fn.searchpos
     -- vim.fn.searchpairpos
     local closers = { ")", "]", "}", ">", "'", '"', "`", "," }
-    local line = vim.api.nvim_get_current_line()
-    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local line = api.nvim_get_current_line()
+    local row, col = unpack(api.nvim_win_get_cursor(0))
     local after = line:sub(col + 1, -1)
     local closer_col = #after + 1
     local closer_i = nil
@@ -15,10 +18,10 @@ local function escape_pair()
         end
     end
     if closer_i then
-        vim.api.nvim_win_set_cursor(0, { row, col + closer_col })
+        api.nvim_win_set_cursor(0, { row, col + closer_col })
     else
-        vim.api.nvim_win_set_cursor(0, { row, col + 1 })
+        api.nvim_win_set_cursor(0, { row, col + 1 })
     end
 end
 
-vim.keymap.set("i", "<C-l>", escape_pair, { desc = "Escape pair" })
+map("i", "<C-l>", escape_pair, { desc = "Escape pair" })
