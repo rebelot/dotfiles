@@ -133,7 +133,10 @@ return require("packer").startup(function(use)
         after = { "lspkind-nvim" },
         event = "BufRead",
         config = function()
-            require("nvim-navic").setup({ icons = require("lspkind").symbol_map })
+            require("nvim-navic").setup({
+                icons = require("lspkind").symbol_map,
+                separator = "",
+            })
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
                     local bufnr = args.buf
@@ -622,7 +625,7 @@ return require("packer").startup(function(use)
             vim.keymap.set("x", "ga", "<Plug>(EasyAlign)")
         end,
         cmd = "EasyAlign",
-        keys = { "ga" },
+        keys = { { "x", "ga" } },
     })
 
     use({
@@ -641,7 +644,7 @@ return require("packer").startup(function(use)
 
     use({
         "kylechui/nvim-surround",
-        keys = { "ys", "cs", "ds", { "i", "<C-g>" }, { "x", "S" } },
+        keys = { { "n", "ys" }, { "n", "cs" }, { "n", "ds" }, { "i", "<C-g>" }, { "x", "S" } },
         config = function()
             require("nvim-surround").setup()
         end,
@@ -666,7 +669,7 @@ return require("packer").startup(function(use)
     use({
         "phaazon/hop.nvim",
         as = "hop",
-        keys = { "s", { "x", "s" }, { "o", "x" } },
+        keys = { {"n", "s"}, { "x", "s" }, { "o", "x" } },
         config = function()
             require("plugins.hop")
         end,

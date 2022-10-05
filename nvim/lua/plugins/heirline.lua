@@ -275,24 +275,38 @@ local Navic = {
             Operator = "Operator",
             TypeParameter = "Type",
         },
+        enc = function(a, b)
+            return bit.bor(bit.lshift(a, 16), b)
+        end,
+        dec = function(c)
+            return { bit.rshift(c, 16), bit.band(c, 65535) }
+        end
     },
     init = function(self)
         local data = require("nvim-navic").get_data() or {}
         local children = {}
         for i, d in ipairs(data) do
+            local pos = self.enc(d.scope.start.line, d.scope.start.character)
             local child = {
                 {
-                    provider = d.icon .. " ",
+                    provider = d.icon,
                     hl = self.type_hl[d.type],
                 },
                 {
-                    provider = d.name,
+                    provider = d.name:gsub("%%", "%%%%"):gsub("%s*->%s*", ''),
                     -- hl = self.type_hl[d.type],
+                    on_click = {
+                        callback = function(self, minwid)
+                            vim.api.nvim_win_set_cursor(0, self.dec(minwid))
+                        end,
+                        minwid = pos,
+                        name = "heirline_navic",
+                    },
                 },
             }
             if #data > 1 and i < #data then
                 table.insert(child, {
-                    provider = " > ",
+                    provider = "  ",
                     hl = { fg = "bright_fg" },
                 })
             end
@@ -583,7 +597,7 @@ local DefaultStatusline = {
     Space,
     Diagnostics,
     Align,
-    utils.make_flexible_component(3, Navic, { provider = "" }),
+    utils.make_flexible_component(3, { Navic, Space }, { provider = "" }),
     Align,
     DAPMessages,
     LSPActive,
