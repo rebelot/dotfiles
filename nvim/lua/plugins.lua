@@ -1,6 +1,3 @@
-local execute = vim.api.nvim_command
-local fn = vim.fn
-
 local disabled_built_ins = {
     -- "netrw",
     -- "netrwPlugin",
@@ -26,7 +23,11 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
--- bootstap
+-- Bootstrap
+------------
+-- local execute = vim.api.nvim_command
+-- local fn = vim.fn
+
 -- local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 -- if fn.empty(fn.glob(install_path)) > 0 then
 --     fn.system({
@@ -181,36 +182,23 @@ return require("packer").startup(function(use)
     use({
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdLineEnter" },
-        after = 'ultisnips',
+        after = "ultisnips",
         config = function()
             require("plugins.cmp")
         end,
-        requires = {
-            { "hrsh7th/cmp-buffer", after = "nvim-cmp" },
-            { "hrsh7th/cmp-path", after = "nvim-cmp" },
-            -- "hrsh7th/cmp-nvim-lua",
-            { "hrsh7th/cmp-cmdline", after = "nvim-cmp" },
-            { "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" },
-            { "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" },
-            { "hrsh7th/cmp-nvim-lsp-document-symbol", after = "nvim-cmp" },
-            -- {
-            --     "uga-rosa/cmp-dictionary",
-            --     ft = { 'markdown' },
-            --     config = function()
-            --         require("cmp_dictionary").setup({
-            --             dic = {
-            --                 ["*"] = "/usr/share/dict/words",
-            --             },
-            --         })
-            --     end,
-            -- },
-            { "kdheepak/cmp-latex-symbols", after = "nvim-cmp" },
-            -- { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" },
-            { "andersevenrud/cmp-tmux", after = "nvim-cmp" },
-            { "quangnguyen30192/cmp-nvim-ultisnips", after = "nvim-cmp"},
-        },
     })
 
+    use({ "hrsh7th/cmp-buffer", after = "nvim-cmp" })
+    use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
+    -- use({"hrsh7th/cmp-nvim-lua", after = "nvim-cmp"})
+    use({ "hrsh7th/cmp-cmdline", after = "nvim-cmp" })
+    use({ "hrsh7th/cmp-nvim-lsp" }) -- required by lsp/init.lua
+    use({ "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" })
+    use({ "hrsh7th/cmp-nvim-lsp-document-symbol", after = "nvim-cmp" })
+    -- use({ "dmitmel/cmp-cmdline-history", after = "nvim-cmp" })
+    use({ "kdheepak/cmp-latex-symbols", after = "nvim-cmp" })
+    use({ "andersevenrud/cmp-tmux", after = "nvim-cmp" })
+    use({ "quangnguyen30192/cmp-nvim-ultisnips", after = "nvim-cmp" })
 
     use({
         "zbirenbaum/copilot.lua",
@@ -269,6 +257,7 @@ return require("packer").startup(function(use)
 
     use({
         "andymass/vim-matchup",
+        event = "BufRead",
         config = function()
             vim.g.matchup_override_vimtex = 1
             vim.g.matchup_matchparen_deferred = 1
@@ -283,10 +272,10 @@ return require("packer").startup(function(use)
         ft = "csv",
     })
 
-    use({
-        "tmhedberg/SimpylFold",
-        ft = "python",
-    })
+    -- use({
+    --     "tmhedberg/SimpylFold",
+    --     ft = "python",
+    -- })
 
     -- use({ "Konfekt/FastFold" })
 
@@ -298,9 +287,10 @@ return require("packer").startup(function(use)
     -- use '/opt/plumed-2.4.3/lib/plumed/vim'
 
     use({
+        -- WARN: Issues with telescope. Lazy-loading telescope solves the issue.
         "nvim-treesitter/nvim-treesitter",
         run = ":TSUpdate",
-        event = { "BufRead", "BufNewFile" },
+        event = "BufRead",
         cmd = { "TSInstall", "TSUpdate" },
         config = function()
             require("treesitter-config")
@@ -350,7 +340,11 @@ return require("packer").startup(function(use)
     })
 
     use({
+        -- WARN: Issues with treesitter. Lazy-loading telescope solves the issue.
         "nvim-telescope/telescope.nvim",
+        keys = { { "n", "<leader>f" }, { "n", "<leader>t" } },
+        cmd = "Telescope",
+        module = "telescope",
         config = function()
             require("plugins.telescope")
         end,
@@ -558,7 +552,7 @@ return require("packer").startup(function(use)
     use({
         "simnalamburt/vim-mundo",
         cmd = { "MundoToggle" },
-        keys = "<leader>mu",
+        keys = { { "n", "<leader>mu" } },
         config = function()
             vim.keymap.set("n", "<leader>mu", "<cmd>MundoToggle<CR>", { desc = "Mundo: toggle" })
         end,
@@ -637,7 +631,7 @@ return require("packer").startup(function(use)
     use({
         "numToStr/Comment.nvim",
         -- event = "BufRead",
-        keys = { "gc", "gb" },
+        keys = { { "n", "gc" }, { "n", "gb" }, { "x", "gc" }, { "x", "gb" } },
         config = function()
             require("Comment").setup({ mappings = { extended = true } })
         end,
@@ -670,7 +664,7 @@ return require("packer").startup(function(use)
     use({
         "phaazon/hop.nvim",
         as = "hop",
-        keys = { {"n", "s"}, { "x", "s" }, { "o", "x" } },
+        keys = { { "n", "s" }, { "x", "s" }, { "o", "x" } },
         config = function()
             require("plugins.hop")
         end,

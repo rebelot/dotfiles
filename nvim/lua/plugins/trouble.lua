@@ -1,4 +1,3 @@
-local copts = { noremap = true }
 local map = vim.keymap.set
 
 require("trouble").setup({ use_diagnostic_signs = true })
@@ -12,12 +11,12 @@ map("n", "<leader>xr", "<cmd>TroubleToggle lsp_references<CR>")
 
 map("n", "]x", function()
     pcall(require("trouble").next, { skip_groups = true, jump = true })
-end, copts)
+end)
 map("n", "[x", function()
     pcall(require("trouble").previous, { skip_groups = true, jump = true })
-end, copts)
+end)
 
-vim.cmd[[hi TroubleText guifg=fg guibg=none]]
+vim.cmd([[hi TroubleText guifg=fg guibg=none]])
 vim.cmd([[
     augroup trouble_au
     autocmd!

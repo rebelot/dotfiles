@@ -245,7 +245,7 @@ local LSPActive = {
 }
 
 local Navic = {
-    condition = require("nvim-navic").is_available,
+    condition = function () return require("nvim-navic").is_available() end,
     static = {
         type_hl = {
             File = "Directory",
@@ -275,18 +275,23 @@ local Navic = {
             Operator = "Operator",
             TypeParameter = "Type",
         },
-        enc = function(a, b)
-            return bit.bor(bit.lshift(a, 16), b)
+        -- line: 16 bit (65536); col: 10 bit (1024); winnr: 6 bit (64)
+        -- local encdec = function(a,b,c) return dec(enc(a,b,c)) end; vim.pretty_print(encdec(2^16 - 1, 2^10 - 1, 2^6 - 1))
+        enc = function(line, col, winnr)
+            return bit.bor(bit.lshift(line, 16), bit.lshift(col, 6), winnr)
         end,
         dec = function(c)
-            return { bit.rshift(c, 16), bit.band(c, 65535) }
+            local line = bit.rshift(c, 16)
+            local col = bit.band(bit.rshift(c, 6), 1023)
+            local winnr = bit.band(c,  63)
+            return line, col, winnr
         end
     },
     init = function(self)
         local data = require("nvim-navic").get_data() or {}
         local children = {}
         for i, d in ipairs(data) do
-            local pos = self.enc(d.scope.start.line, d.scope.start.character)
+            local pos = self.enc(d.scope.start.line, d.scope.start.character, self.winnr)
             local child = {
                 {
                     provider = d.icon,
@@ -296,8 +301,9 @@ local Navic = {
                     provider = d.name:gsub("%%", "%%%%"):gsub("%s*->%s*", ''),
                     -- hl = self.type_hl[d.type],
                     on_click = {
-                        callback = function(self, minwid)
-                            vim.api.nvim_win_set_cursor(0, self.dec(minwid))
+                        callback = function(_, minwid)
+                            local line, col, winnr = self.dec(minwid)
+                            vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), {line, col})
                         end,
                         minwid = pos,
                         name = "heirline_navic",
@@ -312,7 +318,13 @@ local Navic = {
             end
             table.insert(children, child)
         end
-        self[1] = self:new(children, 1)
+        -- self[1] = self:new(children, 1)
+        -- self:set_win_attr("_win_children", self:new(children, 1))
+        -- self[1] = self:get_win_attr("_win_children")
+        self.children = self:new(children, 1)
+    end,
+    provider = function(self)
+        return self.children:eval()
     end,
     hl = { fg = "gray" },
 }
@@ -700,10 +712,9 @@ local StatusLines = {
         end,
     },
 
-    -- init = utils.pick_child_on_condition,
     fallthrough = false,
 
-    GitStatusline,
+    -- GitStatusline,
     SpecialStatusline,
     TerminalStatusline,
     InactiveStatusline,
