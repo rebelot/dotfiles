@@ -1,5 +1,7 @@
 local dap = require("dap")
 local dapui = require("dapui")
+local dap_virtual_text = require'nvim-dap-virtual-text'
+
 local map = vim.keymap.set
 local fn = vim.fn
 -- require('dap.ext.vscode').load_launchjs()
@@ -45,6 +47,7 @@ dap.listeners.after["event_initialized"]["dapui"] = function()
 end
 dap.listeners.after["event_terminated"]["dapui"] = function()
     dapui.close()
+    dap_virtual_text.refresh()
     vim.cmd("bd! \\[dap-repl]")
 end
 

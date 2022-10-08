@@ -1,7 +1,6 @@
-local alpha = require("alpha")
-local dashboard = require("alpha.themes.dashboard")
+local db = require("dashboard")
 local version = vim.version()
-dashboard.section.header.val = {
+db.custom_header = {
     "            :h-                                  Nhy`               ",
     "           -mh.                           h.    `Ndho               ",
     "           hmh+                          oNm.   oNdhh               ",
@@ -36,52 +35,75 @@ dashboard.section.header.val = {
     "                        .-:mNdhh:.......--::::-`                    ",
     "                           yNh/..------..`                          ",
     "                                                                    ",
-    "                          N E O V I M - v " .. version.major .. "." .. version.minor,
+    "N E O V I M - v " .. version.major .. "." .. version.minor,
 }
 
-dashboard.section.header.opts = {
-    hl = "DashboardHeader",
-    position = "center",
+db.custom_center = {
+    {
+        desc = "Find File                     ",
+        shortcut = "<leader>ff",
+        icon = " ",
+        icon_hl = { link = "Function" },
+        action = "Telescope find_files",
+    },
+    {
+        desc = "Recents                       ",
+        shortcut = "<leader>fh",
+        icon = " ",
+        icon_hl = { link = "Function" },
+        action = "Telescope oldfiles",
+    },
+
+    -- { shortcut = "<leader>fr", icon = " ", desc = "Favourite", action = "Telescope frecency" },
+    -- { shortcut = "<leader>fg", icon = " ", desc = "Find Word", action = "Telescope live_grep" },
+
+    {
+        desc = "New File                      ",
+        shortcut = "<leader>en",
+        icon = " ",
+        icon_hl = { link = "Function" },
+        action = "enew",
+    },
+
+    -- { shortcut = "<leader>fm", icon = " ", desc = "Bookmark", action = "Telescope marks" },
+    -- { shortcut = "l", icon = " ", desc = "Load Last Session", action = "SessionLoad" },
+
+    {
+        desc = "Update Plugins                ",
+        shortcut = "         u",
+        icon = " ",
+        icon_hl = { link = "Function" },
+        action = "PackerUpdate",
+    },
+    {
+        desc = "Setting                       ",
+        shortcut = "         s",
+        icon = " ",
+        icon_hl = { link = "Function" },
+        action = "edit $MYVIMRC",
+    },
+    {
+        desc = "Exit                          ",
+        shortcut = "         q",
+        icon = " ",
+        icon_hl = { link = "Function" },
+        action = "exit",
+    },
 }
 
-dashboard.section.buttons.val = {
-    dashboard.button("<leader>ff", "  Find File", ":Telescope find_files<CR>"),
-    dashboard.button("<leader>fh", "  Recents", ":Telescope oldfiles<CR>"),
-    -- dashboard.button("<leader>fr", "  Favourite",         ":Telescope frecency<CR>"),
-    -- dashboard.button("<leader>fg", "  Find Word",          ":Telescope live_grep<CR>"),
-    dashboard.button("<leader>en", "  New File", ":enew<CR>"),
-    -- dashboard.button("<leader>fm", "  Bookmark",          ":Telescope marks<CR>"),
-    -- dashboard.button("l",          "  Load Last Session", ":SessionLoad<CR>"),
-    dashboard.button("u", "  Update Plugins", ":PackerUpdate<CR>"),
-    dashboard.button("s", "  Setting", ":edit $MYVIMRC<CR>"),
-    dashboard.button("q", "  Exit", ":exit<CR>"),
-}
+db.custom_footer = { "type  :help<Enter>  or  <F1>  for on-line help" }
 
--- dashboard.section.buttons.type = 'group'
--- dashboard.section.buttons.opts = {
---     hl = 'yellow', --"DashboardCenter",
---     hl_shortcut = 'DashboardShortcut',
---     position = "center",
---     spacing = 1
--- }
-
-dashboard.section.footer.val =  "type  :help<Enter>  or  <F1>  for on-line help"
-dashboard.section.footer.opts = {
-    hl = "DashboardFooter",
-    position = "center"
-}
--- vim.cmd [[
--- augroup dashboard_au
---      autocmd! * <buffer>
---      autocmd FileType alpha setlocal buftype=nofile
---      autocmd FileType alpha nnoremap <buffer> <leader>q <cmd>exit<CR>
---      autocmd FileType alpha nnoremap <buffer> <leader>u <cmd>PackerUpdate<CR>
---      autocmd FileType alpha nnoremap <buffer> <leader>l <cmd>SessionLoad<CR>
---      autocmd FileType alpha nnoremap <buffer> <leader>, <cmd>edit $MYVIMRC<CR>
--- augroup END
--- ]]
-
-alpha.setup(dashboard.config)
+vim.cmd([[
+augroup dashboard_au
+     autocmd! * <buffer>
+     autocmd FileType dashboard setlocal buftype=nofile
+     autocmd FileType dashboard setlocal nonumber norelativenumber nocursorline noruler
+     autocmd FileType dashboard nnoremap <buffer> q <cmd>exit<CR>
+     autocmd FileType dashboard nnoremap <buffer> u <cmd>PackerUpdate<CR>
+     " autocmd FileType dashboard nnoremap <buffer> <leader>l <cmd>SessionLoad<CR>
+     autocmd FileType dashboard nnoremap <buffer> s <cmd>edit $MYVIMRC<CR>
+augroup END
+]])
 
 -- " =================     ===============     ===============   ========  ========
 -- " \\ . . . . . . .\\   //. . . . . . .\\   //. . . . . . .\\  \\. . .\\// . . //

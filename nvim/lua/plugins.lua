@@ -498,7 +498,7 @@ return require("packer").startup(function(use)
         after = "nvim-dap",
         ft = "python",
         config = function()
-            -- require("dap-python").setup("~/venvs/debugpy/bin/python")
+            require("dap-python").setup()--"~/venvs/debugpy/bin/python")
             require("dap-python").test_runner = "pytest"
         end,
     })
@@ -578,7 +578,8 @@ return require("packer").startup(function(use)
     })
 
     use({
-        "goolord/alpha-nvim",
+        -- Go Glepnir!
+        "glepnir/dashboard-nvim",
         event = "VimEnter",
         config = function()
             require("plugins.dashboard")
@@ -633,7 +634,7 @@ return require("packer").startup(function(use)
         -- event = "BufRead",
         keys = { { "n", "gc" }, { "n", "gb" }, { "x", "gc" }, { "x", "gb" } },
         config = function()
-            require("Comment").setup({ mappings = { extended = true } })
+            require("Comment").setup()
         end,
     })
 
