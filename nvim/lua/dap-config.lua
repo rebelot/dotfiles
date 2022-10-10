@@ -1,15 +1,12 @@
 local dap = require("dap")
 local dapui = require("dapui")
-local dap_virtual_text = require'nvim-dap-virtual-text'
+local dap_virtual_text = require("nvim-dap-virtual-text")
 
 local map = vim.keymap.set
 local fn = vim.fn
 -- require('dap.ext.vscode').load_launchjs()
 
-fn.sign_define(
-    "DapBreakpoint",
-    { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" }
-)
+fn.sign_define("DapBreakpoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
 fn.sign_define(
     "DapBreakpointCondition",
     { text = " ", texthl = "DiagnosticWarn", linehl = "", numhl = "debugBreakpoint" }
@@ -24,9 +21,11 @@ fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl 
 -- mappings
 map("n", "<leader>dC", require("dap").continue, { desc = "DAP: Continue" })
 map("n", "<leader>db", require("dap").toggle_breakpoint, { desc = "DAP: Toggle breackpoint" })
+
 map("n", "<leader>dB", function()
     require("dap").set_breakpoint(fn.input("Breakpoint condition: "))
 end, { desc = "DAP: Set breakpoint" })
+
 map("n", "<leader>do", require("dap").step_over, { desc = "DAP: Step over" })
 map("n", "<leader>dO", require("dap").step_out, { desc = "DAP: Step out" })
 map("n", "<leader>dn", require("dap").step_into, { desc = "DAP: Step into" })
@@ -35,16 +34,26 @@ map("n", "<leader>dr", require("dap").repl.toggle, { desc = "DAP: Toggle REPL" }
 map("n", "<leader>d.", require("dap").goto_, { desc = "DAP: Go to" })
 map("n", "<leader>dh", require("dap").run_to_cursor, { desc = "DAP: Run to cursor" })
 map("n", "<leader>de", require("dap").set_exception_breakpoints, { desc = "DAP: Set exception breakpoints" })
-map("n", "<leader>dv", function() require("telescope").extensions.dap.variables() end, { desc = "DAP-Telescope: Variables" })
-map("n", "<leader>dc", function() require("telescope").extensions.dap.commands() end, { desc = "DAP-Telescope: Commands" })
-map("n", "<leader>dx", require("dapui").eval, { desc = "DAP-UI: Eval" })
+map("n", "<leader>dv", function()
+    require("telescope").extensions.dap.variables()
+end, { desc = "DAP-Telescope: Variables" })
+
+map("n", "<leader>dc", function()
+    require("telescope").extensions.dap.commands()
+end, { desc = "DAP-Telescope: Commands" })
+
+map({ "n", "x" }, "<leader>dx", require("dapui").eval, { desc = "DAP-UI: Eval" })
+
 map("n", "<leader>dX", function()
     dapui.eval(fn.input("expression: "))
 end, { desc = "DAP-UI: Eval expression" })
 
+-- 
+
 dap.listeners.after["event_initialized"]["dapui"] = function()
     dapui.open()
 end
+
 dap.listeners.after["event_terminated"]["dapui"] = function()
     dapui.close()
     dap_virtual_text.refresh()
@@ -56,7 +65,7 @@ table.insert(dap.configurations.python, {
     type = "python",
     request = "attach",
     name = "attach PID",
-    processId = require("dap.utils").pick_process,
+    processId = "${command:pickProcess}",
     console = "integratedTerminal",
 })
 table.insert(dap.configurations.python, {
@@ -80,7 +89,7 @@ table.insert(dap.configurations.python, {
     -- python = function() end,
     pythonPath = function()
         local path
-        for _, server in pairs(vim.lsp.buf_get_clients()) do
+        for _, server in ipairs(vim.lsp.buf_get_clients()) do
             path = vim.tbl_get(server, "config", "settings", "python", "pythonPath")
             if path then
                 break
@@ -165,4 +174,14 @@ dap.configurations.cpp = {
 
 dap.configurations.c = dap.configurations.cpp
 
+-- `${file}`: Active filename
+-- `${fileBasename}`: The current file's basename
+-- `${fileBasenameNoExtension}`: The current file's basename without extension
+-- `${fileDirname}`: The current file's dirname
+-- `${fileExtname}`: The current file's extension
+-- `${relativeFile}`: The current file relative to |getcwd()|
+-- `${relativeFileDirname}`: The current file's dirname relative to |getcwd()|
+-- `${workspaceFolder}`: The current working directory of Neovim
+-- `${workspaceFolderBasename}`: The name of the folder opened in Neovim
+-- `${command:pickProcess}`: Open dialog to pick process using |vim.ui.select|
 return M

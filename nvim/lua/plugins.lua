@@ -182,7 +182,6 @@ return require("packer").startup(function(use)
     use({
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdLineEnter" },
-        after = "ultisnips",
         config = function()
             require("plugins.cmp")
         end,
@@ -326,6 +325,7 @@ return require("packer").startup(function(use)
             require("plugins.indent-blankline")
         end,
         event = "BufRead",
+        after = "nvim-treesitter",
     })
 
     -------------------------
@@ -498,7 +498,7 @@ return require("packer").startup(function(use)
         after = "nvim-dap",
         ft = "python",
         config = function()
-            require("dap-python").setup()--"~/venvs/debugpy/bin/python")
+            require("dap-python").setup() --"~/venvs/debugpy/bin/python")
             require("dap-python").test_runner = "pytest"
         end,
     })
@@ -648,8 +648,7 @@ return require("packer").startup(function(use)
 
     use({
         "windwp/nvim-autopairs",
-        after = { "hop", "nvim-cmp" },
-        event = "InsertCharPre",
+        after = { "nvim-cmp" },
         config = function()
             require("plugins.autopairs")
         end,
@@ -665,7 +664,7 @@ return require("packer").startup(function(use)
     use({
         "phaazon/hop.nvim",
         as = "hop",
-        keys = { { "n", "s" }, { "x", "s" }, { "o", "x" } },
+        keys = { { "n", "S" }, { "n", "s" }, { "x", "s" }, { "o", "x" } },
         config = function()
             require("plugins.hop")
         end,

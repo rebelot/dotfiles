@@ -201,28 +201,37 @@ nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> t
   \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
-cnoreabbrev prinspect lua print(vim.inspect())<Left><Left>
 " cnoremap ( ()<Left>
 " cnoremap [ []<Left>
 " cnoremap { {}<Left>
 
 anoremenu LSP.Back                  <cmd>popup PopUp<cr>
+vnoremenu LSP.Back                  <cmd>popup PopUp<cr>gv
 anoremenu LSP.-1-                   <Nop>
-nnoremenu LSP.&Definition             :lua vim.lsp.buf.definition()<CR>
-nnoremenu LSP.&References             :lua vim.lsp.buf.references()<CR>
+nnoremenu LSP.Hover                <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremenu LSP.Definition           <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremenu LSP.References           <cmd>lua vim.lsp.buf.references()<CR>
+nnoremenu LSP.Rename               <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremenu LSP.Format               <cmd>lua vim.lsp.buf.format()<CR>
+xnoremenu LSP.Format               <cmd>lua vim.lsp.buf.format()<CR>
+nnoremenu LSP.Actions              <cmd>lua vim.lsp.buf.code_action()<CR>
+xnoremenu LSP.Actions              <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremenu LSP.Diagnostics          <cmd>lua vim.diagnostic.open_float({scope = 'line'})<CR>
 
 aunmenu PopUp
 vnoremenu PopUp.Cut                   "+x
 vnoremenu PopUp.Copy                  "+y
-anoremenu PopUp.&Paste                 "+gP
-vnoremenu PopUp.&Paste                 "+P
+anoremenu PopUp.Paste                "+gP
+vnoremenu PopUp.Paste                "+P
 vnoremenu PopUp.Search                "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
 vnoremenu PopUp.Replace               y/\V<C-r>=escape(@",'/\')<CR><CR>``cgn
 vnoremenu PopUp.Delete                "_x
-nnoremenu PopUp.&Select\ All>          ggVG
+nnoremenu PopUp.Select\ All>         ggVG
 vnoremenu PopUp.Select\ All>          gg0oG$
 inoremenu PopUp.Select\ All           <C-Home><C-O>VG
+inoremenu PopUp.Expression           <c-r>=
 anoremenu PopUp.-1-                   <Nop>
-anoremenu PopUp.&LSP                  <cmd>popup LSP<cr>
+nnoremenu PopUp.&LSP                  <cmd>popup LSP<cr>
+vnoremenu PopUp.&LSP                  <cmd>popup LSP<cr>gv
 " nnoremenu PopUp.LSP.&GoToDefinition          lua vim.lsp.buf.definition()
 " nnoremenu PopUp.LSP.&References              lua vim.lsp.buf.references()

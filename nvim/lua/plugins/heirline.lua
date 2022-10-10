@@ -245,7 +245,9 @@ local LSPActive = {
 }
 
 local Navic = {
-    condition = function () return require("nvim-navic").is_available() end,
+    condition = function()
+        return require("nvim-navic").is_available()
+    end,
     static = {
         type_hl = {
             File = "Directory",
@@ -283,9 +285,9 @@ local Navic = {
         dec = function(c)
             local line = bit.rshift(c, 16)
             local col = bit.band(bit.rshift(c, 6), 1023)
-            local winnr = bit.band(c,  63)
+            local winnr = bit.band(c, 63)
             return line, col, winnr
-        end
+        end,
     },
     init = function(self)
         local data = require("nvim-navic").get_data() or {}
@@ -298,12 +300,12 @@ local Navic = {
                     hl = self.type_hl[d.type],
                 },
                 {
-                    provider = d.name:gsub("%%", "%%%%"):gsub("%s*->%s*", ''),
+                    provider = d.name:gsub("%%", "%%%%"):gsub("%s*->%s*", ""),
                     -- hl = self.type_hl[d.type],
                     on_click = {
                         callback = function(_, minwid)
                             local line, col, winnr = self.dec(minwid)
-                            vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), {line, col})
+                            vim.api.nvim_win_set_cursor(vim.fn.win_getid(winnr), { line, col })
                         end,
                         minwid = pos,
                         name = "heirline_navic",
@@ -326,6 +328,7 @@ local Navic = {
     provider = function(self)
         return self.children:eval()
     end,
+    update = 'CursorMoved',
     hl = { fg = "gray" },
 }
 
@@ -496,9 +499,9 @@ local DAPMessages = {
         provider = "ﰇ",
         on_click = {
             callback = function()
-                require("dap").restart()
+                require("dap").run_last()
             end,
-            name = "heirline_dap_restart",
+            name = "heirline_dap_run_last",
         },
     },
     { provider = " " },
