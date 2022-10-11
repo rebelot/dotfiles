@@ -36,15 +36,22 @@ require("nvim-treesitter.configs").setup({
 				["ic"] = "@class.inner",
 				["al"] = "@loop.outer",
 				["il"] = "@loop.inner",
+				['ik'] = "@block.inner",
+				['ak'] = "@block.outer",
 			},
 		},
 		swap = {
 			enable = true,
 			swap_next = {
 				["<leader>ss"] = "@parameter.inner",
+				["<leader>sf"] = "@function.outer",
+				["<leader>sk"] = "@block.outer",
+
 			},
 			swap_previous = {
 				["<leader>sS"] = "@parameter.inner",
+				["<leader>sF"] = "@function.outer",
+				["<leader>sK"] = "@block.outer",
 			},
 		},
 		move = {

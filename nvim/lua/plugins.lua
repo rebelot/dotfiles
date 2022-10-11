@@ -49,6 +49,13 @@ vim.cmd([[
 
 require("packer").init({
     max_jobs = 50,
+    display = {
+        -- unusable until wbthomason/packer.nvim#459 is fixed
+        -- open_fn = function()
+        --     return require("packer.util").float({ border = require("lsp").borders })
+        -- end,
+        prompt_border = require("lsp").borders,
+    },
 })
 
 return require("packer").startup(function(use)

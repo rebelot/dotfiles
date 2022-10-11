@@ -13,12 +13,7 @@ cmp.setup({
             vim.fn["UltiSnips#Anon"](args.body)
         end,
     },
-    -- preselect = cmp.PreselectMode.None,
-    -- enabled = function()
-    --     local prompt = vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
-    --     local command_line = vim.fn.bufname("%") ~= '[Command Line]'
-    --     return prompt and command_line
-    -- end,
+    preselect = cmp.PreselectMode.Item,
     window = {
         documentation = {
             winhighlight = "Search:None",
@@ -30,7 +25,6 @@ cmp.setup({
         -- border = require("lsp").borders,
         -- },
     },
-
     mapping = {
         ["<Tab>"] = cmp.mapping({
             c = function()
@@ -85,9 +79,9 @@ cmp.setup({
         ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { "i" }),
         ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { "i" }),
         ["<C-n>"] = cmp.mapping({
-            c = function()
+            c = function(fallback)
                 if cmp.visible() then
-                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                 else
                     vim.api.nvim_feedkeys(t("<Down>"), "n", true)
                 end
@@ -96,14 +90,15 @@ cmp.setup({
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                 else
-                    fallback()
+                    cmp.complete()
+                    -- fallback()
                 end
             end,
         }),
         ["<C-p>"] = cmp.mapping({
             c = function()
                 if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                 else
                     vim.api.nvim_feedkeys(t("<Up>"), "n", true)
                 end
@@ -112,10 +107,21 @@ cmp.setup({
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
                 else
-                    fallback()
+                    cmp.complete()
+                    -- fallback()
                 end
             end,
         }),
+        ["<C-l>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                if cmp.get_active_entry() then
+                    return cmp.complete_common_string()
+                end
+                fallback()
+            end
+            fallback()
+        end, { "i", "c" }),
+        ["<C-]>"] = cmp.mapping(cmp.mapping.abort(), { "i", "c" }),
         ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
         ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
@@ -126,8 +132,7 @@ cmp.setup({
         --     --     cmp.complete()
         --     -- end
         -- end, { "i" }),
-        -- ['<C-e>']  = cmp.mapping.close(),
-        ["<C-e>"] = cmp.mapping({ i = cmp.mapping.close(), c = cmp.mapping.close() }),
+        ["<C-e>"] = cmp.mapping(cmp.mapping.close(), { "i", "c" }),
         ["<CR>"] = cmp.mapping({
             i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
             -- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),

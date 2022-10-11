@@ -328,7 +328,7 @@ local Navic = {
     provider = function(self)
         return self.children:eval()
     end,
-    update = 'CursorMoved',
+    update = "CursorMoved",
     hl = { fg = "gray" },
 }
 
@@ -974,6 +974,13 @@ require("heirline").setup(StatusLines, WinBar, TabLine)
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 
 vim.cmd([[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])
+
+-- vim.api.nvim_create_autocmd({ "WinNew" }, {
+--     callback = function()
+--         vim.api.nvim_exec_autocmds("User", { pattern = "HeirlineInitWinbar", modeline = false })
+--     end,
+--     group = "Heirline",
+-- })
 
 vim.api.nvim_create_autocmd("User", {
     pattern = "HeirlineInitWinbar",

@@ -87,14 +87,17 @@ vim.lsp.handlers["textDocument/inlayHint"] = show_handler
 
 -- config
 
-local augrp = vim.api.nvim_create_augroup("LspInlayHints", { clear = true })
 
 local function setup_au(bufnr)
-    vim.api.nvim_create_autocmd({
-        "TextChanged",
-        "InsertLeave",
-    }, {
-        callback = function() M.show() end,
+    local augrp = vim.api.nvim_create_augroup("LSP_inlay_hints", { clear = false })
+    vim.api.nvim_clear_autocmds({
+        buffer = bufnr,
+        group = augrp,
+    })
+    vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+        callback = function()
+            M.show()
+        end,
         group = augrp,
         buffer = bufnr,
     })
