@@ -86,13 +86,12 @@ nnoremap <leader>bo :%bd <bar> e# <bar> bd #<CR>
 " Go to [b]uffer, [s]plit, [v]ertical, [t]ab or [d]elete
 nnoremap <silent><m-n> :bnext<CR>
 nnoremap <silent><m-p> :bprev<CR>
-nnoremap gbb :ls<CR>:b 
-nnoremap gbs :ls<CR>:sb 
-nnoremap gbv :ls<CR>:vertical sb 
-nnoremap gbt :ls<CR>:tab sb 
-nnoremap gbd :ls<CR>:bdelete 
+nnoremap gbb :ls<CR>:b <C-z>
+nnoremap gbs :ls<CR>:sb <C-z>
+nnoremap gbv :ls<CR>:vertical sb <C-z>
+nnoremap gbt :ls<CR>:tab sb <C-z>
+nnoremap gbd :ls<CR>:bdelete <C-z>
 nnoremap gbh :browse oldfiles<CR>
-nnoremap gbp :BufferLinePick<CR>
 
 " [w]rite buffer 
 nnoremap <leader>w :w<cr>
@@ -103,14 +102,14 @@ nnoremap <silent><M-/> :noh<bar>diffupdate<CR><C-L>
 
 " [re]load buffer
 " nnoremap <leader>re :e%<CR>
-nnoremap <leader>re :e%<CR>
+nnoremap <silent><leader>re :e%<CR>
 
 " [e]dit, [v]ertical, horizontal [s]plit or [t]ab a [n]ew buffer
 nnoremap <leader>en :enew<CR>
 nnoremap <leader>vn :rightbelow vnew<CR>
 nnoremap <leader>sn :belowright new<CR>
 nnoremap <leader>tn :tabnew<cr>
-" nnoremap <leader>st :split <bar> terminal <cr>
+nnoremap <leader>st :split <bar> terminal <cr>
 nnoremap <leader>vt :vertical split <bar> terminal <cr>
 
 " Edit or select [R/r]egister
@@ -122,7 +121,7 @@ xnoremap > >gv
 xnoremap < <gv
 
 " select [a]ll
-nnoremap <leader>a ggVG
+nnoremap <M-a> ggVG
 
 " [y]ank to clipnoard
 nnoremap <leader>y "+y
@@ -137,23 +136,20 @@ xnoremap <leader>p "+p
 " nnoremap <leader>cn :cnext<CR>
 " nnoremap <leader>cp :cNext<CR>
 " nnoremap <leader>cc :cclose<CR>
-nnoremap <leader>cC :cexpr []<CR>
+nnoremap <silent><leader>cC :cexpr []<CR>
 "
 " Location[L]ist [O]pen, [N]ext, [P]revious, [c]lose, [C]lear
 " nnoremap <leader>lo :botright lopen<CR>
 " nnoremap <leader>ln :lnext<CR>
 " nnoremap <leader>lp :lNext<CR>
 " nnoremap <leader>lc :lclose<CR>
-nnoremap <leader>lC :lexpr []<CR>
+nnoremap <silent><leader>lC :lexpr []<CR>
 
 " Tab / S-Tab as <C-I> / <C-O>
 nnoremap <S-Tab> <C-o>
 
 " Text Formatting
 nnoremap <leader>gq vipgq
-
-" Set @/ to word under cursor
-nnoremap <silent><leader>/ :call setreg('/', expand('<cword>'))<CR>
 
 " Add blank lines above/below cursor
 nnoremap ]<CR> :call append(line('.'), '')<CR>
@@ -164,6 +160,9 @@ nnoremap [<CR> :call append(line('.')-1, '')<CR>
 " xnoremap <C-U> :m'<-2<CR>gv=gv
 xnoremap <C-D> :m'>+1<CR>gv
 xnoremap <C-U> :m'<-2<CR>gv
+
+" Set @/ to word under cursor
+nnoremap g/ :call setreg('/', expand('<cword>'))<CR>//<CR>``
 
 " Search visual selection
 xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``

@@ -162,7 +162,29 @@ return require("packer").startup(function(use)
         event = "BufRead",
         cmd = { "AerialToggle", "AerialInfo" },
         config = function()
-            require("aerial").setup()
+            require("aerial").setup({
+                backends = { "lsp", "treesitter", "markdown" },
+                filter_kind = {
+                    "Class",
+                    "Constructor",
+                    "Enum",
+                    "EnumMember",
+                    "Event",
+                    "Field",
+                    "Function",
+                    "Interface",
+                    "Key",
+                    "Method",
+                    "Module",
+                    "Namespace",
+                    "Operator",
+                    "Package",
+                    "Property",
+                    "Struct",
+                    "Variable",
+                },
+            })
+            vim.keymap.set('n', '<leader>at', ':AerialToggle<CR>')
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
                     local bufnr = args.buf
@@ -198,7 +220,7 @@ return require("packer").startup(function(use)
     use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
     -- use({"hrsh7th/cmp-nvim-lua", after = "nvim-cmp"})
     use({ "hrsh7th/cmp-cmdline", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-nvim-lsp" }) -- required by lsp/init.lua
+    use({ "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" }) -- required by lsp/init.lua
     use({ "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" })
     use({ "hrsh7th/cmp-nvim-lsp-document-symbol", after = "nvim-cmp" })
     -- use({ "dmitmel/cmp-cmdline-history", after = "nvim-cmp" })
@@ -218,7 +240,7 @@ return require("packer").startup(function(use)
                             accept = "<M-CR>",
                             next = "<M-n>",
                             prev = "<M-p>",
-                            dismiss = "<M-]>",
+                            dismiss = "<C-]>",
                         },
                     },
                 })

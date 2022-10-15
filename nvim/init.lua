@@ -42,3 +42,4 @@ require("win_ui_input")
 -- Other
 require("grep")
 require("escape_pair")
+require("marks")

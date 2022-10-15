@@ -3,14 +3,14 @@ require("nvim-autopairs").setup({
         chars = { "{", "[", "(", '"', "'", "`" },
         map = "<M-l>",
         keys = "asdfghjklqwertyuiop",
-        pattern = string.gsub([[ [%'%"%)%,>%]%)%}%,%:] ]], "%s+", ""),
+        pattern = [=[[%'%"%)%>%]%)%}%,]]=],
         check_comma = true,
         end_key = "L",
-        highlight = "HopNextKey",
-        hightlight_grey = "HopUnmatched",
+        highlight = "Error",
+        hightlight_grey = "NonText",
     },
     check_ts = true,
-    enable_check_bracket_line = false,
+    enable_check_bracket_line = true,
 })
 
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")

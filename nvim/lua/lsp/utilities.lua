@@ -24,12 +24,18 @@ local M = {}
 --     end)
 -- end
 
-
-function M.update_settings(client, settings)
-    settings = { settings = vim.tbl_deep_extend('force', client.config.settings, settings) }
-    client.notify("workspace/didChangeConfiguration", settings)
+function M.definition_float()
+    vim.lsp.buf_request_all(0, "textDocument/definition", vim.lsp.util.make_position_params(), function(results)
+        local _, response = next(results)
+        local location = response.result[1]
+        vim.pretty_print(location)
+        vim.lsp.util.preview_location(location, { border = require("lsp").borders })
+    end)
 end
 
-
+function M.update_settings(client, settings)
+    settings = { settings = vim.tbl_deep_extend("force", client.config.settings, settings) }
+    client.notify("workspace/didChangeConfiguration", settings)
+end
 
 return M

@@ -58,7 +58,11 @@ local function echo_cursor_diagnostic()
 
         avail_space = avail_space - (#severity + #msg)
     end
+
     api.nvim_echo(message, false, {})
+    vim.defer_fn(function()
+        api.nvim_echo({}, false, {})
+    end, 5000)
 end
 
 local diag_au_id = api.nvim_create_augroup("Cursor_Diagnostics", { clear = true })
@@ -67,7 +71,7 @@ api.nvim_create_autocmd("CursorHold", {
     group = diag_au_id,
     desc = "Echo cursor diagnostics",
 })
-api.nvim_create_autocmd("CursorMoved", { command = 'echo ""', group = diag_au_id, desc = "Clear cursor diagnostics" })
+-- api.nvim_create_autocmd("CursorMoved", { command = 'echo ""', group = diag_au_id, desc = "Clear cursor diagnostics" })
 
 map("n", "<leader>ld", function()
     vim.diagnostic.open_float({ scope = "line" })

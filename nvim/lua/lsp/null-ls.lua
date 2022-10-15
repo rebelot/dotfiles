@@ -48,20 +48,25 @@ local on_attach = function(client, bufnr)
     )
     if client.server_capabilities.documentFormattingProvider then
         -- set eventignore=all
-        vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP format" })
-        vim.api.nvim_buf_create_user_command(
-            bufnr,
-            "LspFormat",
-            vim.lsp.buf.format,
-            { range = false, desc = "LSP format" }
-        )
+        vim.keymap.set("n", "<leader>lf", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        end, { unpack(opts), desc = "LSP format" })
+        vim.api.nvim_buf_create_user_command(bufnr, "LspFormat", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        end, { range = false, desc = "LSP format" })
     end
 
     if client.server_capabilities.documentRangeFormattingProvider then
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
-        vim.keymap.set("x", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP range format" })
+        vim.keymap.set("x", "<leader>lf", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        end, { unpack(opts), desc = "LSP range format" })
         vim.api.nvim_buf_create_user_command(bufnr, "LspRangeFormat", function(args)
-            vim.lsp.buf.format({ { args.line1, 0 }, { args.line2, 0 } })
+            vim.lsp.buf.format({
+                bufnr = bufnr,
+                async = true,
+                range = { start = { args.line1, 0 }, ["end"] = { args.line2, 0 } },
+            })
         end, { range = true, desc = "LSP range format" })
     end
 end
