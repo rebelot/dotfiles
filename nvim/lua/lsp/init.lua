@@ -35,8 +35,8 @@ require("lsp.inlay_hints")
 ------------------
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
-capabilities.textDocument.completion.completionItem.workDoneProgress = true
+-- capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+-- capabilities.textDocument.completion.completionItem.workDoneProgress = true
 capabilities = require("lsp.semantic_tokens").extend_capabilities(capabilities)
 
 ---------------
@@ -130,29 +130,37 @@ local on_attach = function(client, bufnr)
 
     if client.server_capabilities.documentFormattingProvider then
         -- set eventignore=all
-        vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP format" })
-        vim.api.nvim_buf_create_user_command(
-            bufnr,
-            "LspFormat",
-            vim.lsp.buf.format,
-            { range = false, desc = "LSP format" }
-        )
+        vim.keymap.set("n", "<leader>lf", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        end, { unpack(opts), desc = "LSP format" })
+        vim.api.nvim_buf_create_user_command(bufnr, "LspFormat", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        end, { range = false, desc = "LSP format" })
     end
 
     if client.server_capabilities.documentRangeFormattingProvider then
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
-        vim.keymap.set("x", "<leader>lf", vim.lsp.buf.format, { unpack(opts), desc = "LSP range format" })
+        vim.keymap.set("x", "<leader>lf", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        end, { unpack(opts), desc = "LSP range format" })
         vim.api.nvim_buf_create_user_command(bufnr, "LspRangeFormat", function(args)
-            vim.lsp.buf.format({ { args.line1, 0 }, { args.line2, 0 } })
+            vim.lsp.buf.format({
+                bufnr = bufnr,
+                async = true,
+                range = { start = { args.line1, 0 }, ["end"] = { args.line2, 0 } },
+            })
         end, { range = true, desc = "LSP range format" })
     end
 
     -- if client.server_capabilities.signatureHelpProvider then
     --     local lsp_signature_help_au_id = vim.api.nvim_create_augroup("LSP_signature_help", { clear = true })
-    --     vim.api.nvim_create_autocmd(
-    --         { "CursorHoldI" },
-    --         { callback = function() vim.lsp.buf.signature_help({ focusable = false }) end, group = lsp_signature_help_au_id, buffer = bufnr }
-    --     )
+    --     vim.api.nvim_create_autocmd({ "CursorHoldI" }, {
+    --         callback = function()
+    --             vim.lsp.buf.signature_help({ focusable = false })
+    --         end,
+    --         group = lsp_signature_help_au_id,
+    --         buffer = bufnr,
+    --     })
     -- end
 
     if client.server_capabilities.documentHighlightProvider then

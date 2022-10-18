@@ -21,6 +21,8 @@ local sources = {
     null_ls.builtins.formatting.prettier,
 
     null_ls.builtins.formatting.shfmt,
+    null_ls.builtins.formatting.beautysh,
+    null_ls.builtins.formatting.shellharden,
     null_ls.builtins.diagnostics.shellcheck,
 
     null_ls.builtins.diagnostics.chktex,

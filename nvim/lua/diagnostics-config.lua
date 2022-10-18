@@ -24,6 +24,7 @@ local severity_hl = {
 }
 local severity_prefix = { "[Error]", "[Warning]", "[Info]", "[Hint]" }
 
+local clear_msg_callback_is_running
 local function echo_cursor_diagnostic()
     local line, col = unpack(api.nvim_win_get_cursor(0))
     local line_diagnostics = vim.diagnostic.get(0, { lnum = line - 1 })
@@ -60,9 +61,13 @@ local function echo_cursor_diagnostic()
     end
 
     api.nvim_echo(message, false, {})
-    vim.defer_fn(function()
-        api.nvim_echo({}, false, {})
-    end, 5000)
+    if not clear_msg_callback_is_running then
+        clear_msg_callback_is_running = true
+        vim.defer_fn(function()
+            api.nvim_echo({}, false, {})
+            clear_msg_callback_is_running = false
+        end, 5000)
+    end
 end
 
 local diag_au_id = api.nvim_create_augroup("Cursor_Diagnostics", { clear = true })

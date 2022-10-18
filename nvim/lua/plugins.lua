@@ -627,9 +627,13 @@ return require("packer").startup(function(use)
         "rcarriga/nvim-notify",
         event = "UIEnter",
         config = function()
-            vim.notify = require("notify")
+            local notify = require("notify")
+            -- notify.setup({
+            --     render = 'simple'
+            -- })
+            vim.notify = notify
             vim.keymap.set("n", "<esc>", function()
-                require("notify").dismiss()
+                notify.dismiss()
                 vim.cmd.noh()
             end)
         end,
