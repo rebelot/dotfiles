@@ -65,7 +65,8 @@ autocmd({ "WinEnter", "BufWinEnter" }, {
 ------------------------
 
 autocmd("WinClosed", {
-    command = 'if win_getid() == expand("<amatch>") | wincmd p | endif' })
+    command = 'if win_getid() == expand("<amatch>") | wincmd p | endif',
+})
 
 -----------------------------------
 --  CursorLine, RelativeNumbers  --
@@ -124,8 +125,9 @@ autocmd("LSPAttach", {
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         vim.notify(
-            string.format("LSP: %s(%d) attached to buffer(%d)", client.name, client.id, bufnr),
-            vim.log.levels.INFO
+            string.format("%s(%d) attached to buffer(%d)", client.name, client.id, bufnr),
+            vim.log.levels.INFO,
+            { title = "LSP" } -- requires nvim-notify
         )
     end,
 })

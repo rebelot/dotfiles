@@ -1,8 +1,8 @@
 #
 # ███████╗███████╗██╗  ██╗██████╗  ██████╗
 # ╚══███╔╝██╔════╝██║  ██║██╔══██╗██╔════╝
-#   ███╔╝ ███████╗███████║██████╔╝██║     
-#  ███╔╝  ╚════██║██╔══██║██╔══██╗██║     
+#   ███╔╝ ███████╗███████║██████╔╝██║
+#  ███╔╝  ╚════██║██╔══██║██╔══██╗██║
 # ███████╗███████║██║  ██║██║  ██║╚██████╗
 # ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 
@@ -20,7 +20,7 @@ export PATH="$HOME/.npm-packages/bin:$PATH"                   # (node installer)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
-[[ -z $TMUX ]] || conda deactivate; conda activate base       #   + TMUX fix
+[[ -z $TMUX ]] || conda deactivate; conda activate py310      #   + TMUX fix
 export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
 export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
@@ -125,7 +125,7 @@ export FZF_DEFAULT_OPTS="$(echo \
 --bind 'ctrl-o:toggle-preview' \
 --bind 'tab:down' \
 --bind 'btab:up' \
---bind 'ctrl-z:toggle' ")"
+    --bind 'ctrl-z:toggle' ")"
 # }}}
 
 # User configuration {{{
@@ -214,16 +214,16 @@ function google {
 }
 
 function lessc {
-  pygmentize -O style=gruvbox -f terminal16m -g $1 | less
+    pygmentize -O style=gruvbox -f terminal16m -g $1 | less
 }
 
 function tedit {
-  tmux splitw "nvim $@"
+    tmux splitw "nvim $@"
 }
 
 function cythonsetup {
-  local exts=("$@")
-  cat << EOF > setup.py
+    local exts=("$@")
+    cat << EOF > setup.py
 from setuptools import setup
 from Cython.Build import cythonize
 
@@ -232,22 +232,26 @@ setup(
     ext_modules = cythonize(extensions, language_level = "3")
 )
 EOF
-  bash -c 'read -p "Build? [y/n] " input
-  if [[ $input = "y" ]]; then 
+    bash -c 'read -p "Build? [y/n] " input
+  if [[ $input = "y" ]]; then
     python setup.py build_ext --inplace
-  fi'
+    fi'
 }
 
 function pman {
-  tmux display-popup -E "man $@"
+    tmux display-popup -E "man $@"
 }
 
 function attach_notebook(){
-  ssh -N -f -L localhost:$2:localhost:$1 $3
+    # $1 local port
+    # $2 remote port
+    # 8080 8080 user@host
+    ssh -L $1:localhost:$2 $3
 }
 
 function remote_notebook(){
-  jupyter notebook --no-browser --port=$1
+    # 8080
+    jupyter notebook --no-browser --port=$1
 }
 
 # function neovim_remote {
@@ -289,4 +293,4 @@ unset MANPATH
 
 # zprof
 
-# vim:set et sw=2 ts=2 fdm=marker:
+# vim:set et sw=4 ts=4 fdm=marker:

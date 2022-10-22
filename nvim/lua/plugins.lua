@@ -161,6 +161,7 @@ return require("packer").startup(function(use)
         "stevearc/aerial.nvim",
         event = "BufRead",
         cmd = { "AerialToggle", "AerialInfo" },
+        keys = { { "n", "<leader>at" } },
         config = function()
             require("aerial").setup({
                 backends = { "lsp", "treesitter", "markdown" },
@@ -178,13 +179,13 @@ return require("packer").startup(function(use)
                     "Module",
                     "Namespace",
                     "Operator",
-                    "Package",
+                    -- "Package", -- this catches for/if ??
                     "Property",
                     "Struct",
                     "Variable",
                 },
             })
-            vim.keymap.set('n', '<leader>at', ':AerialToggle<CR>')
+            vim.keymap.set("n", "<leader>at", ":AerialToggle<CR>")
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
                     local bufnr = args.buf
@@ -376,6 +377,9 @@ return require("packer").startup(function(use)
         module = "telescope",
         config = function()
             require("plugins.telescope")
+
+            -- load extensions provided by plugins that are loaded _before_ telescope.
+            require("telescope").load_extension("notify")
         end,
     })
 
@@ -628,14 +632,25 @@ return require("packer").startup(function(use)
         event = "UIEnter",
         config = function()
             local notify = require("notify")
-            -- notify.setup({
-            --     render = 'simple'
-            -- })
+            notify.setup({
+                icons = {
+                    DEBUG = "",
+                    ERROR = "",
+                    INFO = "",
+                    HINT = "",
+                    TRACE = "✎",
+                    WARN = "",
+                },
+                -- render = "simple",
+            })
             vim.notify = notify
             vim.keymap.set("n", "<esc>", function()
                 notify.dismiss()
                 vim.cmd.noh()
             end)
+            vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
+                vim.notify(method.message, params.type)
+            end
         end,
     })
 

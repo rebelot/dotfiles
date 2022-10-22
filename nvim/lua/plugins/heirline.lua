@@ -251,31 +251,31 @@ local Navic = {
     static = {
         type_hl = {
             File = "Directory",
-            Module = "Include",
-            Namespace = "TSNamespace",
-            Package = "Include",
-            Class = "Struct",
-            Method = "Method",
-            Property = "TSProperty",
-            Field = "TSField",
-            Constructor = "TSConstructor ",
-            Enum = "TSField",
-            Interface = "Type",
-            Function = "Function",
-            Variable = "TSVariable",
-            Constant = "Constant",
-            String = "String",
-            Number = "Number",
-            Boolean = "Boolean",
-            Array = "TSField",
-            Object = "Type",
-            Key = "TSKeyword",
-            Null = "Comment",
-            EnumMember = "TSField",
-            Struct = "Struct",
-            Event = "Keyword",
-            Operator = "Operator",
-            TypeParameter = "Type",
+            Module = "@include",
+            Namespace = "@namespace",
+            Package = "@include",
+            Class = "@structure",
+            Method = "@method",
+            Property = "@property",
+            Field = "@field",
+            Constructor = "@constructor",
+            Enum = "@field",
+            Interface = "@type",
+            Function = "@function",
+            Variable = "@variable",
+            Constant = "@constant",
+            String = "@string",
+            Number = "@number",
+            Boolean = "@boolean",
+            Array = "@field",
+            Object = "@type",
+            Key = "@keyword",
+            Null = "@comment",
+            EnumMember = "@field",
+            Struct = "@structure",
+            Event = "@keyword",
+            Operator = "@operator",
+            TypeParameter = "@type",
         },
         -- line: 16 bit (65536); col: 10 bit (1024); winnr: 6 bit (64)
         -- local encdec = function(a,b,c) return dec(enc(a,b,c)) end; vim.pretty_print(encdec(2^16 - 1, 2^10 - 1, 2^6 - 1))
@@ -462,11 +462,11 @@ local DAPMessages = {
         return session ~= nil
     end,
     provider = function()
-        return " " .. require("dap").status() .. " "
+        return " " .. require("dap").status() .. " "
     end,
     hl = "Debug",
     {
-        provider = "",
+        provider = " ",
         on_click = {
             callback = function()
                 require("dap").step_into()
@@ -476,7 +476,7 @@ local DAPMessages = {
     },
     { provider = " " },
     {
-        provider = "",
+        provider = " ",
         on_click = {
             callback = function()
                 require("dap").step_out()
@@ -486,7 +486,7 @@ local DAPMessages = {
     },
     { provider = " " },
     {
-        provider = " ",
+        provider = " ",
         on_click = {
             callback = function()
                 require("dap").step_over()
@@ -496,7 +496,8 @@ local DAPMessages = {
     },
     { provider = " " },
     {
-        provider = "ﰇ",
+        provider = " ",
+        hl = { fg = 'green' },
         on_click = {
             callback = function()
                 require("dap").run_last()
@@ -506,7 +507,8 @@ local DAPMessages = {
     },
     { provider = " " },
     {
-        provider = "",
+        provider = " ",
+        hl = { fg = "red" },
         on_click = {
             callback = function()
                 require("dap").terminate()
@@ -732,7 +734,7 @@ local CloseButton = {
     update = { "WinNew", "WinClosed", "BufEnter" },
     { provider = " " },
     {
-        provider = "",
+        provider = " ",
         hl = { fg = "gray" },
         on_click = {
             callback = function(_, minwid)
@@ -867,8 +869,8 @@ local TablineCloseButton = {
         return not vim.api.nvim_buf_get_option(self.bufnr, "modified")
     end,
     { provider = " " },
-    {
-        provider = "",
+    {   -- ✗    
+        provider = " ",
         hl = { fg = "gray" },
         on_click = {
             callback = function(_, minwid)

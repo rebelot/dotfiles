@@ -6,14 +6,14 @@ local map = vim.keymap.set
 local fn = vim.fn
 -- require('dap.ext.vscode').load_launchjs()
 
-fn.sign_define("DapBreakpoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
+fn.sign_define("DapBreakpoint", { text = "", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
 fn.sign_define(
     "DapBreakpointCondition",
-    { text = " ", texthl = "DiagnosticWarn", linehl = "", numhl = "debugBreakpoint" }
+    { text = "", texthl = "DiagnosticWarn", linehl = "", numhl = "debugBreakpoint" }
 )
 fn.sign_define(
     "DapBreakpointRejected",
-    { text = " ", texthl = "DiagnosticError", linehl = "", numhl = "debugBreakpoint" }
+    { text = "", texthl = "DiagnosticError", linehl = "", numhl = "debugBreakpoint" }
 )
 fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
 fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "Error" })
