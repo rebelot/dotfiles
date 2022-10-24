@@ -56,7 +56,7 @@ end
 function M.on_full(err, response, ctx, config)
     active_requests[ctx.bufnr] = false
     local client = vim.lsp.get_client_by_id(ctx.client_id)
-    if not client then
+    if not client or not vim.api.nvim_buf_is_loaded(ctx.bufnr) then
         return
     end
     -- if tick has changed our response is outdated!
@@ -244,7 +244,7 @@ local function on_token(ctx, token)
     end
     local hl = resolve_hl(token)
     vim.api.nvim_buf_set_extmark(ctx.bufnr, ns, linenr, start_col, {
-        end_col = end_col,
+        end_col = math.min(end_col, #vim.fn.getline(linenr + 1)),
         hl_group = hl,
         priority = 110,
     })
@@ -348,7 +348,7 @@ M.hl_map = {
     macro = "@preproc",
     keyword = {
         "@keyword",
-        documentation = "@attribute"
+        documentation = "@attribute",
     },
     -- modifier = "LspModifier",
     -- comment = "@comment",
