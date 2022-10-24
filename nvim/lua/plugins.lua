@@ -221,7 +221,7 @@ return require("packer").startup(function(use)
     use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
     -- use({"hrsh7th/cmp-nvim-lua", after = "nvim-cmp"})
     use({ "hrsh7th/cmp-cmdline", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" }) -- required by lsp/init.lua
+    use("hrsh7th/cmp-nvim-lsp") -- required by lsp/init.lua
     use({ "hrsh7th/cmp-nvim-lsp-signature-help", after = "nvim-cmp" })
     use({ "hrsh7th/cmp-nvim-lsp-document-symbol", after = "nvim-cmp" })
     -- use({ "dmitmel/cmp-cmdline-history", after = "nvim-cmp" })

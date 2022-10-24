@@ -1,6 +1,8 @@
 let mapleader = ','
 xnoremap <Space> :
 nnoremap <Space> :
+nnoremap <C-space> q:
+xnoremap <C-space> q:
 nnoremap L $
 xnoremap L $
 onoremap L $

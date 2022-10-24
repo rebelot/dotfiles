@@ -91,6 +91,16 @@ autocmd("WinLeave", {
     command = "setlocal nocursorline norelativenumber",
 })
 
+--------------
+--  CmdWin  --
+--------------
+
+autocmd('CmdwinEnter', {
+    command = 'startinsert | setlocal nu rnu cul syntax=on signcolumn=no winbar='
+})
+
+
+
 ----------------
 --  Terminal  --
 ----------------
