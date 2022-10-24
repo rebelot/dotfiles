@@ -314,7 +314,7 @@ local Navic = {
             }
             if #data > 1 and i < #data then
                 table.insert(child, {
-                    provider = "  ",
+                    provider = " → ",
                     hl = { fg = "bright_fg" },
                 })
             end
@@ -497,7 +497,7 @@ local DAPMessages = {
     { provider = " " },
     {
         provider = " ",
-        hl = { fg = 'green' },
+        hl = { fg = "green" },
         on_click = {
             callback = function()
                 require("dap").run_last()
@@ -618,7 +618,7 @@ local DefaultStatusline = {
     Align,
     DAPMessages,
     LSPActive,
-    Space,
+    -- Space,
     -- UltTest,
     Space,
     FileType,
@@ -869,7 +869,7 @@ local TablineCloseButton = {
         return not vim.api.nvim_buf_get_option(self.bufnr, "modified")
     end,
     { provider = " " },
-    {   -- ✗    
+    { -- ✗    
         provider = " ",
         hl = { fg = "gray" },
         on_click = {
@@ -912,7 +912,7 @@ local Tabpage = {
 }
 
 local TabpageClose = {
-    provider = "%999X  %X",
+    provider = " %999X %X",
     hl = "TabLine",
 }
 
