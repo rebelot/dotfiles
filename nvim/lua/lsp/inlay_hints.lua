@@ -111,7 +111,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
             M.enable()
         end
     end,
-    group = augrp,
 })
 
 vim.api.nvim_create_user_command("InlayHintsToggle", M.toggle, {})

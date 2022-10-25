@@ -164,25 +164,31 @@ return require("packer").startup(function(use)
         keys = { { "n", "<leader>at" } },
         config = function()
             require("aerial").setup({
-                backends = { "lsp", "treesitter", "markdown" },
+                backends = {
+                    ["_"] = { "lsp", "treesitter", "markdown", "man" },
+                    markdown = { "treesitter" },
+                },
                 filter_kind = {
-                    "Class",
-                    "Constructor",
-                    "Enum",
-                    "EnumMember",
-                    "Event",
-                    "Field",
-                    "Function",
-                    "Interface",
-                    "Key",
-                    "Method",
-                    "Module",
-                    "Namespace",
-                    "Operator",
-                    -- "Package", -- this catches for/if ??
-                    "Property",
-                    "Struct",
-                    "Variable",
+                    ["_"] = {
+                        "Class",
+                        "Constructor",
+                        "Enum",
+                        "EnumMember",
+                        "Event",
+                        "Field",
+                        "Function",
+                        "Interface",
+                        "Key",
+                        "Method",
+                        "Module",
+                        "Namespace",
+                        "Operator",
+                        -- "Package", -- this catches for/if ??
+                        "Property",
+                        "Struct",
+                        "Variable",
+                    },
+                    -- markdown = { "String" },
                 },
             })
             vim.keymap.set("n", "<leader>at", ":AerialToggle<CR>")
@@ -436,6 +442,8 @@ return require("packer").startup(function(use)
         end,
     })
 
+    -- use({ "ibhagwan/fzf-lua", requires = { "junegunn/fzf", run = "./install --bin" } })
+
     -------------------------------------------
     -- Colors, Icons, StatusLine, BufferLine --
     -------------------------------------------
@@ -539,6 +547,7 @@ return require("packer").startup(function(use)
     use({
         "theHamsta/nvim-dap-virtual-text",
         after = "nvim-dap",
+        module = "nvim-dap-virtual-text",
         config = function()
             require("nvim-dap-virtual-text").setup({
                 enabled = true, -- enable this plugin (the default)
@@ -717,6 +726,8 @@ return require("packer").startup(function(use)
             require("plugins.hop")
         end,
     })
+
+    -- use 'ggandor/leap.nvim'
 
     use("tpope/vim-repeat")
 

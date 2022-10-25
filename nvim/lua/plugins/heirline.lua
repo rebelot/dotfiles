@@ -250,32 +250,32 @@ local Navic = {
     end,
     static = {
         type_hl = {
-            File = "Directory",
-            Module = "@include",
-            Namespace = "@namespace",
-            Package = "@include",
-            Class = "@structure",
-            Method = "@method",
-            Property = "@property",
-            Field = "@field",
-            Constructor = "@constructor",
-            Enum = "@field",
-            Interface = "@type",
-            Function = "@function",
-            Variable = "@variable",
-            Constant = "@constant",
-            String = "@string",
-            Number = "@number",
-            Boolean = "@boolean",
-            Array = "@field",
-            Object = "@type",
-            Key = "@keyword",
-            Null = "@comment",
-            EnumMember = "@field",
-            Struct = "@structure",
-            Event = "@keyword",
-            Operator = "@operator",
-            TypeParameter = "@type",
+            File = utils.dim(utils.get_highlight("Directory").fg, 0.75),
+            Module = utils.dim(utils.get_highlight("@include").fg, 0.75),
+            Namespace = utils.dim(utils.get_highlight("@namespace").fg, 0.75),
+            Package = utils.dim(utils.get_highlight("@include").fg, 0.75),
+            Class = utils.dim(utils.get_highlight("@structure").fg, 0.75),
+            Method = utils.dim(utils.get_highlight("@method").fg, 0.75),
+            Property = utils.dim(utils.get_highlight("@property").fg, 0.75),
+            Field = utils.dim(utils.get_highlight("@field").fg, 0.75),
+            Constructor = utils.dim(utils.get_highlight("@constructor").fg, 0.75),
+            Enum = utils.dim(utils.get_highlight("@field").fg, 0.75),
+            Interface = utils.dim(utils.get_highlight("@type").fg, 0.75),
+            Function = utils.dim(utils.get_highlight("@function").fg, 0.75),
+            Variable = utils.dim(utils.get_highlight("@variable").fg, 0.75),
+            Constant = utils.dim(utils.get_highlight("@constant").fg, 0.75),
+            String = utils.dim(utils.get_highlight("@string").fg, 0.75),
+            Number = utils.dim(utils.get_highlight("@number").fg, 0.75),
+            Boolean = utils.dim(utils.get_highlight("@boolean").fg, 0.75),
+            Array = utils.dim(utils.get_highlight("@field").fg, 0.75),
+            Object = utils.dim(utils.get_highlight("@type").fg, 0.75),
+            Key = utils.dim(utils.get_highlight("@keyword").fg, 0.75),
+            Null = utils.dim(utils.get_highlight("@comment").fg, 0.75),
+            EnumMember = utils.dim(utils.get_highlight("@field").fg, 0.75),
+            Struct = utils.dim(utils.get_highlight("@structure").fg, 0.75),
+            Event = utils.dim(utils.get_highlight("@keyword").fg, 0.75),
+            Operator = utils.dim(utils.get_highlight("@operator").fg, 0.75),
+            TypeParameter = utils.dim(utils.get_highlight("@type").fg, 0.75),
         },
         -- line: 16 bit (65536); col: 10 bit (1024); winnr: 6 bit (64)
         -- local encdec = function(a,b,c) return dec(enc(a,b,c)) end; vim.pretty_print(encdec(2^16 - 1, 2^10 - 1, 2^6 - 1))
@@ -297,10 +297,11 @@ local Navic = {
             local child = {
                 {
                     provider = d.icon,
-                    hl = self.type_hl[d.type],
+                    hl = { fg = self.type_hl[d.type] },
                 },
                 {
                     provider = d.name:gsub("%%", "%%%%"):gsub("%s*->%s*", ""),
+                    hl = { fg = self.type_hl[d.type] },
                     -- hl = self.type_hl[d.type],
                     on_click = {
                         callback = function(_, minwid)
@@ -320,13 +321,7 @@ local Navic = {
             end
             table.insert(children, child)
         end
-        -- self[1] = self:new(children, 1)
-        -- self:set_win_attr("_win_children", self:new(children, 1))
-        -- self[1] = self:get_win_attr("_win_children")
-        self.children = self:new(children, 1)
-    end,
-    provider = function(self)
-        return self.children:eval()
+        self[1] = self:new(children, 1)
     end,
     update = "CursorMoved",
     hl = { fg = "gray" },
@@ -522,7 +517,7 @@ local DAPMessages = {
 }
 
 local WorkDir = {
-    provider = function(self)
+    init = function(self)
         self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
         local cwd = vim.fn.getcwd(0)
         self.cwd = vim.fn.fnamemodify(cwd, ":~")
@@ -976,6 +971,7 @@ require("heirline").setup(StatusLines, WinBar, TabLine)
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 
 vim.cmd([[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])
+vim.o.showtabline = 2
 
 -- vim.api.nvim_create_autocmd({ "WinNew" }, {
 --     callback = function()
