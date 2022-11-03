@@ -8,7 +8,8 @@ require("gitsigns").setup({
     },
 })
 
-map("n", "<leader>hd", "<cmd>Gitsigns preview_hunk<CR>")
+map("n", "<leader>hd", "<cmd>Gitsigns preview_hunk_inline<CR>")
+map("n", "<leader>hb", "<cmd>Gitsigns blame_line<CR>")
 map("n", "]h", "<cmd>Gitsigns next_hunk<CR>")
 map("n", "[h", "<cmd>Gitsigns prev_hunk<CR>")
 map("n", "<leader>xh", "<cmd>Gitsigns setqflist<CR>") -- use trouble

@@ -53,6 +53,8 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
+nnoremap <C-p> <C-w>p
+nnoremap <C-n> <C-w>w
 nnoremap <m-s-l> <C-W>>
 nnoremap <m-s-h> <C-W><
 nnoremap <m-s-j> <C-W>+
@@ -188,6 +190,9 @@ nnoremap zM zMz.
 " Menu
 nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
+
+" Jump to delimiter
+inoremap <silent> <C-l> <esc>:call search("[)\\]}>,'\"]", 'eW')<CR>a
 
 " c-n/c-p previous command or match history
 " cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"

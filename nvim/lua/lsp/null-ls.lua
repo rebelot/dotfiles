@@ -24,6 +24,7 @@ local sources = {
     null_ls.builtins.formatting.beautysh,
     null_ls.builtins.formatting.shellharden,
     null_ls.builtins.diagnostics.shellcheck,
+    null_ls.builtins.formatting.clang_format,
 
     null_ls.builtins.diagnostics.chktex,
 
@@ -41,32 +42,30 @@ local sources = {
 }
 
 local on_attach = function(client, bufnr)
-    local opts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set(
-        { "n", "x" },
-        "<leader>la",
-        vim.lsp.buf.code_action,
-        { unpack(opts), desc = "List LSP Code Actions" }
-    )
+    local map = function(mode, key, expr, opts)
+        opts = vim.tbl_extend("keep", { noremap = true, silent = true, buffer = bufnr }, opts)
+        return vim.keymap.set(mode, key, expr, opts)
+    end
+    map({ "n", "x" }, "<leader>la", vim.lsp.buf.code_action, { desc = "List LSP Code Actions" })
     if client.server_capabilities.documentFormattingProvider then
         -- set eventignore=all
-        vim.keymap.set("n", "<leader>lf", function()
-            vim.lsp.buf.format({ bufnr = bufnr, async = true })
-        end, { unpack(opts), desc = "LSP format" })
+        map("n", "<leader>lf", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = false })
+        end, { desc = "LSP format" })
         vim.api.nvim_buf_create_user_command(bufnr, "LspFormat", function()
-            vim.lsp.buf.format({ bufnr = bufnr, async = true })
+            vim.lsp.buf.format({ bufnr = bufnr, async = false })
         end, { range = false, desc = "LSP format" })
     end
 
     if client.server_capabilities.documentRangeFormattingProvider then
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
-        vim.keymap.set("x", "<leader>lf", function()
-            vim.lsp.buf.format({ bufnr = bufnr, async = true })
-        end, { unpack(opts), desc = "LSP range format" })
+        map("x", "<leader>lf", function()
+            vim.lsp.buf.format({ bufnr = bufnr, async = false })
+        end, { desc = "LSP range format" })
         vim.api.nvim_buf_create_user_command(bufnr, "LspRangeFormat", function(args)
             vim.lsp.buf.format({
                 bufnr = bufnr,
-                async = true,
+                async = false,
                 range = { start = { args.line1, 0 }, ["end"] = { args.line2, 0 } },
             })
         end, { range = true, desc = "LSP range format" })

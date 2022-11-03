@@ -192,13 +192,6 @@ return require("packer").startup(function(use)
                 },
             })
             vim.keymap.set("n", "<leader>at", ":AerialToggle<CR>")
-            vim.api.nvim_create_autocmd("LspAttach", {
-                callback = function(args)
-                    local bufnr = args.buf
-                    local client = vim.lsp.get_client_by_id(args.data.client_id)
-                    require("aerial").on_attach(client, bufnr)
-                end,
-            })
         end,
     })
 
@@ -463,6 +456,7 @@ return require("packer").startup(function(use)
     use({
         "/Users/laurenzi/usr/src/heirline.nvim",
         event = { "UIEnter" },
+        module = 'heirline',
         config = function()
             require("plugins.heirline")
         end,
@@ -520,13 +514,11 @@ return require("packer").startup(function(use)
     use({
         "rcarriga/neotest",
         cmd = { "Neotest", "NeotestSummary", "NeotestNearest", "NeotestAttach" },
+        module = 'neotest',
         requires = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-            -- "antoinemadec/FixCursorHold.nvim",
-            "rcarriga/neotest-python",
-            "rcarriga/neotest-vim-test",
-            "rcarriga/neotest-plenary",
+            { "rcarriga/neotest-python", module = "neotest-python" },
+            { "rcarriga/neotest-vim-test", module = "neotest-vim-test" },
+            { "rcarriga/neotest-plenary", module = "neotest-plenary" },
             "vim-test/vim-test",
         },
         config = function()
@@ -570,7 +562,22 @@ return require("packer").startup(function(use)
         after = "nvim-dap",
         module = "dapui",
         config = function()
-            require("dapui").setup()
+            require("dapui").setup({
+                controls = {
+                    enabled = true,
+                    element = "repl",
+                    icons = {
+                        pause = "",
+                        play = "",
+                        step_into = "",
+                        step_over = "",
+                        step_out = "",
+                        step_back = "",
+                        run_last = "",
+                        terminate = "",
+                    },
+                },
+            })
         end,
     })
 
@@ -653,6 +660,16 @@ return require("packer").startup(function(use)
                 -- render = "simple",
             })
             vim.notify = notify
+
+            local vim_notify = vim.notify
+            vim.notify = function(msg, ...)
+                if msg:match("warning: multiple different client offset_encodings") then
+                    return
+                end
+
+                vim_notify(msg, ...)
+            end
+
             vim.keymap.set("n", "<esc>", function()
                 notify.dismiss()
                 vim.cmd.noh()

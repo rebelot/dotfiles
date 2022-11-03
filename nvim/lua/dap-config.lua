@@ -45,19 +45,23 @@ end, { desc = "DAP-Telescope: Commands" })
 map({ "n", "x" }, "<leader>dx", require("dapui").eval, { desc = "DAP-UI: Eval" })
 
 map("n", "<leader>dX", function()
-    dapui.eval(fn.input("expression: "))
+    dapui.eval(fn.input("expression: "), {})
 end, { desc = "DAP-UI: Eval expression" })
 
--- 
+--
 
-dap.listeners.after["event_initialized"]["dapui"] = function()
-    dapui.open()
+dap.listeners.after.event_initialized["dapui"] = function()
+    dapui.open({})
 end
-
-dap.listeners.after["event_terminated"]["dapui"] = function()
-    dapui.close()
+dap.listeners.after.event_terminated["dapui"] = function()
+    dapui.close({})
     dap_virtual_text.refresh()
-    vim.cmd("bd! \\[dap-repl]")
+    vim.cmd("silent! bd! \\[dap-repl]")
+end
+dap.listeners.before.event_exited["dapui"] = function()
+    dapui.close({})
+    dap_virtual_text.refresh()
+    vim.cmd("silent! bd! \\[dap-repl]")
 end
 
 dap.configurations.python = dap.configurations.python or {}
@@ -171,6 +175,37 @@ dap.configurations.cpp = {
         waitFor = true,
     },
 }
+
+dap.adapters.cppdbg = {
+    id = "cppdbg",
+    type = "executable",
+    command = "OpenDebugAD7",
+}
+table.insert(dap.configurations.cpp, {
+    name = "Launch file",
+    type = "cppdbg",
+    request = "launch",
+    program = function()
+        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+    end,
+    MIMode = 'lldb',
+    cwd = "${workspaceFolder}",
+    stopAtEntry = true,
+    setupCommands = {
+        {
+            text = "-enable-pretty-printing",
+            description = "enable pretty printing",
+            ignoreFailures = false,
+        },
+    },
+})
+table.insert(dap.configurations.cpp, {
+    name = "attach PID",
+    type = "cppdbg",
+    request = "attach",
+    MIMode = 'lldb',
+    pid = require("dap.utils").pick_process,
+})
 
 dap.configurations.c = dap.configurations.cpp
 
