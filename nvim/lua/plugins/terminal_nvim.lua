@@ -27,7 +27,7 @@ local lazygit = require("terminal").terminal:new({
     cmd = { "lazygit" },
     autoclose = true,
 })
-vim.env["GIT_EDITOR"] = "nvr -cc close -cc split --remote-wait +'set bufhidden=wipe'"
+vim.env["GIT_EDITOR"] = "nvr --remote-tab-wait-silent +'set bufhidden=wipe'"
 
 api.nvim_create_user_command("IPython", function()
     local bufnr = api.nvim_get_current_buf()
