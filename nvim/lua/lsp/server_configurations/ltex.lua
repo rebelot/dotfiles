@@ -11,7 +11,7 @@ local function read_spellfile(spellfile)
 end
 
 local function update_spellfile(words)
-    local lang = vim.tbl_keys(words)[1]
+    local lang = vim.tbl_keys(words)[1] ---@type string
     local wordlist = words[lang]
     vim.fn.writefile(wordlist, vim.fn.stdpath("config") .. "/spell/" .. lang:sub(1,2) .. ".utf-8.add", "a")
 end

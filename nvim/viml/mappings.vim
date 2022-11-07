@@ -192,7 +192,7 @@ nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
 
 " Jump to delimiter
-inoremap <silent> <C-l> <esc>:call search("[)\\]}>,'\"]", 'eW')<CR>a
+inoremap <silent> <C-l> <esc>:call search("[)\\]}>,`'\"]", 'eW')<CR>a
 
 " c-n/c-p previous command or match history
 " cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"

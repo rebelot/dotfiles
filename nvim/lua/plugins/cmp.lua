@@ -199,7 +199,7 @@ cmp.setup.cmdline({ "/", "?" }, {
 })
 
 -- Use cmdline & path source for ':'.
-cmp.setup.cmdline(":", {
+cmp.setup.cmdline({":", "@", "="}, {
     completion = { autocomplete = false },
     sources = cmp.config.sources({
         { name = "path" },

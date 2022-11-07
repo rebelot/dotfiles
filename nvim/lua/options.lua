@@ -80,6 +80,7 @@ o.splitbelow = true
 o.splitright = true
 o.foldenable = false
 opt.jumpoptions:append({ "view" })
+opt.diffopt:append({"vertical", "linematch:60", "algorithm:histogram"})
 
 o.dictionary = "/usr/share/dict/words"
 o.spelloptions = "noplainbuffer"

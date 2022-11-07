@@ -4,7 +4,7 @@ local function wininput(opts, on_confirm, win_opts)
     vim.bo[buf].buftype = "prompt"
     vim.bo[buf].bufhidden = "wipe"
 
-    local prompt = opts.prompt or ""
+    local prompt = "> " --opts.prompt or ""
     local default_text = opts.default or ""
 
     local deferred_callback = function(input)
@@ -29,6 +29,7 @@ local function wininput(opts, on_confirm, win_opts)
         focusable = true,
         style = "minimal",
         border = "none",
+        title = opts.prompt
     }
 
     win_opts = vim.tbl_deep_extend("force", default_win_opts, win_opts)

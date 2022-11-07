@@ -1,5 +1,5 @@
 return {
-    cmd = { "ccls-clang-14" },
+    cmd = { "ccls" },
     init_options = {
         cache = {
             directory = "/tmp/ccls",
