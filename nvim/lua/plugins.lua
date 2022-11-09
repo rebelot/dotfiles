@@ -286,7 +286,7 @@ return require("packer").startup(function(use)
     use({
         "andymass/vim-matchup",
         event = "BufRead",
-        config = function()
+        setup = function()
             vim.g.matchup_override_vimtex = 1
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = {
@@ -456,7 +456,7 @@ return require("packer").startup(function(use)
     use({
         "/Users/laurenzi/usr/src/heirline.nvim",
         event = { "UIEnter" },
-        module = 'heirline',
+        module = "heirline",
         config = function()
             require("plugins.heirline")
         end,
@@ -514,7 +514,7 @@ return require("packer").startup(function(use)
     use({
         "rcarriga/neotest",
         cmd = { "Neotest", "NeotestSummary", "NeotestNearest", "NeotestAttach" },
-        module = 'neotest',
+        module = "neotest",
         requires = {
             { "rcarriga/neotest-python", module = "neotest-python" },
             { "rcarriga/neotest-vim-test", module = "neotest-vim-test" },

@@ -10,6 +10,9 @@
 
 # $PATH {{{
 # /etc/paths: /usr/local/bin /usr/bin /bin /usr/sbin /sbin
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
+export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
+export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
 # export PATH="$HOME/bin:$PATH"                                 # <-- ~/bin
 export PATH="$HOME/usr/bin:$PATH"                             # <-- personal stuff
 export PATH="$HOME/.cargo/bin:$PATH"                          # <-- cargo
@@ -21,10 +24,7 @@ export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
 [[ -z $TMUX ]] || conda deactivate; conda activate py310      #   + TMUX fix
-export PATH="/opt/bin:$PATH"                                  # <-- personal stuff
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
-export PATH="/opt/local/libexec/gnubin:$PATH"                 # <-- Coreutils
-source "$HOME/venvs/base/bin/activate"                       	# <-- Activate the Python
+source "$HOME/venvs/base/bin/activate"                        # <-- Activate the Python
 # }}}
 
 # $MANPATH {{{
@@ -57,7 +57,6 @@ source $ZSH/prompt.zsh
 # check zplug for plugin management
 # macports can install syntax highlighting and zsh-completions
 # check https://starship.rs/guide/#%F0%9F%9A%80-installation
-# check esc/conda-zsh-completion
 # check git prompt at https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 # or use vcs_info zsh builtin module
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -214,7 +213,7 @@ function google {
 }
 
 function lessc {
-    pygmentize -O style=gruvbox -f terminal16m -g $1 | less
+    pygmentize -O style=monokai -f terminal16m -g $1 | less
 }
 
 function tedit {
@@ -233,20 +232,11 @@ setup(
 )
 EOF
     bash -c 'read -p "Build? [y/n] " input
-  if [[ $input = "y" ]]; then
-    python setup.py build_ext --inplace
-    fi'
+    if [[ $input = "y" ]]; then python setup.py build_ext --inplace fi'
 }
 
 function pman {
     tmux display-popup -E "man $@"
-}
-
-function attach_notebook(){
-    # $1 local port
-    # $2 remote port
-    # 8080 8080 user@host
-    ssh -L $1:localhost:$2 $3
 }
 
 function remote_notebook(){
@@ -255,8 +245,12 @@ function remote_notebook(){
 }
 
 # function neovim_remote {
-#   nvim --server $NVIM_LISTEN_ADDRESS --remote $(realpath "$@")
-#   # $(realpath ${1:-.})
+#     args=("$@")
+#     real_args=()
+#     for arg in "${args[@]}"; do
+#         real_args+=("$(realpath $arg)")
+#     done
+#     nvim --server $NVIM_LISTEN_ADDRESS --remote ${real_args[@]}
 # }
 # }}}
 
@@ -279,6 +273,7 @@ alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
 alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
+alias pipupdate='pip list -lo --format json |  python -c "import json, sys; print(\"\n\".join([x[\"name\"] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U'
 # alias nvr=neovim_remote
 # alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
 # alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"

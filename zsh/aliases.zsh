@@ -73,7 +73,6 @@ alias t='tail -f'
 # alias vim=nvim
 alias edit=nvim # Vim Only!
 alias watch="env TERM=xterm-256color watch"
-alias pipupdate="pip list --local --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 alias q=exit
 
 # git
