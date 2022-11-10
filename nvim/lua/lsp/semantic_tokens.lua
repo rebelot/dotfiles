@@ -329,6 +329,7 @@ M.hl_map = {
     builtinConstant = "Special",
     variable = {
         -- "@variable",
+        global = "@constant",
         static = "@constant",
         readonly = "@constant",
         defaultLibrary = "Special",

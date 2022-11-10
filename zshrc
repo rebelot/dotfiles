@@ -258,13 +258,13 @@ function remote_notebook(){
 # see $ZSH/aliases.zsh
 
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
-alias vmd='/Applications/VMD\ 1.9.4a51-x86_64-Rev9.app/Contents/MacOS/startup.command'
+alias vmd='/Applications/VMD\ 1.9.4a57-x86_64-Rev12.app/Contents/MacOS/startup.command'
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
 alias clock='tty-clock -c -f %d-%m-%Y'
 alias vim=nvim
-alias debugpy="python $HOME/venvs/debugpy/lib/python3.9/site-packages/debugpy --listen localhost:5678 --wait-for-client"
+# alias debugpy="python $HOME/venvs/debugpy/lib/python3.9/site-packages/debugpy --listen localhost:5678 --wait-for-client"
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
@@ -274,6 +274,7 @@ alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
 alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
 alias pipupdate='pip list -lo --format json |  python -c "import json, sys; print(\"\n\".join([x[\"name\"] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U'
+alias icat='kitty +kitten icat'
 # alias nvr=neovim_remote
 # alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
 # alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"
