@@ -907,13 +907,53 @@ local TablineCloseButton = {
     },
 }
 
+local TablinePicker = {
+    condition = function(self)
+        return self._show_picker
+    end,
+    init = function(self)
+        local bufname = vim.api.nvim_buf_get_name(self.bufnr)
+        bufname = vim.fn.fnamemodify(bufname, ":t")
+        local label = bufname:sub(1, 1)
+        local i = 2
+        while self._picker_labels[label] do
+            label = bufname:sub(i, i)
+            if i > #bufname then
+                break
+            end
+            i = i + 1
+        end
+        self._picker_labels[label] = self.bufnr
+        self.label = label
+    end,
+    provider = function(self)
+        return self.label
+    end,
+    hl = { fg = "red", bold = true },
+}
+
+vim.keymap.set("n", "gbp", function()
+    local tabline = require("heirline").tabline
+    local buflist = tabline._buflist[1]
+    buflist._picker_labels = {}
+    buflist._show_picker = true
+    vim.cmd.redrawtabline()
+    local char = vim.fn.getcharstr()
+    local bufnr = buflist._picker_labels[char]
+    if bufnr then
+        vim.api.nvim_win_set_buf(0, bufnr)
+    end
+    buflist._show_picker = false
+    vim.cmd.redrawtabline()
+end)
+
 local TablineBufferBlock = utils.surround({ "", "" }, function(self)
     if self.is_active then
         return utils.get_highlight("TabLineSel").bg
     else
         return utils.get_highlight("TabLine").bg
     end
-end, { TablineFileNameBlock, TablineCloseButton })
+end, { TablinePicker, TablineFileNameBlock, TablineCloseButton })
 
 local BufferLine = utils.make_buflist(
     TablineBufferBlock,

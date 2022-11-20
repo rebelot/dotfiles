@@ -2,6 +2,7 @@ zsh
 coreutils
 less
 rsync
+wget
 gawk
 grep
 tmux-devel
@@ -9,6 +10,7 @@ ninja
 z
 the_silver_searcher
 ripgrep
+fd
 gh
 lazygit
 git-delta

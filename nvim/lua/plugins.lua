@@ -265,10 +265,10 @@ return require("packer").startup(function(use)
 
     use({
         "danymat/neogen",
+        cmd = "Neogen",
         config = function()
             require("neogen").setup({})
         end,
-        cmd = "Neogen",
     })
 
     -- use 'saadparwaiz1/cmp_luasnip'
@@ -295,10 +295,7 @@ return require("packer").startup(function(use)
         end,
     })
 
-    use({
-        "chrisbra/csv.vim",
-        ft = "csv",
-    })
+    use({ "chrisbra/csv.vim", ft = "csv" })
 
     -- use({
     --     "tmhedberg/SimpylFold",
@@ -350,11 +347,11 @@ return require("packer").startup(function(use)
 
     use({
         "lukas-reineke/indent-blankline.nvim",
+        event = "BufRead",
+        after = "nvim-treesitter",
         config = function()
             require("plugins.indent-blankline")
         end,
-        event = "BufRead",
-        after = "nvim-treesitter",
     })
 
     -------------------------

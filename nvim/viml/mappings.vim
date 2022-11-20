@@ -24,26 +24,13 @@ nnoremap <leader>ev :edit $MYVIMRC<CR>
 " clear search highlighting
 " nnoremap <silent> <esc> :noh<cr>
 
-" Tab S-Tab prev/next candidate, CR confirm, BS delete completion,
-" C-l escape delimiters, C-Space invoke completion,
-" C-U C-D scroll Up/Down
-
-" let g:ulti_expand_res = 0
-" function! Ulti_Expand_and_getRes() abort
-"   call UltiSnips#ExpandSnippet()
-"   return g:ulti_expand_res
-" endfunction
-"
-" imap <silent><CR> <C-R>=pumvisible() ? Ulti_Expand_and_getRes() ? "" : "\<C-y>" : delimitMate#ExpandReturn()<CR>
-" inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>" 
-" imap <expr><S-Tab> pumvisible() ? "\<C-p>" : "<Plug>delimitMateS-Tab"
-" inoremap <expr><C-d> pumvisible() ? "\<PageDown>" : "\<C-d>" 
-" inoremap <expr><C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-" inoremap <C-l> <Right>
-
 " remap <Esc> to jk in insert mode
 " inoremap jk <Esc>
 " inoremap kj <Esc>
+
+" Better <C-r>
+inoremap <C-r> <C-r><C-o>
+inoremap <C-r><C-o> <C-r>
 
 " toggle [r]elative line [n]umbers
 nnoremap <silent><leader>rn :set invrelativenumber<CR>

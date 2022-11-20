@@ -147,7 +147,7 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2022-2"
+export SCHRODINGER="/opt/schrodinger/suites2022-3"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 # export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"

@@ -33,6 +33,7 @@ local servers = {
     "bashls",
     "julials",
     "tsserver",
+    "rust_analyzer",
 }
 
 for _, server in ipairs(servers) do
