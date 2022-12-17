@@ -52,6 +52,13 @@ autocmd("FileType", {
     command = [[setlocal makeprg=pandoc\ -f\ gfm\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf]],
 })
 
+autocmd("Filetype", {
+    pattern = "rust",
+    callback = function(args)
+        vim.api.nvim_buf_create_user_command(args.buf, 'CargoFix', "! cd %:p:h && cargo fix", {})
+    end
+})
+
 -----------------
 --  Scrolloff  --
 -----------------

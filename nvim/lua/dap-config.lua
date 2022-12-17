@@ -135,7 +135,7 @@ dap.adapters.codelldb = {
 
 dap.configurations.cpp = {
     {
-        name = "Launch",
+        name = "Launch (codelldb)",
         type = "codelldb",
         request = "launch",
         program = function()
@@ -160,13 +160,13 @@ dap.configurations.cpp = {
         end,
     },
     {
-        name = "attach PID",
+        name = "attach PID (codelldb)",
         type = "codelldb",
         request = "attach",
         pid = require("dap.utils").pick_process,
     },
     {
-        name = "Attach to Name (wait)",
+        name = "Attach to Name (wait) (codelldb)",
         type = "codelldb",
         request = "attach",
         program = function()
@@ -182,7 +182,7 @@ dap.adapters.cppdbg = {
     command = "OpenDebugAD7",
 }
 table.insert(dap.configurations.cpp, {
-    name = "Launch file",
+    name = "Launch file (cpptools)",
     type = "cppdbg",
     request = "launch",
     program = function()
@@ -200,7 +200,7 @@ table.insert(dap.configurations.cpp, {
     },
 })
 table.insert(dap.configurations.cpp, {
-    name = "attach PID",
+    name = "attach PID (cpptools)",
     type = "cppdbg",
     request = "attach",
     MIMode = 'lldb',
@@ -208,6 +208,7 @@ table.insert(dap.configurations.cpp, {
 })
 
 dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
 
 -- `${file}`: Active filename
 -- `${fileBasename}`: The current file's basename

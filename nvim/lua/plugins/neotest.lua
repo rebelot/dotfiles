@@ -4,8 +4,9 @@ require("neotest").setup({
             dap = { justMyCode = false },
         }),
         require("neotest-plenary"),
+        require("neotest-rust"),
         require("neotest-vim-test")({
-            ignore_file_types = { "python", "vim", "lua" },
+            ignore_file_types = { "python", "vim", "lua", "rust" },
         }),
     },
     consumers = {
@@ -59,5 +60,5 @@ command! Neotest lua require("neotest").run.run(vim.fn.getcwd())
 command! NeotestNearest lua require("neotest").run.run()
 command! NeotestDebug lua require("neotest").run.run({ strategy = "dap" })
 command! NeotestAttach lua require("neotest").run.attach()
-command! NeotestOutput lua require("neotest".output_panel.toggle())
+command! NeotestOutput lua require("neotest").output_panel.toggle()
 ]])

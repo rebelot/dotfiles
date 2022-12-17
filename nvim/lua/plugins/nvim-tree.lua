@@ -39,7 +39,7 @@ require("nvim-tree").setup({
     },
     renderer = {
         icons = {
-            git_placement = "before",
+            git_placement = "after",
             glyphs = {
                 git = {
                     unstaged = "",

@@ -9,7 +9,13 @@ fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHin
 --    
 
 vim.diagnostic.config({
-    float = { source = "always", border = require("lsp").borders },
+    float = {
+        source = "always",
+        border = require("lsp").borders,
+        title = "Diagnostics",
+        title_pos = "left",
+        header = "",
+    },
     virtual_text = false, -- , source = 'always'},
     underline = true,
     signs = true,

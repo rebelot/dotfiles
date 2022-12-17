@@ -309,7 +309,7 @@ return require("packer").startup(function(use)
     -- use({ "vim-pandoc/vim-pandoc" })
     -- use({ "vim-pandoc/vim-pandoc-syntax" })
 
-    -- use '/opt/plumed-2.4.3/lib/plumed/vim'
+    use("/opt/local/lib/plumed/vim")
 
     use({
         -- WARN: Issues with telescope. Lazy-loading telescope solves the issue.
@@ -338,11 +338,6 @@ return require("packer").startup(function(use)
         config = function()
             vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Folded" })
         end,
-    })
-
-    use({
-        "nvim-treesitter/playground",
-        cmd = "TSPlaygroundToggle",
     })
 
     use({
@@ -452,7 +447,7 @@ return require("packer").startup(function(use)
 
     use({
         "/Users/laurenzi/usr/src/heirline.nvim",
-        event = { "UIEnter" },
+        event = { "VimEnter" },
         module = "heirline",
         config = function()
             require("plugins.heirline")
@@ -516,6 +511,7 @@ return require("packer").startup(function(use)
             { "rcarriga/neotest-python", module = "neotest-python" },
             { "rcarriga/neotest-vim-test", module = "neotest-vim-test" },
             { "rcarriga/neotest-plenary", module = "neotest-plenary" },
+            { "rouge8/neotest-rust", module = "neotest-rust" },
             "vim-test/vim-test",
         },
         config = function()

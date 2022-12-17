@@ -278,7 +278,7 @@ local Navic = {
             Module = dim(utils.get_highlight("@include").fg, 0.75),
             Namespace = dim(utils.get_highlight("@namespace").fg, 0.75),
             Package = dim(utils.get_highlight("@include").fg, 0.75),
-            Class = dim(utils.get_highlight("@structure").fg, 0.75),
+            Class = dim(utils.get_highlight("@struct").fg, 0.75),
             Method = dim(utils.get_highlight("@method").fg, 0.75),
             Property = dim(utils.get_highlight("@property").fg, 0.75),
             Field = dim(utils.get_highlight("@field").fg, 0.75),
@@ -296,7 +296,7 @@ local Navic = {
             Key = dim(utils.get_highlight("@keyword").fg, 0.75),
             Null = dim(utils.get_highlight("@comment").fg, 0.75),
             EnumMember = dim(utils.get_highlight("@field").fg, 0.75),
-            Struct = dim(utils.get_highlight("@structure").fg, 0.75),
+            Struct = dim(utils.get_highlight("@struct").fg, 0.75),
             Event = dim(utils.get_highlight("@keyword").fg, 0.75),
             Operator = dim(utils.get_highlight("@operator").fg, 0.75),
             TypeParameter = dim(utils.get_highlight("@type").fg, 0.75),
@@ -619,6 +619,34 @@ local Spell = {
     hl = { bold = true, fg = "orange" },
 }
 
+local SearchCount = {
+    condition = function()
+        return vim.v.hlsearch ~= 0
+    end,
+    init = function(self)
+        local ok, search = pcall(vim.fn.searchcount)
+        if ok and search.total then
+            self.search = search
+        end
+    end,
+    provider = function(self)
+        local search = self.search
+        return string.format("%d/%d", search.current, math.min(search.total, search.maxcount))
+    end,
+    -- {
+    --     provider = function(self)
+    --         return self.search.current
+    --     end,
+    --     hl = { bold = true }
+    -- },
+    -- {
+    --     provider = function(self)
+    --         return "/" .. math.min(self.search.total, self.search.maxcount)
+    --     end,
+    --     hl = { fg = "grey", bold = true }
+    -- },
+}
+
 ViMode = utils.surround({ "", "" }, "bright_bg", { ViMode, Snippets })
 
 local Align = { provider = "%=" }
@@ -626,6 +654,7 @@ local Space = { provider = " " }
 
 local DefaultStatusline = {
     ViMode,
+    SearchCount,
     Space,
     Spell,
     WorkDir,

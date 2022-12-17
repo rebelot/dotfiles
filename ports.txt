@@ -28,9 +28,11 @@ pandoc
 ranger
 jdk19
 ccls-clang-14
+ccls_select
 imagemagik
 hyperfine
 gdb
+plumed
 
 #exa
 #glow

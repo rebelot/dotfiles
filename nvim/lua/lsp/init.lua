@@ -12,6 +12,7 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = borders,
+    title = 'Hover',
 })
 
 local lsprename = vim.lsp.buf.rename
@@ -29,6 +30,7 @@ vim.lsp.buf.rename = function(new_name, options)
 end
 
 require("lsp.inlay_hints")
+require("lsp.semantic_tokens")
 
 ------------------
 -- Capabilities --
@@ -36,7 +38,6 @@ require("lsp.inlay_hints")
 
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-capabilities = require("lsp.semantic_tokens").extend_capabilities(capabilities)
 
 ---------------
 -- On Attach --

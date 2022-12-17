@@ -206,6 +206,11 @@ require("telescope").setup({
         file_browser = {
             hidden = true,
             depth = 3,
+            mappings = {
+                i = {
+                    ["<CR>"] = custom_actions.multi_selection_open
+                }
+            }
         },
         ["ui-select"] = themes.get_dropdown(),
     },

@@ -7,7 +7,7 @@ function M.get_color(hlgroup, attr)
     -- return vim.api.nvim_get_hl_by_name(hlgroup, true)[attr]
 end
 
-vim.opt.background = "dark"
+-- vim.opt.background = "dark"
 
 function M.gruvbox()
     g.gruvbox_material_background = "medium"

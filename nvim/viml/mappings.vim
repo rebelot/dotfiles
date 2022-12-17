@@ -179,7 +179,8 @@ nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
 
 " Jump to delimiter
-inoremap <silent> <C-l> <esc>:call search("[)\\]}>,`'\"]", 'eW')<CR>a
+" inoremap <silent> <C-l> <esc>:call search("[)\\]}>,`'\"]", 'eW')<CR>a
+inoremap <silent> <C-l> <Left><cmd>call search("[)\\]}>,`'\"]", 'eW')<CR><Right>
 
 " c-n/c-p previous command or match history
 " cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"
@@ -198,33 +199,44 @@ cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
 " cnoremap [ []<Left>
 " cnoremap { {}<Left>
 
-anoremenu LSP.Back                  <cmd>popup PopUp<cr>
-vnoremenu LSP.Back                  <cmd>popup PopUp<cr>gv
-anoremenu LSP.-1-                   <Nop>
-nnoremenu LSP.Hover                <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremenu LSP.Definition           <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremenu LSP.References           <cmd>lua vim.lsp.buf.references()<CR>
-nnoremenu LSP.Rename               <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremenu LSP.Format               <cmd>lua vim.lsp.buf.format()<CR>
-xnoremenu LSP.Format               <cmd>lua vim.lsp.buf.format()<CR>
-nnoremenu LSP.Actions              <cmd>lua vim.lsp.buf.code_action()<CR>
-xnoremenu LSP.Actions              <cmd>lua vim.lsp.buf.code_action()<CR>
-nnoremenu LSP.Diagnostics          <cmd>lua vim.diagnostic.open_float({scope = 'line'})<CR>
+anoremenu LSP.Back        <cmd>popup PopUp<cr>
+vnoremenu LSP.Back        <cmd>popup PopUp<cr>gv
+anoremenu LSP.-1-         <Nop>
+nnoremenu LSP.Hover       <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremenu LSP.Definition  <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremenu LSP.References  <cmd>lua vim.lsp.buf.references()<CR>
+nnoremenu LSP.Rename      <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremenu LSP.Format      <cmd>lua vim.lsp.buf.format()<CR>
+xnoremenu LSP.Format      <cmd>lua vim.lsp.buf.format()<CR>
+nnoremenu LSP.Actions     <cmd>lua vim.lsp.buf.code_action()<CR>
+xnoremenu LSP.Actions     <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremenu LSP.Diagnostics <cmd>lua vim.diagnostic.open_float({scope = 'line'})<CR>
+
+anoremenu DAP.Back               <cmd>popup PopUp<cr>
+vnoremenu DAP.Back               <cmd>popup PopUp<cr>gv
+anoremenu DAP.-1-                <Nop>
+nnoremenu DAP.Toggle\ Breakpoint <cmd>lua require'dap'.toggle_breakpoint()<CR>
+nnoremenu DAP.Condition\ Breakpoint <cmd>lua require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+nnoremenu DAP.Exception\ Breakpoint <cmd>lua require'dap'.set_exception_breakpoints()<CR>
+nnoremenu DAP.Run\ to\ cursor <cmd>lua require'dap'.run_to_cursor()<CR>
+nnoremenu DAP.Eval <cmd>lua require'dapui'.eval()<CR>
+vnoremenu DAP.Eval <cmd>lua require'dapui'.eval()<CR>
 
 aunmenu PopUp
-vnoremenu PopUp.Cut                   "+x
-vnoremenu PopUp.Copy                  "+y
-anoremenu PopUp.Paste                "+gP
-vnoremenu PopUp.Paste                "+P
-vnoremenu PopUp.Search                "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
-vnoremenu PopUp.Replace               y/\V<C-r>=escape(@",'/\')<CR><CR>``cgn
-vnoremenu PopUp.Delete                "_x
-nnoremenu PopUp.Select\ All>         ggVG
-vnoremenu PopUp.Select\ All>          gg0oG$
-inoremenu PopUp.Select\ All           <C-Home><C-O>VG
-inoremenu PopUp.Expression           <c-r>=
-anoremenu PopUp.-1-                   <Nop>
-nnoremenu PopUp.&LSP                  <cmd>popup LSP<cr>
-vnoremenu PopUp.&LSP                  <cmd>popup LSP<cr>gv
+vnoremenu PopUp.Cut           "+x
+vnoremenu PopUp.Copy          "+y
+anoremenu PopUp.Paste         "+gP
+vnoremenu PopUp.Paste         "+P
+vnoremenu PopUp.Search        "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
+vnoremenu PopUp.Replace       y/\V<C-r>=escape(@",'/\')<CR><CR>``cgn
+vnoremenu PopUp.Delete        "_x
+nnoremenu PopUp.Select\ All>  ggVG
+vnoremenu PopUp.Select\ All>  gg0oG$
+inoremenu PopUp.Select\ All   <C-Home><C-O>VG
+inoremenu PopUp.Expression    <c-r>=
+anoremenu PopUp.-1-           <Nop>
+nnoremenu PopUp.LSP          <cmd>popup LSP<cr>
+vnoremenu PopUp.LSP          <cmd>popup LSP<cr>gv
+nnoremenu PopUp.DAP          <cmd>popup DAP<cr>
 " nnoremenu PopUp.LSP.&GoToDefinition          lua vim.lsp.buf.definition()
 " nnoremenu PopUp.LSP.&References              lua vim.lsp.buf.references()
