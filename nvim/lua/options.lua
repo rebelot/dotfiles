@@ -3,6 +3,8 @@ local o = vim.o
 local opt = vim.opt
 local fn = vim.fn
 
+vim.g.mapleader = ','
+
 g.python3_host_prog = "/Users/laurenzi/venvs/base/bin/python"
 g.python_host_prog = "/Users/laurenzi/venvs/base27/bin/python"
 

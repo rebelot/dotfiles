@@ -289,7 +289,6 @@ local plugins = {
     { dir = "/opt/local/lib/plumed/vim", ft = "plumed" },
 
     {
-        -- WARN: Issues with telescope. Lazy-loading telescope solves the issue.
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         event = "BufReadPost",
@@ -330,7 +329,7 @@ local plugins = {
 
     {
         "nvim-telescope/telescope.nvim",
-        keys = { { "<leader>f" }, { "<leader>t" } },
+        keys = { "<leader>f" },
         cmd = "Telescope",
         config = function()
             require("plugins.telescope")
@@ -589,9 +588,9 @@ local plugins = {
 
     {
         dir = "/Users/laurenzi/usr/src/terminal.nvim",
-        -- cmd = { "TermOpen", "TermRun" },
-        -- keys = "<leader>t",
-        -- event = "TermOpen",
+        cmd = { "TermOpen", "TermToggle", "TermRun", "Lazygit", "IPython", "Htop" },
+        keys = "<leader>t",
+        event = "TermOpen",
         config = function()
             require("plugins.terminal_nvim")
         end,

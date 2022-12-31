@@ -1,4 +1,3 @@
-let mapleader = ','
 xnoremap <Space> :
 nnoremap <Space> :
 nnoremap <C-space> q:

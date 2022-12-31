@@ -16,24 +16,20 @@
 
 -- require("impatient")--.enable_profile()
 
--- Mappings
-vim.cmd("source ~/.config/nvim/viml/mappings.vim")
+-- general configurations
+require("options")
+vim.opt.laststatus = 3
 
 -- Plugins
 require("plugins")
-
---
-vim.opt.laststatus = 3
--- require("colors")
-
--- general configurations
-require("options")
 
 -- Functions, Commands, Autocommands
 vim.cmd("source ~/.config/nvim/viml/commands.vim")
 require("autocommands")
 -- vim.cmd("source ~/.config/nvim/viml/autocommands.vim")
 
+-- Mappings
+vim.cmd("source ~/.config/nvim/viml/mappings.vim")
 
 -- Diagnostics
 require("diagnostics-config")
