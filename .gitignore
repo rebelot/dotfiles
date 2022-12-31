@@ -6,3 +6,4 @@ nvim/plugin/packer_compiled.lua
 nvim/spell/
 kitty/kitty.conf.bak
 kitty/current-theme.conf
+nvim/lazy-lock.json
