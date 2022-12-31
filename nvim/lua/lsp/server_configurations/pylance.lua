@@ -153,50 +153,6 @@ end
 
 return {
     on_attach = function(client, bufnr)
-        client.server_capabilities.semanticTokensProvider = {
-            legend = {
-                tokenTypes = {
-                    "comment",
-                    "keyword",
-                    "string",
-                    "number",
-                    "regexp",
-                    "type",
-                    "class",
-                    "interface",
-                    "enum",
-                    "enumMember",
-                    "typeParameter",
-                    "function",
-                    "method",
-                    "property",
-                    "variable",
-                    "parameter",
-                    "module",
-                    "intrinsic",
-                    "selfParameter",
-                    "clsParameter",
-                    "magicFunction",
-                    "builtinConstant",
-                },
-                tokenModifiers = {
-                    "declaration",
-                    "static",
-                    "abstract",
-                    "async",
-                    "documentation",
-                    "typeHint",
-                    "typeHintComment",
-                    "readonly",
-                    "decorator",
-                    "builtin",
-                },
-            },
-            range = true,
-            full = {
-                delta = true,
-            },
-        }
         client.commands["pylance.extractVariableWithRename"] = function(command, enriched_ctx)
             command.command = "pylance.extractVariable"
             vim.lsp.buf.execute_command(command)

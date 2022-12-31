@@ -275,6 +275,7 @@ alias fuck='killall -9'
 alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
 alias pipupdate='pip list -lo --format json |  python -c "import json, sys; print(\"\n\".join([x[\"name\"] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U'
 alias icat='kitty +kitten icat'
+alias kitty_make_conf='kitty +runpy "from kitty.config import commented_out_default_config as conf; print(conf());"'
 # alias nvr=neovim_remote
 # alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
 # alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"

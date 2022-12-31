@@ -33,6 +33,7 @@ imagemagik
 hyperfine
 gdb
 plumed
+pdfgrep
 
 #exa
 #glow

@@ -1,34 +1,5 @@
 #!/bin/bash
 
-# cd "$HOME/usr/src" || exit
-
-# echo Checking latest nightly release...
-# latest="$(curl https://github.com/neovim/neovim/releases/tag/nightly 2> /dev/null | grep -m 1 -e 'NVIM v[[:digit:]]' | sed -E 's/^.* (NVIM [a-z0-9\.+\-]*).*$/\1/')"
-# current="$(nvim --version | head -n 1)"
-# echo
-# echo "Latest nvim version: $latest"
-# echo "Current nvim version: $current"
-#
-# if [[ "$current" = "$latest" ]]; then
-#     echo
-#     echo Already up to date!
-# else
-#     echo
-#     echo Downloading latest nightly release...
-#     curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
-#     if [[ "$(file nvim-macos.tar.gz)" =~ (gzip|archive) ]]; then
-#         echo
-#         echo Extracting package...
-#         tar -xzf nvim-macos.tar.gz
-#         echo All done!
-#         nvim --version
-#     else
-#         echo
-#         echo Downloaded package seems not valid
-#         cat nvim-macos.tar.gz
-#     fi
-# fi
-
 cd "$HOME/usr/src/neovim" || exit
 
 current="$(git --no-pager log origin/master -n 1 --pretty=format:"%H")"

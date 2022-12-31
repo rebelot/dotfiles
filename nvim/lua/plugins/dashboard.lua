@@ -89,7 +89,7 @@ db.custom_center = {
         shortcut = "u",
         icon = "  ",
         icon_hl = { link = icon_color },
-        action = "PackerUpdate",
+        action = "Lazy update",
     },
     {
         desc = "Setting                       ",
@@ -124,7 +124,7 @@ vim.api.nvim_create_autocmd('Filetype', {
             nnoremap <buffer> n <cmd>DashboardNewFile<CR>
             nnoremap <buffer> <leader>en <cmd>DashboardNewFile<CR>
             nnoremap <buffer> L <cmd>SessionLoad<CR>
-            nnoremap <buffer> u <cmd>PackerUpdate<CR>
+            nnoremap <buffer> u <cmd>Lazy update<CR>
             nnoremap <buffer> s <cmd>edit $MYVIMRC<CR>
             nnoremap <buffer> q <cmd>exit<CR>
         ]]
