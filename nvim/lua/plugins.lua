@@ -52,7 +52,9 @@ local plugins = {
 
     {
         "neovim/nvim-lspconfig",
-        lazy = false,
+        -- lazy = false,
+        event = "BufReadPre",
+        cmd = "Mason",
         dependencies = {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
@@ -196,9 +198,9 @@ local plugins = {
 
     {
         "zbirenbaum/copilot.lua",
-        event = "VeryLazy",
+        event = "BufReadPre",
         config = function()
-            vim.defer_fn(function()
+            vim.schedule(function()
                 require("copilot").setup({
                     ft_disable = { "julia", "dap-repl" },
                     suggestion = {
@@ -210,7 +212,7 @@ local plugins = {
                         },
                     },
                 })
-            end, 100)
+            end)
         end,
     },
 
@@ -280,6 +282,7 @@ local plugins = {
             {
                 "nvim-treesitter/nvim-treesitter-context",
                 config = function()
+                    require("treesitter-context").setup()
                     vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Folded" })
                 end,
             },
@@ -405,7 +408,7 @@ local plugins = {
     {
         "rebelot/heirline.nvim",
         dev = true,
-        event = { "VimEnter" },
+        event = "UiEnter",
         config = function()
             require("plugins.heirline")
         end,
@@ -570,7 +573,8 @@ local plugins = {
     {
         -- Go Glepnir!
         "glepnir/dashboard-nvim",
-        event = "VimEnter",
+        lazy = false,
+        enabled = true,
         config = function()
             require("plugins.dashboard")
         end,
@@ -584,7 +588,7 @@ local plugins = {
 
     {
         "rcarriga/nvim-notify",
-        event = "UIEnter",
+        event = "VeryLazy",
         config = function()
             local notify = require("notify")
             notify.setup({

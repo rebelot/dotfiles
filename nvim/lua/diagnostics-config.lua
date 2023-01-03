@@ -1,6 +1,7 @@
 local fn = vim.fn
 local api = vim.api
 local map = vim.keymap.set
+local border = vim.g.FloatBorders
 
 fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
 fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
@@ -11,7 +12,7 @@ fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHin
 vim.diagnostic.config({
     float = {
         source = "always",
-        border = require("lsp").borders,
+        border = border,
         title = "Diagnostics",
         title_pos = "left",
         header = "",

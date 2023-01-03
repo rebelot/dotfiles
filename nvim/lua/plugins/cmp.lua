@@ -22,7 +22,7 @@ cmp.setup({
         -- completion = {
         --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:CmpCompletionSel,Search:None",
         --     border = 'none'
-        -- border = require("lsp").borders,
+        -- border = vim.g.FloatBorders,
         -- },
     },
     mapping = {

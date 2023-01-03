@@ -1,4 +1,4 @@
-local borders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
+local borders = vim.g.FloatBorders
 
 -----------------------
 -- Handlers override --

@@ -3,6 +3,7 @@ local o = vim.o
 local opt = vim.opt
 local fn = vim.fn
 
+vim.g.FloatBorders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
 vim.g.mapleader = ','
 
 g.python3_host_prog = "/Users/laurenzi/venvs/base/bin/python"
