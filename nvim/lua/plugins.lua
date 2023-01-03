@@ -37,13 +37,11 @@ local plugins = {
     ----------------
     "nvim-lua/plenary.nvim",
 
-    -- "lewis6991/impatient.nvim",
-
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
     {
         "tami5/sqlite.lua",
-        config = function()
+        init = function()
             vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
         end,
     },
@@ -51,29 +49,17 @@ local plugins = {
     --------------------------------------------
     -- LSP, Diagnostics, Snippets, Completion --
     --------------------------------------------
-    {
-        "williamboman/mason.nvim",
-        priority = 1000,
-        lazy = false,
-        config = function()
-            require("mason").setup()
-        end,
-    },
-
-    {
-        "williamboman/mason-lspconfig.nvim",
-        priority = 999,
-        lazy = false,
-        config = function()
-            require("mason-lspconfig").setup()
-        end,
-    },
 
     {
         "neovim/nvim-lspconfig",
-        priority = 998,
         lazy = false,
+        dependencies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        },
         config = function()
+            require("mason").setup()
+            require("mason-lspconfig").setup()
             require("lsp.server_setup")
         end,
     },
@@ -89,9 +75,7 @@ local plugins = {
     {
         "j-hui/fidget.nvim",
         event = { "BufReadPost" },
-        config = function()
-            require("fidget").setup()
-        end,
+        config = true,
     },
 
     {
@@ -186,9 +170,8 @@ local plugins = {
                 dependencies = {
                     {
                         "SirVer/ultisnips",
-                        event = "InsertEnter",
                         dependencies = "honza/vim-snippets",
-                        config = function()
+                        init = function()
                             vim.opt.rtp:append({ vim.fn.stdpath("data") .. "/site/pack/packer/start/vim-snippets" })
                             vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
                             vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
@@ -213,7 +196,7 @@ local plugins = {
 
     {
         "zbirenbaum/copilot.lua",
-        lazy = true,
+        event = "VeryLazy",
         config = function()
             vim.defer_fn(function()
                 require("copilot").setup({
@@ -227,7 +210,7 @@ local plugins = {
                         },
                     },
                 })
-            end, 50)
+            end, 100)
         end,
     },
 
@@ -243,9 +226,7 @@ local plugins = {
     {
         "danymat/neogen",
         cmd = "Neogen",
-        config = function()
-            require("neogen").setup({})
-        end,
+        config = true,
     },
 
     -- use 'saadparwaiz1/cmp_luasnip'
@@ -262,8 +243,8 @@ local plugins = {
 
     {
         "andymass/vim-matchup",
-        event = "BufReadPost",
-        setup = function()
+        event = "BufRead",
+        init = function()
             vim.g.matchup_override_vimtex = 1
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = {
@@ -291,9 +272,9 @@ local plugins = {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        event = "BufReadPost",
+        event = "BufRead",
         cmd = { "TSInstall", "TSUpdate" },
-        dependecies = {
+        dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects",
             "RRethy/nvim-treesitter-textsubjects",
             {
@@ -331,10 +312,38 @@ local plugins = {
         "nvim-telescope/telescope.nvim",
         keys = { "<leader>f" },
         cmd = "Telescope",
+        dependencies = {
+            {
+                "nvim-telescope/telescope-frecency.nvim",
+                lazy = true,
+                config = function()
+                    vim.keymap.set(
+                        "n",
+                        "<leader>fr",
+                        require("telescope").extensions.frecency.frecency,
+                        { desc = "Telescope: Frecency" }
+                    )
+                end,
+            },
+            {
+                "nvim-telescope/telescope-file-browser.nvim",
+                lazy = true,
+                config = function()
+                    vim.keymap.set(
+                        "n",
+                        "<leader>f.",
+                        require("telescope").extensions.file_browser.file_browser,
+                        { desc = "Telescope: File browser" }
+                    )
+                end,
+            },
+            "nvim-telescope/telescope-fzf-native.nvim",
+            "nvim-telescope/telescope-dap.nvim",
+            "nvim-telescope/telescope-ui-select.nvim",
+        },
         config = function()
             require("plugins.telescope")
 
-            -- load extensions provided by plugins that are loaded _before_ telescope.
             require("telescope").load_extension("file_browser")
             require("telescope").load_extension("dap")
             require("telescope").load_extension("notify")
@@ -344,48 +353,6 @@ local plugins = {
         end,
     },
 
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        lazy = true,
-        config = function()
-            vim.keymap.set(
-                "n",
-                "<leader>f.",
-                require("telescope").extensions.file_browser.file_browser,
-                { desc = "Telescope: File browser" }
-            )
-        end,
-    },
-
-    {
-        "nvim-telescope/telescope-dap.nvim",
-        lazy = true,
-    },
-
-    {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        lazy = true,
-        build = "make",
-    },
-
-    {
-        "nvim-telescope/telescope-frecency.nvim",
-        lazy = true,
-        config = function()
-            vim.keymap.set(
-                "n",
-                "<leader>fr",
-                require("telescope").extensions.frecency.frecency,
-                { desc = "Telescope: Frecency" }
-            )
-        end,
-    },
-
-    {
-        "nvim-telescope/telescope-ui-select.nvim",
-        lazy = true,
-    },
-
     --{ "ibhagwan/fzf-lua", requires = { "junegunn/fzf", run = "./install --bin" } })
 
     -------------------------------------------
@@ -393,7 +360,8 @@ local plugins = {
     -------------------------------------------
 
     {
-        dir = "/Users/laurenzi/usr/src/kanagawa.nvim",
+        "rebelot/kanagawa.nvim",
+        dev = true,
         lazy = false,
         priority = 1000,
         config = function()
@@ -421,24 +389,22 @@ local plugins = {
                     TelescopePreviewNormal = { bg = colors.bg_dim },
                     TelescopePreviewBorder = { bg = colors.bg_dim, fg = colors.bg_dim },
                 },
-                theme = theme,
             })
             vim.cmd("colorscheme kanagawa")
         end,
     },
 
-    { dir = "/Users/laurenzi/usr/src/lucy.nvim" },
+    { "rebelot/lucy.nvim", lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
         lazy = true,
-        config = function()
-            require("nvim-web-devicons").setup()
-        end,
+        config = true,
     },
 
     {
-        dir = "/Users/laurenzi/usr/src/heirline.nvim",
+        "rebelot/heirline.nvim",
+        dev = true,
         event = { "VimEnter" },
         config = function()
             require("plugins.heirline")
@@ -448,9 +414,7 @@ local plugins = {
     {
         "uga-rosa/ccc.nvim",
         cmd = "CccPick",
-        config = function()
-            require("ccc").setup({ bar_len = 60 })
-        end,
+        config = { bar_len = 60 },
     },
 
     --------------------------
@@ -459,7 +423,6 @@ local plugins = {
 
     {
         "mfussenegger/nvim-dap",
-        lazy = true,
         config = function()
             require("dap-config")
         end,
@@ -467,6 +430,8 @@ local plugins = {
 
     {
         "jbyuki/one-small-step-for-vimkind",
+        lazy = true,
+        ft = "lua",
         config = function()
             local dap = require("dap")
             dap.configurations.lua = {
@@ -522,21 +487,17 @@ local plugins = {
     {
         "theHamsta/nvim-dap-virtual-text",
         lazy = true,
-        config = function()
-            require("nvim-dap-virtual-text").setup({
-                enabled = true, -- enable this plugin (the default)
-                enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
-                highlight_changed_variables = true, -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
-                highlight_new_as_changed = true, -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
-                show_stop_reason = true, -- show stop reason when stopped for exceptions
-                commented = false, -- prefix virtual text with comment string
-                -- experimental features:
-                virt_text_pos = "eol", -- position of virtual text, see `:h nvim_buf_set_extmark()`
-                all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
-                virt_lines = false, -- show virtual lines instead of virtual text (will flicker!)
-                virt_text_win_col = nil, -- position the virtual text at a fixed window column (starting from the first text column) ,
-            })
-        end,
+        config = {
+            enabled_commands = true,
+            highlight_changed_variables = true,
+            highlight_new_as_changed = true,
+            show_stop_reason = true,
+            commented = false,
+            virt_text_pos = "eol",
+            all_frames = false,
+            virt_lines = false,
+            virt_text_win_col = nil,
+        },
     },
 
     {
@@ -587,7 +548,8 @@ local plugins = {
     },
 
     {
-        dir = "/Users/laurenzi/usr/src/terminal.nvim",
+        "rebelot/terminal.nvim",
+        dev = true,
         cmd = { "TermOpen", "TermToggle", "TermRun", "Lazygit", "IPython", "Htop" },
         keys = "<leader>t",
         event = "TermOpen",
@@ -617,9 +579,7 @@ local plugins = {
     {
         "norcalli/nvim-colorizer.lua",
         event = { "BufReadPost", "BufNewFile" },
-        config = function()
-            require("colorizer").setup()
-        end,
+        config = true,
     },
 
     {
@@ -686,9 +646,7 @@ local plugins = {
         "numToStr/Comment.nvim",
         event = "BufReadPost",
         keys = { { mode = "n", "gc" }, { mode = "n", "gb" }, { mode = "x", "gc" }, { mode = "x", "gb" } },
-        config = function()
-            require("Comment").setup()
-        end,
+        config = true,
     },
 
     {
@@ -700,9 +658,7 @@ local plugins = {
             { mode = "i", "<C-g>" },
             { mode = "x", "S" },
         },
-        config = function()
-            require("nvim-surround").setup()
-        end,
+        config = true,
     },
 
     {
@@ -755,7 +711,7 @@ local plugins = {
     },
 }
 
-require("lazy").setup(plugins)
+require("lazy").setup(plugins, { dev = { path = "~/usr/src" } })
 
 -- vim.opt.rtp:append({
 --     "/Users/laurenzi/usr/src/kanagawa.nvim",

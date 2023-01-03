@@ -12,9 +12,6 @@
 -- check telescope project for bookmarks
 -- maybe it's time for a session plugin
 -- check out sidebar-nvim/sidebar.nvim
--- switch from packer to folke/lazy.nvim
-
--- require("impatient")--.enable_profile()
 
 -- general configurations
 require("options")
@@ -41,4 +38,3 @@ require("win_ui_input")
 require("grep")
 require("marks")
 require("searchyank")
-

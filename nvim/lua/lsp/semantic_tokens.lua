@@ -1,37 +1,45 @@
 local M = {}
 
-local defined_hl = {}
-M.defined_hl = defined_hl
-
 local STHighlighter = vim.lsp.semantic_tokens.__STHighlighter
 
-local function chain_link_hl(hl_tbl, hl_name)
-    if defined_hl[hl_name] then
-        return
-    end
+M.hl_table = {}
+local bufnr_to_ft_cache = {}
+local hl_cache = {}
 
-    table.remove(hl_tbl)
-    local hl_base_name = next(hl_tbl) and "Lsp." .. table.concat(hl_tbl, ".") or nil
-
-    vim.api.nvim_set_hl(0, hl_name, { default = true, link = hl_base_name })
-    defined_hl[hl_name] = true
-
-    if hl_base_name then
-        chain_link_hl(hl_tbl, hl_base_name)
+function M.clear_cache()
+    for k, _ in pairs(hl_cache) do
+        hl_cache[k] = nil
     end
 end
 
-local function highlighter(token)
-    local hl
-    if token.modifiers then
-        hl = { token.type, unpack(token.modifiers) }
-    else
-        hl = { token.type }
+local function highlighter(token, bufnr)
+    local ft = bufnr_to_ft_cache[bufnr]
+    if not ft then
+        ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+        bufnr_to_ft_cache[bufnr] = ft
     end
-    local hl_name = "Lsp." .. table.concat(hl, ".")
+    local hl = { token.type, unpack(token.modifiers or {}) }
+    local hl_name = "@" .. table.concat(hl, ".") .. "." .. ft
 
-    chain_link_hl(hl, hl_name)
+    if hl_cache[hl_name] then
+        return hl_name
+    end
 
+    local hl_spec = {}
+    local priority = 0
+    for pattern, spec in pairs(M.hl_table) do
+        if string.match(hl_name, pattern) then
+            local spec_priority = spec.priority or 0
+            local mode = spec_priority > priority and "force" or "keep"
+            priority = spec_priority
+            hl_spec = vim.tbl_extend(mode, hl_spec, spec)
+        end
+    end
+    hl_spec.priority = nil
+    if next(hl_spec) then
+        vim.api.nvim_set_hl(0, hl_name, hl_spec)
+    end
+    hl_cache[hl_name] = true
     return hl_name
 end
 
@@ -110,7 +118,7 @@ function STHighlighter:on_win(topline, botline)
                     -- finishes, clangd sends a refresh request which lets the client
                     -- re-synchronize the tokens.
                     vim.api.nvim_buf_set_extmark(self.bufnr, state.namespace, token.line, token.start_col, {
-                        hl_group = highlighter(token),
+                        hl_group = highlighter(token, self.bufnr),
                         end_col = token.end_col,
                         priority = vim.highlight.priorities.semantic_tokens,
                         strict = false,
@@ -125,65 +133,69 @@ function STHighlighter:on_win(topline, botline)
     end
 end
 
+-- function M.make_highlights(hl_map)
+--     for name, spec in pairs(hl_map) do
+--         local hlname = name
+--         for k, v in pairs(spec) do
+--             if k == "hl" then
+--                 v.default = true
+--                 vim.api.nvim_set_hl(0, "@" .. name, v)
+--             else
+--                 hlname = name .. "." .. k
+--                 M.make_highlights({ [hlname] = v })
+--             end
+--         end
+--     end
+-- end
 
-function M.make_highlights(hl_map)
-    for key, val in pairs(hl_map) do
-        if type(val) == "table" then
-            for k, v in pairs(val) do
-                local name = key .. ((type(k) == "number" and "") or ("." .. k))
-                M.make_highlights({ [name] = v })
-            end
-        else
-            vim.api.nvim_set_hl(0, "Lsp." .. key, { link = val })
-        end
-    end
-end
+-- M.hl_map = {
+--     -- namespace = "@namespace",
+--     module = { hl = { link = "@variable" } },
+--     selfParameter = { hl = { link = "@variable.builtin" } },
+--     builtinConstant = { hl = { link = "Special" } },
+--     variable = {
+--         hl = {},
+--         global = { hl = { link = "@constant" } },
+--         static = { hl = { link = "@constant" } },
+--         readonly = { hl = { link = "@constant" } },
+--         declaration = { readonly = { hl = { link = "@constant" } } },
+--         defaultLibrary = { hl = { link = "Special" } },
+--         builtin = { hl = { link = "Special" } },
+--     },
+--     ["function"] = {
+--         hl = { link = "Function" },
+--         defaultLibrary = { hl = { link = "Special" } },
+--         builtin = { hl = { link = "Special" } },
+--         static = { hl = { link = "@function" } },
+--     },
+--     magicFunction = { hl = { link = "Special" } },
+--     keyword = {
+--         hl = { link = "@keyword" },
+--         documentation = { hl = { link = "@attribute" } },
+--     },
+--     operator = { controlFlow = { hl = { link = "@exception" } } },
+-- }
 
---TODO:
-M.hl_map = {
-    namespace = "@namespace",
-    -- module = "",
-    type = "@type",
-    class = "@type",
-    enum = "@field",
-    interface = "@type",
-    struct = "@type",
-    typeParameter = "@parameter",
-    parameter = "@parameter",
-    selfParameter = "@variable.builtin",
-    builtinConstant = "Special",
-    variable = {
-        -- "@variable",
-        global = "@constant",
-        static = "@constant",
-        readonly = "@constant",
-        defaultLibrary = "Special",
-        builtin = "Special",
-    },
-    property = "@property",
-    enumMember = "@field",
-    event = "@type",
-    ["function"] = {
-        "@function",
-        defaultLibrary = "Special",
-        builtin = "Special",
-        static = "@function",
-    },
-    magicFunction = "Special",
-    method = "@method",
-    macro = "@preproc",
-    keyword = {
-        "@keyword",
-        documentation = "@attribute",
-    },
-    -- modifier = "LspModifier",
-    -- comment = "@comment",
-    string = "@string",
-    number = "@number",
-    regexp = "@string.regex",
-    operator = { "@operator", controlFlow = "@exception" },
+-- M.make_highlights(M.hl_map)
+M.hl_table = {
+    module = { link = "@variable" },
+    selfParameter = { link = "@variable.builtin" },
+    builtinConstant = { link = "Special" },
+    ["@variable.*global"] = { link = "@constant" },
+    ["@variable.*static"] = { link = "@constant" },
+    ["@variable.*readonly"] = { link = "@constant" },
+    ["@variable.*defaultLibrary"] = { link = "Special" },
+    ["@variable.*builtin"] = { link = "Special" },
+
+    ["@function.*defaultLibrary"] = { link = "Special" },
+    ["@method.*defaultLibrary"] = { link = "Special" },
+    ["@function.*builtin"] = { link = "Special" },
+    magicFunction = { link = "Special" },
+    ["@keyword.*documentation"] = { link = "@attribute" },
+    ["@operator.*controlFlow"] = { link = "@exception" },
+    readonly = { link = "@constant" },
+    -- builtin = { link = "Special" },
+    -- defaultLibrary = { link = "Special" },
 }
-
-M.make_highlights(M.hl_map)
 
 return M

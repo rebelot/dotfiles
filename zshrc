@@ -23,7 +23,7 @@ export PATH="$HOME/.npm-packages/bin:$PATH"                   # (node installer)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
 source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
-[[ -z $TMUX ]] || conda deactivate; conda activate py310      #   + TMUX fix
+[[ -z $TMUX ]] || conda deactivate; conda activate py311      #   + TMUX fix
 source "$HOME/venvs/base/bin/activate"                        # <-- Activate the Python
 # }}}
 
