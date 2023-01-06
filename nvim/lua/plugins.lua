@@ -306,6 +306,21 @@ local plugins = {
 
     {
         "kyazdani42/nvim-tree.lua",
+        init = function()
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "VeryLazy",
+                callback = function()
+                    for _, arg in ipairs(vim.fn.argv(-1)) do
+                        if vim.fn.isdirectory(arg) == 1 then
+                            vim.cmd("Lazy! load nvim-tree.lua")
+                            break
+                        end
+                    end
+                end,
+            })
+        end,
+        cmd = {"NvimTreeToggle", "NvimTreeFindFile"},
+        keys = {"<leader>nt", "<leader>nf"},
         config = function()
             require("plugins.nvim-tree")
         end,
