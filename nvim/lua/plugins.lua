@@ -35,16 +35,9 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    "nvim-lua/plenary.nvim",
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
-
-    {
-        "tami5/sqlite.lua",
-        init = function()
-            vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
-        end,
-    },
 
     --------------------------------------------
     -- LSP, Diagnostics, Snippets, Completion --
@@ -76,7 +69,7 @@ local plugins = {
 
     {
         "j-hui/fidget.nvim",
-        event = { "BufReadPost" },
+        event = "LspAttach",
         config = true,
     },
 
@@ -307,20 +300,17 @@ local plugins = {
     {
         "kyazdani42/nvim-tree.lua",
         init = function()
-            vim.api.nvim_create_autocmd("User", {
-                pattern = "VeryLazy",
-                callback = function()
-                    for _, arg in ipairs(vim.fn.argv(-1)) do
-                        if vim.fn.isdirectory(arg) == 1 then
-                            vim.cmd("Lazy! load nvim-tree.lua")
-                            break
-                        end
+            vim.api.nvim_create_autocmd("BufEnter", {
+                callback = function(args)
+                    if vim.fn.isdirectory(args.match) == 1 then
+                        require("lazy").load({ plugins = "nvim-tree.lua" })
+                        return true
                     end
                 end,
             })
         end,
-        cmd = {"NvimTreeToggle", "NvimTreeFindFile"},
-        keys = {"<leader>nt", "<leader>nf"},
+        cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
+        keys = { "<leader>nt", "<leader>nf" },
         config = function()
             require("plugins.nvim-tree")
         end,
@@ -328,12 +318,18 @@ local plugins = {
 
     {
         "nvim-telescope/telescope.nvim",
-        keys = { "<leader>f" },
+        keys = { "<leader>f", "<leader><space>", "<leader>k", "<leader>T" },
         cmd = "Telescope",
         dependencies = {
             {
                 "nvim-telescope/telescope-frecency.nvim",
-                lazy = true,
+                dependencies = {
+                    "tami5/sqlite.lua",
+                    init = function()
+                        vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
+                    end,
+                },
+
                 config = function()
                     vim.keymap.set(
                         "n",
@@ -345,7 +341,6 @@ local plugins = {
             },
             {
                 "nvim-telescope/telescope-file-browser.nvim",
-                lazy = true,
                 config = function()
                     vim.keymap.set(
                         "n",
@@ -357,7 +352,15 @@ local plugins = {
             },
             "nvim-telescope/telescope-fzf-native.nvim",
             "nvim-telescope/telescope-dap.nvim",
-            "nvim-telescope/telescope-ui-select.nvim",
+            {
+                "nvim-telescope/telescope-ui-select.nvim",
+                init = function()
+                    vim.ui.select = function(...)
+                        require("lazy").load({ plugins = { "telescope.nvim" } })
+                        vim.ui.select(...)
+                    end
+                end,
+            },
         },
         config = function()
             require("plugins.telescope")
@@ -603,7 +606,13 @@ local plugins = {
 
     {
         "rcarriga/nvim-notify",
-        event = "VeryLazy",
+        lazy = true,
+        init = function()
+            vim.notify = function(...)
+                require("lazy").load({ plugins = { "nvim-notify" } })
+                vim.notify(...)
+            end
+        end,
         config = function()
             local notify = require("notify")
             notify.setup({

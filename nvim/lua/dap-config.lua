@@ -1,6 +1,4 @@
 local dap = require("dap")
-local dapui = require("dapui")
-local dap_virtual_text = require("nvim-dap-virtual-text")
 
 local map = vim.keymap.set
 local fn = vim.fn
@@ -19,48 +17,48 @@ fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", lineh
 fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "Error" })
 
 -- mappings
-map("n", "<leader>dC", require("dap").continue, { desc = "DAP: Continue" })
-map("n", "<leader>db", require("dap").toggle_breakpoint, { desc = "DAP: Toggle breackpoint" })
-
+map("n", "<leader>dC", dap.continue, { desc = "DAP: Continue" })
+map("n", "<leader>db", dap.toggle_breakpoint, { desc = "DAP: Toggle breackpoint" })
 map("n", "<leader>dB", function()
-    require("dap").set_breakpoint(fn.input("Breakpoint condition: "))
+    dap.set_breakpoint(fn.input("Breakpoint condition: "))
 end, { desc = "DAP: Set breakpoint" })
+map("n", "<leader>do", dap.step_over, { desc = "DAP: Step over" })
+map("n", "<leader>dO", dap.step_out, { desc = "DAP: Step out" })
+map("n", "<leader>dn", dap.step_into, { desc = "DAP: Step into" })
+map("n", "<leader>dN", dap.step_back, { desc = "DAP: Step back" })
+map("n", "<leader>dr", dap.repl.toggle, { desc = "DAP: Toggle REPL" })
+map("n", "<leader>d.", dap.goto_, { desc = "DAP: Go to" })
+map("n", "<leader>dh", dap.run_to_cursor, { desc = "DAP: Run to cursor" })
+map("n", "<leader>de", dap.set_exception_breakpoints, { desc = "DAP: Set exception breakpoints" })
 
-map("n", "<leader>do", require("dap").step_over, { desc = "DAP: Step over" })
-map("n", "<leader>dO", require("dap").step_out, { desc = "DAP: Step out" })
-map("n", "<leader>dn", require("dap").step_into, { desc = "DAP: Step into" })
-map("n", "<leader>dN", require("dap").step_back, { desc = "DAP: Step back" })
-map("n", "<leader>dr", require("dap").repl.toggle, { desc = "DAP: Toggle REPL" })
-map("n", "<leader>d.", require("dap").goto_, { desc = "DAP: Go to" })
-map("n", "<leader>dh", require("dap").run_to_cursor, { desc = "DAP: Run to cursor" })
-map("n", "<leader>de", require("dap").set_exception_breakpoints, { desc = "DAP: Set exception breakpoints" })
 map("n", "<leader>dv", function()
     require("telescope").extensions.dap.variables()
 end, { desc = "DAP-Telescope: Variables" })
-
 map("n", "<leader>dc", function()
     require("telescope").extensions.dap.commands()
 end, { desc = "DAP-Telescope: Commands" })
 
-map({ "n", "x" }, "<leader>dx", require("dapui").eval, { desc = "DAP-UI: Eval" })
+map({ "n", "x" }, "<leader>dx", function()
+    require("dapui").eval()
+end, { desc = "DAP-UI: Eval" })
 
 map("n", "<leader>dX", function()
-    dapui.eval(fn.input("expression: "), {})
+    require("dapui").eval(fn.input("expression: "), {})
 end, { desc = "DAP-UI: Eval expression" })
 
 --
 
 dap.listeners.after.event_initialized["dapui"] = function()
-    dapui.open({})
+    require("dapui").open({})
 end
 dap.listeners.after.event_terminated["dapui"] = function()
-    dapui.close({})
-    dap_virtual_text.refresh()
+    require("dapui").close({})
+    require("dap_virtual_text").refresh()
     vim.cmd("silent! bd! \\[dap-repl]")
 end
 dap.listeners.before.event_exited["dapui"] = function()
-    dapui.close({})
-    dap_virtual_text.refresh()
+    require("dapui").close({})
+    require("dap_virtual_text").refresh()
     vim.cmd("silent! bd! \\[dap-repl]")
 end
 
@@ -188,7 +186,7 @@ table.insert(dap.configurations.cpp, {
     program = function()
         return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
     end,
-    MIMode = 'lldb',
+    MIMode = "lldb",
     cwd = "${workspaceFolder}",
     stopAtEntry = true,
     setupCommands = {
@@ -203,7 +201,7 @@ table.insert(dap.configurations.cpp, {
     name = "attach PID (cpptools)",
     type = "cppdbg",
     request = "attach",
-    MIMode = 'lldb',
+    MIMode = "lldb",
     pid = require("dap.utils").pick_process,
 })
 

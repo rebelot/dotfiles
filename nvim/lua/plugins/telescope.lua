@@ -1,7 +1,8 @@
+local map = vim.keymap.set
 local actions = require("telescope.actions")
 local actions_layout = require("telescope.actions.layout")
 local action_state = require("telescope.actions.state")
-local previewers = require("telescope.previewers")
+-- local previewers = require("telescope.previewers")
 local themes = require("telescope.themes")
 local trouble = require("trouble.providers.telescope")
 local transform_mod = require("telescope.actions.mt").transform_mod
@@ -208,39 +209,40 @@ require("telescope").setup({
             depth = 3,
             mappings = {
                 i = {
-                    ["<CR>"] = custom_actions.multi_selection_open
-                }
-            }
+                    ["<CR>"] = custom_actions.multi_selection_open,
+                },
+            },
         },
         ["ui-select"] = themes.get_dropdown(),
     },
 })
 
-vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, { desc = "Telescope: Find files" })
-vim.keymap.set(
+map("n", "<leader>ff", require("telescope.builtin").find_files, { desc = "Telescope: Find files" })
+map(
     "n",
     "<leader>fl",
     require("telescope.builtin").current_buffer_fuzzy_find,
     { desc = "Telescope: Find current buffer" }
 )
-vim.keymap.set("n", "<leader>fq", require("telescope.builtin").quickfix, { desc = "Telescope: Quickfix" })
-vim.keymap.set("n", "<leader>fh", require("telescope.builtin").oldfiles, { desc = "Telescope: Old files" })
-vim.keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, { desc = "Telescope: Buffers" })
-vim.keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, { desc = "Telescope: Live Grep" })
-vim.keymap.set("n", "<leader>fG", function()
+map("n", "<leader>fq", require("telescope.builtin").quickfix, { desc = "Telescope: Quickfix" })
+map("n", "<leader>fh", require("telescope.builtin").oldfiles, { desc = "Telescope: Old files" })
+map("n", "<leader>fb", require("telescope.builtin").buffers, { desc = "Telescope: Buffers" })
+map("n", "<leader>fg", require("telescope.builtin").live_grep, { desc = "Telescope: Live Grep" })
+map("n", "<leader>fG", function()
     require("telescope.builtin").live_grep({ grep_open_files = true })
 end, { desc = "Telescope: Live Grep open_files" })
-vim.keymap.set("n", "<leader><space>", require("telescope.builtin").commands, { desc = "Telescope: Commands" })
-vim.keymap.set("n", "<leader>ft", require("telescope.builtin").treesitter, { desc = "Telescope: Treesitter" })
-vim.keymap.set("n", "<leader>fj", require("telescope.builtin").jumplist, { desc = "Telescope: Jump list" })
-vim.keymap.set("n", "<leader>T", function()
+map("n", "<leader><space>", require("telescope.builtin").commands, { desc = "Telescope: Commands" })
+map("n", "<leader>ft", require("telescope.builtin").treesitter, { desc = "Telescope: Treesitter" })
+map("n", "<leader>fj", require("telescope.builtin").jumplist, { desc = "Telescope: Jump list" })
+map("n", "<leader>k", require("telescope.builtin").keymaps, { desc = "Telescope: Keymaps" })
+map("n", "<leader>T", function()
     require("telescope.builtin").builtin({ include_extensions = true })
 end, { desc = "Telescope: List pickers" })
-vim.keymap.set("n", "<leader>z", require("telescope.builtin").spell_suggest, { desc = "Telescope: Spell suggestions" })
-vim.keymap.set("n", "<leader>fm", require("telescope.builtin").marks, { desc = "Telescope: Marks" })
-vim.keymap.set("n", '<leader>t"', require("telescope.builtin").registers, { desc = "Telescope: Registers" })
+map("n", "<leader>z", require("telescope.builtin").spell_suggest, { desc = "Telescope: Spell suggestions" })
+map("n", "<leader>fm", require("telescope.builtin").marks, { desc = "Telescope: Marks" })
+map("n", '<leader>t"', require("telescope.builtin").registers, { desc = "Telescope: Registers" })
 
 vim.api.nvim_create_user_command("FindFiles", function(args)
     require("telescope.builtin").find_files({ cwd = args.args })
 end, { nargs = "?", complete = "dir", desc = "Telescope: Find files" })
-vim.keymap.set("n", "<leader>fF", ":FindFiles ", { desc = "Telescope: Find files (directory)" })
+map("n", "<leader>fF", ":FindFiles ", { desc = "Telescope: Find files (directory)" })

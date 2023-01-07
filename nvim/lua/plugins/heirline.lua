@@ -1,6 +1,5 @@
 local conditions = require("heirline.conditions")
 local utils = require("heirline.utils")
-local constructors = require("heirline.constructors")
 
 --- Blend two rgb colors using alpha
 ---@param color1 string | number first color
@@ -621,7 +620,7 @@ local Spell = {
 
 local SearchCount = {
     condition = function()
-        return vim.v.hlsearch ~= 0
+        return vim.v.hlsearch ~= 0 and vim.o.cmdheight == 0
     end,
     init = function(self)
         local ok, search = pcall(vim.fn.searchcount)
@@ -631,7 +630,7 @@ local SearchCount = {
     end,
     provider = function(self)
         local search = self.search
-        return string.format("%d/%d", search.current, math.min(search.total, search.maxcount))
+        return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
     end,
     -- {
     --     provider = function(self)
@@ -800,7 +799,6 @@ local CloseButton = {
 }
 
 local WinBar = {
-    -- init = utils.pick_child_on_condition,
     fallthrough = false,
     {
         condition = function()
