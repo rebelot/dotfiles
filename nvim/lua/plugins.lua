@@ -23,6 +23,12 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
+-- local function defer(func, timeout)
+--     return function()
+--         vim.defer_fn(func, timeout)
+--     end
+-- end
+
 -- Bootstrap
 ------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -46,7 +52,7 @@ local plugins = {
     {
         "neovim/nvim-lspconfig",
         -- lazy = false,
-        event = "BufReadPre",
+        event = { "BufRead", "BufNewFile" },
         cmd = "Mason",
         dependencies = {
             "williamboman/mason.nvim",
@@ -61,7 +67,7 @@ local plugins = {
 
     {
         "jose-elias-alvarez/null-ls.nvim",
-        event = { "BufReadPost", "BufNewFile" },
+        event = { "BufRead", "BufNewFile" },
         config = function()
             require("lsp.null-ls")
         end,
@@ -191,11 +197,11 @@ local plugins = {
 
     {
         "zbirenbaum/copilot.lua",
-        event = "BufReadPre",
+        event = { "BufRead", "BufNewFile" },
         config = function()
             vim.schedule(function()
                 require("copilot").setup({
-                    ft_disable = { "julia", "dap-repl" },
+                    ft_disable = { "julia", "dap-repl", "terminal" },
                     suggestion = {
                         keymap = {
                             accept = "<M-CR>",
@@ -206,6 +212,21 @@ local plugins = {
                     },
                 })
             end)
+        end,
+    },
+    {
+        "jackMort/ChatGPT.nvim",
+        cmd = { "ChatGPT", "ChatGPTEditWithInstructions", "ChatGPTActAs" },
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+        },
+        config = function()
+            local f = io.open(vim.fn.expand("$XDG_CONFIG_HOME") .. "/openai")
+            if f then
+                vim.env.OPENAI_API_KEY = f:read()
+                f:close()
+                require("chatgpt").setup({})
+            end
         end,
     },
 
@@ -435,7 +456,8 @@ local plugins = {
     {
         "uga-rosa/ccc.nvim",
         cmd = "CccPick",
-        config = { bar_len = 60 },
+        opts = { bar_len = 60 },
+        config = true,
     },
 
     --------------------------
@@ -508,7 +530,8 @@ local plugins = {
     {
         "theHamsta/nvim-dap-virtual-text",
         lazy = true,
-        config = {
+        config = true,
+        opts = {
             enabled_commands = true,
             highlight_changed_variables = true,
             highlight_new_as_changed = true,
@@ -721,8 +744,8 @@ local plugins = {
     ----------
     {
         "benmills/vimux",
-        -- keys = '<leader>v',
-        -- cmd = {'VimuxPromptCommand', 'VimuxOpenRunner'},
+        keys = { { "<leader>vp" }, { mode = "x", "<leader>vs" } },
+        cmd = { "VimuxPromptCommand", "VimuxOpenRunner" },
         config = function()
             vim.cmd([[
             function! VimuxSlime()

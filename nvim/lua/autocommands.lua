@@ -114,6 +114,7 @@ autocmd('CmdwinEnter', {
 
 autocmd("TermOpen", {
     callback = function(args)
+        vim.bo.ft = 'terminal'
         vim.cmd([[setlocal nonumber norelativenumber winhl=Normal:NormalFloat]])
         if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
             vim.cmd("startinsert")

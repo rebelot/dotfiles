@@ -83,7 +83,6 @@ function STHighlighter:on_win(topline, botline)
                         hl_group = highlighter(token, self.bufnr),
                         end_col = token.end_col,
                         priority = vim.highlight.priorities.semantic_tokens,
-                        right_gravity = false,
                         end_right_gravity = true,
                         strict = false,
                     })

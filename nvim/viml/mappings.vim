@@ -17,7 +17,7 @@ onoremap <S-CR> -
 " noremap <M-S-M> M
 
 "nnore fast [e]dit and [s]ourcing .[v]imrc
-nnoremap <leader>ev :edit $MYVIMRC<CR>
+" nnoremap <leader>ev :edit $MYVIMRC<CR>
 " nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
 " clear search highlighting
@@ -28,6 +28,8 @@ nnoremap <leader>ev :edit $MYVIMRC<CR>
 " inoremap kj <Esc>
 
 " Better <C-r>
+" Surround a word witht text: ciwTEXT<C-'>TEXT
+inoremap <C-'> <C-r><C-o>"
 inoremap <C-r> <C-r><C-o>
 inoremap <C-r><C-o> <C-r>
 
@@ -50,10 +52,10 @@ nnoremap <c-w>S :bo split<cr>
 nnoremap <c-w>V :bo vert split<cr>
 
 tnoremap <c-\><c-\> <c-\><c-n>
-tnoremap <c-h> <c-\><c-n><c-w>h
-tnoremap <c-j> <c-\><c-n><c-w>j
-tnoremap <c-k> <c-\><c-n><c-w>k
-tnoremap <c-l> <c-\><c-n><c-w>l
+" tnoremap <c-h> <c-\><c-n><c-w>h
+" tnoremap <c-j> <c-\><c-n><c-w>j
+" tnoremap <c-k> <c-\><c-n><c-w>k
+" tnoremap <c-l> <c-\><c-n><c-w>l
 
 " Vertical/Horizontal Scrolling
 noremap <m-l> zl
@@ -232,6 +234,7 @@ vnoremenu PopUp.Delete        "_x
 nnoremenu PopUp.Select\ All>  ggVG
 vnoremenu PopUp.Select\ All>  gg0oG$
 inoremenu PopUp.Select\ All   <C-Home><C-O>VG
+nnoremenu PopUp.Inspect       :Inspect<CR>
 inoremenu PopUp.Expression    <c-r>=
 anoremenu PopUp.-1-           <Nop>
 nnoremenu PopUp.LSP          <cmd>popup LSP<cr>
