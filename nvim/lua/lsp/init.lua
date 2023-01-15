@@ -162,7 +162,7 @@ local on_attach = function(client, bufnr)
     end
 end
 
-M = {}
+local M = {}
 M.default_on_attach = on_attach
 M.default_capabilities = capabilities
 M.borders = borders

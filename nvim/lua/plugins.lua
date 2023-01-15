@@ -217,6 +217,7 @@ local plugins = {
     {
         "jackMort/ChatGPT.nvim",
         cmd = { "ChatGPT", "ChatGPTEditWithInstructions", "ChatGPTActAs" },
+        -- enabled = false,
         dependencies = {
             "MunifTanjim/nui.nvim",
         },
@@ -448,6 +449,7 @@ local plugins = {
         "rebelot/heirline.nvim",
         dev = true,
         event = "UiEnter",
+        enabled = true,
         config = function()
             require("plugins.heirline")
         end,

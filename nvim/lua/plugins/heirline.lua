@@ -251,7 +251,7 @@ local LSPActive = {
     -- Or complicate things a bit and get the servers names
     -- provider  = function(self)
     --     local names = {}
-    --     for i, server in pairs(vim.lsp.buf_get_clients(0)) do
+    --     for i, server in pairs(vim.lsp.buf_get_active_clients({ bufnr = 0 })) do
     --         table.insert(names, server.name)
     --     end
     --     return " [" .. table.concat(names, " ") .. "]"
@@ -1062,7 +1062,65 @@ local TabLine = {
     TabPages,
 }
 
-require("heirline").setup(StatusLines, WinBar, TabLine)
+local Stc = {
+    {
+        provider = "%s",
+        static = {
+            resolve = function(self, name)
+                for pat, cb in pairs(self.handlers) do
+                    if name:match(pat) then
+                        return cb
+                    end
+                end
+            end,
+
+            handlers = {
+                ["GitSigns.*"] = function(args)
+                    require'gitsigns'.preview_hunk_inline()
+                end,
+                ["Dap.*"] = function(args)
+                    require("dap").toggle_breakpoint()
+                end,
+                ["Diagnostic.*"] = function(args)
+                    vim.diagnostic.open_float() -- { pos = args.mousepos.line - 1, relative = "mouse" })
+                end,
+            },
+        },
+        on_click = {
+            callback = function(self, ...)
+                local mousepos = vim.fn.getmousepos()
+                vim.api.nvim_win_set_cursor(0, { mousepos.line, mousepos.column })
+                local sign_at_cursor = vim.fn.screenstring(mousepos.screenrow, mousepos.screencol)
+                if sign_at_cursor ~= "" then
+                    local args = {
+                        mousepos = mousepos,
+                    }
+                    local signs = vim.fn.sign_getdefined()
+                    for _, sign in ipairs(signs) do
+                        local glyph = sign.text:gsub(" ", "")
+                        if sign_at_cursor == glyph then
+                            vim.defer_fn(function()
+                                self:resolve(sign.name)(args)
+                            end, 10)
+                            return
+                        end
+                    end
+                end
+            end,
+            name = "heirline_signcol_callback",
+            update = true,
+        },
+    },
+    {
+        provider = "%=%4{v:wrap ? '' : &nu ? (&rnu && v:relnum ? v:relnum : v:lnum) : ''}",
+    },
+    {
+        provider = "%C "
+    },
+}
+
+require("heirline").setup({ statusline = StatusLines, winbar = WinBar, tabline = TabLine, statuscolumn = Stc })
+vim.o.statuscolumn = require'heirline'.eval_statuscolumn()
 
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 
@@ -1083,7 +1141,7 @@ vim.api.nvim_create_autocmd("User", {
         local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
         local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
         if buftype or filetype then
-            vim.opt_local.winbar = nil
+            args.data.ok = false
         end
     end,
     group = "Heirline",
