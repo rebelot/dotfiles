@@ -50,15 +50,16 @@ end, { desc = "DAP-UI: Eval expression" })
 
 dap.listeners.after.event_initialized["dapui"] = function()
     require("dapui").open({})
+    require("nvim-dap-virtual-text").refresh()
 end
 dap.listeners.after.event_terminated["dapui"] = function()
     require("dapui").close({})
-    require("dap_virtual_text").refresh()
+    require("nvim-dap-virtual-text").refresh()
     vim.cmd("silent! bd! \\[dap-repl]")
 end
 dap.listeners.before.event_exited["dapui"] = function()
     require("dapui").close({})
-    require("dap_virtual_text").refresh()
+    require("nvim-dap-virtual-text").refresh()
     vim.cmd("silent! bd! \\[dap-repl]")
 end
 
@@ -218,4 +219,3 @@ dap.configurations.rust = dap.configurations.cpp
 -- `${workspaceFolder}`: The current working directory of Neovim
 -- `${workspaceFolderBasename}`: The name of the folder opened in Neovim
 -- `${command:pickProcess}`: Open dialog to pick process using |vim.ui.select|
-return M

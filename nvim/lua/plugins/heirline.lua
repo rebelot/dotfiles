@@ -632,18 +632,20 @@ local SearchCount = {
         local search = self.search
         return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
     end,
-    -- {
-    --     provider = function(self)
-    --         return self.search.current
-    --     end,
-    --     hl = { bold = true }
-    -- },
-    -- {
-    --     provider = function(self)
-    --         return "/" .. math.min(self.search.total, self.search.maxcount)
-    --     end,
-    --     hl = { fg = "grey", bold = true }
-    -- },
+}
+
+local MacroRec = {
+    condition = function()
+        return vim.fn.reg_recording() ~= "" and vim.o.cmdheight == 0
+    end,
+    provider = " ",
+    hl = { fg = "orange", bold = true },
+    utils.surround({ "[", "]" }, nil, {
+        provider = function()
+            return vim.fn.reg_recording()
+        end,
+        hl = { fg = "green", bold = true },
+    }),
 }
 
 ViMode = utils.surround({ "", "" }, "bright_bg", { ViMode, Snippets })
@@ -654,6 +656,7 @@ local Space = { provider = " " }
 local DefaultStatusline = {
     ViMode,
     SearchCount,
+    MacroRec,
     Space,
     Spell,
     WorkDir,
@@ -1063,29 +1066,61 @@ local TabLine = {
 }
 
 local Stc = {
+    static = {
+        ---@return {name:string, text:string, texthl:string}[]
+        get_signs = function()
+            -- local buf = vim.api.nvim_get_current_buf()
+            local buf = vim.fn.expand("%")
+            return vim.tbl_map(function(sign)
+                return vim.fn.sign_getdefined(sign.name)[1]
+            end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
+        end,
+
+        resolve = function(self, name)
+            for pat, cb in pairs(self.handlers) do
+                if name:match(pat) then
+                    return cb
+                end
+            end
+        end,
+
+        handlers = {
+            ["GitSigns.*"] = function(args)
+                require("gitsigns").preview_hunk_inline()
+            end,
+            ["Dap.*"] = function(args)
+                require("dap").toggle_breakpoint()
+            end,
+            ["Diagnostic.*"] = function(args)
+                vim.diagnostic.open_float() -- { pos = args.mousepos.line - 1, relative = "mouse" })
+            end,
+        },
+    },
+    -- init = function(self)
+    --     local signs = {}
+    --     for _, s in ipairs(self.get_signs()) do
+    --         if s.name:find("GitSign") then
+    --             self.git_sign = s
+    --         else
+    --             table.insert(signs, s)
+    --         end
+    --     end
+    --     self.signs = signs
+    -- end,
     {
         provider = "%s",
-        static = {
-            resolve = function(self, name)
-                for pat, cb in pairs(self.handlers) do
-                    if name:match(pat) then
-                        return cb
-                    end
-                end
-            end,
+        -- provider = function(self)
+        --     -- return vim.inspect({ self.signs, self.git_sign })
+        --     local children = {}
+        --     for _, sign in ipairs(self.signs) do
+        --         table.insert(children, {
+        --             provider = sign.text,
+        --             hl = sign.texthl,
+        --         })
+        --     end
+        --     self[1] = self:new(children, 1)
+        -- end,
 
-            handlers = {
-                ["GitSigns.*"] = function(args)
-                    require'gitsigns'.preview_hunk_inline()
-                end,
-                ["Dap.*"] = function(args)
-                    require("dap").toggle_breakpoint()
-                end,
-                ["Diagnostic.*"] = function(args)
-                    vim.diagnostic.open_float() -- { pos = args.mousepos.line - 1, relative = "mouse" })
-                end,
-            },
-        },
         on_click = {
             callback = function(self, ...)
                 local mousepos = vim.fn.getmousepos()
@@ -1112,27 +1147,42 @@ local Stc = {
         },
     },
     {
-        provider = "%=%4{v:wrap ? '' : &nu ? (&rnu && v:relnum ? v:relnum : v:lnum) : ''}",
+        provider = "%=%4{v:virtnum ? '' : &nu ? (&rnu && v:relnum ? v:relnum : v:lnum) . ' ' : ''}",
     },
     {
-        provider = "%C "
+        provider = "%{% &fdc ? '%C ' : '' %}",
     },
+    -- {
+    --     provider = function(self)
+    --         return self.git_sign and self.git_sign.text
+    --     end,
+    --     hl = function(self)
+    --         return self.git_sign and self.git_sign.texthl
+    --     end,
+    -- },
 }
 
 require("heirline").setup({ statusline = StatusLines, winbar = WinBar, tabline = TabLine, statuscolumn = Stc })
-vim.o.statuscolumn = require'heirline'.eval_statuscolumn()
+vim.o.statuscolumn = require("heirline").eval_statuscolumn()
 
 vim.api.nvim_create_augroup("Heirline", { clear = true })
 
 vim.cmd([[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])
-vim.o.showtabline = 2
 
--- vim.api.nvim_create_autocmd({ "WinNew" }, {
---     callback = function()
---         vim.api.nvim_exec_autocmds("User", { pattern = "HeirlineInitWinbar", modeline = false })
---     end,
---     group = "Heirline",
--- })
+vim.cmd("au BufWinEnter * if &bt != '' | setl stc= | endif")
+vim.api.nvim_create_autocmd("BufWinEnter,FileType", {
+    callback = function(args)
+        local buf = args.buf
+        local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
+        local filetype =
+            vim.tbl_contains({ "NvimTree", "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
+        if buftype or filetype then
+            -- vim.opt_local.statuscolumn = ""
+            vim.opt_local.signcolumn = "no"
+        end
+    end,
+    group = "Heirline",
+})
 
 vim.api.nvim_create_autocmd("User", {
     pattern = "HeirlineInitWinbar",

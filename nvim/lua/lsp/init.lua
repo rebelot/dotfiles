@@ -45,7 +45,7 @@ require("lsp.semantic_tokens").setup({
     ["@method.*defaultLibrary"] = { link = "Special" },
     ["@function.*builtin"] = { link = "Special" },
     magicFunction = { link = "Special" },
-    ["@keyword.*documentation"] = { link = "@attribute" },
+    -- ["@keyword.*documentation"] = { link = "@attribute" },
     ["@operator.*controlFlow"] = { link = "@exception" },
     readonly = { link = "@constant" },
     -- builtin = { link = "Special" },

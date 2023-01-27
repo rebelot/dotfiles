@@ -1,9 +1,5 @@
-local db = require("dashboard")
 local version = vim.version()
-
-db.session_directory = vim.fn.stdpath("data") .. "/sessions"
-
-db.custom_header = {
+local header = {
     "            :h-                                  Nhy`               ",
     "           -mh.                           h.    `Ndho               ",
     "           hmh+                          oNm.   oNdhh               ",
@@ -39,96 +35,87 @@ db.custom_header = {
     "                           yNh/..------..`                          ",
     "                                                                    ",
     "N E O V I M - v " .. version.major .. "." .. version.minor,
+    "",
 }
 
 local icon_color = "Function"
-db.custom_center = {
+local center = {
     {
         desc = "Find File                     ",
-        shortcut = "f",
+        key = "f",
         icon = "  ",
-        icon_hl = { link = icon_color },
         action = "Telescope find_files",
     },
     {
         desc = "Recents                       ",
-        shortcut = "r",
+        key = "r",
         icon = "  ",
-        icon_hl = { link = icon_color },
         action = "Telescope oldfiles",
     },
 
     {
         desc = "Browse Files                  ",
-        shortcut = ".",
+        key = ".",
         icon = "  ",
-        icon_hl = { link = icon_color },
-        action = "Telescope file_browser"
+        action = "Telescope file_browser",
     },
     -- { shortcut = "<leader>fg", icon = " ", desc = "Find Word", action = "Telescope live_grep" },
 
     {
         desc = "New File                      ",
-        shortcut = "n",
+        key = "n",
         icon = "  ",
-        icon_hl = { link = icon_color },
-        action = "DashboardNewFile",
+        action = "enew",
     },
 
     -- { shortcut = "<leader>fm", icon = " ", desc = "Bookmark", action = "Telescope marks" },
     {
         desc = "Load Last Session             ",
-        shortcut = "L",
+        key = "L",
         icon = "  ",
-        icon_hl = { link = icon_color },
         action = "SessionLoad",
     },
 
     {
         desc = "Update Plugins                ",
-        shortcut = "u",
+        key = "u",
         icon = "  ",
-        icon_hl = { link = icon_color },
         action = "Lazy update",
     },
     {
-        desc = "Setting                       ",
-        shortcut = "s",
+        desc = "Config                        ",
+        key = "s",
         icon = "  ",
-        icon_hl = { link = icon_color },
-        action = "edit $MYVIMRC",
+        action = "Telescope find_files cwd=~/.config/nvim",
     },
     {
         desc = "Exit                          ",
-        shortcut = "q",
+        key = "q",
         icon = "  ",
-        icon_hl = { link = icon_color },
         action = "exit",
     },
 }
 
-db.custom_footer = { "type  :help<Enter>  or  <F1>  for on-line help" }
+local custom_footer = { "type  :help<Enter>  or  <F1>  for on-line help" }
 
-
-vim.api.nvim_create_autocmd('Filetype', {
-    pattern = 'dashboard',
-    group = vim.api.nvim_create_augroup('Dashboard_au', { clear = true }),
+vim.api.nvim_create_autocmd("Filetype", {
+    pattern = "dashboard",
+    group = vim.api.nvim_create_augroup("Dashboard_au", { clear = true }),
     callback = function()
-        vim.cmd [[
-            hi! link DashboardFooter NonText
+        vim.cmd([[
             setlocal buftype=nofile
             setlocal nonumber norelativenumber nocursorline noruler
-            nnoremap <buffer> f <cmd>Telescope find_files<CR>
-            nnoremap <buffer> r <cmd>Telescope oldfiles<CR>
-            nnoremap <buffer> . <cmd>Telescope file_browser<CR>
-            nnoremap <buffer> n <cmd>DashboardNewFile<CR>
-            nnoremap <buffer> <leader>en <cmd>DashboardNewFile<CR>
-            nnoremap <buffer> L <cmd>SessionLoad<CR>
-            nnoremap <buffer> u <cmd>Lazy update<CR>
-            nnoremap <buffer> s <cmd>edit $MYVIMRC<CR>
-            nnoremap <buffer> q <cmd>exit<CR>
-        ]]
-    end
+        ]])
+    end,
+})
+
+require("dashboard").setup({
+    theme = "doom",
+    config = {
+        header = header,
+        center = center,
+        footer = custom_footer,
+    },
 })
 
 -- " =================     ===============     ===============   ========  ========

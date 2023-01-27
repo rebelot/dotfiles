@@ -55,8 +55,8 @@ autocmd("FileType", {
 autocmd("Filetype", {
     pattern = "rust",
     callback = function(args)
-        vim.api.nvim_buf_create_user_command(args.buf, 'CargoFix', "! cd %:p:h && cargo fix", {})
-    end
+        vim.api.nvim_buf_create_user_command(args.buf, "CargoFix", "! cd %:p:h && cargo fix", {})
+    end,
 })
 
 -----------------
@@ -89,7 +89,7 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
         if not vim.tbl_contains({ "terminal", "prompt", "nofile" }, vim.bo[buf].buftype) then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
         else
-            vim.cmd([[setl nocursorline | let &l:relativenumber = &l:number]])
+            vim.cmd([[setl nocursorline | let &l:relativenumber = &l:number | setl signcolumn=no]])
         end
     end,
 })
@@ -102,11 +102,9 @@ autocmd("WinLeave", {
 --  CmdWin  --
 --------------
 
-autocmd('CmdwinEnter', {
-    command = 'startinsert | setlocal nu rnu cul syntax=on signcolumn=no winbar='
+autocmd("CmdwinEnter", {
+    command = "startinsert | setlocal nonu nornu cul syntax=on signcolumn=no stc= winbar= winhl=Normal:NormalFloat",
 })
-
-
 
 ----------------
 --  Terminal  --
@@ -114,7 +112,7 @@ autocmd('CmdwinEnter', {
 
 autocmd("TermOpen", {
     callback = function(args)
-        vim.bo.ft = 'terminal'
+        vim.bo.ft = "terminal"
         vim.cmd([[setlocal nonumber norelativenumber winhl=Normal:NormalFloat]])
         if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
             vim.cmd("startinsert")
@@ -145,7 +143,7 @@ autocmd("LSPAttach", {
         vim.notify(
             string.format("%s(%d) attached to buffer(%d)", client.name, client.id, bufnr),
             vim.log.levels.INFO,
-            { title = "LSP" } -- requires nvim-notify
+            { title = "LSP" }-- requires nvim-notify
         )
     end,
 })

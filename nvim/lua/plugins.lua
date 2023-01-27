@@ -185,9 +185,7 @@ local plugins = {
             },
             {
                 "zbirenbaum/copilot-cmp",
-                config = function()
-                    require("copilot_cmp").setup()
-                end,
+                config = true,
             },
         },
         config = function()
@@ -199,19 +197,17 @@ local plugins = {
         "zbirenbaum/copilot.lua",
         event = { "BufRead", "BufNewFile" },
         config = function()
-            vim.schedule(function()
-                require("copilot").setup({
-                    ft_disable = { "julia", "dap-repl", "terminal" },
-                    suggestion = {
-                        keymap = {
-                            accept = "<M-CR>",
-                            next = "<M-n>",
-                            prev = "<M-p>",
-                            dismiss = "<C-]>",
-                        },
+            require("copilot").setup({
+                ft_disable = { "julia", "dap-repl", "terminal" },
+                suggestion = {
+                    keymap = {
+                        accept = "<M-CR>",
+                        next = "<M-n>",
+                        prev = "<M-p>",
+                        dismiss = "<C-]>",
                     },
-                })
-            end)
+                },
+            })
         end,
     },
     {
@@ -294,13 +290,7 @@ local plugins = {
         dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects",
             "RRethy/nvim-treesitter-textsubjects",
-            {
-                "nvim-treesitter/nvim-treesitter-context",
-                config = function()
-                    require("treesitter-context").setup()
-                    vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Folded" })
-                end,
-            },
+            { "nvim-treesitter/nvim-treesitter-context", config = true },
         },
         config = function()
             require("treesitter-config")
@@ -409,31 +399,46 @@ local plugins = {
         priority = 1000,
         config = function()
             vim.o.background = nil
-            local colors = require("kanagawa.colors").setup({ theme = "default" })
+            vim.o.cmdheight = 0
             require("kanagawa").setup({
                 dimInactive = false,
-                globalStatus = true,
-                overrides = {
-                    -- Pmenu = { fg = colors.fg_dark, bg = colors.bg_light0 },
-                    -- PmenuSel = { fg = "NONE", bg = colors.bg_light1 },
-                    -- PmenuSbar = { bg = colors.bg_dim },
-                    -- PmenuThumb = { bg = colors.bg_light1 },
-
-                    TelescopeNormal = { bg = colors.bg_dim },
-                    TelescopeBorder = { fg = colors.bg_dim, bg = colors.bg_dim },
-                    TelescopeTitle = { fg = colors.bg_light3, bold = true },
-
-                    TelescopePromptNormal = { bg = colors.bg_light0 },
-                    TelescopePromptBorder = { fg = colors.bg_light0, bg = colors.bg_light0 },
-
-                    TelescopeResultsNormal = { bg = "#1a1a22" },
-                    TelescopeResultsBorder = { fg = "#1a1a22", bg = "#1a1a22" },
-
-                    TelescopePreviewNormal = { bg = colors.bg_dim },
-                    TelescopePreviewBorder = { bg = colors.bg_dim, fg = colors.bg_dim },
-                },
+                theme = { dark = "dragon" },
+                overrides = function(colors)
+                    -- local theme = colors.theme
+                    -- return {
+                    --     -- Pmenu = { fg = theme.fg_dark, bg = theme.bg_light0 },
+                    --     -- PmenuSel = { fg = "NONE", bg = theme.bg_light1 },
+                    --     -- PmenuSbar = { bg = theme.bg_dim },
+                    --     -- PmenuThumb = { bg = theme.bg_light1 },
+                    --
+                    --     -- TelescopeNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_dim },
+                    --     -- TelescopeBorder = { fg = theme.ui.bg_dim, bg = theme.ui.bg_dim },
+                    --     TelescopeTitle = { fg = theme.ui.bg_p1, bold = true },
+                    --
+                    --     TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+                    --     TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+                    --
+                    --     TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+                    --     TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+                    --
+                    --     TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+                    --     TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+                    --     TreesitterContext = { link = "Folded" },
+                    -- }
+                    return require("kanagawa.presets"):with(colors, {}, "telescopeBox")
+                end,
             })
             vim.cmd("colorscheme kanagawa")
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                pattern = "Kanagawa",
+                callback = function()
+                    if vim.o.background == "light" then
+                        vim.fn.system("kitty +kitten themes Kanagawa_light")
+                    else
+                        vim.fn.system("kitty +kitten themes Kanagawa")
+                    end
+                end,
+            })
         end,
     },
 
@@ -616,7 +621,7 @@ local plugins = {
     {
         -- Go Glepnir!
         "glepnir/dashboard-nvim",
-        lazy = false,
+        event = "VimEnter",
         enabled = true,
         config = function()
             require("plugins.dashboard")
@@ -624,8 +629,8 @@ local plugins = {
     },
 
     {
-        "norcalli/nvim-colorizer.lua",
-        event = { "BufReadPost", "BufNewFile" },
+        "NvChad/nvim-colorizer.lua",
+        event = { "BufReadPre", "BufNewFile" },
         config = true,
     },
 
@@ -672,6 +677,16 @@ local plugins = {
         end,
     },
 
+    {
+        "iamcco/markdown-preview.nvim",
+        build = "cd app && npm install",
+        cmd = "MarkdownPreview",
+        ft = { "markdown", "pandoc" },
+        setup = function()
+            vim.g.mkdp_filetypes = { "markdown" }
+            -- vim.g.mkdp_browser = 'safari'
+        end,
+    },
     -------------------
     -- Editing Tools --
     -------------------
@@ -748,6 +763,12 @@ local plugins = {
         "benmills/vimux",
         keys = { { "<leader>vp" }, { mode = "x", "<leader>vs" } },
         cmd = { "VimuxPromptCommand", "VimuxOpenRunner" },
+        init = function()
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "python",
+                command = [[xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>]],
+            })
+        end,
         config = function()
             vim.cmd([[
             function! VimuxSlime()
@@ -756,10 +777,6 @@ local plugins = {
             ]])
             vim.keymap.set("x", "<leader>vs", '"vy :call VimuxSlime()<CR>', { desc = "Vimux: send selection" })
             vim.keymap.set("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { desc = "Vimux: prompt command" })
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "python",
-                command = [[xnoremap <buffer> <leader>vs "+y :call VimuxRunCommand('%paste')<CR>]],
-            })
         end,
     },
 }

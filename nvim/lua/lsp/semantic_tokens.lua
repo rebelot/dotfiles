@@ -95,6 +95,11 @@ function STHighlighter:on_win(topline, botline)
 end
 
 function M.setup(hl_table)
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+            M.clear_cache()
+        end,
+    })
     M.hl_table = hl_table
 end
 
