@@ -14,7 +14,7 @@ fn.sign_define(
     { text = "", texthl = "DiagnosticError", linehl = "", numhl = "debugBreakpoint" }
 )
 fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
-fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "Error" })
+fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "DiagnosticSignError" })
 
 -- mappings
 map("n", "<leader>dC", dap.continue, { desc = "DAP: Continue" })
