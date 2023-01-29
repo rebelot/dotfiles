@@ -135,6 +135,10 @@ nnoremap <m-h> zh
 nnoremap <m-j> <C-E>
 nnoremap <m-k> <C-Y>
 
+" j/k in wrapped lines
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
+
 " close window/buffer
 nnoremap <leader>q :close<CR>
 nnoremap <leader>Q :bdelete<CR>

@@ -42,19 +42,22 @@ local icon_color = "Function"
 local center = {
     {
         desc = "Find File                     ",
+        keymap = "",
         key = "f",
         icon = "  ",
         action = "Telescope find_files",
     },
     {
-        desc = "Recents                       ",
+        desc = "Recents",
+        keymap = "",
         key = "r",
         icon = "  ",
         action = "Telescope oldfiles",
     },
 
     {
-        desc = "Browse Files                  ",
+        desc = "Browse Files",
+        keymap = "",
         key = ".",
         icon = "  ",
         action = "Telescope file_browser",
@@ -62,7 +65,8 @@ local center = {
     -- { shortcut = "<leader>fg", icon = " ", desc = "Find Word", action = "Telescope live_grep" },
 
     {
-        desc = "New File                      ",
+        desc = "New File",
+        keymap = "",
         key = "n",
         icon = "  ",
         action = "enew",
@@ -70,26 +74,30 @@ local center = {
 
     -- { shortcut = "<leader>fm", icon = " ", desc = "Bookmark", action = "Telescope marks" },
     {
-        desc = "Load Last Session             ",
+        desc = "Load Last Session",
+        keymap = "",
         key = "L",
         icon = "  ",
         action = "SessionLoad",
     },
 
     {
-        desc = "Update Plugins                ",
+        desc = "Update Plugins",
+        keymap = "",
         key = "u",
         icon = "  ",
         action = "Lazy update",
     },
     {
-        desc = "Config                        ",
+        desc = "Config",
+        keymap = "",
         key = "s",
         icon = "  ",
         action = "Telescope find_files cwd=~/.config/nvim",
     },
     {
-        desc = "Exit                          ",
+        desc = "Exit",
+        keymap = "",
         key = "q",
         icon = "  ",
         action = "exit",

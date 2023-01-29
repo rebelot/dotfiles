@@ -27,6 +27,10 @@ onoremap <S-CR> -
 " inoremap jk <Esc>
 " inoremap kj <Esc>
 
+" j/k in wrapped lines
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
+
 " Better <C-r>
 " Surround a word witht text: ciwTEXT<C-'>TEXT
 inoremap <C-'> <C-r><C-o>"
