@@ -993,7 +993,8 @@ local BufferLine = utils.make_buflist(
 
 local Tabpage = {
     provider = function(self)
-        return "%" .. self.tabnr .. "T " .. self.tabnr .. " %T"
+        local n = #vim.api.nvim_tabpage_list_wins(self.tabpage)
+        return "%" .. self.tabnr .. "T " .. self.tabnr .. "(" .. n .. ")" .. " %T"
     end,
     hl = function(self)
         if not self.is_active then
@@ -1002,6 +1003,7 @@ local Tabpage = {
             return "TabLineSel"
         end
     end,
+    update = { "TabNew", "TabClosed", "TabEnter", "TabLeave", "WinNew", "WinClosed" },
 }
 
 local TabpageClose = {
@@ -1169,20 +1171,7 @@ vim.api.nvim_create_augroup("Heirline", { clear = true })
 
 vim.cmd([[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])
 
-vim.cmd("au BufWinEnter * if &bt != '' | setl stc= | endif")
-vim.api.nvim_create_autocmd("BufWinEnter,FileType", {
-    callback = function(args)
-        local buf = args.buf
-        local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
-        local filetype =
-            vim.tbl_contains({ "NvimTree", "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
-        if buftype or filetype then
-            -- vim.opt_local.statuscolumn = ""
-            vim.opt_local.signcolumn = "no"
-        end
-    end,
-    group = "Heirline",
-})
+-- vim.cmd("au BufWinEnter * if &bt != '' | setl stc= | endif")
 
 vim.api.nvim_create_autocmd("User", {
     pattern = "HeirlineInitWinbar",

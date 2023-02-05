@@ -425,7 +425,8 @@ local plugins = {
                     --     TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
                     --     TreesitterContext = { link = "Folded" },
                     -- }
-                    return require("kanagawa.presets"):with(colors, {}, "telescopeBox")
+                    return require("kanagawa.presets"):with(colors, {
+                    }, "telescopeBox")
                 end,
             })
             vim.cmd("colorscheme kanagawa")
@@ -625,6 +626,7 @@ local plugins = {
         enabled = true,
         config = function()
             require("plugins.dashboard")
+            vim.keymap.set("n", "<F3>", "<cmd>Dashboard<CR>", { desc = "Dashboard: open" })
         end,
     },
 

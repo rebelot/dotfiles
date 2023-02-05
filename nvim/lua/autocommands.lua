@@ -75,21 +75,24 @@ autocmd("WinClosed", {
     command = 'if win_getid() == expand("<amatch>") | wincmd p | endif',
 })
 
------------------------------------
---  CursorLine, RelativeNumbers  --
------------------------------------
-
--- autocmd({ "WinEnter", "BufWinEnter" }, {
---     command = "setlocal cursorline relativenumber",
--- })
+-----------------------------------------------
+--  CursorLine, RelativeNumbers, SignColumn  --
+-----------------------------------------------
 
 autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
     callback = function(args)
         local buf = args.buf
-        if not vim.tbl_contains({ "terminal", "prompt", "nofile" }, vim.bo[buf].buftype) then
+        if vim.tbl_contains({ "terminal", "prompt", "nofile", "help" }, vim.bo[buf].buftype) then
+            vim.cmd([[setl nocursorline | setl signcolumn=no | let &l:relativenumber = &l:number]])
+        end
+        if vim.tbl_contains({ "NvimTree" }, vim.bo[buf].filetype) then
+            vim.cmd([[setl cursorline | setl signcolumn=yes:1 | let &l:relativenumber = &l:number]])
+        end
+        if vim.bo[buf].buftype == "" then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
-        else
-            vim.cmd([[setl nocursorline | let &l:relativenumber = &l:number | setl signcolumn=no]])
+        end
+        if vim.bo[buf].buftype == "quickfix" then
+            vim.cmd([[setl cursorline nonu signcolumn=no | let &l:relativenumber = &l:number]])
         end
     end,
 })
@@ -143,7 +146,7 @@ autocmd("LSPAttach", {
         vim.notify(
             string.format("%s(%d) attached to buffer(%d)", client.name, client.id, bufnr),
             vim.log.levels.INFO,
-            { title = "LSP" }-- requires nvim-notify
+            { title = "LSP" } -- requires nvim-notify
         )
     end,
 })

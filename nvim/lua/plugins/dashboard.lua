@@ -62,7 +62,6 @@ local center = {
         icon = "  ",
         action = "Telescope file_browser",
     },
-    -- { shortcut = "<leader>fg", icon = " ", desc = "Find Word", action = "Telescope live_grep" },
 
     {
         desc = "New File",
@@ -72,7 +71,6 @@ local center = {
         action = "enew",
     },
 
-    -- { shortcut = "<leader>fm", icon = " ", desc = "Bookmark", action = "Telescope marks" },
     {
         desc = "Load Last Session",
         keymap = "",
@@ -88,6 +86,15 @@ local center = {
         icon = "  ",
         action = "Lazy update",
     },
+
+    {
+        desc = "Manage Extensions",
+        keymap = "",
+        key = "m",
+        icon = "  ",
+        action = "Mason",
+    },
+
     {
         desc = "Config",
         keymap = "",
