@@ -210,7 +210,8 @@ require("telescope").setup({
                 ["<C-v>"] = stopinsert(custom_actions.multi_selection_open_vertical),
                 ["<C-s>"] = stopinsert(custom_actions.multi_selection_open_horizontal),
                 ["<C-t>"] = stopinsert(custom_actions.multi_selection_open_tab),
-                ["<CR>"] = stopinsert(custom_actions.multi_selection_open),
+                -- ["<CR>"] = stopinsert(custom_actions.multi_selection_open),
+                ["<CR>"] = custom_actions.multi_selection_open,
             },
             n = {
                 ["<Tab>"] = actions.move_selection_next,
@@ -274,8 +275,8 @@ map("n", "<leader>fq", require("telescope.builtin").quickfix, { desc = "Telescop
 map("n", "<leader>fh", require("telescope.builtin").oldfiles, { desc = "Telescope: Old files" })
 map("n", "<leader>fb", require("telescope.builtin").buffers, { desc = "Telescope: Buffers" })
 map("n", "<leader>fg", require("telescope.builtin").live_grep, { desc = "Telescope: Live Grep" })
-map("n", "<leader>fG", function()
-    require("telescope.builtin").live_grep({ grep_open_files = true })
+map("x", "<leader>fg", require("telescope.builtin").grep_string, { desc = "Telescope: Live Grep" })
+map("n", "<leader>fG", function() require("telescope.builtin").live_grep({ grep_open_files = true })
 end, { desc = "Telescope: Live Grep open_files" })
 map("n", "<leader><space>", require("telescope.builtin").commands, { desc = "Telescope: Commands" })
 map("n", "<leader>ft", require("telescope.builtin").treesitter, { desc = "Telescope: Treesitter" })

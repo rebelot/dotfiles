@@ -26,7 +26,7 @@ local servers = {
     "pylance",
     -- "pyright",
     "marksman",
-    "sumneko_lua",
+    "lua_ls",
     "texlab",
     "ltex",
     "vimls",

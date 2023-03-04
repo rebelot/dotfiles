@@ -38,8 +38,9 @@ require("nvim-tree").setup({
         adaptive_size = false,
     },
     renderer = {
+        -- highlight_opened_files = 'name',
         icons = {
-            git_placement = "after",
+            git_placement = "before",
             glyphs = {
                 git = {
                     unstaged = "",

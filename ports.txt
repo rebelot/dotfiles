@@ -34,7 +34,7 @@ hyperfine
 gdb
 plumed
 pdfgrep
+exa
+glow
 
-#exa
-#glow
 #bmon

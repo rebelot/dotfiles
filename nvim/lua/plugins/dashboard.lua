@@ -111,7 +111,9 @@ local center = {
     },
 }
 
-local custom_footer = { "type  :help<Enter>  or  <F1>  for on-line help" }
+local custom_footer = {
+    "type  :help<Enter>  or  <F1>  for on-line help",
+}
 
 vim.api.nvim_create_autocmd("Filetype", {
     pattern = "dashboard",
@@ -129,7 +131,12 @@ require("dashboard").setup({
     config = {
         header = header,
         center = center,
-        footer = custom_footer,
+        footer = function()
+            return {
+                "type  :help<Enter>  or  <F1>  for on-line help",
+                "Startup time: " .. require"lazy".stats().startuptime .. " ms"
+            }
+        end,
     },
 })
 

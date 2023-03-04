@@ -68,7 +68,7 @@ opt.fillchars:append({
     verthoriz = "╋",             -- '╬',--'┼','
 })
 
-opt.fillchars:append({ foldopen = "", foldsep = "│", foldclose = "" })
+opt.fillchars:append({ foldopen = "", foldsep = "│", foldclose = "" }) --    
 opt.fillchars:append({ diff = "╲" })
 
 o.inccommand = "nosplit"         -- real time preview of substitution commands

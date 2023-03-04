@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -212,7 +212,7 @@ local plugins = {
     },
     {
         "jackMort/ChatGPT.nvim",
-        cmd = { "ChatGPT", "ChatGPTEditWithInstructions", "ChatGPTActAs" },
+        cmd = { "ChatGPT", "ChatGPTEditWithInstructions", "ChatGPTActAs", "ChatGPTCompleteCode" },
         -- enabled = false,
         dependencies = {
             "MunifTanjim/nui.nvim",
@@ -262,11 +262,13 @@ local plugins = {
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = {
                 method = "popup",
+                -- fullwidth = 0,
+                -- syntax_hl = 1,
             }
         end,
     },
 
-    { "chrisbra/csv.vim", ft = "csv" },
+    { "chrisbra/csv.vim",                ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -275,7 +277,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -285,7 +287,7 @@ local plugins = {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        event = "BufRead",
+        event = { "BufReadPre" },
         cmd = { "TSInstall", "TSUpdate" },
         dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects",
@@ -325,6 +327,16 @@ local plugins = {
         keys = { "<leader>nt", "<leader>nf" },
         config = function()
             require("plugins.nvim-tree")
+        end,
+    },
+
+    {
+        "stevearc/oil.nvim",
+        cmd = "Oil",
+        keys = { "<leader>o" },
+        config = function()
+            require("oil").setup()
+            vim.keymap.set("n", "<leader>o", ":Oil<CR>", { desc = "Oil" })
         end,
     },
 
@@ -402,31 +414,22 @@ local plugins = {
             vim.o.cmdheight = 0
             require("kanagawa").setup({
                 dimInactive = false,
-                theme = { dark = "dragon" },
+                background = { light = "lotus", dark = "dragon" },
                 overrides = function(colors)
-                    -- local theme = colors.theme
-                    -- return {
-                    --     -- Pmenu = { fg = theme.fg_dark, bg = theme.bg_light0 },
-                    --     -- PmenuSel = { fg = "NONE", bg = theme.bg_light1 },
-                    --     -- PmenuSbar = { bg = theme.bg_dim },
-                    --     -- PmenuThumb = { bg = theme.bg_light1 },
-                    --
-                    --     -- TelescopeNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_dim },
-                    --     -- TelescopeBorder = { fg = theme.ui.bg_dim, bg = theme.ui.bg_dim },
-                    --     TelescopeTitle = { fg = theme.ui.bg_p1, bold = true },
-                    --
-                    --     TelescopePromptNormal = { bg = theme.ui.bg_p1 },
-                    --     TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
-                    --
-                    --     TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
-                    --     TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
-                    --
-                    --     TelescopePreviewNormal = { bg = theme.ui.bg_dim },
-                    --     TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
-                    --     TreesitterContext = { link = "Folded" },
-                    -- }
-                    return require("kanagawa.presets"):with(colors, {
-                    }, "telescopeBox")
+                    local theme = colors.theme
+                    return {
+                        TelescopeTitle = { fg = theme.ui.special, bold = true },
+                        TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+                        TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+                        TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+                        TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+                        TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+                        TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+                        -- Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+                        -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+                        -- PmenuSbar = { bg = theme.ui.bg_m1 },
+                        -- PmenuThumb = { bg = theme.ui.bg_p2 },
+                    }
                 end,
             })
             vim.cmd("colorscheme kanagawa")
@@ -435,6 +438,8 @@ local plugins = {
                 callback = function()
                     if vim.o.background == "light" then
                         vim.fn.system("kitty +kitten themes Kanagawa_light")
+                    elseif vim.o.background == "dark" then
+                        vim.fn.system("kitty +kitten themes Kanagawa_dragon")
                     else
                         vim.fn.system("kitty +kitten themes Kanagawa")
                     end
@@ -443,7 +448,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -610,8 +615,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
-
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

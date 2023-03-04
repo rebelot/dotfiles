@@ -245,9 +245,7 @@ local ScrollBar = {
 local LSPActive = {
     condition = conditions.lsp_attached,
     update = { "LspAttach", "LspDetach", "WinEnter" },
-
     provider = " [LSP]",
-
     -- Or complicate things a bit and get the servers names
     -- provider  = function(self)
     --     local names = {}
@@ -351,7 +349,6 @@ local Navic = {
 }
 
 local Diagnostics = {
-
     condition = conditions.has_diagnostics,
     update = { "DiagnosticChanged", "BufEnter" },
     on_click = {
@@ -360,21 +357,18 @@ local Diagnostics = {
         end,
         name = "heirline_diagnostics",
     },
-
     static = {
         error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
         warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
         info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
         hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
     },
-
     init = function(self)
         self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
         self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
         self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
         self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
     end,
-
     {
         provider = function(self)
             return self.errors > 0 and (self.error_icon .. self.errors .. " ")
@@ -403,12 +397,10 @@ local Diagnostics = {
 
 local Git = {
     condition = conditions.is_git_repo,
-
     init = function(self)
         self.status_dict = vim.b.gitsigns_status_dict
         self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
     end,
-
     on_click = {
         callback = function(self, minwid, nclicks, button)
             vim.defer_fn(function()
@@ -418,9 +410,7 @@ local Git = {
         name = "heirline_git",
         update = false,
     },
-
     hl = { fg = "orange" },
-
     {
         provider = function(self)
             return " " .. self.status_dict.head
@@ -555,7 +545,6 @@ local WorkDir = {
         end,
         name = "heirline_workdir",
     },
-
     flexible = 1,
     {
         provider = function(self)
@@ -739,7 +728,6 @@ local TerminalStatusline = {
 }
 
 local StatusLines = {
-
     hl = function()
         if conditions.is_active() then
             return "StatusLine"
@@ -747,7 +735,6 @@ local StatusLines = {
             return "StatusLineNC"
         end
     end,
-
     static = {
         mode_colors = {
             n = "red",
@@ -769,9 +756,7 @@ local StatusLines = {
             return self.mode_colors[mode]
         end,
     },
-
     fallthrough = false,
-
     -- GitStatusline,
     SpecialStatusline,
     TerminalStatusline,
@@ -877,14 +862,14 @@ local TablineFileFlags = {
         end,
         hl = { fg = "orange" },
     },
-    -- {
-    --     condition = function(self)
-    --         return not vim.api.nvim_buf_is_loaded(self.bufnr)
-    --     end,
-    --     -- a downright arrow
-    --     provider = "", -- 
-    --     hl = { fg = "gray" },
-    -- },
+    {
+        condition = function(self)
+            return not vim.api.nvim_buf_is_loaded(self.bufnr)
+        end,
+        -- a downright arrow
+        provider = " 󰘓 ", --󰕁 
+        hl = { fg = "gray" },
+    },
 }
 
 local TablineFileNameBlock = {
@@ -985,6 +970,7 @@ local TablineBufferBlock = utils.surround({ "", "" }, function(self)
     end
 end, { TablinePicker, TablineFileNameBlock, TablineCloseButton })
 
+
 local BufferLine = utils.make_buflist(
     TablineBufferBlock,
     { provider = " ", hl = { fg = "gray" } },
@@ -1033,14 +1019,12 @@ local TabLineOffset = {
             return true
         end
     end,
-
     provider = function(self)
         local title = self.title
         local width = vim.api.nvim_win_get_width(self.winid)
         local pad = math.ceil((width - #title) / 2)
         return string.rep(" ", pad) .. title .. string.rep(" ", pad)
     end,
-
     hl = function(self)
         if vim.api.nvim_get_current_win() == self.winid then
             return "TablineSel"
