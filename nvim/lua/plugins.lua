@@ -415,6 +415,7 @@ local plugins = {
             require("kanagawa").setup({
                 compile = true,
                 dimInactive = false,
+                transparent = true,
                 background = { light = "lotus", dark = "dragon" },
                 overrides = function(colors)
                     local theme = colors.theme
