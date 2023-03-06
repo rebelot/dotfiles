@@ -413,11 +413,13 @@ local plugins = {
             vim.o.background = nil
             vim.o.cmdheight = 0
             require("kanagawa").setup({
+                compile = true,
                 dimInactive = false,
                 background = { light = "lotus", dark = "dragon" },
                 overrides = function(colors)
                     local theme = colors.theme
                     return {
+                        -- Normal = { bg = 'darkblue' },
                         TelescopeTitle = { fg = theme.ui.special, bold = true },
                         TelescopePromptNormal = { bg = theme.ui.bg_p1 },
                         TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
@@ -425,16 +427,16 @@ local plugins = {
                         TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
                         TelescopePreviewNormal = { bg = theme.ui.bg_dim },
                         TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
-                        -- Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-                        -- PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
-                        -- PmenuSbar = { bg = theme.ui.bg_m1 },
-                        -- PmenuThumb = { bg = theme.ui.bg_p2 },
+                        Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+                        PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+                        PmenuSbar = { bg = theme.ui.bg_m1 },
+                        PmenuThumb = { bg = theme.ui.bg_p2 },
                     }
                 end,
             })
             vim.cmd("colorscheme kanagawa")
             vim.api.nvim_create_autocmd("ColorScheme", {
-                pattern = "Kanagawa",
+                pattern = "kanagawa",
                 callback = function()
                     if vim.o.background == "light" then
                         vim.fn.system("kitty +kitten themes Kanagawa_light")

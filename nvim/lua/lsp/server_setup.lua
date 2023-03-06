@@ -17,7 +17,7 @@ local function make_config(server_name)
     else
         config.on_attach = default_on_attach
     end
-    config.capabilites = default_capabilities
+    config.capabilities = default_capabilities
     return config
 end
 
