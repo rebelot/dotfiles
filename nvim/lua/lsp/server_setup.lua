@@ -3,7 +3,7 @@ local default_capabilities = require("lsp").default_capabilities
 local lspconfig = require("lspconfig")
 
 local function make_config(server_name)
-    local ok, config = pcall(require, "lsp.server_configurations." .. server_name)
+    local ok, config = pcall(require, "lsp.servers." .. server_name)
     if not ok then
         config = {}
     end

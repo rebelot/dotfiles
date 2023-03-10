@@ -106,12 +106,6 @@ local ViMode = {
     },
 }
 
-local FileNameBlock = {
-    init = function(self)
-        self.filename = vim.api.nvim_buf_get_name(0)
-    end,
-}
-
 local FileIcon = {
     init = function(self)
         local filename = self.filename
@@ -137,7 +131,12 @@ local FileName = {
             self.lfilename = vim.fn.pathshorten(self.lfilename)
         end
     end,
-    hl = "Directory",
+    hl = function()
+        if vim.bo.modified then
+            return { fg = utils.get_highlight("Directory").fg, bold = true, italic = true }
+        end
+        return "Directory"
+    end,
     flexible = 2,
     {
         provider = function(self)
@@ -156,7 +155,7 @@ local FileFlags = {
         condition = function()
             return vim.bo.modified
         end,
-        provider = "[+]",
+        provider = " ● ", --[+]",
         hl = { fg = "green" },
     },
     {
@@ -168,15 +167,14 @@ local FileFlags = {
     },
 }
 
-local FileNameModifer = {
-    hl = function()
-        if vim.bo.modified then
-            return { fg = "cyan", bold = true, force = true }
-        end
+local FileNameBlock = {
+    init = function(self)
+        self.filename = vim.api.nvim_buf_get_name(0)
     end,
+    FileIcon,
+    FileName,
+    unpack(FileFlags),
 }
-
-FileNameBlock = utils.insert(FileNameBlock, FileIcon, utils.insert(FileNameModifer, FileName), unpack(FileFlags))
 
 local FileType = {
     provider = function()
@@ -246,7 +244,6 @@ local LSPActive = {
     condition = conditions.lsp_attached,
     update = { "LspAttach", "LspDetach", "WinEnter" },
     provider = " [LSP]",
-    -- Or complicate things a bit and get the servers names
     -- provider  = function(self)
     --     local names = {}
     --     for i, server in pairs(vim.lsp.buf_get_active_clients({ bufnr = 0 })) do
@@ -275,7 +272,7 @@ local Navic = {
             Module = dim(utils.get_highlight("@include").fg, 0.75),
             Namespace = dim(utils.get_highlight("@namespace").fg, 0.75),
             Package = dim(utils.get_highlight("@include").fg, 0.75),
-            Class = dim(utils.get_highlight("@struct").fg, 0.75),
+            Class = dim(utils.get_highlight("@type").fg, 0.75),
             Method = dim(utils.get_highlight("@method").fg, 0.75),
             Property = dim(utils.get_highlight("@property").fg, 0.75),
             Field = dim(utils.get_highlight("@field").fg, 0.75),
@@ -293,7 +290,7 @@ local Navic = {
             Key = dim(utils.get_highlight("@keyword").fg, 0.75),
             Null = dim(utils.get_highlight("@comment").fg, 0.75),
             EnumMember = dim(utils.get_highlight("@field").fg, 0.75),
-            Struct = dim(utils.get_highlight("@struct").fg, 0.75),
+            Struct = dim(utils.get_highlight("@type").fg, 0.75),
             Event = dim(utils.get_highlight("@keyword").fg, 0.75),
             Operator = dim(utils.get_highlight("@operator").fg, 0.75),
             TypeParameter = dim(utils.get_highlight("@type").fg, 0.75),
@@ -619,8 +616,9 @@ local SearchCount = {
     end,
     provider = function(self)
         local search = self.search
-        return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
+        return string.format(" %d/%d", search.current, math.min(search.total, search.maxcount))
     end,
+    hl = { fg = "purple", bold = true },
 }
 
 local MacroRec = {
@@ -635,17 +633,25 @@ local MacroRec = {
         end,
         hl = { fg = "green", bold = true },
     }),
+    { provider = " " },
 }
 
-ViMode = utils.surround({ "", "" }, "bright_bg", { ViMode, Snippets })
+-- WIP
+local VisualRange = {
+    condition = function()
+        return vim.tbl_containsvim({ "V", "v" }, vim.fn.mode())
+    end,
+    provider = function()
+        local start = vim.fn.getpos("'<")
+        local stop = vim.fn.getpos("'>")
+    end,
+}
 
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
 local DefaultStatusline = {
-    ViMode,
-    SearchCount,
-    MacroRec,
+    utils.surround({ "", "" }, "bright_bg", { MacroRec, ViMode, Snippets }),
     Space,
     Spell,
     WorkDir,
@@ -656,24 +662,18 @@ local DefaultStatusline = {
     Space,
     Diagnostics,
     Align,
-    { flexible = 3, { Navic, Space }, { provider = "" } },
+    -- { flexible = 3,   { Navic, Space }, { provider = "" } },
     Align,
     DAPMessages,
     LSPActive,
-    -- Space,
-    -- UltTest,
     Space,
     FileType,
-    { flexible = 3, { Space, FileEncoding }, { provider = "" } },
+    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
+    SearchCount,
     Space,
     ScrollBar,
-    -- {
-    --     provider = function()
-    --         return vim.inspect(utils.get_highlight('StatusLine'))
-    --     end
-    -- }
 }
 
 local InactiveStatusline = {
@@ -768,7 +768,6 @@ local CloseButton = {
     condition = function(self)
         return not vim.bo.modified
     end,
-    -- update = 'BufEnter',
     update = { "WinNew", "WinClosed", "BufEnter" },
     { provider = " " },
     {
@@ -803,22 +802,31 @@ local WinBar = {
         condition = function()
             return conditions.buffer_matches({ buftype = { "terminal" } })
         end,
-        utils.surround({ "", "" }, "dark_red", {
+        utils.surround({ "", "" }, "dark_red", {
             FileType,
             Space,
             TerminalName,
             CloseButton,
         }),
     },
-    utils.surround({ "", "" }, "bright_bg", {
-        hl = function()
-            if conditions.is_not_active() then
-                return { fg = "gray", force = true }
-            end
-        end,
-
-        FileNameBlock,
-        CloseButton,
+    utils.surround({ "", "" }, "bright_bg", {
+        fallthrough = false,
+        {
+            condition = conditions.is_not_active,
+            {
+                hl = { fg = "bright_fg", force = true },
+                FileNameBlock,
+            },
+            CloseButton,
+        },
+        {
+            -- provider = "      ",
+            Navic,
+            { provider = "%<"},
+            Align,
+            FileNameBlock,
+            CloseButton,
+        },
     }),
 }
 
@@ -845,7 +853,7 @@ local TablineFileFlags = {
         condition = function(self)
             return vim.api.nvim_buf_get_option(self.bufnr, "modified")
         end,
-        provider = "[+]",
+        provider = " ● ", --"[+]",
         hl = { fg = "green" },
     },
     {
@@ -906,12 +914,15 @@ local TablineCloseButton = {
         return not vim.api.nvim_buf_get_option(self.bufnr, "modified")
     end,
     { provider = " " },
-    { -- ✗    
+    {
+        -- ✗    
         provider = " ",
         hl = { fg = "gray" },
         on_click = {
             callback = function(_, minwid)
-                vim.api.nvim_buf_delete(minwid, { force = false })
+                vim.schedule(function()
+                    vim.api.nvim_buf_delete(minwid, { force = false })
+                end)
                 vim.cmd.redrawtabline()
             end,
             minwid = function(self)
@@ -970,11 +981,42 @@ local TablineBufferBlock = utils.surround({ "", "" }, function(self)
     end
 end, { TablinePicker, TablineFileNameBlock, TablineCloseButton })
 
+local get_bufs = function()
+    return vim.tbl_filter(function(bufnr)
+        return vim.api.nvim_buf_get_option(bufnr, "buflisted")
+    end, vim.api.nvim_list_bufs())
+end
+
+local buflist_cache = {}
+
+vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
+    callback = function()
+        vim.schedule(function()
+            local buffers = get_bufs()
+            for i, v in ipairs(buffers) do
+                buflist_cache[i] = v
+            end
+            for i = #buffers + 1, #buflist_cache do
+                buflist_cache[i] = nil
+            end
+
+            if #buflist_cache > 1 then
+                vim.o.showtabline = 2
+            else
+                vim.o.showtabline = 1
+            end
+        end)
+    end,
+})
 
 local BufferLine = utils.make_buflist(
     TablineBufferBlock,
     { provider = " ", hl = { fg = "gray" } },
-    { provider = " ", hl = { fg = "gray" } }
+    { provider = " ", hl = { fg = "gray" } },
+    function()
+        return buflist_cache
+    end,
+    false
 )
 
 local Tabpage = {
@@ -1035,19 +1077,8 @@ local TabLineOffset = {
 }
 
 local TabLine = {
-    -- update = {
-    --     "BufNew",
-    --     "BufDelete",
-    --     "WinEnter",
-    --     "BufEnter",
-    --     "BufModifiedSet",
-    --     callback = function()
-    --         -- print("callback")
-    --     end,
-    -- },
     TabLineOffset,
     BufferLine,
-    -- utils.make_flexible_component(1, {provider = 'aaaaaaaaaaaaaaaaaaa'}, {provider = 'bbbb'}),
     TabPages,
 }
 
@@ -1061,7 +1092,6 @@ local Stc = {
                 return vim.fn.sign_getdefined(sign.name)[1]
             end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
         end,
-
         resolve = function(self, name)
             for pat, cb in pairs(self.handlers) do
                 if name:match(pat) then
@@ -1069,7 +1099,6 @@ local Stc = {
                 end
             end
         end,
-
         handlers = {
             ["GitSigns.*"] = function(args)
                 require("gitsigns").preview_hunk_inline()
@@ -1147,6 +1176,9 @@ local Stc = {
     --     end,
     -- },
 }
+
+vim.o.laststatus = 3
+-- vim.o.showtabline = 2
 
 require("heirline").setup({ statusline = StatusLines, winbar = WinBar, tabline = TabLine, statuscolumn = Stc })
 vim.o.statuscolumn = require("heirline").eval_statuscolumn()

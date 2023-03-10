@@ -13,11 +13,11 @@ cmp.setup({
             vim.fn["UltiSnips#Anon"](args.body)
         end,
     },
-    preselect = cmp.PreselectMode.Item,
+    preselect = cmp.PreselectMode.None,
     window = {
         documentation = {
             winhighlight = "Search:None",
-            border = require("lsp").borders,
+            border = vim.g.FloatBorders,
         },
         -- completion = {
         --     winhighlight = "Normal:Pmenu,FloatBorder:CmpCompletionBorder,CursorLine:CmpCompletionSel,Search:None",

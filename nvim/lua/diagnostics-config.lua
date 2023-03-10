@@ -32,7 +32,6 @@ local severity_hl = {
 }
 local severity_prefix = { "[Error]", "[Warning]", "[Info]", "[Hint]" }
 
-local clear_msg_callback_is_running
 local function echo_cursor_diagnostic()
     local line, col = unpack(api.nvim_win_get_cursor(0))
     local line_diagnostics = vim.diagnostic.get(0, { lnum = line - 1 })
@@ -68,27 +67,38 @@ local function echo_cursor_diagnostic()
         avail_space = avail_space - (#severity + #msg)
     end
 
-    api.nvim_echo(message, false, {})
-    if not clear_msg_callback_is_running then
-        clear_msg_callback_is_running = true
-        vim.defer_fn(function()
-            api.nvim_echo({}, false, {})
-            clear_msg_callback_is_running = false
-        end, 5000)
-    end
+    -- api.nvim_echo(message, false, {})
+    return message
 end
 
-local diag_au_id = api.nvim_create_augroup("Cursor_Diagnostics", { clear = true })
-api.nvim_create_autocmd("CursorHold", {
-    callback = echo_cursor_diagnostic,
-    group = diag_au_id,
-    desc = "Echo cursor diagnostics",
-})
--- api.nvim_create_autocmd("CursorMoved", { command = 'echo ""', group = diag_au_id, desc = "Clear cursor diagnostics" })
+-- local diag_au_id = api.nvim_create_augroup("Cursor_Diagnostics", { clear = true })
+-- api.nvim_create_autocmd("CursorHold", {
+--     callback = function(args)
+--         local msg = echo_cursor_diagnostic()
+--         if msg then
+--             if not (vim.fn.exists("b:cursor_diag_au") and vim.b[args.buf].cursor_diag_au) then
+--                 vim.api.nvim_create_autocmd("CursorMoved", {
+--                     callback = function(args)
+--                         -- print('creating cleanup autocmd')
+--                         vim.cmd("echo 'cleanup! " .. os.clock() .. "'")
+--                         vim.b[args.buf].cursor_diag_au = false
+--                         return true
+--                     end,
+--                     buf = args.bufnr,
+--                 })
+--             end
+--             vim.b[args.buf].cursor_diag_au = true
+--             api.nvim_echo(msg, false, {})
+--         end
+--     end,
+--     group = diag_au_id,
+--     desc = "Echo cursor diagnostics",
+-- })
 
 map("n", "<leader>ld", function()
     vim.diagnostic.open_float({ scope = "line" })
 end, { desc = "Show line diagnostics" })
 map("n", "<leader>lq", vim.diagnostic.setqflist, { desc = "Send diagnostics to quickfix" })
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
+map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })

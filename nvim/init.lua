@@ -15,8 +15,6 @@
 
 -- general configurations
 require("options")
-vim.opt.showtabline = 2
-vim.opt.laststatus = 3
 
 -- Plugins
 require("plugins")

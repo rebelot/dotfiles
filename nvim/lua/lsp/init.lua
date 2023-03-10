@@ -31,27 +31,6 @@ end
 
 require("lsp.inlay_hints")
 
-require("lsp.semantic_tokens").setup({
-    module = { link = "@variable" },
-    selfParameter = { link = "@variable.builtin" },
-    builtinConstant = { link = "Special" },
-    ["@variable.*global"] = { link = "@constant" },
-    ["@variable.*static"] = { link = "@constant" },
-    ["@variable.*readonly"] = { link = "@constant" },
-    ["@variable.*defaultLibrary"] = { link = "Special" },
-    ["@variable.*builtin"] = { link = "Special" },
-
-    ["@function.*defaultLibrary"] = { link = "Special" },
-    ["@method.*defaultLibrary"] = { link = "Special" },
-    ["@function.*builtin"] = { link = "Special" },
-    magicFunction = { link = "Special" },
-    ["@keyword.*documentation"] = { link = "Special" },
-    ["@operator.*controlFlow"] = { link = "@exception" },
-    readonly = { link = "@constant" },
-    -- builtin = { link = "Special" },
-    -- defaultLibrary = { link = "Special" },
-})
-
 ------------------
 -- Capabilities --
 ------------------

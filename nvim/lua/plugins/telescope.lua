@@ -126,7 +126,6 @@ local symbol_highlights = {
     Property = "TelescopeResultsOperator",
     Struct = "TelescopeResultsStruct",
     Variable = "TelescopeResultsVariable",
-
     -- lua
     String = "String",
     Boolean = "Constant",
@@ -134,13 +133,11 @@ local symbol_highlights = {
     Object = "Type",
     Number = "Number",
     Array = "@enum",
-
     -- Other Kinds
     Module = "PreProc",
     Interface = "@interface",
     Operator = "@operator",
     Enum = "@enum",
-
     -- Constructor = "",
     -- Color = "",
     -- EnumMember = "",
@@ -199,14 +196,12 @@ require("telescope").setup({
                     actions.smart_send_to_loclist(prompt_bufnr)
                     require("trouble").open("loclist")
                 end,
-
                 ["<M-a>"] = actions.toggle_all,
                 ["<C-Down>"] = actions.cycle_history_next,
                 ["<C-Up>"] = actions.cycle_history_prev,
                 ["<M-right>"] = actions_layout.cycle_layout_next,
                 ["<M-left>"] = actions_layout.cycle_layout_prev,
                 ["<C-o>"] = actions_layout.toggle_preview,
-
                 ["<C-v>"] = stopinsert(custom_actions.multi_selection_open_vertical),
                 ["<C-s>"] = stopinsert(custom_actions.multi_selection_open_horizontal),
                 ["<C-t>"] = stopinsert(custom_actions.multi_selection_open_tab),
@@ -249,6 +244,7 @@ require("telescope").setup({
         lsp_document_symbols = {
             symbol_highlights = symbol_highlights,
         },
+        commands = themes.get_dropdown(),
     },
     extensions = {
         file_browser = {
@@ -276,7 +272,8 @@ map("n", "<leader>fh", require("telescope.builtin").oldfiles, { desc = "Telescop
 map("n", "<leader>fb", require("telescope.builtin").buffers, { desc = "Telescope: Buffers" })
 map("n", "<leader>fg", require("telescope.builtin").live_grep, { desc = "Telescope: Live Grep" })
 map("x", "<leader>fg", require("telescope.builtin").grep_string, { desc = "Telescope: Live Grep" })
-map("n", "<leader>fG", function() require("telescope.builtin").live_grep({ grep_open_files = true })
+map("n", "<leader>fG", function()
+    require("telescope.builtin").live_grep({ grep_open_files = true })
 end, { desc = "Telescope: Live Grep open_files" })
 map("n", "<leader><space>", require("telescope.builtin").commands, { desc = "Telescope: Commands" })
 map("n", "<leader>ft", require("telescope.builtin").treesitter, { desc = "Telescope: Treesitter" })
