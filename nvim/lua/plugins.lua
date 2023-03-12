@@ -62,6 +62,7 @@ local plugins = {
             require("mason").setup()
             require("mason-lspconfig").setup()
             require("lsp.server_setup")
+            require('lspconfig.ui.windows').default_options.border = vim.g.FloatBorders
         end,
     },
 
@@ -261,9 +262,9 @@ local plugins = {
             vim.g.matchup_override_vimtex = 1
             vim.g.matchup_matchparen_deferred = 1
             vim.g.matchup_matchparen_offscreen = {}
-                -- method = "popup",
-                -- fullwidth = 0,
-                -- syntax_hl = 1,
+            -- method = "popup",
+            -- fullwidth = 0,
+            -- syntax_hl = 1,
             -- }
         end,
     },
@@ -353,7 +354,6 @@ local plugins = {
                         vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
                     end,
                 },
-
                 config = function()
                     vim.keymap.set(
                         "n",
@@ -420,7 +420,6 @@ local plugins = {
                 overrides = function(colors)
                     local theme = colors.theme
                     return {
-                        -- Normal = { bg = 'darkblue' },
                         TelescopeTitle = { fg = theme.ui.special, bold = true },
                         TelescopePromptNormal = { bg = theme.ui.bg_p1 },
                         TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
@@ -428,10 +427,15 @@ local plugins = {
                         TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
                         TelescopePreviewNormal = { bg = theme.ui.bg_dim },
                         TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+                        NormalFloat = { bg = "none" },
+                        LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+                        MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+                        FloatBorder = { bg = "none" },
                         Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
                         PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
                         PmenuSbar = { bg = theme.ui.bg_m1 },
                         PmenuThumb = { bg = theme.ui.bg_p2 },
+                        NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 }
                     }
                 end,
             })

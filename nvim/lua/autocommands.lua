@@ -106,7 +106,7 @@ autocmd("WinLeave", {
 --------------
 
 autocmd("CmdwinEnter", {
-    command = "startinsert | setlocal nonu nornu cul syntax=on signcolumn=no stc= winbar= winhl=Normal:NormalFloat",
+    command = "startinsert | setlocal nonu nornu cul syntax=on signcolumn=no stc= winbar= winhl=Normal:NormalDark",
 })
 
 ----------------
@@ -116,7 +116,7 @@ autocmd("CmdwinEnter", {
 autocmd("TermOpen", {
     callback = function(args)
         vim.bo.ft = "terminal"
-        vim.cmd([[setlocal nonumber norelativenumber winhl=Normal:NormalFloat]])
+        vim.cmd([[setlocal nonumber norelativenumber winhl=Normal:NormalDark]])
         if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
             vim.cmd("startinsert")
         end
