@@ -101,6 +101,11 @@ require("nvim-tree").setup({
         open_file = {
             resize_window = true,
         },
+        file_popup = {
+            open_win_config = {
+                border = vim.g.FloatBorders
+            }
+        },
     },
     view = {
         adaptive_size = false,
@@ -123,26 +128,57 @@ require("nvim-tree").setup({
         },
     },
 })
+
+local function make_rename_params(old_fname, new_fname)
+    return {
+        files = {
+            {
+                oldUri = vim.uri_from_fname(old_fname),
+                newUri = vim.uri_from_fname(new_fname),
+            },
+        },
+    }
+end
+
+local function file_matches_filters(fname, filters)
+    for _, filter in ipairs(filters) do
+        local pattern = filter.pattern
+        local glob = pattern.glob
+        -- local matches = pattern.matches
+        local regex = vim.fn.glob2regpat(glob)
+        if vim.fn.match(fname, regex) ~= -1 then
+            return true
+        end
+    end
+end
+
 local Event = api.events.Event
 api.events.subscribe(Event.NodeRenamed, function(data)
     local clients = vim.lsp.get_active_clients()
-    local old = vim.uri_from_fname(data.old_name)
-    local new = vim.uri_from_fname(data.new_name)
+    local params = make_rename_params(data.old_name, data.new_name)
     for _, client in ipairs(clients) do
-        if vim.tbl_get(client, "server_capabilities", "workspace", "fileOperations", "didRename") ~= nil then
-            client.notify("workspace/didRenameFiles", {
-                files = {
-                    {
-                        oldUri = old,
-                    },
-                    {
-                        newUri = new,
-                    },
-                },
-            })
+        local didRename = vim.tbl_get(client, "server_capabilities", "workspace", "fileOperations", "didRename")
+        if didRename ~= nil then
+            -- local filters = willRename.filters or {}
+            client.notify("workspace/didRenameFiles", params)
+        end
+    end
+end)
+
+api.events.subscribe(Event.WillRenameNode, function(data)
+    local clients = vim.lsp.get_active_clients()
+    local params = make_rename_params(data.old_name, data.new_name)
+    for _, client in ipairs(clients) do
+        local willRename = vim.tbl_get(client, "server_capabilities", "workspace", "fileOperations", "willRename")
+        if willRename ~= nil then
+            -- local filters = willRename.filters or {}
+            local resp = client.request_sync("workspace/willRenameFiles", params, 1000)
+            if resp and resp.result ~= nil then
+                vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
+            end
         end
     end
 end)
 
 vim.keymap.set("n", "<leader>nt", "<cmd>NvimTreeToggle<CR>", { desc = "NvimTree: toggle" })
-vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile!<CR>", { desc = "NvimTree: find file" })
+vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile!<CR> | <cmd>NvimTreeFocus<CR>", { desc = "NvimTree: find file" })

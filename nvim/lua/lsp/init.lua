@@ -29,7 +29,9 @@ vim.lsp.buf.rename = function(new_name, options)
     lsprename(new_name, options)
 end
 
-require("lsp.inlay_hints")
+require("lsp.inlay_hints").setup({
+    -- exclude_ft = { "rust" }
+})
 
 ------------------
 -- Capabilities --

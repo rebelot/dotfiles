@@ -55,7 +55,7 @@ autocmd("FileType", {
 autocmd("Filetype", {
     pattern = "rust",
     callback = function(args)
-        vim.api.nvim_buf_create_user_command(args.buf, "CargoFix", "! cd %:p:h && cargo fix", {})
+        vim.cmd("compiler cargo")
     end,
 })
 
@@ -73,13 +73,14 @@ autocmd({ "WinEnter", "BufWinEnter" }, {
 
 autocmd("WinClosed", {
     command = 'if win_getid() == expand("<amatch>") | wincmd p | endif',
+    nested = true,
 })
 
 -----------------------------------------------
 --  CursorLine, RelativeNumbers, SignColumn  --
 -----------------------------------------------
 
-autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
+autocmd({ "WinEnter", "BufWinEnter", "FileType", "BufEnter" }, {
     callback = function(args)
         local buf = args.buf
         if vim.tbl_contains({ "terminal", "prompt", "nofile", "help" }, vim.bo[buf].buftype) then
@@ -98,7 +99,13 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType" }, {
 })
 
 autocmd("WinLeave", {
-    command = "setlocal nocursorline norelativenumber",
+    -- command = "setlocal nocursorline norelativenumber",
+    callback = function(args)
+        if vim.bo[args.buf].buftype ~= "" then
+            return
+        end
+        vim.cmd([[setlocal nocursorline norelativenumber]])
+    end,
 })
 
 --------------
@@ -109,6 +116,26 @@ autocmd("CmdwinEnter", {
     command = "startinsert | setlocal nonu nornu cul syntax=on signcolumn=no stc= winbar= winhl=Normal:NormalDark",
 })
 
+----------------
+--  QuickFix  --
+----------------
+
+autocmd("BufWinEnter", {
+    callback = function(args)
+        local buf = args.buf
+        if vim.bo[buf].buftype == "quickfix" then
+            vim.cmd([[setl winhl=Normal:NormalDark]])
+            vim.keymap.set("n", "q", "<cmd>cclose<CR>", { buffer = buf })
+            vim.keymap.set("n", "<C-n>", "<cmd>cnext<CR>", { buffer = buf })
+            vim.keymap.set("n", "<C-p>", "<cmd>cNext<CR>", { buffer = buf })
+        end
+    end,
+})
+
+autocmd("QuickFixCmdPost", {
+    command = "cwindow",
+    nested = true,
+})
 ----------------
 --  Terminal  --
 ----------------

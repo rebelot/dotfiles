@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -62,7 +62,7 @@ local plugins = {
             require("mason").setup()
             require("mason-lspconfig").setup()
             require("lsp.server_setup")
-            require('lspconfig.ui.windows').default_options.border = vim.g.FloatBorders
+            require("lspconfig.ui.windows").default_options.border = vim.g.FloatBorders
         end,
     },
 
@@ -269,7 +269,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim",                ft = "csv" },
+    { "chrisbra/csv.vim", ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -278,7 +278,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -435,7 +435,7 @@ local plugins = {
                         PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
                         PmenuSbar = { bg = theme.ui.bg_m1 },
                         PmenuThumb = { bg = theme.ui.bg_p2 },
-                        NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 }
+                        NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
                     }
                 end,
             })
@@ -455,7 +455,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim",  lazy = false, dev = true },
+    { "rebelot/lucy.nvim", lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -622,7 +622,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

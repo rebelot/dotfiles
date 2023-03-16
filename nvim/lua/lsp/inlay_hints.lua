@@ -30,6 +30,16 @@ local function set_mark(bufnr, line, text, highlight)
     })
 end
 
+local function parse_label(label)
+    if type(label) == "string" then
+        return label
+    elseif type(label) == "table" then
+        return table.concat(vim.tbl_map(function(label_part)
+            return label_part.value
+        end, label))
+    end
+end
+
 local function show_handler(err, result, ctx, config)
     if err or not result then
         return
@@ -38,13 +48,11 @@ local function show_handler(err, result, ctx, config)
     local bufnr = ctx.bufnr
     for _, value in pairs(result) do
         local line = tonumber(value.position.line)
-        local label = value.label
-        if type(label) == "table" then
-            label = label.value or label[1].value
-        end
+        local label = parse_label(value.label)
         pcall(set_mark, bufnr, line, label, config and config.highlight or "NonText")
     end
 end
+
 
 local function apply_edits_handler(err, result, ctx, config)
     if err or not result then
@@ -87,37 +95,43 @@ vim.lsp.handlers["textDocument/inlayHint"] = show_handler
 
 -- config
 
+function M.setup(config)
+    config = config or {}
 
-local function setup_au(bufnr)
-    local augrp = vim.api.nvim_create_augroup("LSP_inlay_hints", { clear = false })
-    vim.api.nvim_clear_autocmds({
-        buffer = bufnr,
-        group = augrp,
-    })
-    vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
-        callback = function()
-            M.show()
+    local function setup_au(bufnr)
+        local augrp = vim.api.nvim_create_augroup("LSP_inlay_hints", { clear = false })
+        vim.api.nvim_clear_autocmds({
+            buffer = bufnr,
+            group = augrp,
+        })
+        vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+            callback = function()
+                M.show()
+            end,
+            group = augrp,
+            buffer = bufnr,
+        })
+    end
+
+    vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+            local buf = args.buf
+            if vim.tbl_contains(config.exclude_ft or {}, vim.bo[buf].ft) then
+                return
+            end
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if client.server_capabilities.inlayHintProvider then
+                setup_au(args.buf)
+                M.enable()
+                vim.api.nvim_buf_create_user_command(buf, "InlayHintsToggle", M.toggle, {})
+                vim.api.nvim_buf_create_user_command(buf, "InlayHintsApply", function(cmd_args)
+                    local start_pos, end_pos = { cmd_args.line1, 0 }, { cmd_args.line2, 0 }
+                    M.apply(start_pos, end_pos)
+                end, { range = true })
+            end
         end,
-        group = augrp,
-        buffer = bufnr,
     })
 end
-
-vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client.server_capabilities.inlayHintProvider then
-            setup_au(args.buf)
-            M.enable()
-        end
-    end,
-})
-
-vim.api.nvim_create_user_command("InlayHintsToggle", M.toggle, {})
-vim.api.nvim_create_user_command("InlayHintsApply", function(args)
-    local start_pos, end_pos = { args.line1, 0 }, { args.line2, 0 }
-    M.apply(start_pos, end_pos)
-end, { range = true })
 
 -- {
 --     {

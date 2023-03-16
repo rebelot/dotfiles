@@ -46,15 +46,9 @@ local function setup_colors()
     }
 end
 
-require("heirline").load_colors(setup_colors())
-
 local ViMode = {
     init = function(self)
         self.mode = vim.fn.mode(1)
-        if not self.once then
-            vim.cmd("au ModeChanged *:*o redrawstatus")
-        end
-        self.once = true
     end,
     static = {
         mode_names = {
@@ -103,6 +97,10 @@ local ViMode = {
     end,
     update = {
         "ModeChanged",
+        pattern = "*:*",
+        callback = vim.schedule_wrap(function()
+            vim.cmd("redrawstatus")
+        end),
     },
 }
 
@@ -633,6 +631,13 @@ local MacroRec = {
         end,
         hl = { fg = "green", bold = true },
     }),
+    update = {
+        "RecordingEnter",
+        "RecordingLeave",
+        callback = vim.schedule_wrap(function()
+            vim.cmd("redrawstatus")
+        end)
+    },
     { provider = " " },
 }
 
@@ -650,8 +655,10 @@ local VisualRange = {
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
+ViMode = utils.surround({ "", "" }, "bright_bg", { MacroRec, ViMode, Snippets })
+
 local DefaultStatusline = {
-    utils.surround({ "", "" }, "bright_bg", { MacroRec, ViMode, Snippets }),
+    ViMode,
     Space,
     Spell,
     WorkDir,
@@ -668,7 +675,7 @@ local DefaultStatusline = {
     LSPActive,
     Space,
     FileType,
-    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
+    { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
     SearchCount,
@@ -787,17 +794,17 @@ local CloseButton = {
 
 local WinBar = {
     fallthrough = false,
-    {
-        condition = function()
-            return conditions.buffer_matches({
-                buftype = { "nofile", "prompt", "help", "quickfix" },
-                filetype = { "^git.*", "fugitive" },
-            })
-        end,
-        init = function()
-            vim.opt_local.winbar = nil
-        end,
-    },
+    -- {
+    --     condition = function()
+    --         return conditions.buffer_matches({
+    --             buftype = { "nofile", "prompt", "help", "quickfix" },
+    --             filetype = { "^git.*", "fugitive" },
+    --         })
+    --     end,
+    --     init = function()
+    --         vim.opt_local.winbar = nil
+    --     end,
+    -- },
     {
         condition = function()
             return conditions.buffer_matches({ buftype = { "terminal" } })
@@ -822,7 +829,7 @@ local WinBar = {
         {
             -- provider = "      ",
             Navic,
-            { provider = "%<"},
+            { provider = "%<" },
             Align,
             FileNameBlock,
             CloseButton,
@@ -1180,7 +1187,22 @@ local Stc = {
 vim.o.laststatus = 3
 -- vim.o.showtabline = 2
 
-require("heirline").setup({ statusline = StatusLines, winbar = WinBar, tabline = TabLine, statuscolumn = Stc })
+require("heirline").setup({
+    statusline = StatusLines,
+    winbar = WinBar,
+    tabline = TabLine,
+    statuscolumn = Stc,
+    opts = {
+        disable_winbar_cb = function(args)
+            local buf = args.buf
+            local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
+            local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
+            return buftype or filetype
+        end,
+        colors = setup_colors,
+    },
+})
+
 vim.o.statuscolumn = require("heirline").eval_statuscolumn()
 
 vim.api.nvim_create_augroup("Heirline", { clear = true })
@@ -1189,23 +1211,9 @@ vim.cmd([[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 |
 
 -- vim.cmd("au BufWinEnter * if &bt != '' | setl stc= | endif")
 
-vim.api.nvim_create_autocmd("User", {
-    pattern = "HeirlineInitWinbar",
-    callback = function(args)
-        local buf = args.buf
-        local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
-        local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
-        if buftype or filetype then
-            args.data.ok = false
-        end
-    end,
-    group = "Heirline",
-})
-
 vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
-        local colors = setup_colors()
-        utils.on_colorscheme(colors)
+        utils.on_colorscheme(setup_colors)
     end,
     group = "Heirline",
 })
