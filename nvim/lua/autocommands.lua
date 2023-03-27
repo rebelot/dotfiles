@@ -52,8 +52,8 @@ autocmd("FileType", {
     command = [[setlocal makeprg=pandoc\ -f\ gfm\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf]],
 })
 
-autocmd("Filetype", {
-    pattern = "rust",
+autocmd({"BufRead","BufNewFile"}, {
+    pattern = {"*.rs", 'Cargo.toml'},
     callback = function(args)
         vim.cmd("compiler cargo")
     end,

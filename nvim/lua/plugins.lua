@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -269,7 +269,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim", ft = "csv" },
+    { "chrisbra/csv.vim",                ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -278,7 +278,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -315,10 +315,11 @@ local plugins = {
     {
         "kyazdani42/nvim-tree.lua",
         init = function()
-            vim.api.nvim_create_autocmd("BufEnter", {
+            vim.api.nvim_create_autocmd({"BufEnter"}, {
                 callback = function(args)
                     if vim.fn.isdirectory(args.match) == 1 then
                         require("lazy").load({ plugins = "nvim-tree.lua" })
+                        vim.cmd("NvimTreeToggle")
                         return true
                     end
                 end,
@@ -336,7 +337,9 @@ local plugins = {
         cmd = "Oil",
         keys = { "<leader>o" },
         config = function()
-            require("oil").setup()
+            require("oil").setup({
+                default_file_explorer = false,
+            })
             vim.keymap.set("n", "<leader>o", ":Oil<CR>", { desc = "Oil" })
         end,
     },
@@ -428,9 +431,9 @@ local plugins = {
                         TelescopePreviewNormal = { bg = theme.ui.bg_dim },
                         TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
                         NormalFloat = { bg = "none" },
+                        FloatBorder = { bg = "none" },
                         LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
                         MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
-                        FloatBorder = { bg = "none" },
                         Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
                         PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
                         PmenuSbar = { bg = theme.ui.bg_m1 },
@@ -455,7 +458,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -622,7 +625,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
@@ -695,7 +698,7 @@ local plugins = {
         build = "cd app && npm install",
         cmd = "MarkdownPreview",
         ft = { "markdown", "pandoc" },
-        setup = function()
+        init = function()
             vim.g.mkdp_filetypes = { "markdown" }
             -- vim.g.mkdp_browser = 'safari'
         end,

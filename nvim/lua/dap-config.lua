@@ -175,37 +175,6 @@ dap.configurations.cpp = {
     },
 }
 
--- dap.adapters.cppdbg = {
---     id = "cppdbg",
---     type = "executable",
---     command = "OpenDebugAD7",
--- }
--- table.insert(dap.configurations.cpp, {
---     name = "Launch file (cpptools)",
---     type = "cppdbg",
---     request = "launch",
---     program = function()
---         return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
---     end,
---     -- MIMode = "lldb",
---     cwd = "${workspaceFolder}",
---     stopAtEntry = true,
---     setupCommands = {
---         {
---             text = "-enable-pretty-printing",
---             description = "enable pretty printing",
---             ignoreFailures = false,
---         },
---     },
--- })
--- table.insert(dap.configurations.cpp, {
---     name = "attach PID (cpptools)",
---     type = "cppdbg",
---     request = "attach",
---     MIMode = "lldb",
---     pid = require("dap.utils").pick_process,
--- })
-
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 

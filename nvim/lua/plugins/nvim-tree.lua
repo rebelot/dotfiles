@@ -181,4 +181,4 @@ api.events.subscribe(Event.WillRenameNode, function(data)
 end)
 
 vim.keymap.set("n", "<leader>nt", "<cmd>NvimTreeToggle<CR>", { desc = "NvimTree: toggle" })
-vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile!<CR> | <cmd>NvimTreeFocus<CR>", { desc = "NvimTree: find file" })
+vim.keymap.set("n", "<leader>nf", "<cmd>NvimTreeFindFile!<CR>", { desc = "NvimTree: find file" })
