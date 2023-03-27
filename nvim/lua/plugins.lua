@@ -315,7 +315,7 @@ local plugins = {
     {
         "kyazdani42/nvim-tree.lua",
         init = function()
-            vim.api.nvim_create_autocmd({"BufEnter"}, {
+            vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)
                     if vim.fn.isdirectory(args.match) == 1 then
                         require("lazy").load({ plugins = "nvim-tree.lua" })
