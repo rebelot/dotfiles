@@ -94,7 +94,6 @@ compinit -i
 # other sources  {{{
 source /opt/local/etc/profile.d/z.sh
 source ~/.fzf.zsh
-eval "$(kitty +complete setup zsh)"
 eval "$(pip completion --zsh)"
 # }}}
 
@@ -190,14 +189,6 @@ export XDG_CONFIG_HOME="$HOME/.config/"
 
 # Functions {{{
 
-function melakappa {
-    if [ $# -eq 0 ]; then
-        echo "usage: melakappa Folder_Name"
-    else
-        mkdir -p ~/Jessicah/"$1" && mount_afp -i afp://$jessicah/"$1" ~/Jessicah/"$1"
-    fi
-}
-
 function deskhide {
     local state
     state=$(defaults read com.apple.finder CreateDesktop)
@@ -239,9 +230,14 @@ function pman {
     tmux display-popup -E "man $@"
 }
 
-function remote_notebook(){
+function remote_notebook {
     # 8080
     jupyter notebook --no-browser --port=$1
+}
+
+function ssh_forward {
+    # 8080 xlence
+    ssh -L $1:localhost:$1 $2
 }
 
 # function neovim_remote {

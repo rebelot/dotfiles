@@ -24,6 +24,29 @@ local function dim(color, n)
     return blend(color, "#000000", n)
 end
 
+local separators = {
+    rounded_left = "",
+    rounded_right = "",
+    rounded_left_hollow = "",
+    rounded_right_hollow = "",
+    powerline_left = "",
+    powerline_right = "",
+    powerline_right_hollow = "",
+    powerline_left_hollow = "",
+    slant_left = "",
+    slant_right = "",
+    inverted_slant_left = "",
+    inverted_slant_right = "",
+    slant_ur = "",
+    slant_br = "",
+    vert = "│",
+    vert_thick = "┃",
+    block = "█",
+    double_vert = "║",
+    dotted_vert = "┊",
+}
+
+
 local function setup_colors()
     return {
         bright_bg = utils.get_highlight("Folded").bg,
@@ -89,8 +112,9 @@ local ViMode = {
         },
     },
     provider = function(self)
-        return " %2(" .. self.mode_names[self.mode] .. "%)"
+        return " %2(" .. self.mode_names[self.mode] .. "%)"
     end,
+    --     
     hl = function(self)
         local color = self:mode_color()
         return { fg = color, bold = true }
