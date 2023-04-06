@@ -174,8 +174,8 @@ export LESS=-R
 # export LDFLAGS="-L/opt/local/lib"
 # export DYLD_LIBRARY_PATH="/usr/local/cuda/lib:$DYLD_LIBRARY_PATH"
 # export QT_API="pyqt5"
-# export CXX="/opt/local/bin/clang++"
-# export CC="/opt/local/bin/clang"
+export CXX=`which g++`
+export CC=`which gcc`
 
 #XCODE CTL SOURCES
 # /Applications/Xcode.app/Contents/Developer
