@@ -7,8 +7,8 @@ local fn = vim.fn
 vim.g.FloatBorders = "rounded"
 vim.g.mapleader = ','
 
-g.python3_host_prog = "/Users/laurenzi/venvs/base/bin/python"
-g.python_host_prog = "/Users/laurenzi/venvs/base27/bin/python"
+g.python3_host_prog = vim.fn.expand("$HOME") .. "/venvs/base/bin/python"
+g.python_host_prog = vim.fn.expand("$HOME") .. "/venvs/base27/bin/python"
 
 o.termguicolors = true           -- enable gui colors for terminal
 g.vimsyn_embed = "lPr"
