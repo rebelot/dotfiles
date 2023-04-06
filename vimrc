@@ -31,9 +31,9 @@ set statusline=%-(%f%h%w%q%m%r%)%=%(%y\ %l/%L\ (%p%%)\ :\ %c%)
 " Settings {{{
 
 syntax on                " enable syntax highlighting
-set termguicolors        " enable gui colors for terminal
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" 
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"set termguicolors        " enable gui colors for terminal
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum" 
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
                          " Failsafe to enable True Colors in tmux; is it really required?
 set encoding=utf-8       " enconding
 let g:vimsyn_embed = 'lPr'
@@ -79,7 +79,7 @@ set wildignorecase       " ignore case command completion menu
 set showcmd              " show key spressed in lower-right corner
 set sidescroll=1         " smooth side scrolling
 set conceallevel=2       " conceal marked text
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,preview
                          " set the behavior of the completion menu 
 set fillchars=vert:┃,fold:\ 
                          " set various fillchars; in this case removes clobbering signs from folds ('\ ')

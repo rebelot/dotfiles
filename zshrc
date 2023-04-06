@@ -7,7 +7,7 @@
 # ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 
 # zmodload zsh/zprof
-
+module load gnu8 forge schrodinger amber
 # $PATH {{{
 # /etc/paths: /usr/local/bin /usr/bin /bin /usr/sbin /sbin
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
@@ -22,8 +22,8 @@ export PATH="$HOME/.npm-packages/bin:$PATH"                   # (node installer)
 # export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
-source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
-[[ -z $TMUX ]] || conda deactivate; conda activate py311      #   + TMUX fix
+#source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
+#[[ -z $TMUX ]] || conda deactivate; conda activate py311      #   + TMUX fix
 source "$HOME/venvs/base/bin/activate"                        # <-- Activate the Python
 # }}}
 
@@ -92,10 +92,12 @@ compinit -i
 # }}}
 
 # other sources  {{{
+<<<<<<< HEAD
 source /opt/local/etc/profile.d/z.sh
 source /opt/local/share/fzf/shell/key-bindings.zsh
 source /opt/local/share/fzf/shell/completion.zsh
 # eval "$(pip completion --zsh)"
+source ~/.fzf.zsh
 # }}}
 
 # plugin Opts {{{
@@ -273,6 +275,8 @@ alias mdclean='rm -ri *_trj *out* *cpt* *log *.ene *checkpoint* *-in.cms'
 alias pipupdate='pip list -lo --format json |  python -c "import json, sys; print(\"\n\".join([x[\"name\"] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U'
 alias icat='kitty +kitten icat'
 alias kitty_make_conf='kitty +runpy "from kitty.config import commented_out_default_config as conf; print(conf());"'
+alias squeuel="squeue -O JobID:7,Partition:10,Name,UserName,StateCompact:4,TimeUsed:12,tres-alloc:45,NodeList:.8"
+alias sinfol="sinfo -O NodeHost:10,Gres:7,GresUsed:10,CPUsState:14,StateCompact:.5"
 # alias nvr=neovim_remote
 # alias nvrs="nvim --server $NVIM_LISTEN_ADDRESS --remote-send"
 # alias nvre="nvim --server $NVIM_LISTEN_ADDRESS --remote-expr"

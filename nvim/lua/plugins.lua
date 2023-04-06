@@ -481,7 +481,7 @@ require("lazy").setup({
 
     {
         "rebelot/kanagawa.nvim",
-        dev = true,
+        dev = false,
         lazy = false,
         priority = 1000,
         config = function()
@@ -534,7 +534,7 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim", lazy = false, dev = false, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -547,9 +547,9 @@ require("lazy").setup({
 
     {
         "rebelot/heirline.nvim",
-        dev = true,
         -- event = "VimEnter",
         event = "BufEnter",
+        dev = false,
         enabled = true,
         config = function()
             require("plugins.heirline")
@@ -702,7 +702,7 @@ require("lazy").setup({
 
     {
         "rebelot/terminal.nvim",
-        dev = true,
+        dev = false,
         cmd = { "TermOpen", "TermToggle", "TermRun", "Lazygit", "IPython", "Htop" },
         keys = "<leader>t",
         event = "TermOpen",
