@@ -658,9 +658,6 @@ local MacroRec = {
     update = {
         "RecordingEnter",
         "RecordingLeave",
-        callback = vim.schedule_wrap(function()
-            vim.cmd("redrawstatus")
-        end)
     },
     { provider = " " },
 }

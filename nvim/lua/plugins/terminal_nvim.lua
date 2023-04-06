@@ -12,21 +12,30 @@ map("n", "<leader>tR", term_map.run(nil, { layout = { open_cmd = "enew" } }))
 map("n", "<leader>tk", term_map.kill)
 map("n", "<leader>t]", term_map.cycle_next)
 map("n", "<leader>t[", term_map.cycle_prev)
+map("n", "<leader>tl", term_map.move({ open_cmd = "belowright vnew" }))
+map("n", "<leader>tL", term_map.move({ open_cmd = "botright vnew" }))
+map("n", "<leader>th", term_map.move({ open_cmd = "belowright new" }))
+map("n", "<leader>tH", term_map.move({ open_cmd = "botright new" }))
+map("n", "<leader>tf", term_map.move({ open_cmd = "float" }))
+
 local ipython = require("terminal").terminal:new({
     layout = { open_cmd = "botright vertical new" },
     cmd = { "ipython" },
     autoclose = true,
 })
+
 local htop = require("terminal").terminal:new({
     layout = { open_cmd = "float" },
     cmd = { "htop" },
     autoclose = true,
 })
+
 local lazygit = require("terminal").terminal:new({
     layout = { open_cmd = "float", height = 0.9, width = 0.9 },
     cmd = { "lazygit" },
     autoclose = true,
 })
+
 vim.env["GIT_EDITOR"] = "nvr --remote-tab-wait-silent +'set bufhidden=wipe'"
 
 api.nvim_create_user_command("IPython", function()
