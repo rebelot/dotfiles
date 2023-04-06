@@ -46,7 +46,6 @@ local separators = {
     dotted_vert = "┊",
 }
 
-
 local function setup_colors()
     return {
         bright_bg = utils.get_highlight("Folded").bg,
@@ -114,7 +113,7 @@ local ViMode = {
     provider = function(self)
         return " %2(" .. self.mode_names[self.mode] .. "%)"
     end,
-    --     
+    --    
     hl = function(self)
         local color = self:mode_color()
         return { fg = color, bold = true }
@@ -696,7 +695,7 @@ local DefaultStatusline = {
     LSPActive,
     Space,
     FileType,
-    { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
+    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
     SearchCount,
@@ -1048,10 +1047,19 @@ local BufferLine = utils.make_buflist(
 )
 
 local Tabpage = {
-    provider = function(self)
-        local n = #vim.api.nvim_tabpage_list_wins(self.tabpage)
-        return "%" .. self.tabnr .. "T " .. self.tabnr .. "(" .. n .. ")" .. " %T"
-    end,
+    {
+        provider = function(self)
+            return " %" .. self.tabnr .. "T" .. self.tabnr .. " "
+        end,
+        hl = { bold = true },
+    },
+    {
+        provider = function(self)
+            local n = #vim.api.nvim_tabpage_list_wins(self.tabpage)
+            return n .. "%T "
+        end,
+        hl = { fg = "gray" },
+    },
     hl = function(self)
         if not self.is_active then
             return "TabLine"
