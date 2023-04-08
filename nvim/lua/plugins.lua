@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -432,6 +432,7 @@ local plugins = {
                         TelescopePreviewNormal = { bg = theme.ui.bg_dim },
                         TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
                         NormalFloat = { bg = "none" },
+                        FloatTitle = { bg = "none" },
                         FloatBorder = { bg = "none" },
                         LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
                         MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
@@ -470,7 +471,8 @@ local plugins = {
     {
         "rebelot/heirline.nvim",
         dev = true,
-        event = "UiEnter",
+        -- event = "VimEnter",
+        event = "VimEnter",
         enabled = true,
         config = function()
             require("plugins.heirline")

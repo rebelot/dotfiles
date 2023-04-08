@@ -1016,8 +1016,8 @@ end
 
 local buflist_cache = {}
 
-vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
-    callback = function()
+vim.api.nvim_create_autocmd({ "VimEnter", "UIEnter", "BufAdd", "BufDelete" }, {
+    callback = function(args)
         vim.schedule(function()
             local buffers = get_bufs()
             for i, v in ipairs(buffers) do
@@ -1225,7 +1225,7 @@ require("heirline").setup({
         disable_winbar_cb = function(args)
             local buf = args.buf
             local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
-            local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer" }, vim.bo[buf].filetype)
+            local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer", }, vim.bo[buf].filetype)
             return buftype or filetype
         end,
         colors = setup_colors,

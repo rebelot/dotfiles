@@ -22,7 +22,8 @@ local function make_config(server_name)
 end
 
 local servers = {
-    "ccls",
+    -- "ccls",
+    "clangd",
     "pylance",
     -- "pyright",
     "marksman",

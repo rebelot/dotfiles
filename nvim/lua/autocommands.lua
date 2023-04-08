@@ -52,8 +52,8 @@ autocmd("FileType", {
     command = [[setlocal makeprg=pandoc\ -f\ gfm\ --pdf-engine=xelatex\ %\ -o\ %:r.pdf]],
 })
 
-autocmd({"BufRead","BufNewFile"}, {
-    pattern = {"*.rs", 'Cargo.toml'},
+autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = { "*.rs", "Cargo.toml" },
     callback = function(args)
         vim.cmd("compiler cargo")
     end,
@@ -102,6 +102,9 @@ autocmd("WinLeave", {
     -- command = "setlocal nocursorline norelativenumber",
     callback = function(args)
         if vim.bo[args.buf].buftype ~= "" then
+            return
+        end
+        if vim.wo.scrollbind then
             return
         end
         vim.cmd([[setlocal nocursorline norelativenumber]])

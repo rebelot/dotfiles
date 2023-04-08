@@ -36,5 +36,6 @@ plumed
 pdfgrep
 exa
 glow
+neomutt
 
 #bmon
