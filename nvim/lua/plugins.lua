@@ -270,7 +270,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim", ft = "csv" },
+    { "chrisbra/csv.vim",                ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -279,7 +279,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -460,7 +460,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -628,7 +628,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

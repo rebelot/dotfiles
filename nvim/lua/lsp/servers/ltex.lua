@@ -67,7 +67,7 @@ return {
 
         update_config_from_spellfile(client)
     end,
-    filetypes = { "bib", "markdown", "org", "plaintex", "rst", "tex" },
+    filetypes = { "bib", "markdown", "org", "plaintex", "rst", "tex", "mail" },
     settings = {
         ltex = {
             completionEnabled = true,
