@@ -559,7 +559,7 @@ local WorkDir = {
     hl = { fg = "blue", bold = true },
     on_click = {
         callback = function()
-            vim.cmd("NvimTreeToggle")
+            vim.cmd("Neotree toggle")
         end,
         name = "heirline_workdir",
     },
@@ -1104,8 +1104,8 @@ local TabLineOffset = {
         local bufnr = vim.api.nvim_win_get_buf(win)
         self.winid = win
 
-        if vim.api.nvim_buf_get_option(bufnr, "filetype") == "NvimTree" then
-            self.title = "NvimTree"
+        if vim.api.nvim_buf_get_option(bufnr, "filetype") == "neo-tree" then
+            self.title = "NeoTree"
             return true
         end
     end,
@@ -1226,7 +1226,7 @@ local Stc = {
 }
 
 vim.o.laststatus = 3
-vim.o.showcmdloc = 'statusline'
+vim.o.showcmdloc = "statusline"
 -- vim.o.showtabline = 2
 
 require("heirline").setup({

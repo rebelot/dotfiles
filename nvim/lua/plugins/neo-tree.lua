@@ -60,7 +60,7 @@ local function getTelescopeOpts(state, path)
     }
 end
 require("neo-tree").setup({
-    auto_clean_after_session_restore = false,
+    auto_clean_after_session_restore = true,
     popup_border_style = vim.g.FloatBorder,
     open_files_do_not_replace_types = { "terminal", "trouble", "qf" },
     sources = {
@@ -73,7 +73,7 @@ require("neo-tree").setup({
         winbar = true,
         sources = {
             { source = "filesystem", display_name = " Files" },
-            { source = "buffers", display_name = " Buffers" },
+            { source = "buffers", display_name = " Buffers" }, -- 
             { source = "git_status", display_name = " Git" },
             { source = "document_symbols", display_name = " LSP" },
         },
@@ -98,7 +98,7 @@ require("neo-tree").setup({
                 modified = "",
                 conflict = "",
                 unstaged = "",
-                staged = "",
+                staged = "",
                 unmerged = "",
                 renamed = "",
                 untracked = "",
@@ -121,11 +121,11 @@ require("neo-tree").setup({
             ["<cr>"] = "open",
             ["<esc>"] = "revert_preview",
             ["o"] = { "toggle_preview", config = { use_float = true } },
+            ["O"] = "focus_preview",
             ["P"] = function(state)
                 local node = state.tree:get_node()
                 require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
             end,
-            ["l"] = "focus_preview",
             ["<C-s>"] = "split_with_window_picker",
             ["<C-v>"] = "vsplit_with_window_picker",
             ["<C-t>"] = "open_tabnew",
@@ -150,6 +150,24 @@ require("neo-tree").setup({
             [">"] = "next_source",
             -- custom commands
             ["i"] = "run_command",
+            ["h"] = function(state)
+                local node = state.tree:get_node()
+                if (node.type == "directory" or node:has_children()) and node:is_expanded() then
+                    state.commands.toggle_node(state)
+                else
+                    require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+                end
+            end,
+            ["l"] = function(state)
+                local node = state.tree:get_node()
+                if node.type == "directory" or node:has_children() then
+                    if not node:is_expanded() then
+                        state.commands.toggle_node(state)
+                    else
+                        require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+                    end
+                end
+            end,
         },
     },
     commands = {
