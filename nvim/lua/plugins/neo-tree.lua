@@ -131,6 +131,7 @@ require("neo-tree").setup({
             ["<C-t>"] = "open_tabnew",
             ["<C-w>"] = "open_with_window_picker",
             ["C"] = "close_node",
+            ["za"] = "toggle_node",
             ["zM"] = "close_all_nodes",
             ["zR"] = "expand_all_nodes",
             ["R"] = "refresh",
