@@ -63,17 +63,25 @@ require("neo-tree").setup({
     auto_clean_after_session_restore = false,
     popup_border_style = vim.g.FloatBorder,
     open_files_do_not_replace_types = { "terminal", "trouble", "qf" },
+    sources = {
+        "filesystem",
+        "buffers",
+        "git_status",
+        "document_symbols",
+    },
     source_selector = {
         winbar = true,
-        tab_labels = {
-            -- falls back to source_name if nil
-            filesystem = "  Files ",
-            buffers = "  Buffers ",
-            git_status = "  Git ",
+        sources = {
+            { source = "filesystem", display_name = " Files" },
+            { source = "buffers", display_name = " Buffers" },
+            { source = "git_status", display_name = " Git" },
+            { source = "document_symbols", display_name = " LSP" },
         },
-        separator = { left = "", right = ""},
+        separator = " ",
+        tabs_layout = "equal",
     },
     default_component_configs = {
+        container = { enable_character_fade = false },
         modified = {
             symbol = "●",
         },
@@ -112,7 +120,11 @@ require("neo-tree").setup({
             ["<2-LeftMouse>"] = "open",
             ["<cr>"] = "open",
             ["<esc>"] = "revert_preview",
-            ["P"] = { "toggle_preview", config = { use_float = true } },
+            ["o"] = { "toggle_preview", config = { use_float = true } },
+            ["P"] = function(state)
+                local node = state.tree:get_node()
+                require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+            end,
             ["l"] = "focus_preview",
             ["<C-s>"] = "split_with_window_picker",
             ["<C-v>"] = "vsplit_with_window_picker",
@@ -136,7 +148,16 @@ require("neo-tree").setup({
             ["?"] = "show_help",
             ["<"] = "prev_source",
             [">"] = "next_source",
+            -- custom commands
+            ["i"] = "run_command",
         },
+    },
+    commands = {
+        run_command = function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            vim.api.nvim_input(": " .. path .. "<Home>")
+        end,
     },
     nesting_rules = {},
     filesystem = {
@@ -166,7 +187,6 @@ require("neo-tree").setup({
                 ["[g"] = "prev_git_modified",
                 ["]g"] = "next_git_modified",
                 -- custom commands
-                ["i"] = "run_command",
                 ["tf"] = "telescope_find",
                 ["tg"] = "telescope_grep",
             },
@@ -179,11 +199,6 @@ require("neo-tree").setup({
             },
         },
         commands = {
-            run_command = function(state)
-                local node = state.tree:get_node()
-                local path = node:get_id()
-                vim.api.nvim_input(": " .. path .. "<Home>")
-            end,
             telescope_find = function(state)
                 local node = state.tree:get_node()
                 local path = node:get_id()
@@ -200,6 +215,56 @@ require("neo-tree").setup({
                 end
                 require("telescope.builtin").live_grep(getTelescopeOpts(state, path))
             end,
+        },
+    },
+    renderers = {
+        file = {
+            { "indent" },
+            { "icon" },
+            {
+                "container",
+                content = {
+                    {
+                        "name",
+                        zindex = 10,
+                    },
+                    {
+                        "symlink_target",
+                        zindex = 10,
+                        highlight = "NeoTreeSymbolicLinkTarget",
+                    },
+                    { "clipboard", zindex = 10 },
+                    { "bufnr", zindex = 10 },
+                    { "modified", zindex = 20, align = "right" },
+                    { "diagnostics", zindex = 20, align = "right" },
+                    { "git_status", zindex = 20, align = "right" },
+                },
+            },
+        },
+        directory = {
+            { "indent" },
+            { "icon" },
+            { "current_filter" },
+            {
+                "container",
+                content = {
+                    { "name", zindex = 10 },
+                    {
+                        "symlink_target",
+                        zindex = 10,
+                        highlight = "NeoTreeSymbolicLinkTarget",
+                    },
+                    { "clipboard", zindex = 10 },
+                    {
+                        "diagnostics",
+                        errors_only = true,
+                        zindex = 20,
+                        align = "right",
+                        hide_when_expanded = true,
+                    },
+                    { "git_status", zindex = 20, align = "right", hide_when_expanded = true },
+                },
+            },
         },
     },
     buffers = {
@@ -228,6 +293,51 @@ require("neo-tree").setup({
             },
         },
     },
+    document_symbols = {
+        window = {
+            mappings = {
+                ["<cr>"] = "jump_to_symbol",
+                ["a"] = "noop",
+                ["A"] = "noop",
+                ["d"] = "noop",
+                ["y"] = "noop",
+                ["Y"] = "noop",
+                ["x"] = "noop",
+                ["p"] = "noop",
+                ["m"] = "noop",
+            },
+        },
+        kinds = {
+            Unknown = { icon = "?", hl = "" },
+            Root = { icon = "/", hl = "NeoTreeRootName" },
+            File = { icon = "", hl = "Tag" },
+            Module = { icon = require("lspkind").symbol_map.Module, hl = "PreProc" },
+            Namespace = { icon = require("lspkind").symbol_map.Namespace, hl = "@namespace" },
+            Package = { icon = require("lspkind").symbol_map.Package, hl = "PreProc" },
+            Class = { icon = require("lspkind").symbol_map.Class, hl = "Type" },
+            Method = { icon = require("lspkind").symbol_map.Method, hl = "@method" },
+            Property = { icon = require("lspkind").symbol_map.Property, hl = "@property" },
+            Field = { icon = require("lspkind").symbol_map.Field, hl = "@field" },
+            Constructor = { icon = require("lspkind").symbol_map.Constructor, hl = "@constructor" },
+            Enum = { icon = require("lspkind").symbol_map.Enum, hl = "Type" },
+            Interface = { icon = require("lspkind").symbol_map.Interface, hl = "Type" },
+            Function = { icon = require("lspkind").symbol_map.Function, hl = "@function" },
+            Variable = { icon = require("lspkind").symbol_map.Variable, hl = "@variable" },
+            Constant = { icon = require("lspkind").symbol_map.Constant, hl = "Constant" },
+            String = { icon = require("lspkind").symbol_map.String, hl = "String" },
+            Number = { icon = require("lspkind").symbol_map.Number, hl = "Number" },
+            Boolean = { icon = require("lspkind").symbol_map.Boolean, hl = "Boolean" },
+            Array = { icon = require("lspkind").symbol_map.Array, hl = "Type" },
+            Object = { icon = require("lspkind").symbol_map.Object, hl = "Type" },
+            Key = { icon = require("lspkind").symbol_map.Key, hl = "Property" },
+            Null = { icon = require("lspkind").symbol_map.Null, hl = "Constant" },
+            EnumMember = { icon = require("lspkind").symbol_map.EnumMember, hl = "Constant" },
+            Struct = { icon = require("lspkind").symbol_map.Struct, hl = "Type" },
+            Event = { icon = require("lspkind").symbol_map.Event, hl = "@property" },
+            Operator = { icon = require("lspkind").symbol_map.Operator, hl = "Operator" },
+            TypeParameter = { icon = require("lspkind").symbol_map.TypeParameter, hl = "Type" },
+        },
+    },
     event_handlers = {
         {
             event = "file_renamed",
@@ -239,6 +349,7 @@ require("neo-tree").setup({
 
 vim.keymap.set("n", "<leader>nt", ":Neotree source=filesystem toggle<CR>")
 vim.keymap.set("n", "<leader>nf", ":Neotree source=filesystem reveal_force_cwd<cr>")
-vim.keymap.set("n", "<leader>nF", ":Neotree position=float reveal_file=<cfile> reveal_force_cwd<cr>")
+vim.keymap.set("n", "<leader>gf", ":Neotree position=float reveal_file=<cfile> reveal_force_cwd<cr>")
 vim.keymap.set("n", "<leader>nb", ":Neotree source=buffers<CR>")
 vim.keymap.set("n", "<leader>ng", ":Neotree source=git_status<CR>")
+vim.keymap.set("n", "<leader>ns", ":Neotree source=document_symbols<CR>")
