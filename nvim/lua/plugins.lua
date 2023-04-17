@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -187,7 +187,13 @@ local plugins = {
             },
             {
                 "zbirenbaum/copilot-cmp",
-                config = true,
+                config = function()
+                    require("copilot_cmp").setup({
+                        formatters = {
+                            insert_text = require("copilot_cmp.format").remove_existing,
+                        },
+                    })
+                end,
             },
         },
         config = function()
@@ -201,7 +207,9 @@ local plugins = {
         config = function()
             require("copilot").setup({
                 ft_disable = { "julia", "dap-repl", "terminal" },
+                panel = { enabled = false },
                 suggestion = {
+                    enabled = false,
                     keymap = {
                         accept = "<M-CR>",
                         next = "<M-n>",
@@ -270,7 +278,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim",                ft = "csv" },
+    { "chrisbra/csv.vim", ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -279,7 +287,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -315,6 +323,7 @@ local plugins = {
 
     {
         "kyazdani42/nvim-tree.lua",
+        enabled = false,
         init = function()
             vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)
@@ -330,6 +339,50 @@ local plugins = {
         keys = { "<leader>nt", "<leader>nf" },
         config = function()
             require("plugins.nvim-tree")
+        end,
+    },
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        enabled = true,
+        cmd = { "Neotree" },
+        keys = { "<leader>nt", "<leader>nf" },
+        init = function()
+            vim.api.nvim_create_autocmd({ "BufEnter" }, {
+                callback = function(args)
+                    if vim.fn.isdirectory(args.match) == 1 then
+                        require("lazy").load({ plugins = "neo-tree.nvim" })
+                        vim.cmd("Neotree")
+                        return true
+                    end
+                end,
+            })
+        end,
+        branch = "v2.x",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            {
+                -- only needed if you want to use the commands with "_with_window_picker" suffix
+                "s1n7ax/nvim-window-picker",
+                config = function()
+                    require("window-picker").setup({
+                        autoselect_one = true,
+                        include_current = false,
+                        filter_rules = {
+                            -- filter using buffer options
+                            bo = {
+                                -- if the file type is one of following, the window will be ignored
+                                -- filetype = { 'neo-tree', "neo-tree-popup", "notify" },
+                                -- if the buffer type is one of following, the window will be ignored
+                                buftype = { "terminal", "quickfix", "nofile" },
+                            },
+                        },
+                        -- other_win_hl_color = '#e35e4f',
+                    })
+                end,
+            },
+        },
+        config = function()
+            require("plugins.neo-tree")
         end,
     },
 
@@ -441,6 +494,13 @@ local plugins = {
                         PmenuSbar = { bg = theme.ui.bg_m1 },
                         PmenuThumb = { bg = theme.ui.bg_p2 },
                         NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
+
+                        NeoTreeModified = { link = "String" },
+                        NeoTreeGitConflict = { fg = theme.diag.error },
+                        NeoTreeGitUnstaged = { fg = theme.diag.warning },
+                        NeoTreeGitUntracked = { fg = theme.diag.warning },
+                        NeoTreeTabInactive = { link = "TabLine" },
+                        NeoTreeTabActive = { link = "TabLineSel" },
                     }
                 end,
             })
@@ -460,12 +520,15 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim",  lazy = false, dev = true },
+    { "rebelot/lucy.nvim", lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
         lazy = true,
         config = true,
+        opts = {
+            default = true,
+        },
     },
 
     {
@@ -607,6 +670,7 @@ local plugins = {
     },
 
     { "tpope/vim-fugitive", cmd = "G" },
+    { "TimUntersberger/neogit", enabled = false },
 
     {
         "simnalamburt/vim-mundo",
@@ -628,7 +692,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

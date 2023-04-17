@@ -672,10 +672,22 @@ local VisualRange = {
     end,
 }
 
+local ShowCmd = {
+    condition = function()
+        return vim.o.cmdheight == 0
+    end,
+    provider = function()
+        return ":%3.5(%S%)"
+    end,
+    hl = function(self)
+        return { bold = true, fg = self:mode_color() }
+    end,
+}
+
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
-ViMode = utils.surround({ "", "" }, "bright_bg", { MacroRec, ViMode, Snippets })
+ViMode = utils.surround({ "", "" }, "bright_bg", { MacroRec, ViMode, Snippets, ShowCmd })
 
 local DefaultStatusline = {
     ViMode,
@@ -1214,6 +1226,7 @@ local Stc = {
 }
 
 vim.o.laststatus = 3
+vim.o.showcmdloc = 'statusline'
 -- vim.o.showtabline = 2
 
 require("heirline").setup({
@@ -1223,10 +1236,13 @@ require("heirline").setup({
     statuscolumn = Stc,
     opts = {
         disable_winbar_cb = function(args)
-            local buf = args.buf
-            local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
-            local filetype = vim.tbl_contains({ "gitcommit", "fugitive", "Trouble", "packer", "dashboard" }, vim.bo[buf].filetype)
-            return buftype or filetype
+            if vim.bo[args.buf].filetype == "neo-tree" then
+                return
+            end
+            return conditions.buffer_matches({
+                buftype = { "nofile", "prompt", "help", "quickfix" },
+                filetype = { "^git.*", "fugitive", "Trouble", "dashboard" },
+            }, args.buf)
         end,
         colors = setup_colors,
     },
