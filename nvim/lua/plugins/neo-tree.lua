@@ -72,9 +72,9 @@ require("neo-tree").setup({
     source_selector = {
         winbar = true,
         sources = {
-            { source = "filesystem", display_name = " Files" },
-            { source = "buffers", display_name = " Buffers" }, -- 
-            { source = "git_status", display_name = " Git" },
+            { source = "filesystem",       display_name = " Files" },
+            { source = "buffers",          display_name = " Buffers" }, -- 
+            { source = "git_status",       display_name = " Git" },
             { source = "document_symbols", display_name = " LSP" },
         },
         separator = " ",
@@ -251,11 +251,11 @@ require("neo-tree").setup({
                         zindex = 10,
                         highlight = "NeoTreeSymbolicLinkTarget",
                     },
-                    { "clipboard", zindex = 10 },
-                    { "bufnr", zindex = 10 },
-                    { "modified", zindex = 20, align = "right" },
+                    { "clipboard",   zindex = 10 },
+                    { "bufnr",       zindex = 10 },
+                    { "modified",    zindex = 20, align = "right" },
                     { "diagnostics", zindex = 20, align = "right" },
-                    { "git_status", zindex = 20, align = "right" },
+                    { "git_status",  zindex = 20, align = "right" },
                 },
             },
         },
@@ -266,7 +266,7 @@ require("neo-tree").setup({
             {
                 "container",
                 content = {
-                    { "name", zindex = 10 },
+                    { "name",      zindex = 10 },
                     {
                         "symlink_target",
                         zindex = 10,
