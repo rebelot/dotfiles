@@ -676,9 +676,7 @@ local ShowCmd = {
     condition = function()
         return vim.o.cmdheight == 0
     end,
-    provider = function()
-        return ":%3.5(%S%)"
-    end,
+    provider = ":%3.5(%S%)",
     hl = function(self)
         return { bold = true, fg = self:mode_color() }
     end,
