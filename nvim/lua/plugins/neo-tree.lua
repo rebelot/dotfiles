@@ -75,8 +75,8 @@ require("neo-tree").setup({
             { source = "git_status", display_name = " Git" },
             { source = "document_symbols", display_name = " LSP" },
         },
-        separator = " ",
-        tabs_layout = "equal",
+        separator = "%=",
+        tabs_layout = "center",
     },
     default_component_configs = {
         container = { enable_character_fade = false },
