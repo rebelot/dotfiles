@@ -72,9 +72,9 @@ require("neo-tree").setup({
     source_selector = {
         winbar = true,
         sources = {
-            { source = "filesystem",       display_name = " Files" },
-            { source = "buffers",          display_name = " Buffers" }, -- 
-            { source = "git_status",       display_name = " Git" },
+            { source = "filesystem", display_name = " Files" },
+            { source = "buffers", display_name = " Buffers" }, -- 
+            { source = "git_status", display_name = " Git" },
             { source = "document_symbols", display_name = " LSP" },
         },
         separator = " ",
@@ -85,12 +85,30 @@ require("neo-tree").setup({
         modified = {
             symbol = "●",
         },
+        diagnostics = {
+            -- symbols = {
+            --     hint = "H",
+            --     info = "I",
+            --     warn = "!",
+            --     error = "X",
+            -- },
+            highlights = {
+                hint = "DiagnosticHint",
+                info = "DiagnosticInfo",
+                warn = "DiagnosticWarn",
+                error = "DiagnosticError",
+            },
+        },
         icon = {
             folder_closed = "󰉋",
-            folder_open = "",
+            folder_open = "󰝰",
             folder_empty = "󰉖",
+            folder_empty_open = "󰷏",
             default = " ",
             highlight = "NeoTreeFileIcon",
+        },
+        name = {
+            highlight_opened_files = true,
         },
         git_status = {
             symbols = {
@@ -188,8 +206,8 @@ require("neo-tree").setup({
             never_show = {},
             never_show_by_pattern = {},
         },
-        follow_current_file = false,
-        group_empty_dirs = false,
+        follow_current_file = true,
+        group_empty_dirs = true,
         hijack_netrw_behavior = "open_default",
         use_libuv_file_watcher = true,
         window = {
@@ -252,11 +270,11 @@ require("neo-tree").setup({
                         zindex = 10,
                         highlight = "NeoTreeSymbolicLinkTarget",
                     },
-                    { "clipboard",   zindex = 10 },
-                    { "bufnr",       zindex = 10 },
-                    { "modified",    zindex = 20, align = "right" },
+                    { "clipboard", zindex = 10 },
+                    { "bufnr", zindex = 10 },
+                    { "modified", zindex = 20, align = "right" },
                     { "diagnostics", zindex = 20, align = "right" },
-                    { "git_status",  zindex = 20, align = "right" },
+                    { "git_status", zindex = 20, align = "right" },
                 },
             },
         },
@@ -267,7 +285,7 @@ require("neo-tree").setup({
             {
                 "container",
                 content = {
-                    { "name",      zindex = 10 },
+                    { "name", zindex = 10 },
                     {
                         "symlink_target",
                         zindex = 10,
@@ -366,9 +384,4 @@ require("neo-tree").setup({
     },
 })
 
-vim.keymap.set("n", "<leader>nt", ":Neotree source=filesystem toggle<CR>")
-vim.keymap.set("n", "<leader>nf", ":Neotree source=filesystem reveal_force_cwd<cr>")
-vim.keymap.set("n", "<leader>gf", ":Neotree position=float reveal_file=<cfile> reveal_force_cwd<cr>")
-vim.keymap.set("n", "<leader>nb", ":Neotree source=buffers<CR>")
-vim.keymap.set("n", "<leader>ng", ":Neotree source=git_status<CR>")
-vim.keymap.set("n", "<leader>ns", ":Neotree source=document_symbols<CR>")
+vim.keymap.set("n", "\\", ":Neotree source=filesystem reveal toggle<CR>")

@@ -345,7 +345,7 @@ local plugins = {
         "nvim-neo-tree/neo-tree.nvim",
         enabled = true,
         cmd = { "Neotree" },
-        keys = { "<leader>n" },
+        keys = { "\\" },
         init = function()
             vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)
@@ -361,22 +361,21 @@ local plugins = {
         dependencies = {
             "MunifTanjim/nui.nvim",
             {
-                -- only needed if you want to use the commands with "_with_window_picker" suffix
                 "s1n7ax/nvim-window-picker",
                 config = function()
                     require("window-picker").setup({
                         autoselect_one = true,
-                        include_current = false,
+                        include_current_win = false,
+                        selection_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                        current_win_hl_color = "none",
+                        other_win_hl_color = "none",
+                        fg_color = "fg",
                         filter_rules = {
-                            -- filter using buffer options
                             bo = {
-                                -- if the file type is one of following, the window will be ignored
                                 -- filetype = { 'neo-tree', "neo-tree-popup", "notify" },
-                                -- if the buffer type is one of following, the window will be ignored
                                 buftype = { "terminal", "quickfix", "nofile" },
                             },
                         },
-                        -- other_win_hl_color = '#e35e4f',
                     })
                 end,
             },
