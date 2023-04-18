@@ -345,7 +345,7 @@ local plugins = {
         "nvim-neo-tree/neo-tree.nvim",
         enabled = true,
         cmd = { "Neotree" },
-        keys = { "\\" },
+        keys = { "<leader>n" },
         init = function()
             vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)

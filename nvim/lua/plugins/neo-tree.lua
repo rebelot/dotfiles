@@ -384,4 +384,9 @@ require("neo-tree").setup({
     },
 })
 
-vim.keymap.set("n", "\\", ":Neotree source=filesystem reveal toggle<CR>")
+vim.keymap.set("n", "<leader>nt", ":Neotree toggle<CR>")
+vim.keymap.set("n", "<leader>nc", ":Neotree close<CR>")
+vim.keymap.set("n", "<leader>nf", ":Neotree source=filesystem reveal reveal_force_cwd<CR>")
+vim.keymap.set("n", "<leader>nF", ":Neotree source=filesystem reveal_file=<cfile><CR>")
+vim.keymap.set("n", "<leader>ng", ":Neotree source=git_status dir=%:p:h<CR>")
+vim.keymap.set("n", "<leader>ns", ":Neotree source=document_symbols<CR>")
