@@ -93,7 +93,8 @@ compinit -i
 
 # other sources  {{{
 source /opt/local/etc/profile.d/z.sh
-source ~/.fzf.zsh
+source /opt/local/share/fzf/shell/key-bindings.zsh
+source /opt/local/share/fzf/shell/completion.zsh
 eval "$(pip completion --zsh)"
 # }}}
 
@@ -123,7 +124,7 @@ export FZF_DEFAULT_OPTS="$(echo \
 --bind 'ctrl-o:toggle-preview' \
 --bind 'tab:down' \
 --bind 'btab:up' \
-    --bind 'ctrl-z:toggle' ")"
+--bind 'ctrl-z:toggle' ")"
 # }}}
 
 # User configuration {{{

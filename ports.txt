@@ -8,6 +8,7 @@ grep
 tmux-devel
 ninja
 gdb
+fzf
 z
 the_silver_searcher
 ripgrep
