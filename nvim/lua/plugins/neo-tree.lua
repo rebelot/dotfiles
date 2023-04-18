@@ -1,5 +1,3 @@
-vim.g.neo_tree_remove_legacy_commands = 1
-
 local function make_rename_params(old_fname, new_fname)
     return {
         files = {
@@ -113,7 +111,8 @@ require("neo-tree").setup({
         git_status = {
             symbols = {
                 added = "",
-                modified = "",
+                -- modified = "",
+                modified = "",
                 conflict = "",
                 unstaged = "",
                 staged = "",

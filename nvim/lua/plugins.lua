@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -278,7 +278,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim", ft = "csv" },
+    { "chrisbra/csv.vim",                ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -287,7 +287,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -347,6 +347,7 @@ local plugins = {
         cmd = { "Neotree" },
         keys = { "<leader>n" },
         init = function()
+            vim.g.neo_tree_remove_legacy_commands = 1
             vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)
                     if vim.fn.isdirectory(args.match) == 1 then
@@ -366,7 +367,7 @@ local plugins = {
                     require("window-picker").setup({
                         autoselect_one = true,
                         include_current_win = false,
-                        selection_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                        selection_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                         current_win_hl_color = "none",
                         other_win_hl_color = "none",
                         fg_color = "fg",
@@ -512,7 +513,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim",      lazy = false,   dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -661,7 +662,7 @@ local plugins = {
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     },
 
-    { "tpope/vim-fugitive", cmd = "G" },
+    { "tpope/vim-fugitive",     cmd = "G" },
     { "TimUntersberger/neogit", enabled = false },
 
     {
@@ -684,7 +685,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

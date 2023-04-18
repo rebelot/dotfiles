@@ -86,9 +86,9 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType", "BufEnter" }, {
         if vim.tbl_contains({ "terminal", "prompt", "nofile", "help" }, vim.bo[buf].buftype) then
             vim.cmd([[setl nocursorline | setl signcolumn=no | let &l:relativenumber = &l:number]])
         end
-        if vim.tbl_contains({ "NvimTree" }, vim.bo[buf].filetype) then
-            vim.cmd([[setl cursorline | setl signcolumn=yes:1 | let &l:relativenumber = &l:number]])
-        end
+        -- if vim.tbl_contains({ "NvimTree" }, vim.bo[buf].filetype) then
+        --     vim.cmd([[setl cursorline | setl signcolumn=yes:1 | let &l:relativenumber = &l:number]])
+        -- end
         if vim.bo[buf].buftype == "" then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
         end
