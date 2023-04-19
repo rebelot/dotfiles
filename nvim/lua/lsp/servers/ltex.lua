@@ -1,7 +1,9 @@
 local function read_spellfile(spellfile)
     local path = vim.fn.stdpath("config") .. "/spell/" .. spellfile
     local words = {}
-    if vim.fn.filereadable(path) == 0 then return words end
+    if vim.fn.filereadable(path) == 0 then
+        return words
+    end
     for line in io.lines(path) do
         if line:sub(1, 1) ~= "#" then
             table.insert(words, line)
@@ -13,7 +15,7 @@ end
 local function update_spellfile(words)
     local lang = vim.tbl_keys(words)[1] ---@type string
     local wordlist = words[lang]
-    vim.fn.writefile(wordlist, vim.fn.stdpath("config") .. "/spell/" .. lang:sub(1,2) .. ".utf-8.add", "a")
+    vim.fn.writefile(wordlist, vim.fn.stdpath("config") .. "/spell/" .. lang:sub(1, 2) .. ".utf-8.add", "a")
 end
 
 local function update_config(client, type, data)
@@ -26,15 +28,15 @@ local function update_config(client, type, data)
             table.insert(ltex[type][lang], element)
         end
     end
-    client.notify("workspace/didChangeConfiguration", {settings = settings})
+    client.notify("workspace/didChangeConfiguration", { settings = settings })
 end
 
 local function update_config_from_spellfile(client)
     local settings = client.config.settings
     local lang = settings.ltex.language or "en-US"
     settings.ltex.dictionary = settings.ltex.dictionary or {}
-    settings.ltex.dictionary[lang] = read_spellfile(lang:sub(1,2) .. ".utf-8.add")
-    client.notify("workspace/didChangeConfiguration", {settings = settings})
+    settings.ltex.dictionary[lang] = read_spellfile(lang:sub(1, 2) .. ".utf-8.add")
+    client.notify("workspace/didChangeConfiguration", { settings = settings })
 end
 
 return {
@@ -55,17 +57,26 @@ return {
         end
     end,
     on_attach = function(client, bufnr)
-        vim.keymap.set('n', 'zg', function()
+        vim.keymap.set("n", "zg", function()
             vim.cmd("execute 'norm! zg'")
             update_config_from_spellfile(client)
-        end, {buffer = bufnr, desc="ltex-ls: add word to dictionary"})
+        end, { buffer = bufnr, desc = "ltex-ls: add word to dictionary" })
 
-        vim.keymap.set('n', 'zw', function()
+        vim.keymap.set("n", "zw", function()
             vim.cmd("execute 'norm! zw'")
             update_config_from_spellfile(client)
-        end, {buffer = bufnr, desc="ltex-ls: remove word from dictionary"})
+        end, { buffer = bufnr, desc = "ltex-ls: remove word from dictionary" })
 
         update_config_from_spellfile(client)
+
+        vim.api.nvim_buf_create_user_command(bufnr, "LTexSelectLanguage", function(args)
+            client.config.settings.ltex.language = args.args
+            client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            update_config_from_spellfile(client)
+        end, {
+            nargs = 1,
+            -- complete = "customlist,v:lua.ltex_select_language",
+        })
     end,
     filetypes = { "bib", "markdown", "org", "plaintex", "rst", "tex", "mail" },
     settings = {
@@ -79,7 +90,7 @@ return {
             --     path = vim.fn.expand("$HOME/usr/src/ltex-ls/lib/ltex-ls-15.2.0"),
             -- },
             language = "en-US",
-            checkFrequency = "save"
+            checkFrequency = "save",
             -- dictionary = {
             --     ["en-US"] = read_spellfile("en.utf-8.add"),
             -- },

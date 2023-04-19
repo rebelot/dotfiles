@@ -6,7 +6,7 @@ require("nvim-autopairs").setup({
         pattern = [=[[%'%"%)%>%]%)%}%,]]=],
         check_comma = true,
         end_key = "L",
-        highlight = "Error",
+        highlight = "PmenuSel",
         hightlight_grey = "NonText",
     },
     check_ts = true,

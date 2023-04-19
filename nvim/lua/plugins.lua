@@ -41,7 +41,7 @@ local plugins = {
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -123,31 +123,41 @@ local plugins = {
         -- enabled = false,
         config = function()
             require("aerial").setup({
+                attach_mode = "global",
                 backends = {
                     ["_"] = { "lsp", "treesitter", "markdown", "man" },
                     markdown = { "treesitter" },
                 },
-                filter_kind = {
-                    ["_"] = {
-                        "Class",
-                        "Constructor",
-                        "Enum",
-                        "EnumMember",
-                        "Event",
-                        "Field",
-                        "Function",
-                        "Interface",
-                        "Key",
-                        "Method",
-                        "Module",
-                        "Namespace",
-                        "Operator",
-                        -- "Package", -- this catches for/if ??
-                        "Property",
-                        "Struct",
-                        "Variable",
-                    },
-                    -- markdown = { "String" },
+                filter_kind = false,
+                -- filter_kind = {
+                --     ["_"] = {
+                --         "Class",
+                --         "Constructor",
+                --         "Enum",
+                --         "EnumMember",
+                --         "Event",
+                --         "Field",
+                --         "Function",
+                --         "Interface",
+                --         "Key",
+                --         "Method",
+                --         "Module",
+                --         "Namespace",
+                --         "Operator",
+                --         -- "Package", -- this catches for/if ??
+                --         "Property",
+                --         "Struct",
+                --         "Variable",
+                --     },
+                --     -- markdown = { "String" },
+                -- },
+                layout = { min_width = 30 },
+                show_guides = true,
+                guides = {
+                    mid_item = "├ ",
+                    last_item = "└ ",
+                    nested_top = "│ ",
+                    whitespace = "  ",
                 },
             })
             vim.keymap.set("n", "<leader>at", ":AerialToggle<CR>")
@@ -278,7 +288,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim",                ft = "csv" },
+    { "chrisbra/csv.vim", ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -287,7 +297,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -513,7 +523,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim",      lazy = false,   dev = true },
+    { "rebelot/lucy.nvim", lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -662,7 +672,7 @@ local plugins = {
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     },
 
-    { "tpope/vim-fugitive",     cmd = "G" },
+    { "tpope/vim-fugitive", cmd = "G" },
     { "TimUntersberger/neogit", enabled = false },
 
     {
@@ -685,7 +695,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
