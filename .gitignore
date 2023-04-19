@@ -8,3 +8,4 @@ kitty/kitty.conf.bak
 kitty/kitty.orig.conf
 kitty/current-theme.conf
 nvim/lazy-lock.json
+neomutt/accounts/*pass*

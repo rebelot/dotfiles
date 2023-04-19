@@ -298,7 +298,7 @@ local Navic = {
             Property = dim(utils.get_highlight("@property").fg, 0.75),
             Field = dim(utils.get_highlight("@field").fg, 0.75),
             Constructor = dim(utils.get_highlight("@constructor").fg, 0.75),
-            Enum = dim(utils.get_highlight("@field").fg, 0.75),
+            Enum = dim(utils.get_highlight("@type").fg, 0.75),
             Interface = dim(utils.get_highlight("@type").fg, 0.75),
             Function = dim(utils.get_highlight("@function").fg, 0.75),
             Variable = dim(utils.get_highlight("@variable").fg, 0.75),
@@ -310,9 +310,9 @@ local Navic = {
             Object = dim(utils.get_highlight("@type").fg, 0.75),
             Key = dim(utils.get_highlight("@keyword").fg, 0.75),
             Null = dim(utils.get_highlight("@comment").fg, 0.75),
-            EnumMember = dim(utils.get_highlight("@field").fg, 0.75),
+            EnumMember = dim(utils.get_highlight("@constant").fg, 0.75),
             Struct = dim(utils.get_highlight("@type").fg, 0.75),
-            Event = dim(utils.get_highlight("@keyword").fg, 0.75),
+            Event = dim(utils.get_highlight("@type").fg, 0.75),
             Operator = dim(utils.get_highlight("@operator").fg, 0.75),
             TypeParameter = dim(utils.get_highlight("@type").fg, 0.75),
         },
@@ -352,7 +352,7 @@ local Navic = {
                     },
                 },
             }
-            if #data > 1 and i < #data then
+            if i < #data then
                 table.insert(child, {
                     provider = " → ",
                     hl = { fg = "bright_fg" },
@@ -621,8 +621,10 @@ local Spell = {
     condition = function()
         return vim.wo.spell
     end,
-    provider = "SPELL ",
-    hl = { bold = true, fg = "orange" },
+    provider = function()
+        return "󰓆 " .. vim.o.spelllang .. " "
+    end,
+    hl = { bold = true, fg = "green" },
 }
 
 local SearchCount = {

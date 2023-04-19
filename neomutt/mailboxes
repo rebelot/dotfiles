@@ -1,0 +1,9 @@
+# vim: set ft=neomuttrc:
+
+macro index <f2> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/unimi<enter><change-folder>!<enter>'
+macro index <f3> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/gmail<enter><change-folder>!<enter>'
+
+# folder-hook 'gmail' 'source accounts/gmail'
+# folder-hook 'unimi' 'source accounts/unimi'
+
+source accounts/gmail

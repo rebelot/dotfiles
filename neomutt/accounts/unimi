@@ -1,0 +1,28 @@
+# vim: set filetype=neomuttrc:
+
+set from = "tommaso.laurenzi@unimi.it"
+set realname = "Tommaso Laurenzi"
+
+set imap_user = "tommaso.laurenzi@unimi.it"
+set smtp_url = "smtps://tommaso.laurenzi@smtp.unimi.it:465"
+set smtp_authenticators = "login"
+
+set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/unimi_pass.gpg 2>/dev/null`"
+set smtp_pass = $imap_pass
+set imap_check_subscribed
+# set hostname = "unimi.it"
+
+# Ensure TLS is enforced
+set ssl_starttls = yes
+set ssl_force_tls = yes
+
+set folder="imaps://mailserver.unimi.it:993"
+set spoolfile = "+INBOX"
+set postponed = "+Drafts"
+set record = "+Sent Messages"
+
+unmailboxes *
+mailboxes $spoolfile =Sent\ Messages =Sent =Drafts =Trash =Deleted\ Messages =My_Spam
+
+color status     black    cyan
+
