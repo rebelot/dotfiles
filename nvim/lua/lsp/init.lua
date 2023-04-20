@@ -1,3 +1,4 @@
+local M = {}
 local borders = vim.g.FloatBorders
 
 -----------------------
@@ -12,22 +13,8 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = borders,
-    title = 'Hover',
+    title = "Hover",
 })
-
-local lsprename = vim.lsp.buf.rename
-
-vim.lsp.buf.rename = function(new_name, options)
-    options = options or {}
-
-    local filter = function(client)
-        return not vim.tbl_contains({ "null-ls", "copilot" }, client.name)
-    end
-
-    options.filter = options.filter or filter
-
-    lsprename(new_name, options)
-end
 
 require("lsp.inlay_hints").setup({
     -- exclude_ft = { "rust" }
@@ -78,7 +65,7 @@ local on_attach = function(client, bufnr)
         { desc = "List LSP workspace symbols" }
     )
     map("n", "<leader>lwl", function()
-        vim.pretty_print(vim.lsp.buf.list_workspace_folders())
+        vim.print(vim.lsp.buf.list_workspace_folders())
     end, { desc = "List LSP workspace folders" })
     map("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, { desc = "Add LSP workspace folder" })
     map("n", "<leader>lwr", vim.lsp.buf.remove_workspace_folder, { desc = "Remove LSP workspace folder" })
@@ -106,7 +93,7 @@ local on_attach = function(client, bufnr)
             vim.lsp.buf.format({
                 bufnr = bufnr,
                 async = false,
-                range = { start = { args.line1, 0 }, ["end"] = { args.line2, 0 } },
+                range = { start = { args.line1, 0 },["end"] = { args.line2, 0 } },
             })
         end, { range = true, desc = "LSP range format" })
     end
@@ -143,7 +130,6 @@ local on_attach = function(client, bufnr)
     end
 end
 
-local M = {}
 M.default_on_attach = on_attach
 M.default_capabilities = capabilities
 M.borders = borders
