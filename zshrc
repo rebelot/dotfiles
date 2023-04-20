@@ -151,7 +151,7 @@ export HISTFILESIZE=-1
 # programs env opts
 export SCHRODINGER="/opt/schrodinger/suites2023-2"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
-export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
+# export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 # export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"
 # export JULIA_PKGDIR="/Users/laurenzi/.julia"
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
@@ -257,7 +257,7 @@ function ssh_forward {
 # see $ZSH/aliases.zsh
 
 alias licdes="licmae | grep -A 3 DESMOND_GPGPU"
-alias vmd='/Applications/VMD\ 1.9.4a57-x86_64-Rev12.app/Contents/MacOS/startup.command'
+# alias vmd='/Applications/VMD\ 1.9.4a57-x86_64-Rev12.app/Contents/MacOS/startup.command'
 alias fz="cd \$(z | awk '{print \$2}' | fzf)"
 alias tflip='echo "(╯°□°)╯︵ ┻━┻"'
 alias schrenv=". ~/venvs/schrodinger.ve/bin/activate"
@@ -267,7 +267,7 @@ alias vim=nvim
 alias pudb='python -m pudb'
 alias ptpy='ptipython'
 alias vxl='/opt/VirtualGL/bin/vglconnect -s xlenceVPN'
-alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
+# alias pymol='/Applications/PyMOL.app/Contents/bin/pymol -xq -X 400 -Y 20 -W 800 -H 800 -d "cd $(pwd)"'
 # alias codelldb="while sleep 1; do $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/adapter/codelldb --port 13000 --liblldb $HOME/.vscode/extensions/vadimcn.vscode-lldb-1.7.0/lldb/lib/liblldb.dylib; done"
 alias schrdoc="open $SCHRODINGER/docs/Documentation.htm"
 alias fuck='killall -9'
