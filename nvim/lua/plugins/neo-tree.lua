@@ -58,7 +58,7 @@ local function getTelescopeOpts(state, path)
     }
 end
 require("neo-tree").setup({
-    auto_clean_after_session_restore = true,
+    auto_clean_after_session_restore = false,
     popup_border_style = vim.g.FloatBorder,
     open_files_do_not_replace_types = { "terminal", "trouble", "qf" },
     sources = {

@@ -1,11 +1,6 @@
-# Set the theme to "TwoDark"
-# --theme="gruvbox-dark"
---theme="Enki-Tokyo-Night"
-
-# Show line numbers, Git modifications and file header (but no grid)
---style="grid,numbers,changes,header"
-
-# Use italic text on the terminal (not supported on all terminals)
+--theme="base16-256"
+# --style="grid,numbers,changes,header"
+--style="auto"
 --italic-text=always
 
 # Use C++ syntax (instead of C) for .h header files

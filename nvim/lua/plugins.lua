@@ -338,7 +338,7 @@ local plugins = {
             vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)
                     if vim.fn.isdirectory(args.match) == 1 then
-                        require("lazy").load({ plugins = "nvim-tree.lua" })
+                        require("lazy").load({ plugins = { "nvim-tree.lua" } })
                         vim.cmd("NvimTreeToggle")
                         return true
                     end
@@ -361,9 +361,22 @@ local plugins = {
             vim.api.nvim_create_autocmd({ "BufEnter" }, {
                 callback = function(args)
                     if vim.fn.isdirectory(args.match) == 1 then
-                        require("lazy").load({ plugins = "neo-tree.nvim" })
+                        require("lazy").load({ plugins = { "neo-tree.nvim" } })
                         vim.cmd("Neotree")
                         return true
+                    end
+                end,
+            })
+            vim.api.nvim_create_autocmd({ "SessionLoadPost" }, {
+                callback = function(args)
+                    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                        if vim.api.nvim_buf_get_name(buf):match("neo%-tree") then
+                            print('neotreee!')
+                            vim.api.nvim_buf_delete(buf, { force = true })
+                            -- require("lazy").load({ plugins = { "neo-tree.nvim" } })
+                            -- vim.cmd("Neotree")
+                            return
+                        end
                     end
                 end,
             })

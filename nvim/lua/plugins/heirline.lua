@@ -707,7 +707,7 @@ local DefaultStatusline = {
     LSPActive,
     Space,
     FileType,
-    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
+    { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
     SearchCount,
