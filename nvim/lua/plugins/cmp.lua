@@ -148,7 +148,6 @@ cmp.setup({
     experimental = {
         ghost_text = true,
     },
-
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
@@ -177,15 +176,30 @@ cmp.setup({
             return vim_item
         end,
     },
+    sorting = {
+        priority_weight = 2,
+        comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            -- cmp.config.compare.scopes,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.locality,
+            cmp.config.compare.kind,
+            -- cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+        },
+    },
     sources = cmp.config.sources({
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" },
-        { name = "copilot" },
         { name = "ultisnips" },
         { name = "path" },
+        -- { name = "copilot" },
     }, {
         { name = "buffer" },
-        { name = "tmux", option = { all_panes = true } },
+        { name = "tmux",  option = { all_panes = true } },
     }),
 })
 
@@ -199,7 +213,7 @@ cmp.setup.cmdline({ "/", "?" }, {
 })
 
 -- Use cmdline & path source for ':'.
-cmp.setup.cmdline({":", "@", "="}, {
+cmp.setup.cmdline({ ":", "@", "=" }, {
     completion = { autocomplete = false },
     sources = cmp.config.sources({
         { name = "path" },
@@ -211,10 +225,10 @@ cmp.setup.cmdline({":", "@", "="}, {
 cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
     sources = {
         { name = "nvim_lsp_signature_help" },
-        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
+        -- { name = "copilot" },
         { name = "buffer" },
         -- { name = "dictionary", keyword_length = 2 },
         { name = "latex_symbols" },
@@ -222,12 +236,6 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
     },
 })
 
--- local rec_au = vim.api.nvim_create_augroup('CmpRecording', { clear = true })
--- vim.api.nvim_create_autocmd('RecordingEnter', {
---     group = rec_au,
---     command = [[lua require'cmp'.setup.buffer({ enabled = false })]]
--- })
--- vim.api.nvim_create_autocmd('RecordingLeave', {
---     group = rec_au,
---     command = [[lua require'cmp'.setup.buffer({ enabled = true })]]
--- })
+vim.keymap.set("i", "<C-X><C-X>", function()
+    require("cmp").complete({ config = { sources = { { name = "copilot" } } } })
+end, { silent = true })

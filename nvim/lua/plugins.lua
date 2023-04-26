@@ -1,9 +1,10 @@
-local disabled_built_ins = {
+local disabled_rtp_plugins = {
     -- "netrw",
     -- "netrwPlugin",
     -- "netrwSettings",
     -- "netrwFileHandlers",
     "gzip",
+    "tutor",
     "zip",
     "zipPlugin",
     "tar",
@@ -19,14 +20,8 @@ local disabled_built_ins = {
     "matchit",
 }
 
-for _, plugin in pairs(disabled_built_ins) do
-    vim.g["loaded_" .. plugin] = 1
-end
-
--- local function defer(func, timeout)
---     return function()
---         vim.defer_fn(func, timeout)
---     end
+-- for _, plugin in pairs(disabled_rtp_plugins) do
+--     vim.g["loaded_" .. plugin] = 1
 -- end
 
 -- Bootstrap
@@ -371,7 +366,7 @@ local plugins = {
                 callback = function(args)
                     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
                         if vim.api.nvim_buf_get_name(buf):match("neo%-tree") then
-                            print('neotreee!')
+                            print("neotreee!")
                             vim.api.nvim_buf_delete(buf, { force = true })
                             -- require("lazy").load({ plugins = { "neo-tree.nvim" } })
                             -- vim.cmd("Neotree")
@@ -551,7 +546,7 @@ local plugins = {
         "rebelot/heirline.nvim",
         dev = true,
         -- event = "VimEnter",
-        event = "VimEnter",
+        event = "BufEnter",
         enabled = true,
         config = function()
             require("plugins.heirline")
@@ -686,7 +681,7 @@ local plugins = {
     },
 
     { "tpope/vim-fugitive", cmd = "G" },
-    { "TimUntersberger/neogit", enabled = false },
+    -- { "TimUntersberger/neogit", enabled = false },
 
     {
         "simnalamburt/vim-mundo",
@@ -880,7 +875,10 @@ local plugins = {
     },
 }
 
-require("lazy").setup(plugins, { dev = { path = "~/usr/src" } })
+require("lazy").setup(
+    plugins,
+    { dev = { path = "~/usr/src" }, performance = { rtp = { disabled_plugins = disabled_rtp_plugins } } }
+)
 
 -- vim.opt.rtp:append({
 --     "/Users/laurenzi/usr/src/kanagawa.nvim",

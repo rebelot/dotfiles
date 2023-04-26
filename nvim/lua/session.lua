@@ -1,3 +1,6 @@
+vim.opt.sessionoptions =
+    { "blank", "buffers", "curdir", "folds", "help", "tabpages", "winsize", "terminal", "localoptions" }
+
 local PATH = vim.fn.stdpath("state") .. "/sessions"
 
 local function sesspath(name)

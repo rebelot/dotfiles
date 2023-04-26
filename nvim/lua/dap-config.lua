@@ -7,14 +7,17 @@ local fn = vim.fn
 fn.sign_define("DapBreakpoint", { text = "", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
 fn.sign_define(
     "DapBreakpointCondition",
-    { text = "", texthl = "DiagnosticWarn", linehl = "", numhl = "debugBreakpoint" }
+    { text = "", texthl = "DiagnosticSignWarn", linehl = "", numhl = "debugBreakpoint" }
 )
 fn.sign_define(
     "DapBreakpointRejected",
-    { text = "", texthl = "DiagnosticError", linehl = "", numhl = "debugBreakpoint" }
+    { text = "", texthl = "DiagnosticSignError", linehl = "", numhl = "debugBreakpoint" }
 )
 fn.sign_define("DapLogPoint", { text = " ", texthl = "debugBreakpoint", linehl = "", numhl = "debugBreakpoint" })
-fn.sign_define("DapStopped", { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "DiagnosticSignError" })
+fn.sign_define(
+    "DapStopped",
+    { text = "", texthl = "debugBreakpoint", linehl = "debugPC", numhl = "DiagnosticSignError" }
+)
 
 -- mappings
 map("n", "<leader>dC", dap.continue, { desc = "DAP: Continue" })
