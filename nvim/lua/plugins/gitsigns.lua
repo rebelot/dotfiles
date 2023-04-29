@@ -2,6 +2,7 @@ local map = vim.keymap.set
 
 require("gitsigns").setup({
     trouble = true,
+    _inline2 = true,
     keymaps = {},
     preview_config = {
         border = require("lsp").borders,

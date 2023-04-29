@@ -7,19 +7,13 @@ command! Reload source $MYVIMRC | noh
 command! -range=% Wc <line1>,<line2>w ! wc
 
 function! WinZoomToggle() abort
-    if ! exists('w:WinZoomIsZoomed') 
-      let w:WinZoomIsZoomed = 0
+    if !exists('t:winrestcmd') || !t:winrestcmd
+        let t:winrestcmd = winrestcmd()
+        wincmd _
+        wincmd |
+    else
+        execute t:winrestcmd
+        let t:winrestcmd = 0
     endif
-    if w:WinZoomIsZoomed == 0
-      let w:WinZoomOldWidth = winwidth(0)
-      let w:WinZoomOldHeight = winheight(0)
-      wincmd _
-      wincmd |
-      let w:WinZoomIsZoomed = 1
-    elseif w:WinZoomIsZoomed == 1
-      execute 'resize ' . w:WinZoomOldHeight
-      execute 'vertical resize ' . w:WinZoomOldWidth
-      let w:WinZoomIsZoomed = 0
-   endif
 endfunction
 

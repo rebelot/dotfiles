@@ -6,8 +6,10 @@
 -- gubergren, no sea takimata sanctus est Lorem ipsum
 -- dolor sit amet.
 
+-- /dol\w* -> 1,7SearchYank -> p -> dolor dolore dolores dolor
+
 vim.api.nvim_create_user_command("SearchYank", function(args)
-    vim.fn.setreg(args.reg, "")
+    vim.fn.setreg(args.reg:lower(), "")
     local line1 = args.line1 or 1
     local line2 = args.line2 or vim.fn.line('$')
     vim.api.nvim_cmd({

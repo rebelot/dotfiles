@@ -933,11 +933,18 @@ local TablineFileNameBlock = {
         end
     end,
     on_click = {
-        callback = function(_, minwid, nclicks)
+        callback = function(self, minwid, nclicks)
             if nclicks == 1 then
                 vim.api.nvim_win_set_buf(0, minwid)
             elseif nclicks == 2 then
-                vim.cmd.wincmd("o")
+                if vim.t.winrestcmd then
+                    vim.cmd(vim.t.winrestcmd)
+                    vim.t.winrestcmd = nil
+                else
+                    vim.t.winrestcmd = vim.fn.winrestcmd()
+                    vim.cmd.wincmd("|")
+                    vim.cmd.wincmd("_")
+                end
             end
         end,
         minwid = function(self)
