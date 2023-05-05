@@ -91,7 +91,7 @@ local center = {
         desc = "Manage Extensions",
         keymap = "",
         key = "m",
-        icon = "  ",
+        icon = "  ",
         action = "Mason",
     },
 
@@ -122,6 +122,7 @@ vim.api.nvim_create_autocmd("Filetype", {
         vim.cmd([[
             setlocal buftype=nofile
             setlocal nonumber norelativenumber nocursorline noruler
+            nnoremap <buffer> <F2> :h news.txt<CR> 
         ]])
     end,
 })
@@ -133,7 +134,7 @@ require("dashboard").setup({
         center = center,
         footer = function()
             return {
-                "type  :help<Enter>  or  <F1>  for on-line help",
+                "type  :help<Enter>  or  <F1>  for on-line help,  <F2>  news changelog",
                 "Startup time: " .. require"lazy".stats().startuptime .. " ms"
             }
         end,

@@ -51,6 +51,7 @@ o.wildignorecase = true          -- ignore case command completion menu
 -- o.clipboard = "unnamed"       -- send yanks to system clipboard (buggy with v-block)
 o.showcmd = true                 -- show key spressed in lower-right corner
 o.sidescroll = 1                 -- smooth side scrolling
+o.smoothscroll = true
 -- o.scrolloff = 16 -- minimal number of lines above/below cursor (see autocommands)
 o.splitkeep = 'screen'
 o.conceallevel = 2               -- conceal marked text

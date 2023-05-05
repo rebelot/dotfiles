@@ -209,21 +209,20 @@ local plugins = {
     {
         "zbirenbaum/copilot.lua",
         event = { "BufRead", "BufNewFile" },
-        config = function()
-            require("copilot").setup({
-                ft_disable = { "julia", "dap-repl", "terminal" },
-                panel = { enabled = false },
-                suggestion = {
-                    enabled = false,
-                    keymap = {
-                        accept = "<M-CR>",
-                        next = "<M-n>",
-                        prev = "<M-p>",
-                        dismiss = "<C-]>",
-                    },
+        opts = {
+            filetypes = { julia = false, ["dap-repl"] = false },
+            panel = { enabled = true },
+            suggestion = {
+                enabled = true,
+                auto_trigger = false,
+                keymap = {
+                    accept = "<M-CR>",
+                    next = "<M-n>",
+                    prev = "<M-p>",
+                    dismiss = "<C-]>",
                 },
-            })
-        end,
+            },
+        },
     },
     {
         "jackMort/ChatGPT.nvim",
