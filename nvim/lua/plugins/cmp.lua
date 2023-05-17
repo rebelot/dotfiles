@@ -146,7 +146,7 @@ cmp.setup({
         }),
     },
     experimental = {
-        ghost_text = true,
+        ghost_text = { hl_group = "Comment" },
     },
     formatting = {
         fields = { "kind", "abbr", "menu" },

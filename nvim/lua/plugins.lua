@@ -32,11 +32,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local plugins = {
+require("lazy").setup({
+
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -282,7 +283,7 @@ local plugins = {
         end,
     },
 
-    { "chrisbra/csv.vim", ft = "csv" },
+    { "chrisbra/csv.vim",                ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -291,7 +292,7 @@ local plugins = {
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -486,10 +487,11 @@ local plugins = {
         config = function()
             vim.o.background = nil
             vim.o.cmdheight = 0
+            vim.o.pumblend = 10
             require("kanagawa").setup({
                 compile = true,
                 dimInactive = false,
-                transparent = true,
+                -- transparent = true,
                 background = { light = "lotus", dark = "dragon" },
                 overrides = function(colors)
                     local theme = colors.theme
@@ -506,7 +508,7 @@ local plugins = {
                         FloatBorder = { bg = "none" },
                         LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
                         MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
-                        Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+                        Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1, blend = vim.o.pumblend },
                         PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
                         PmenuSbar = { bg = theme.ui.bg_m1 },
                         PmenuThumb = { bg = theme.ui.bg_p2 },
@@ -530,7 +532,7 @@ local plugins = {
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -702,7 +704,7 @@ local plugins = {
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
@@ -872,12 +874,7 @@ local plugins = {
             vim.keymap.set("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { desc = "Vimux: prompt command" })
         end,
     },
-}
-
-require("lazy").setup(
-    plugins,
-    { dev = { path = "~/usr/src" }, performance = { rtp = { disabled_plugins = disabled_rtp_plugins } } }
-)
+}, { dev = { path = "~/usr/src" }, performance = { rtp = { disabled_plugins = disabled_rtp_plugins } } })
 
 -- vim.opt.rtp:append({
 --     "/Users/laurenzi/usr/src/kanagawa.nvim",

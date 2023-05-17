@@ -14,7 +14,7 @@ local sources = {
     null_ls.builtins.formatting.stylua.with({
         args = { "--indent-width", "4", "--indent-type", "Spaces", "-" },
     }),
-
+    null_ls.builtins.formatting.latexindent,
     -- null_ls.builtins.diagnostics.luacheck,
     -- null_ls.builtins.formatting.lua_format,
 

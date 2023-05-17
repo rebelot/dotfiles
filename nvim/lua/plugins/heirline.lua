@@ -24,6 +24,19 @@ local function dim(color, n)
     return blend(color, "#000000", n)
 end
 
+local icons = {
+    -- ✗   󰅖 󰅘 󰅚 󰅙 󱎘 
+    close = "󰅙 ",
+    dir = "󰉋 ",
+    lsp = " ", --   
+    vim = " ",
+    debug = " ",
+    err = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+    warn = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+    info = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+    hint = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+}
+
 local separators = {
     rounded_left = "",
     rounded_right = "",
@@ -111,7 +124,7 @@ local ViMode = {
         },
     },
     provider = function(self)
-        return " %2(" .. self.mode_names[self.mode] .. "%)"
+        return icons.vim .. "%2(" .. self.mode_names[self.mode] .. "%)"
     end,
     --    
     hl = function(self)
@@ -264,7 +277,7 @@ local ScrollBar = {
 local LSPActive = {
     condition = conditions.lsp_attached,
     update = { "LspAttach", "LspDetach", "WinEnter" },
-    provider = " [LSP]",
+    provider = icons.lsp .. "LSP",
     -- provider  = function(self)
     --     local names = {}
     --     for i, server in pairs(vim.lsp.buf_get_active_clients({ bufnr = 0 })) do
@@ -375,12 +388,7 @@ local Diagnostics = {
         end,
         name = "heirline_diagnostics",
     },
-    static = {
-        error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
-        warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-        info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-        hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
-    },
+    static = {},
     init = function(self)
         self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
         self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
@@ -389,25 +397,25 @@ local Diagnostics = {
     end,
     {
         provider = function(self)
-            return self.errors > 0 and (self.error_icon .. self.errors .. " ")
+            return self.errors > 0 and (icons.err .. self.errors .. " ")
         end,
         hl = "DiagnosticError",
     },
     {
         provider = function(self)
-            return self.warnings > 0 and (self.warn_icon .. self.warnings .. " ")
+            return self.warnings > 0 and (icons.warn .. self.warnings .. " ")
         end,
         hl = "DiagnosticWarn",
     },
     {
         provider = function(self)
-            return self.info > 0 and (self.info_icon .. self.info .. " ")
+            return self.info > 0 and (icons.info .. self.info .. " ")
         end,
         hl = "DiagnosticInfo",
     },
     {
         provider = function(self)
-            return self.hints > 0 and (self.hint_icon .. self.hints)
+            return self.hints > 0 and (icons.hint .. self.hints)
         end,
         hl = "DiagnosticHint",
     },
@@ -488,7 +496,7 @@ local DAPMessages = {
         return session ~= nil
     end,
     provider = function()
-        return " " .. require("dap").status() .. " "
+        return icons.debug .. require("dap").status() .. " "
     end,
     hl = "Debug",
     {
@@ -549,7 +557,7 @@ local DAPMessages = {
 
 local WorkDir = {
     init = function(self)
-        self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
+        self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. icons.dir
         local cwd = vim.fn.getcwd(0)
         self.cwd = vim.fn.fnamemodify(cwd, ":~")
         if not conditions.width_percent_below(#self.cwd, 0.27) then
@@ -810,7 +818,7 @@ local CloseButton = {
     update = { "WinNew", "WinClosed", "BufEnter" },
     { provider = " " },
     {
-        provider = " ",
+        provider = icons.close,
         hl = { fg = "gray" },
         on_click = {
             callback = function(_, minwid)
@@ -965,8 +973,7 @@ local TablineCloseButton = {
     end,
     { provider = " " },
     {
-        -- ✗    
-        provider = " ",
+        provider = icons.close,
         hl = { fg = "gray" },
         on_click = {
             callback = function(_, minwid)

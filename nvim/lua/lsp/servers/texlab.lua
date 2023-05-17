@@ -3,8 +3,7 @@ return {
         texlab = {
             build = {
                 args = {
-                    "-xelatex",
-                    "-verbose",
+                    "-pdfxe",
                     "-file-line-error",
                     "-synctex=1",
                     "-interaction=nonstopmode",
@@ -12,6 +11,7 @@ return {
                 },
                 executable = "latexmk",
                 forwardSearchAfter = true,
+                onSave = true,
             },
             chktex = {
                 onOpenAndSave = true,
