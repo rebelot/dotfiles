@@ -513,6 +513,7 @@ require("lazy").setup({
                         PmenuSbar = { bg = theme.ui.bg_m1 },
                         PmenuThumb = { bg = theme.ui.bg_p2 },
                         NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
+                        SpellBad = { undercurl = true, underline = false, sp = colors.palette.oldWhite },
                     }
                 end,
             })

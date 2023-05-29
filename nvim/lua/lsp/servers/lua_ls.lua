@@ -22,7 +22,7 @@ return {
                 enable = false,
             },
             hint = {
-                enable = false
+                enable = true
             }
         },
     },

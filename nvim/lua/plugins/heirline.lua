@@ -692,6 +692,24 @@ local ShowCmd = {
     end,
 }
 
+-- local VirtualEnv = {
+--     init = function(self)
+--         if not self.timer then
+--             self.timer = vim.loop.new_timer()
+--             self.timer:start(0, 5000, function()
+--                 vim.schedule_wrap(function()
+--                     local path = vim.fn.split(vim.fn.system("which python"), "/")
+--                     vim.notify(path)
+--                     self.pythonpath = path[#path - 2]
+--                 end)
+--             end)
+--         end
+--     end,
+--     provider = function(self)
+--         return self.pythonpath
+--     end,
+-- }
+
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
@@ -713,6 +731,7 @@ local DefaultStatusline = {
     Align,
     DAPMessages,
     LSPActive,
+    -- VirtualEnv,
     Space,
     FileType,
     { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
@@ -886,8 +905,11 @@ local TablineBufnr = {
 
 local TablineFileName = {
     provider = function(self)
-        local filename = self.filename
-        filename = filename == "" and "[No Name]" or vim.fn.fnamemodify(filename, ":t")
+        local filename = vim.fn.fnamemodify(self.filename, ":t")
+        if self.dupes and self.dupes[filename] then
+            filename = vim.fn.fnamemodify(self.filename, ":h:t") .. "/" .. filename
+        end
+        filename = filename == "" and "[No Name]" or filename
         return filename
     end,
     hl = function(self)
@@ -1142,7 +1164,41 @@ local TabLineOffset = {
     end,
 }
 
+vim.api.nvim_create_autocmd({ "VimEnter", "UIEnter", "BufAdd", "BufDelete" }, {
+    callback = function(args)
+        local counts = {}
+        local dupes = {}
+        local names = vim.tbl_map(function(bufnr)
+            return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":t")
+        end, get_bufs())
+        for _, name in ipairs(names) do
+            counts[name] = (counts[name] or 0) + 1
+        end
+        for name, count in pairs(counts) do
+            if count > 1 then
+                dupes[name] = true
+            end
+        end
+        require'heirline'.tabline.dupes = dupes
+    end,
+})
+
 local TabLine = {
+    -- init = function(self)
+    --     self.dupes = {}
+    --     local counts = {}
+    --     local names = vim.tbl_map(function(bufnr)
+    --         return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":t")
+    --     end, buflist_cache)
+    --     for _, name in ipairs(names) do
+    --         counts[name] = (counts[name] or 0) + 1
+    --     end
+    --     for name, count in pairs(counts) do
+    --         if count > 1 then
+    --             self.dupes[name] = true
+    --         end
+    --     end
+    -- end,
     TabLineOffset,
     BufferLine,
     TabPages,

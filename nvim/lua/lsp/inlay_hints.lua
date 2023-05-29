@@ -22,10 +22,11 @@ function M.toggle()
     end
 end
 
-local function set_mark(bufnr, line, text, highlight)
-    vim.api.nvim_buf_set_extmark(bufnr, namespace, line, 0, {
+local function set_mark(bufnr, line, col, text, highlight)
+    vim.api.nvim_buf_set_extmark(bufnr, namespace, line, col, {
         virt_text = { { text, highlight } },
-        virt_text_pos = "eol",
+        -- virt_text_pos = "eol",
+        virt_text_pos = "inline",
         hl_mode = "combine",
     })
 end
@@ -48,8 +49,9 @@ local function show_handler(err, result, ctx, config)
     local bufnr = ctx.bufnr
     for _, value in pairs(result) do
         local line = tonumber(value.position.line)
+        local col = tonumber(value.position.character)
         local label = parse_label(value.label)
-        pcall(set_mark, bufnr, line, label, config and config.highlight or "NonText")
+        pcall(set_mark, bufnr, line, col, label, config and config.highlight or "NonText")
     end
 end
 
