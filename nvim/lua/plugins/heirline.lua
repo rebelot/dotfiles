@@ -734,7 +734,7 @@ local DefaultStatusline = {
     -- VirtualEnv,
     Space,
     FileType,
-    { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
+    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
     SearchCount,
@@ -1184,21 +1184,6 @@ vim.api.nvim_create_autocmd({ "VimEnter", "UIEnter", "BufAdd", "BufDelete" }, {
 })
 
 local TabLine = {
-    -- init = function(self)
-    --     self.dupes = {}
-    --     local counts = {}
-    --     local names = vim.tbl_map(function(bufnr)
-    --         return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":t")
-    --     end, buflist_cache)
-    --     for _, name in ipairs(names) do
-    --         counts[name] = (counts[name] or 0) + 1
-    --     end
-    --     for name, count in pairs(counts) do
-    --         if count > 1 then
-    --             self.dupes[name] = true
-    --         end
-    --     end
-    -- end,
     TabLineOffset,
     BufferLine,
     TabPages,

@@ -98,6 +98,17 @@ local on_attach = function(client, bufnr)
         end, { range = true, desc = "LSP range format" })
     end
 
+    -- if client.server_capabilities.inlayHintProvider then
+    --     local augrp = vim.api.nvim_create_augroup("LSP_inlay_hints", { clear = true })
+    --     vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+    --         callback = function()
+    --             require('vim.lsp._inlay_hint').refresh()
+    --         end,
+    --         group = augrp,
+    --         buffer = bufnr,
+    --     })
+    -- end
+
     -- if client.server_capabilities.signatureHelpProvider then
     --     local lsp_signature_help_au_id = vim.api.nvim_create_augroup("LSP_signature_help", { clear = true })
     --     vim.api.nvim_create_autocmd({ "CursorHoldI" }, {
