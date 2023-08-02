@@ -97,9 +97,6 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
--- Folding
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 
 local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
 local map = vim.keymap.set

@@ -37,7 +37,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -283,7 +283,7 @@ require("lazy").setup({
         end,
     },
 
-    { "chrisbra/csv.vim",                ft = "csv" },
+    { "chrisbra/csv.vim", ft = "csv" },
 
     --{
     --     "tmhedberg/SimpylFold",
@@ -292,7 +292,7 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -514,6 +514,7 @@ require("lazy").setup({
                         PmenuThumb = { bg = theme.ui.bg_p2 },
                         NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
                         SpellBad = { undercurl = true, underline = false, sp = colors.palette.oldWhite },
+                        LspInlayHint = { fg = theme.ui.special },
                     }
                 end,
             })
@@ -533,7 +534,7 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim",  lazy = false, dev = true },
+    { "rebelot/lucy.nvim", lazy = false, dev = true },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -678,6 +679,11 @@ require("lazy").setup({
     },
 
     {
+        "lewis6991/satellite.nvim",
+        event = "BufReadPost",
+        setup = true,
+    },
+    {
         "sindrets/diffview.nvim",
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     },
@@ -705,7 +711,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

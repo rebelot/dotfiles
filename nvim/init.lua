@@ -13,7 +13,7 @@
 -- maybe it's time for a session plugin
 -- check out sidebar-nvim/sidebar.nvim
 
-vim.loader.enable()
+-- vim.loader.enable()
 
 -- general configurations
 require("options")

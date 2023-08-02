@@ -91,6 +91,9 @@ o.dictionary = "/usr/share/dict/words"
 o.spelloptions = "noplainbuffer"
 -- opt.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor2/lCursor2,r-cr:hor20,o:hor50"
 
+-- Folding
+o.foldmethod = "expr"
+o.foldexpr = "nvim_treesitter#foldexpr()"
 function CustomFoldText()
     return fn.getline(vim.v.foldstart) .. " ... " .. fn.getline(vim.v.foldend):gsub("^%s*", "")
 end

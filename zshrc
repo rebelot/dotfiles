@@ -95,7 +95,7 @@ compinit -i
 source /opt/local/etc/profile.d/z.sh
 source /opt/local/share/fzf/shell/key-bindings.zsh
 source /opt/local/share/fzf/shell/completion.zsh
-eval "$(pip completion --zsh)"
+# eval "$(pip completion --zsh)"
 # }}}
 
 # plugin Opts {{{
@@ -147,7 +147,7 @@ export SAVEHIST=10000
 export HISTFILESIZE=-1
 
 # programs env opts
-export SCHRODINGER="/opt/schrodinger/suites2022-4"
+export SCHRODINGER="/opt/schrodinger/suites2023-2"
 export SCHRODINGER_ALLOW_UNSAFE_MULTIPROCESSING=1 #FUCK OFF
 export PYMOL4MAESTRO="/opt/anaconda3/envs/pymol/bin/"
 # export ILOG_CPLEX_PATH="/Applications/IBM/ILOG/CPLEX_Studio128"

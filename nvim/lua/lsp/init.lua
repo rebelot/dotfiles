@@ -16,10 +16,6 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     title = "Hover",
 })
 
-require("lsp.inlay_hints").setup({
-    -- exclude_ft = { "rust" }
-})
-
 ------------------
 -- Capabilities --
 ------------------
@@ -32,8 +28,8 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 ---------------
 
 local on_attach = function(client, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+    -- vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+    -- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     -- mappings
     local map = function(mode, key, expr, opts)
@@ -70,11 +66,11 @@ local on_attach = function(client, bufnr)
     map("n", "<leader>lwa", vim.lsp.buf.add_workspace_folder, { desc = "Add LSP workspace folder" })
     map("n", "<leader>lwr", vim.lsp.buf.remove_workspace_folder, { desc = "Remove LSP workspace folder" })
     map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
-    map("n", "K", vim.lsp.buf.hover, { desc = "LSP Hover" })
+    -- map("n", "K", vim.lsp.buf.hover, { desc = "LSP Hover" })
     map({ "n", "i" }, "<C-q>", vim.lsp.buf.signature_help, { desc = "Show LSP signature help" })
     -- buf_set_keymap('n', '<leader>lg', peek_definition, opts) -- treesitter does it better atm
 
-    if client.server_capabilities.documentFormattingProvider then
+    if client.supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
         -- set eventignore=all
         map("n", "<leader>lf", function()
             vim.lsp.buf.format({ bufnr = bufnr, async = false })
@@ -84,7 +80,7 @@ local on_attach = function(client, bufnr)
         end, { range = false, desc = "LSP format" })
     end
 
-    if client.server_capabilities.documentRangeFormattingProvider then
+    if client.supports_method(vim.lsp.protocol.Methods.textDocument_rangeFormatting) then
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})")
         map("x", "<leader>lf", function()
             vim.lsp.buf.format({ bufnr = bufnr, async = false })
@@ -98,16 +94,9 @@ local on_attach = function(client, bufnr)
         end, { range = true, desc = "LSP range format" })
     end
 
-    -- if client.server_capabilities.inlayHintProvider then
-    --     local augrp = vim.api.nvim_create_augroup("LSP_inlay_hints", { clear = true })
-    --     vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
-    --         callback = function()
-    --             require('vim.lsp._inlay_hint').refresh()
-    --         end,
-    --         group = augrp,
-    --         buffer = bufnr,
-    --     })
-    -- end
+    if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+        vim.lsp.inlay_hint(bufnr, true)
+    end
 
     -- if client.server_capabilities.signatureHelpProvider then
     --     local lsp_signature_help_au_id = vim.api.nvim_create_augroup("LSP_signature_help", { clear = true })
@@ -120,20 +109,20 @@ local on_attach = function(client, bufnr)
     --     })
     -- end
 
-    if client.server_capabilities.documentHighlightProvider then
+    if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
         local lsp_references_au_id = vim.api.nvim_create_augroup("LSP_document_highlight", { clear = false })
         vim.api.nvim_clear_autocmds({
             buffer = bufnr,
             group = lsp_references_au_id,
         })
         vim.api.nvim_create_autocmd("CursorHold", {
-            callback = vim.lsp.buf.document_highlight,
+            callback = function() vim.lsp.buf.document_highlight() end,
             buffer = bufnr,
             group = lsp_references_au_id,
             desc = "LSP document highlight",
         })
         vim.api.nvim_create_autocmd({ "CursorMoved", "WinLeave" }, {
-            callback = vim.lsp.buf.clear_references,
+            callback = function() vim.lsp.buf.clear_references() end,
             buffer = bufnr,
             group = lsp_references_au_id,
             desc = "Clear LSP document highlight",
