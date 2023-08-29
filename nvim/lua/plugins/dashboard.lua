@@ -38,7 +38,6 @@ local header = {
     "",
 }
 
-local icon_color = "Function"
 local center = {
     {
         desc = "Find File                     ",
@@ -90,7 +89,7 @@ local center = {
     {
         desc = "Manage Extensions",
         keymap = "",
-        key = "m",
+        key = "e",
         icon = "  ",
         action = "Mason",
     },
@@ -109,10 +108,6 @@ local center = {
         icon = "  ",
         action = "exit",
     },
-}
-
-local custom_footer = {
-    "type  :help<Enter>  or  <F1>  for on-line help",
 }
 
 vim.api.nvim_create_autocmd("Filetype", {

@@ -9,6 +9,7 @@
 -- try  sindrets/winshift.nvim
 -- check out vim.quickui
 -- folke/todo-comments.nvim
+-- {"folke/flash.nvim"}
 -- check telescope project for bookmarks
 -- maybe it's time for a session plugin
 -- check out sidebar-nvim/sidebar.nvim
