@@ -422,21 +422,21 @@ require("lazy").setup({
         cmd = "Telescope",
         dependencies = {
             {
-                "nvim-telescope/telescope-frecency.nvim",
-                dependencies = {
-                    "tami5/sqlite.lua",
-                    init = function()
-                        vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
-                    end,
-                },
-                config = function()
-                    vim.keymap.set(
-                        "n",
-                        "<leader>fr",
-                        require("telescope").extensions.frecency.frecency,
-                        { desc = "Telescope: Frecency" }
-                    )
-                end,
+                -- "nvim-telescope/telescope-frecency.nvim",
+                -- dependencies = {
+                --     "tami5/sqlite.lua",
+                --     init = function()
+                --         vim.g.sqlite_clib_path = "/opt/local/lib/libsqlite3.dylib"
+                --     end,
+                -- },
+                -- config = function()
+                --     vim.keymap.set(
+                --         "n",
+                --         "<leader>fr",
+                --         require("telescope").extensions.frecency.frecency,
+                --         { desc = "Telescope: Frecency" }
+                --     )
+                -- end,
             },
             {
                 "nvim-telescope/telescope-file-browser.nvim",
@@ -468,7 +468,7 @@ require("lazy").setup({
             require("telescope").load_extension("dap")
             require("telescope").load_extension("notify")
             require("telescope").load_extension("fzf")
-            require("telescope").load_extension("frecency")
+            -- require("telescope").load_extension("frecency")
             require("telescope").load_extension("ui-select")
         end,
     },

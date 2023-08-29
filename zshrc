@@ -92,10 +92,6 @@ compinit -i
 # }}}
 
 # other sources  {{{
-<<<<<<< HEAD
-source /opt/local/etc/profile.d/z.sh
-source /opt/local/share/fzf/shell/key-bindings.zsh
-source /opt/local/share/fzf/shell/completion.zsh
 # eval "$(pip completion --zsh)"
 source ~/.fzf.zsh
 # }}}
