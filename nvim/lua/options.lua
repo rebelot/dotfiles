@@ -98,4 +98,5 @@ function CustomFoldText()
     return fn.getline(vim.v.foldstart) .. " ... " .. fn.getline(vim.v.foldend):gsub("^%s*", "")
 end
 
-opt.foldtext = "v:lua.CustomFoldText()"
+-- opt.foldtext = "v:lua.CustomFoldText()"
+opt.foldtext = "v:lua.vim.treesitter.foldtext()"

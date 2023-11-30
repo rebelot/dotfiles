@@ -95,7 +95,7 @@ local on_attach = function(client, bufnr)
     end
 
     if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-        vim.lsp.inlay_hint(bufnr, true)
+        vim.lsp.inlay_hint.enable(bufnr, true)
     end
 
     -- if client.server_capabilities.signatureHelpProvider then

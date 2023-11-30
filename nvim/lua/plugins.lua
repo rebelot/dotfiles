@@ -20,6 +20,16 @@ local disabled_rtp_plugins = {
     "matchit",
 }
 
+-- vim.api.nvim_create_autocmd("BufRead", {
+--     pattern = "plugins.lua",
+--     callback = function()
+--         vim.keymap.set("n", "gx", function()
+--
+--         end)
+--     end,
+--     buf = true
+-- })
+
 -- for _, plugin in pairs(disabled_rtp_plugins) do
 --     vim.g["loaded_" .. plugin] = 1
 -- end
@@ -37,7 +47,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -72,8 +82,13 @@ require("lazy").setup({
 
     {
         "j-hui/fidget.nvim",
+        enabled = true,
         event = "LspAttach",
-        config = true,
+        opts = {
+            notification = {
+                override_vim_notify = true,
+            }
+        }
     },
 
     {
@@ -93,6 +108,7 @@ require("lazy").setup({
 
     {
         "SmiteshP/nvim-navic",
+        enabled = true,
         event = "BufReadPost",
         config = function()
             require("nvim-navic").setup({
@@ -116,7 +132,6 @@ require("lazy").setup({
         event = "BufReadPost",
         cmd = { "AerialToggle", "AerialInfo" },
         keys = "<leader>at",
-        -- enabled = false,
         config = function()
             require("aerial").setup({
                 attach_mode = "global",
@@ -163,6 +178,7 @@ require("lazy").setup({
     {
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdLineEnter" },
+        enabled = true,
         dependencies = {
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
@@ -228,7 +244,6 @@ require("lazy").setup({
     {
         "jackMort/ChatGPT.nvim",
         cmd = { "ChatGPT", "ChatGPTEditWithInstructions", "ChatGPTActAs", "ChatGPTCompleteCode" },
-        -- enabled = false,
         dependencies = {
             "MunifTanjim/nui.nvim",
         },
@@ -292,7 +307,7 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -316,6 +331,7 @@ require("lazy").setup({
 
     {
         "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
         event = "BufReadPost",
         config = function()
             require("plugins.indent-blankline")
@@ -420,6 +436,7 @@ require("lazy").setup({
         "nvim-telescope/telescope.nvim",
         keys = { "<leader>f", "<leader><space>", "<leader>k", "<leader>T" },
         cmd = "Telescope",
+        enabled = true,
         dependencies = {
             {
                 "nvim-telescope/telescope-frecency.nvim",
@@ -466,7 +483,7 @@ require("lazy").setup({
 
             require("telescope").load_extension("file_browser")
             require("telescope").load_extension("dap")
-            require("telescope").load_extension("notify")
+            -- require("telescope").load_extension("notify")
             require("telescope").load_extension("fzf")
             require("telescope").load_extension("frecency")
             require("telescope").load_extension("ui-select")
@@ -482,10 +499,12 @@ require("lazy").setup({
     {
         "rebelot/kanagawa.nvim",
         dev = true,
+        enabled = true,
         lazy = false,
         priority = 1000,
         config = function()
-            vim.o.background = nil
+            -- vim.o.background = nil
+            vim.cmd("set bg=")
             vim.o.cmdheight = 0
             vim.o.pumblend = 10
             require("kanagawa").setup({
@@ -534,11 +553,11 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
-        lazy = true,
+        lazy = false,
         config = true,
         opts = {
             default = true,
@@ -672,7 +691,7 @@ require("lazy").setup({
 
     {
         "lewis6991/gitsigns.nvim",
-        event = "BufReadPost",
+        event = "BufReadPre",
         config = function()
             require("plugins.gitsigns")
         end,
@@ -682,6 +701,7 @@ require("lazy").setup({
         "lewis6991/satellite.nvim",
         event = "BufReadPost",
         setup = true,
+        enabled = true,
     },
     {
         "sindrets/diffview.nvim",
@@ -711,7 +731,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
@@ -739,6 +759,7 @@ require("lazy").setup({
     {
         "rcarriga/nvim-notify",
         lazy = true,
+        enabled = false,
         init = function()
             vim.notify = function(...)
                 require("lazy").load({ plugins = { "nvim-notify" } })
