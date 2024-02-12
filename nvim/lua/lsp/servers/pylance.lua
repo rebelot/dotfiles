@@ -5,7 +5,7 @@ local lsputil = require("lspconfig.util")
 local _commands = {
     "pyright.createtypestub",
     "pyright.organizeimports",
-    "pyright.addoptionalforparam",
+    "pyright.dumpFileDebugInfo",
     "python.createTypeStub",
     "python.orderImports",
     "python.addOptionalForParam",
@@ -15,9 +15,15 @@ local _commands = {
     "python.intellicode.loadLanguageServerExtension",
     "pylance.extractMethod",
     "pylance.extractVariable",
-    "pylance.dumpFileDebugInfo",
     "pylance.completionAccepted",
     "pylance.executedClientCommand",
+    "pylance.moveSymbol",
+    "pylance.getSour ceFiles",
+    "pylance.convertImportFormat",
+    "pylance.fixAll",
+    "pylance.pytest.addAllFixtureTypeAnnotations",
+    "pylance.pytest.addFixtureTypeAnnotation",
+    "pylance.indexing.clearPersistedIndices",
 }
 
 local function organize_imports()
@@ -60,8 +66,10 @@ require("lspconfig.configs").pylance = {
         autostart = true,
         single_file_support = true,
         cmd = {
-            "node",
-            vim.fn.expand("$HOME/usr/src/pylance_langserver/extension/dist/server.bundle.crack.js"),
+            -- "node",
+            -- "--inspect-brk",
+            -- vim.fn.expand("$HOME/usr/src/pylance_langserver/extension/dist/server.bundle.crack.js"),
+            "delance-langserver",
             "--stdio",
         },
         filetypes = { "python" },
@@ -81,12 +89,6 @@ require("lspconfig.configs").pylance = {
         settings = {
             python = {
                 analysis = vim.empty_dict(),
-                telemetry = {
-                    enable = false,
-                },
-            },
-            telemetry = {
-                telemetryLevel = "off",
             },
         },
         docs = {

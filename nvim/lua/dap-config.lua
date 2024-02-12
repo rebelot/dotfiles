@@ -135,6 +135,25 @@ dap.adapters.codelldb = {
     },
 }
 
+dap.adapters.node2 = {
+    type = "executable",
+    command = "node-debug2-adapter",
+    args = {}
+}
+
+dap.configurations.typescript = {
+        {
+            type = "node2",
+            name = "node attach",
+            request = "attach",
+            program = "${file}",
+            cwd = vim.fn.getcwd(),
+            sourceMaps = true,
+            protocol = "inspector",
+        }
+    }
+dap.configurations.javascript = dap.configurations.typescript
+
 dap.configurations.cpp = {
     {
         name = "Launch (codelldb)",

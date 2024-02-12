@@ -15,14 +15,6 @@
 -- check out sidebar-nvim/sidebar.nvim
 
 -- vim.loader.enable()
-vim.api.nvim_create_autocmd("OptionSet", {
-    pattern = "background",
-    callback = function(args)
-        print("bg was set!")
-        vim.print(args)
-
-    end,
-})
 
 -- general configurations
 require("options")

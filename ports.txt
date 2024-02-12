@@ -1,5 +1,6 @@
 zsh
 coreutils
+cmake
 less
 rsync
 wget

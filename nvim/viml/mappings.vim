@@ -21,7 +21,7 @@ onoremap <S-CR> -
 " nnoremap <silent><leader>sv :source $MYVIMRC<CR>:noh<CR>
 
 " clear search highlighting
-" nnoremap <silent> <esc> :noh<cr>
+nnoremap <silent> <esc> :noh<CR>
 
 " remap <Esc> to jk in insert mode
 " inoremap jk <Esc>

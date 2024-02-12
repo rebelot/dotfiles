@@ -47,7 +47,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -87,8 +87,8 @@ require("lazy").setup({
         opts = {
             notification = {
                 override_vim_notify = true,
-            }
-        }
+            },
+        },
     },
 
     {
@@ -307,7 +307,7 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -515,6 +515,25 @@ require("lazy").setup({
                 overrides = function(colors)
                     local theme = colors.theme
                     return {
+                        ["@string.regexp"] = { link = "@string.regex" },
+                        ["@variable.parameter"] = { link = "@parameter" },
+                        ["@exception"] = { link = "@exception" },
+                        ["@string.special.symbol"] = { link = "@symbol" },
+                        ["@markup.strong"] = { link = "@text.strong" },
+                        ["@markup.italic"] = { link = "@text.emphasis" },
+                        ["@markup.heading"] = { link = "@text.title" },
+                        ["@markup.raw"] = { link = "@text.literal" },
+                        ["@markup.quote"] = { link = "@text.quote" },
+                        ["@markup.math"] = { link = "@text.math" },
+                        ["@markup.environment"] = { link = "@text.environment" },
+                        ["@markup.environment.name"] = { link = "@text.environment.name" },
+                        ["@markup.link.url"] = { link = "Special" },
+                        ["@markup.link.label"] = { link = "Identifier" },
+                        ["@comment.note"] = { link = "@text.note" },
+                        ["@comment.warning"] = { link = "@text.warning" },
+                        ["@comment.danger"] = { link = "@text.danger" },
+                        ["@diff.plus"] = { link = "@text.diff.add" },
+                        ["@diff.minus"] = { link = "@text.diff.delete" },
                         TelescopeTitle = { fg = theme.ui.special, bold = true },
                         TelescopePromptNormal = { bg = theme.ui.bg_p1 },
                         TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
@@ -553,7 +572,7 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -731,7 +750,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

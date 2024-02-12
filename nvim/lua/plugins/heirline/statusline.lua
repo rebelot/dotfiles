@@ -226,32 +226,32 @@ local Navic = {
     end,
     static = {
         type_hl = {
-            File = dim(utils.get_highlight("Directory").fg, 0.75),
-            Module = dim(utils.get_highlight("@include").fg, 0.75),
-            Namespace = dim(utils.get_highlight("@namespace").fg, 0.75),
-            Package = dim(utils.get_highlight("@include").fg, 0.75),
-            Class = dim(utils.get_highlight("@type").fg, 0.75),
-            Method = dim(utils.get_highlight("@method").fg, 0.75),
-            Property = dim(utils.get_highlight("@property").fg, 0.75),
-            Field = dim(utils.get_highlight("@field").fg, 0.75),
-            Constructor = dim(utils.get_highlight("@constructor").fg, 0.75),
-            Enum = dim(utils.get_highlight("@type").fg, 0.75),
-            Interface = dim(utils.get_highlight("@type").fg, 0.75),
-            Function = dim(utils.get_highlight("@function").fg, 0.75),
-            Variable = dim(utils.get_highlight("@variable").fg, 0.75),
-            Constant = dim(utils.get_highlight("@constant").fg, 0.75),
-            String = dim(utils.get_highlight("@string").fg, 0.75),
-            Number = dim(utils.get_highlight("@number").fg, 0.75),
-            Boolean = dim(utils.get_highlight("@boolean").fg, 0.75),
-            Array = dim(utils.get_highlight("@field").fg, 0.75),
-            Object = dim(utils.get_highlight("@type").fg, 0.75),
-            Key = dim(utils.get_highlight("@keyword").fg, 0.75),
-            Null = dim(utils.get_highlight("@comment").fg, 0.75),
-            EnumMember = dim(utils.get_highlight("@constant").fg, 0.75),
-            Struct = dim(utils.get_highlight("@type").fg, 0.75),
-            Event = dim(utils.get_highlight("@type").fg, 0.75),
-            Operator = dim(utils.get_highlight("@operator").fg, 0.75),
-            TypeParameter = dim(utils.get_highlight("@type").fg, 0.75),
+            -- File = dim(utils.get_highlight("Directory").fg, 0.75),
+            -- Module = dim(utils.get_highlight("@include").fg, 0.75),
+            -- Namespace = dim(utils.get_highlight("@namespace").fg, 0.75),
+            -- Package = dim(utils.get_highlight("@include").fg, 0.75),
+            -- Class = dim(utils.get_highlight("@type").fg, 0.75),
+            -- Method = dim(utils.get_highlight("@method").fg, 0.75),
+            -- Property = dim(utils.get_highlight("@property").fg, 0.75),
+            -- Field = dim(utils.get_highlight("@field").fg, 0.75),
+            -- Constructor = dim(utils.get_highlight("@constructor").fg, 0.75),
+            -- Enum = dim(utils.get_highlight("@type").fg, 0.75),
+            -- Interface = dim(utils.get_highlight("@type").fg, 0.75),
+            -- Function = dim(utils.get_highlight("@function").fg, 0.75),
+            -- Variable = dim(utils.get_highlight("@variable").fg, 0.75),
+            -- Constant = dim(utils.get_highlight("@constant").fg, 0.75),
+            -- String = dim(utils.get_highlight("@string").fg, 0.75),
+            -- Number = dim(utils.get_highlight("@number").fg, 0.75),
+            -- Boolean = dim(utils.get_highlight("@boolean").fg, 0.75),
+            -- Array = dim(utils.get_highlight("@field").fg, 0.75),
+            -- Object = dim(utils.get_highlight("@type").fg, 0.75),
+            -- Key = dim(utils.get_highlight("@keyword").fg, 0.75),
+            -- Null = dim(utils.get_highlight("@comment").fg, 0.75),
+            -- EnumMember = dim(utils.get_highlight("@constant").fg, 0.75),
+            -- Struct = dim(utils.get_highlight("@type").fg, 0.75),
+            -- Event = dim(utils.get_highlight("@type").fg, 0.75),
+            -- Operator = dim(utils.get_highlight("@operator").fg, 0.75),
+            -- TypeParameter = dim(utils.get_highlight("@type").fg, 0.75),
         },
         -- line: 16 bit (65536); col: 10 bit (1024); winnr: 6 bit (64)
         -- local encdec = function(a,b,c) return dec(enc(a,b,c)) end; vim.pretty_print(encdec(2^16 - 1, 2^10 - 1, 2^6 - 1))
@@ -312,34 +312,30 @@ local Diagnostics = {
         end,
         name = "heirline_diagnostics",
     },
-    static = {},
     init = function(self)
-        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
-        self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
-        self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+        self.diagnostics = vim.diagnostic.count()
     end,
     {
         provider = function(self)
-            return self.errors > 0 and (icons.err .. self.errors .. " ")
+            return self.diagnostics[1] and (icons.err .. self.diagnostics[1] .. " ")
         end,
         hl = "DiagnosticError",
     },
     {
         provider = function(self)
-            return self.warnings > 0 and (icons.warn .. self.warnings .. " ")
+            return self.diagnostics[2] and (icons.warn .. self.diagnostics[2] .. " ")
         end,
         hl = "DiagnosticWarn",
     },
     {
         provider = function(self)
-            return self.info > 0 and (icons.info .. self.info .. " ")
+            return self.diagnostics[3] and (icons.info .. self.diagnostics[3] .. " ")
         end,
         hl = "DiagnosticInfo",
     },
     {
         provider = function(self)
-            return self.hints > 0 and (icons.hint .. self.hints)
+            return self.diagnostics[4] and (icons.hint .. self.diagnostics[4] .. " ")
         end,
         hl = "DiagnosticHint",
     },
