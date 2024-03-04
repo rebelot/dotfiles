@@ -8,18 +8,18 @@ local function sesspath(name)
 end
 
 local function sessdefaultname()
-    return table.concat(vim.split(vim.loop.cwd(), "/", { trimempty = true }), "_")
+    return table.concat(vim.split(vim.uv.cwd(), "/", { trimempty = true }), "_")
         .. "_"
         .. os.date("%Y_%m_%d_%H_%M_%S")
 end
 
 local function mksess(name)
-    vim.loop.fs_mkdir(PATH, 448)
+    vim.uv.fs_mkdir(PATH, 448)
     vim.cmd("mksession! " .. sesspath(name))
 end
 
 local function loadsess(name)
-    vim.loop.fs_mkdir(PATH, 448)
+    vim.uv.fs_mkdir(PATH, 448)
     local ok, _ = pcall(vim.cmd, "source " .. sesspath(name))
     if not ok then
         vim.notify("Session " .. name .. " not found", vim.log.levels.WARN)
@@ -27,7 +27,7 @@ local function loadsess(name)
 end
 
 local function listsess()
-    vim.loop.fs_mkdir(PATH, 448)
+    vim.uv.fs_mkdir(PATH, 448)
     return vim.tbl_map(function(s)
         return s:gsub(".vim", "")
     end, vim.fn.readdir(PATH))
