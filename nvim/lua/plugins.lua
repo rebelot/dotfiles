@@ -47,7 +47,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -307,7 +307,7 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -498,6 +498,7 @@ require("lazy").setup({
         priority = 1000,
         config = function()
             -- vim.o.background = nil
+            local c = require("kanagawa.lib.color")
             vim.cmd("set bg=")
             vim.o.cmdheight = 0
             vim.o.pumblend = 10
@@ -509,25 +510,6 @@ require("lazy").setup({
                 overrides = function(colors)
                     local theme = colors.theme
                     return {
-                        -- ["@string.regexp"] = { link = "@string.regex" },
-                        -- ["@variable.parameter"] = { link = "@parameter" },
-                        -- ["@exception"] = { link = "@exception" },
-                        -- ["@string.special.symbol"] = { link = "@symbol" },
-                        -- ["@markup.strong"] = { link = "@text.strong" },
-                        -- ["@markup.italic"] = { link = "@text.emphasis" },
-                        -- ["@markup.heading"] = { link = "@text.title" },
-                        -- ["@markup.raw"] = { link = "@text.literal" },
-                        -- ["@markup.quote"] = { link = "@text.quote" },
-                        -- ["@markup.math"] = { link = "@text.math" },
-                        -- ["@markup.environment"] = { link = "@text.environment" },
-                        -- ["@markup.environment.name"] = { link = "@text.environment.name" },
-                        -- ["@markup.link.url"] = { link = "Special" },
-                        -- ["@markup.link.label"] = { link = "Identifier" },
-                        -- ["@comment.note"] = { link = "@text.note" },
-                        -- ["@comment.warning"] = { link = "@text.warning" },
-                        -- ["@comment.danger"] = { link = "@text.danger" },
-                        -- ["@diff.plus"] = { link = "@text.diff.add" },
-                        -- ["@diff.minus"] = { link = "@text.diff.delete" },
                         TelescopeTitle = { fg = theme.ui.special, bold = true },
                         TelescopePromptNormal = { bg = theme.ui.bg_p1 },
                         TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
@@ -546,7 +528,28 @@ require("lazy").setup({
                         PmenuThumb = { bg = theme.ui.bg_p2 },
                         NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
                         SpellBad = { undercurl = true, underline = false, sp = colors.palette.oldWhite },
-                        LspInlayHint = { fg = theme.ui.special },
+                        DiagnosticVirtualTextError = {
+                            fg = theme.diag.error,
+                            bg = c(theme.diag.error):blend(theme.ui.bg, 0.95):to_hex(),
+                        },
+                        DiagnosticVirtualTextWarn = {
+                            fg = theme.diag.warning,
+                            bg = c(theme.diag.warning):blend(theme.ui.bg, 0.95):to_hex(),
+                        },
+                        DiagnosticVirtualTextHint = {
+                            fg = theme.diag.hint,
+                            bg = c(theme.diag.hint):blend(theme.ui.bg, 0.95):to_hex(),
+                        },
+                        DiagnosticVirtualTextInfo = {
+                            fg = theme.diag.info,
+                            bg = c(theme.diag.info):blend(theme.ui.bg, 0.95):to_hex(),
+                        },
+                        DiagnosticVirtualTextOk = {
+                            fg = theme.diag.ok,
+                            bg = c(theme.diag.ok):blend(theme.ui.bg, 0.95):to_hex(),
+                        },
+                        -- LspInlayHint = { fg = theme.ui.special },
+                        -- EndOfBuffer = { link = 'NonText' }
                     }
                 end,
             })
@@ -566,7 +569,7 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -744,7 +747,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

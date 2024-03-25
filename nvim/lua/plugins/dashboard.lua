@@ -57,7 +57,7 @@ local center = {
     {
         desc = "Browse Files",
         keymap = "",
-        key = ".",
+        key = "b",
         icon = "  ",
         action = "Telescope file_browser",
     },
@@ -97,7 +97,7 @@ local center = {
     {
         desc = "Config",
         keymap = "",
-        key = "s",
+        key = "c",
         icon = "  ",
         action = "Telescope find_files cwd=~/.config/nvim",
     },
@@ -116,7 +116,7 @@ vim.api.nvim_create_autocmd("Filetype", {
     callback = function()
         vim.cmd([[
             setlocal buftype=nofile
-            setlocal nonumber norelativenumber nocursorline noruler
+            setlocal nonumber norelativenumber nocursorline noruler fillchars=eob:\ 
             nnoremap <buffer> <F2> :h news.txt<CR> 
         ]])
     end,
