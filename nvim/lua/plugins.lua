@@ -73,7 +73,7 @@ require("lazy").setup({
     },
 
     {
-        "jose-elias-alvarez/null-ls.nvim",
+        "nvimtools/none-ls.nvim",
         event = { "BufRead", "BufNewFile" },
         config = function()
             require("lsp.null-ls")

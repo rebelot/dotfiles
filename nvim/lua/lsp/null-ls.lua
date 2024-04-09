@@ -14,19 +14,19 @@ local sources = {
     null_ls.builtins.formatting.stylua.with({
         args = { "--indent-width", "4", "--indent-type", "Spaces", "-" },
     }),
-    null_ls.builtins.formatting.latexindent,
+    -- null_ls.builtins.formatting.latexindent,
     -- null_ls.builtins.diagnostics.luacheck,
     -- null_ls.builtins.formatting.lua_format,
 
     null_ls.builtins.formatting.prettier,
 
     null_ls.builtins.formatting.shfmt,
-    null_ls.builtins.formatting.beautysh,
+    -- null_ls.builtins.formatting.beautysh,
     null_ls.builtins.formatting.shellharden,
-    null_ls.builtins.diagnostics.shellcheck,
+    -- null_ls.builtins.diagnostics.shellcheck,
     null_ls.builtins.formatting.clang_format,
 
-    null_ls.builtins.diagnostics.chktex,
+    -- null_ls.builtins.diagnostics.chktex,
 
     null_ls.builtins.diagnostics.cppcheck,
 
