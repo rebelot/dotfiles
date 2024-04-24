@@ -47,7 +47,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -72,6 +72,22 @@ require("lazy").setup({
         end,
     },
 
+    -- {
+    --     "vhyrro/luarocks.nvim",
+    --     priority = 10000,
+    --     opts = {
+    --         -- rocks = { "magick" },
+    --     },
+    -- },
+    -- {
+    --     "rest-nvim/rest.nvim",
+    --     ft = "http",
+    --     dependencies = { "luarocks.nvim" },
+    --     config = function()
+    --         require("rest-nvim").setup()
+    --     end,
+    -- },
+
     {
         "nvimtools/none-ls.nvim",
         event = { "BufRead", "BufNewFile" },
@@ -91,20 +107,20 @@ require("lazy").setup({
         },
     },
 
-    {
-        "onsails/lspkind-nvim",
-        lazy = true,
-        config = function()
-            require("lspkind").init({
-                mode = "symbol_text",
-                preset = "codicons",
-                symbol_map = {
-                    Copilot = "",
-                },
-                -- preset = "default",
-            })
-        end,
-    },
+    -- {
+    --     "onsails/lspkind-nvim",
+    --     lazy = true,
+    --     config = function()
+    --         require("lspkind").init({
+    --             mode = "symbol_text",
+    --             preset = "codicons",
+    --             symbol_map = {
+    --                 Copilot = "",
+    --             },
+    --             -- preset = "default",
+    --         })
+    --     end,
+    -- },
 
     {
         "SmiteshP/nvim-navic",
@@ -114,6 +130,7 @@ require("lazy").setup({
             require("nvim-navic").setup({
                 -- icons = require("lspkind").symbol_map,
                 separator = "",
+                icons = require("lsp.init").symbol_icons,
             })
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
@@ -170,6 +187,7 @@ require("lazy").setup({
                     nested_top = "│ ",
                     whitespace = "  ",
                 },
+                icons = require("lsp.init").symbol_icons,
             })
             vim.keymap.set("n", "<leader>at", ":AerialToggle<CR>")
         end,
@@ -271,7 +289,23 @@ require("lazy").setup({
         cmd = "Neogen",
         config = true,
     },
-
+    -- {
+    --     "benlubas/molten-nvim",
+    --     -- see otter.nvim and quarto.nvim
+    --     dependencies = {
+    --         "3rd/image.nvim",
+    --         dependencies = { "luarocks.nvim" },
+    --     },
+    --     cmd = { "MoltenInit" },
+    --     build = ":UpdateRemotePlugins",
+    --     init = function()
+    --         vim.g.molten_auto_open_output = false
+    --         vim.g.molten_image_provider = "image.nvim"
+    --         vim.g.molten_wrap_output = true
+    --         vim.g.molten_virt_text_output = true
+    --         vim.g.molten_virt_lines_off_by_1 = true
+    --     end,
+    -- },
     -- use 'saadparwaiz1/cmp_luasnip'
     -- use 'L3MON4D3/LuaSnip'
     -- use 'hrsh7th/vim-vsnip'
@@ -307,7 +341,7 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -569,7 +603,7 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -747,7 +781,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {

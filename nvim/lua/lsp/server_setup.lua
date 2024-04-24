@@ -26,6 +26,7 @@ local servers = {
     "clangd",
     "pylance",
     -- "pyright",
+    -- "basedpyright",
     "marksman",
     "lua_ls",
     "texlab",

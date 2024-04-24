@@ -99,4 +99,4 @@ function CustomFoldText()
 end
 
 -- opt.foldtext = "v:lua.CustomFoldText()"
-opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+opt.foldtext = ""

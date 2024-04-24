@@ -248,7 +248,7 @@ require("telescope").setup({
     extensions = {
         file_browser = {
             hidden = true,
-            depth = 3,
+            -- depth = 3,
             mappings = {
                 i = {
                     ["<CR>"] = custom_actions.multi_selection_open,

@@ -6,7 +6,8 @@ local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
-local cmp = require("cmp") or {}
+local cmp = require("cmp")
+
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -49,7 +50,7 @@ cmp.setup({
                 if vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
                     vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), "m", true)
                 elseif vim.snippet.jumpable(1) then
-                    vim.snippet.jump( 1)
+                    vim.snippet.jump(1)
                 else
                     fallback()
                 end
@@ -67,18 +68,18 @@ cmp.setup({
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                    return vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_backward)"), "m", true)
+                    vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_backward)"), "m", true)
                 elseif vim.snippet.jumpable(-1) then
-                    vim.snippet.jump( -1)
+                    vim.snippet.jump(-1)
                 else
                     fallback()
                 end
             end,
             s = function(fallback)
                 if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
-                    return vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_backward)"), "m", true)
+                    vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_backward)"), "m", true)
                 elseif vim.snippet.jumpable(-1) then
-                    vim.snippet.jump( -1)
+                    vim.snippet.jump(-1)
                 else
                     fallback()
                 end
@@ -160,7 +161,7 @@ cmp.setup({
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
             local menu
-            local kind = require("lspkind").symbol_map[vim_item.kind] --.. " " .. vim_item.kind
+            local kind = require("lsp.init").symbol_icons[vim_item.kind] .. " " -- .. vim_item.kind
 
             local alias = {
                 buffer = "[B]",
@@ -174,11 +175,12 @@ cmp.setup({
                 nvim_lsp_signature_help = "[S]",
             }
 
-            if entry.source.name == "nvim_lsp" then
-                menu = entry.source.source.client.name
-            else
-                menu = alias[entry.source.name] or entry.source.name
-            end
+            -- if entry.source.name == "nvim_lsp" then
+            --     menu = entry.source.source.client.name
+            -- else
+            --     menu = alias[entry.source.name] or entry.source.name
+            -- end
+
             vim_item.menu = vim_item.kind
             vim_item.kind = kind
             return vim_item
@@ -206,8 +208,8 @@ cmp.setup({
         { name = "path" },
         -- { name = "copilot" },
     }, {
-        { name = "buffer" },
-        { name = "tmux", option = { all_panes = true } },
+        -- { name = "buffer" },
+        -- { name = "tmux", option = { all_panes = true } },
     }),
 })
 
@@ -244,8 +246,8 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
     },
 })
 
-vim.keymap.set("i", "<C-X><C-X>", function()
-    require("cmp").complete({ config = { sources = { { name = "copilot" } } } })
+vim.keymap.set("i", "<C-X>c", function()
+    cmp.complete({ config = { sources = { { name = "copilot" } } } })
 end, { silent = true })
 
 -- cmp.event:on("menu_opened", function()
