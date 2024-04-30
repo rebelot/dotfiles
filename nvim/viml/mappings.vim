@@ -11,6 +11,8 @@ onoremap H ^
 nnoremap <S-CR> -
 xnoremap <S-CR> -
 onoremap <S-CR> -
+nnoremap <leader>. @:
+xnoremap <leader>. @:
 
 " noremap <M-S-H> H
 " noremap <M-S-L> L
@@ -133,6 +135,7 @@ xnoremap <leader>p "+p
 " nnoremap <leader>cp :cNext<CR>
 " nnoremap <leader>cc :cclose<CR>
 nnoremap <silent><leader>cC :cexpr []<CR>
+nnoremap <leader>c/ :cexpr []\|copen<CR><C-w>p:%g//caddexpr expand("%") .. ":" .. line(".") .. ":" .. getline(".")<CR>
 "
 " Location[L]ist [O]pen, [N]ext, [P]revious, [c]lose, [C]lear
 " nnoremap <leader>lo :botright lopen<CR>

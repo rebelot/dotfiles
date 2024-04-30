@@ -145,55 +145,6 @@ require("lazy").setup({
     },
 
     {
-        "stevearc/aerial.nvim",
-        event = "BufReadPost",
-        cmd = { "AerialToggle", "AerialInfo" },
-        keys = "<leader>at",
-        config = function()
-            require("aerial").setup({
-                attach_mode = "global",
-                backends = {
-                    ["_"] = { "lsp", "treesitter", "markdown", "man" },
-                    markdown = { "treesitter" },
-                },
-                filter_kind = false,
-                -- filter_kind = {
-                --     ["_"] = {
-                --         "Class",
-                --         "Constructor",
-                --         "Enum",
-                --         "EnumMember",
-                --         "Event",
-                --         "Field",
-                --         "Function",
-                --         "Interface",
-                --         "Key",
-                --         "Method",
-                --         "Module",
-                --         "Namespace",
-                --         "Operator",
-                --         -- "Package", -- this catches for/if ??
-                --         "Property",
-                --         "Struct",
-                --         "Variable",
-                --     },
-                --     -- markdown = { "String" },
-                -- },
-                layout = { min_width = 30 },
-                show_guides = true,
-                guides = {
-                    mid_item = "├ ",
-                    last_item = "└ ",
-                    nested_top = "│ ",
-                    whitespace = "  ",
-                },
-                icons = require("lsp.init").symbol_icons,
-            })
-            vim.keymap.set("n", "<leader>at", ":AerialToggle<CR>")
-        end,
-    },
-
-    {
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdLineEnter" },
         enabled = true,
@@ -277,7 +228,8 @@ require("lazy").setup({
 
     {
         "folke/trouble.nvim",
-        cmd = { "Trouble", "TroubleToggle" },
+        branch = "dev",
+        cmd = { "Trouble" },
         keys = "<leader>x",
         config = function()
             require("plugins.trouble")
@@ -561,6 +513,8 @@ require("lazy").setup({
                         PmenuSbar = { bg = theme.ui.bg_m1 },
                         PmenuThumb = { bg = theme.ui.bg_p2 },
                         NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
+                        TroubleNormal = { link = "NormalDark" },
+                        TroubleNormalNC = { link = "TroubleNormal" },
                         SpellBad = { undercurl = true, underline = false, sp = colors.palette.oldWhite },
                         DiagnosticVirtualTextError = {
                             fg = theme.diag.error,

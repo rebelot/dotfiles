@@ -64,7 +64,7 @@ autocmd({ "BufRead", "BufNewFile" }, {
 -----------------
 
 autocmd({ "WinEnter", "BufWinEnter" }, {
-    command = [[let &l:scrolloff = winheight(0) / 3]],
+    command = [[let &l:scrolloff = winheight(0) / 4]],
 })
 
 ------------------------
@@ -93,6 +93,9 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType", "BufEnter" }, {
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
         end
         if vim.bo[buf].buftype == "quickfix" then
+            vim.cmd([[setl cursorline nonu signcolumn=no | let &l:relativenumber = &l:number]])
+        end
+        if vim.bo[buf].filetype == "trouble" then
             vim.cmd([[setl cursorline nonu signcolumn=no | let &l:relativenumber = &l:number]])
         end
     end,
@@ -129,8 +132,9 @@ autocmd("BufWinEnter", {
         if vim.bo[buf].buftype == "quickfix" then
             vim.cmd([[setl winhl=Normal:NormalDark]])
             vim.keymap.set("n", "q", "<cmd>cclose<CR>", { buffer = buf })
-            vim.keymap.set("n", "<C-n>", "<cmd>cnext<CR>", { buffer = buf })
-            vim.keymap.set("n", "<C-p>", "<cmd>cNext<CR>", { buffer = buf })
+            vim.keymap.set("n", "<C-n>", "<cmd>cnext<CR>zt<C-w>p", { buffer = buf })
+            vim.keymap.set("n", "<C-p>", "<cmd>cNext<CR>zt<C-w>p", { buffer = buf })
+            vim.keymap.set("n", "<C-CR>", "<CR>zt<C-w>p", { buffer = buf })
         end
     end,
 })

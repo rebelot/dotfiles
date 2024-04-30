@@ -1,25 +1,31 @@
 local map = vim.keymap.set
 
-require("trouble").setup({ use_diagnostic_signs = true })
+require("trouble").setup({
+    -- preview = { type = "float" },
+    icons = {
+        kinds = require("lsp.init").symbol_icons,
+    }
+})
 
-map("n", "<leader>xx", "<cmd>TroubleToggle<CR>")
-map("n", "<leader>xD", "<cmd>TroubleToggle workspace_diagnostics<CR>")
-map("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<CR>")
-map("n", "<leader>xc", "<cmd>TroubleToggle quickfix<CR>")
-map("n", "<leader>xl", "<cmd>TroubleToggle loclist<CR>")
-map("n", "<leader>xr", "<cmd>TroubleToggle lsp_references<CR>")
+map("n", "<leader>xt", "<cmd>Trouble<CR>")
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>")
+map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>")
+map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>")
+map("n", "<leader>xl", "<cmd>Trouble lsp toggle focus=false win.position=right<CR>")
+map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<CR>")
+map("n", "<leader>xL", "<cmd>Trouble loclist toggle<CR>")
 
-map("n", "]x", function()
-    pcall(require("trouble").next, { skip_groups = true, jump = true })
-end)
-map("n", "[x", function()
-    pcall(require("trouble").previous, { skip_groups = true, jump = true })
-end)
+-- map("n", "]x", function()
+--     require("trouble").next()
+-- end)
+-- map("n", "[x", function()
+--     require("trouble").prev()
+-- end)
 
-vim.cmd([[hi TroubleText guifg=fg guibg=none]])
-vim.cmd([[
-    augroup trouble_au
-    autocmd!
-    autocmd FileType Trouble setl cursorline 
-    augroup END
-]])
+-- vim.cmd([[hi! link TroubleNormal NormalFloat]])
+-- vim.cmd([[
+--     augroup trouble_au
+--     autocmd!
+--     autocmd FileType Trouble setl cursorline
+--     augroup END
+-- ]])

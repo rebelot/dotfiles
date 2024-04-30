@@ -4,7 +4,7 @@ local actions_layout = require("telescope.actions.layout")
 local action_state = require("telescope.actions.state")
 -- local previewers = require("telescope.previewers")
 local themes = require("telescope.themes")
-local trouble = require("trouble.providers.telescope")
+local trouble = require("trouble.sources.telescope")
 local transform_mod = require("telescope.actions.mt").transform_mod
 
 local function multiopen(prompt_bufnr, method)
@@ -191,7 +191,7 @@ require("telescope").setup({
                 ["<Tab>"] = actions.move_selection_next,
                 ["<S-Tab>"] = actions.move_selection_previous,
                 ["<C-z>"] = actions.toggle_selection,
-                ["<C-x>"] = trouble.smart_open_with_trouble,
+                ["<C-x>"] = trouble.get,
                 ["<M-l>"] = function(prompt_bufnr)
                     actions.smart_send_to_loclist(prompt_bufnr)
                     require("trouble").open("loclist")
@@ -211,7 +211,7 @@ require("telescope").setup({
                 ["<Tab>"] = actions.move_selection_next,
                 ["<S-Tab>"] = actions.move_selection_previous,
                 ["<C-z>"] = actions.toggle_selection,
-                ["<C-x>"] = trouble.smart_open_with_trouble,
+                ["<C-x>"] = trouble.get,
                 ["<M-a>"] = actions.toggle_all,
                 ["<M-l>"] = function(prompt_bufnr)
                     actions.smart_send_to_loclist(prompt_bufnr)
