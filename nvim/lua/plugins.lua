@@ -487,7 +487,8 @@ require("lazy").setup({
             local c = require("kanagawa.lib.color")
             vim.cmd("set bg=")
             vim.o.cmdheight = 0
-            vim.o.pumblend = 10
+            -- vim.o.pumblend = 10
+
             require("kanagawa").setup({
                 compile = true,
                 dimInactive = false,
@@ -515,7 +516,7 @@ require("lazy").setup({
                         NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
                         TroubleNormal = { link = "NormalDark" },
                         TroubleNormalNC = { link = "TroubleNormal" },
-                        SpellBad = { undercurl = true, underline = false, sp = colors.palette.oldWhite },
+                        NeoTreeNormal = { link = "NormalDark" },
                         DiagnosticVirtualTextError = {
                             fg = theme.diag.error,
                             bg = c(theme.diag.error):blend(theme.ui.bg, 0.95):to_hex(),
@@ -837,12 +838,12 @@ require("lazy").setup({
         cmd = { "TableModeToggle" },
     },
 
-    {
-        "numToStr/Comment.nvim",
-        event = "BufReadPost",
-        keys = { { mode = "n", "gc" }, { mode = "n", "gb" }, { mode = "x", "gc" }, { mode = "x", "gb" } },
-        config = true,
-    },
+    -- {
+    --     "numToStr/Comment.nvim",
+    --     event = "BufReadPost",
+    --     keys = { { mode = "n", "gc" }, { mode = "n", "gb" }, { mode = "x", "gc" }, { mode = "x", "gb" } },
+    --     config = true,
+    -- },
 
     {
         "kylechui/nvim-surround",

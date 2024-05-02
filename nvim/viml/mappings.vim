@@ -167,8 +167,10 @@ nnoremap g/ :call setreg('/', expand('<cword>'))<CR>//<CR>``
 xnoremap g/ "sy/\V<C-r>=escape(@s,'/\')<CR><CR>``
 
 "fast macro
-nnoremap @ <cmd>set lazyredraw <bar> execute 'noautocmd norm! ' . v:count1 . '@' . getcharstr() <bar> set nolazyredraw<cr>
-xnoremap @ :<C-U>set lazyredraw <bar> execute "noautocmd '<,'>norm! " . v:count1 . "@" . getcharstr()<bar> set nolazyredraw<cr>
+nnoremap @ <cmd>set lazyredraw <bar> execute "noautocmd norm! " . v:count1 . "@" . getcharstr()<bar>set nolazyredraw<cr>
+xnoremap @ :<C-U>set lazyredraw <bar> execute "noautocmd '<,'>norm! " . v:count1 . "@" . getcharstr()<bar>set nolazyredraw<cr>
+nnoremap Q <cmd>set lazyredraw <bar> execute "noautocmd norm! Q"<bar>set nolazyredraw<cr>
+xnoremap Q :<C-U>set lazyredraw <bar> execute "noautocmd '<,'>norm! Q"<bar>set nolazyredraw<cr>
 
 " http://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-bytes-of-vimscript/
 " Poor men refactoring

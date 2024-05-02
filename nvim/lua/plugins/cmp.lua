@@ -40,8 +40,8 @@ cmp.setup({
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
                     vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), "m", true)
-                elseif vim.snippet.jumpable(1) then
-                    vim.snippet.jump(1)
+                elseif vim.snippet.jump(1) then
+                    return
                 else
                     fallback()
                 end
@@ -69,8 +69,8 @@ cmp.setup({
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
                     vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_backward)"), "m", true)
-                elseif vim.snippet.jumpable(-1) then
-                    vim.snippet.jump(-1)
+                elseif vim.snippet.jump(-1) then
+                    return
                 else
                     fallback()
                 end
@@ -161,19 +161,19 @@ cmp.setup({
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
             local menu
-            local kind = require("lsp.init").symbol_icons[vim_item.kind] .. " " -- .. vim_item.kind
+            local kind = require("lsp.init").symbol_icons[vim_item.kind] -- .. " " .. vim_item.kind
 
-            local alias = {
-                buffer = "[B]",
-                path = "[P]",
-                nvim_lsp = "[LSP]",
-                luasnip = "[LS]",
-                ultisnips = "[US]",
-                nvim_lua = "Lua",
-                tmux = "[T]",
-                latex_symbols = "[TX]",
-                nvim_lsp_signature_help = "[S]",
-            }
+            -- local alias = {
+            --     buffer = "[B]",
+            --     path = "[P]",
+            --     nvim_lsp = "[LSP]",
+            --     luasnip = "[LS]",
+            --     ultisnips = "[US]",
+            --     nvim_lua = "Lua",
+            --     tmux = "[T]",
+            --     latex_symbols = "[TX]",
+            --     nvim_lsp_signature_help = "[S]",
+            -- }
 
             -- if entry.source.name == "nvim_lsp" then
             --     menu = entry.source.source.client.name
