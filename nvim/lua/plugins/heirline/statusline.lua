@@ -50,7 +50,6 @@ local ViMode = {
     provider = function(self)
         return icons.vim .. "%2(" .. self.mode_names[self.mode] .. "%)"
     end,
-    --    
     hl = function(self)
         local color = self:mode_color()
         return { fg = color, bold = true }
@@ -308,7 +307,7 @@ local Diagnostics = {
     update = { "DiagnosticChanged", "BufEnter" },
     on_click = {
         callback = function()
-            require("trouble").toggle({ mode = "document_diagnostics" })
+            require("trouble").toggle("diagnostics")
         end,
         name = "heirline_diagnostics",
     },
@@ -576,7 +575,7 @@ local MacroRec = {
     condition = function()
         return vim.fn.reg_recording() ~= "" and vim.o.cmdheight == 0
     end,
-    provider = " ",
+    provider = icons.rec,
     hl = { fg = "orange", bold = true },
     utils.surround({ "[", "]" }, nil, {
         provider = function()

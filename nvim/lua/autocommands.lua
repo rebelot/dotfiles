@@ -63,7 +63,7 @@ autocmd({ "BufRead", "BufNewFile" }, {
 --  Scrolloff  --
 -----------------
 
-autocmd({ "WinEnter", "BufWinEnter" }, {
+autocmd({ "WinEnter", "BufWinEnter", "WinResized" }, {
     command = [[let &l:scrolloff = winheight(0) / 4]],
 })
 
@@ -110,7 +110,7 @@ autocmd("WinLeave", {
         if vim.wo.scrollbind then
             return
         end
-        vim.cmd([[setlocal nocursorline norelativenumber]])
+        vim.cmd([[setlocal nocursorline norelativenumber scrolloff<]])
     end,
 })
 

@@ -4,7 +4,8 @@ require("neotest").setup({
             dap = { justMyCode = false },
         }),
         require("neotest-plenary"),
-        require("neotest-rust"),
+        -- require("neotest-rust"),
+        require("rustaceanvim.neotest"),
         require("neotest-vim-test")({
             ignore_file_types = { "python", "vim", "lua", "rust" },
         }),

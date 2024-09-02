@@ -42,6 +42,7 @@ require("nvim-treesitter.configs").setup({
                 ["aa"] = "@parameter.outer",
                 ["i="] = "@assignment.inner",
                 ["a="] = "@assignment.outer",
+                ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" }
             },
         },
         swap = {
@@ -61,20 +62,32 @@ require("nvim-treesitter.configs").setup({
             enable = true,
             set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
-                ["]m"] = "@function.outer",
-                ["]]"] = "@class.outer",
+                ["]f"] = "@function.outer",
+                ["]c"] = "@class.outer",
+                ["]k"] = "@block.outer",
+                ["]a"] = "@parameter.inner",
+                ["]s"] = { query = "@scope", query_group = "locals"},
             },
             goto_next_end = {
-                ["]M"] = "@function.outer",
-                ["]["] = "@class.outer",
+                ["]F"] = "@function.outer",
+                ["]C"] = "@class.outer",
+                ["]K"] = "@block.outer",
+                ["]A"] = "@parameter.inner",
+                ["]S"] = { query = "@scope", query_group = "locals"},
             },
             goto_previous_start = {
-                ["[m"] = "@function.outer",
-                ["[["] = "@class.outer",
+                ["[f"] = "@function.outer",
+                ["[c"] = "@class.outer",
+                ["[k"] = "@class.outer",
+                ["[a"] = "@parameter.inner",
+                ["[s"] = { query = "@scope", query_group = "locals"},
             },
             goto_previous_end = {
-                ["[M"] = "@function.outer",
-                ["[]"] = "@class.outer",
+                ["[F"] = "@function.outer",
+                ["[C"] = "@class.outer",
+                ["[K"] = "@class.outer",
+                ["[A"] = "@parameter.inner",
+                ["[S"] = { query = "@scope", query_group = "locals"},
             },
         },
         lsp_interop = {
@@ -100,12 +113,12 @@ require("nvim-treesitter.configs").setup({
 
 local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
 local map = vim.keymap.set
-map({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-map({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
-map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
-map({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
-map({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
-map({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
+-- map({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+-- map({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+-- map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
+-- map({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
+-- map({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
+-- map({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 
 --  @block.inner
 --  @block.outer

@@ -112,21 +112,19 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 ---------------
 
 local on_attach = function(client, bufnr)
-    -- vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-    -- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
-    -- mappings
     local map = function(mode, key, expr, opts)
         opts = vim.tbl_extend("force", { noremap = true, silent = true, buffer = bufnr, desc = "LSP" }, opts)
         return vim.keymap.set(mode, key, expr, opts)
     end
     map("n", "gd", require("telescope.builtin").lsp_definitions, { desc = "LSP: go to definition" })
-    map(
-        "n",
-        "<C-w>d",
-        "<Cmd>split <bar> Telescope lsp_definitions<CR>",
-        { desc = "LSP: go to definition (split window)" }
-    )
+    -- map(
+    --     "n",
+    --     "<C-w>d",
+    --     "<Cmd>split <bar> Telescope lsp_definitions<CR>",
+    --     { desc = "LSP: go to definition (split window)" }
+    -- )
+    -- map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP: rename" })
+    -- map({"n", "x"}, "<leader>la", vim.lsp.buf.code_action, { desc = "LSP: code action" })
     map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP: go to declaration" })
     map("n", "gr", require("telescope.builtin").lsp_references, { desc = "LSP: references" })
     map("n", "<leader>lt", require("telescope.builtin").lsp_type_definitions, { desc = "LSP: go to type definitions" })

@@ -46,7 +46,6 @@ local on_attach = function(client, bufnr)
         opts = vim.tbl_extend("keep", { noremap = true, silent = true, buffer = bufnr }, opts)
         return vim.keymap.set(mode, key, expr, opts)
     end
-    map({ "n", "x" }, "<leader>la", vim.lsp.buf.code_action, { desc = "List LSP Code Actions" })
     if client.server_capabilities.documentFormattingProvider then
         -- set eventignore=all
         map("n", "<leader>lf", function()

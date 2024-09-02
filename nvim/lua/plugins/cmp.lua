@@ -8,6 +8,14 @@ end
 
 local cmp = require("cmp")
 
+local has_words_before = function()
+    if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+        return false
+    end
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
+end
+
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -36,8 +44,10 @@ cmp.setup({
                 end
             end,
             i = function(fallback)
+                -- if cmp.visible() and has_words_before() then
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                    -- cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
                 elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
                     vim.api.nvim_feedkeys(t("<Plug>(ultisnips_jump_forward)"), "m", true)
                 elseif vim.snippet.jump(1) then
@@ -191,6 +201,7 @@ cmp.setup({
         comparators = {
             cmp.config.compare.offset,
             cmp.config.compare.exact,
+            require("copilot_cmp.comparators").prioritize,
             -- cmp.config.compare.scopes,
             cmp.config.compare.score,
             cmp.config.compare.recently_used,
@@ -206,7 +217,7 @@ cmp.setup({
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
-        -- { name = "copilot" },
+        { name = "copilot" },
     }, {
         -- { name = "buffer" },
         -- { name = "tmux", option = { all_panes = true } },
@@ -238,11 +249,11 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
-        -- { name = "copilot" },
         { name = "buffer" },
         -- { name = "dictionary", keyword_length = 2 },
         { name = "latex_symbols" },
         -- { name = "tmux", option = { all_panes = true } },
+        { name = "copilot" },
     },
 })
 
@@ -250,10 +261,10 @@ vim.keymap.set("i", "<C-X>c", function()
     cmp.complete({ config = { sources = { { name = "copilot" } } } })
 end, { silent = true })
 
--- cmp.event:on("menu_opened", function()
---     vim.b.copilot_suggestion_hidden = true
--- end)
---
--- cmp.event:on("menu_closed", function()
---     vim.b.copilot_suggestion_hidden = false
--- end)
+cmp.event:on("menu_opened", function()
+    vim.b.copilot_suggestion_hidden = true
+end)
+
+cmp.event:on("menu_closed", function()
+    vim.b.copilot_suggestion_hidden = false
+end)

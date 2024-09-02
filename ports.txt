@@ -6,6 +6,7 @@ wget
 gawk
 grep
 tmux-devel
+parallel
 
 cmake
 ninja
@@ -29,6 +30,7 @@ hyperfine
 imagemagik
 universal-ctags
 gnuplot
+graphviz
 
 gh
 lazygit

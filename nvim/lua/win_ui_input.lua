@@ -29,7 +29,7 @@ local function wininput(opts, on_confirm, win_opts)
         focusable = true,
         style = "minimal",
         border = "none",
-        title = opts.prompt
+        title = opts.prompt,
     }
 
     win_opts = vim.tbl_deep_extend("force", default_win_opts, win_opts)
@@ -41,8 +41,10 @@ local function wininput(opts, on_confirm, win_opts)
     vim.cmd("startinsert!")
     vim.defer_fn(function()
         vim.api.nvim_buf_set_text(buf, 0, #prompt, 0, #prompt, { default_text })
-        vim.cmd("startinsert!")
-    end, 10)
+        -- vim.cmd("startinsert!")
+        vim.cmd("stopinsert!")
+        vim.cmd("normal! l")
+    end, 15)
 end
 
 -- wininput({
@@ -59,13 +61,9 @@ local orig_ui_input = vim.ui.input
 vim.api.nvim_create_namespace("winui")
 vim.ui.input = function(opts, on_confirm)
     local ft = vim.bo.filetype
-    if vim.tbl_contains({"TelescopePrompt", "NvimTree"}, ft) then
+    if vim.tbl_contains({ "TelescopePrompt", "NvimTree" }, ft) then
         orig_ui_input(opts, on_confirm)
     else
-        wininput(
-            opts,
-            on_confirm,
-            { border = vim.g.FloatBorders, relative = "cursor", row = 1, col = 0, width = 1 }
-        )
+        wininput(opts, on_confirm, { border = vim.g.FloatBorders, relative = "cursor", row = 1, col = 0, width = 1 })
     end
 end

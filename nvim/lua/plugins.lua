@@ -71,22 +71,48 @@ require("lazy").setup({
             require("lspconfig.ui.windows").default_options.border = vim.g.FloatBorders
         end,
     },
-
-    -- {
-    --     "vhyrro/luarocks.nvim",
-    --     priority = 10000,
-    --     opts = {
-    --         -- rocks = { "magick" },
-    --     },
-    -- },
-    -- {
-    --     "rest-nvim/rest.nvim",
-    --     ft = "http",
-    --     dependencies = { "luarocks.nvim" },
-    --     config = function()
-    --         require("rest-nvim").setup()
-    --     end,
-    -- },
+    {
+        "mrcjkb/rustaceanvim",
+        lazy = false, -- This plugin is already lazy
+        init = function()
+            vim.g.rustaceanvim = {
+                tools = {
+                    float_win_config = {
+                        border = vim.g.FloatBorders,
+                    },
+                },
+                server = {
+                    on_attach = require("lsp.init").default_on_attach,
+                    capabilities = require("lsp.init").default_capabilities,
+                    default_settings = {
+                        -- rust-analyzer language server configuration
+                        ["rust-analyzer"] = {
+                            check = {
+                                command = "clippy",
+                            },
+                        },
+                    },
+                },
+                -- DAP configuration
+                dap = {},
+            }
+        end,
+    },
+    {
+        "vhyrro/luarocks.nvim",
+        priority = 10000,
+        config = true,
+        enabled = false,
+    },
+    {
+        "rest-nvim/rest.nvim",
+        ft = "http",
+        enabled = false,
+        dependencies = { "luarocks.nvim" },
+        config = function()
+            require("rest-nvim").setup()
+        end,
+    },
 
     {
         "nvimtools/none-ls.nvim",
@@ -228,7 +254,6 @@ require("lazy").setup({
 
     {
         "folke/trouble.nvim",
-        branch = "dev",
         cmd = { "Trouble" },
         keys = "<leader>x",
         config = function()
@@ -241,23 +266,25 @@ require("lazy").setup({
         cmd = "Neogen",
         config = true,
     },
-    -- {
-    --     "benlubas/molten-nvim",
-    --     -- see otter.nvim and quarto.nvim
-    --     dependencies = {
-    --         "3rd/image.nvim",
-    --         dependencies = { "luarocks.nvim" },
-    --     },
-    --     cmd = { "MoltenInit" },
-    --     build = ":UpdateRemotePlugins",
-    --     init = function()
-    --         vim.g.molten_auto_open_output = false
-    --         vim.g.molten_image_provider = "image.nvim"
-    --         vim.g.molten_wrap_output = true
-    --         vim.g.molten_virt_text_output = true
-    --         vim.g.molten_virt_lines_off_by_1 = true
-    --     end,
-    -- },
+    {
+        "benlubas/molten-nvim",
+        -- see otter.nvim and quarto.nvim
+        dependencies = {
+            {
+                "3rd/image.nvim",
+                lazy = true,
+                setup = true,
+            },
+        },
+        build = ":UpdateRemotePlugins",
+        init = function()
+            vim.g.molten_auto_open_output = false
+            vim.g.molten_image_provider = "image.nvim"
+            vim.g.molten_wrap_output = true
+            vim.g.molten_virt_text_output = true
+            vim.g.molten_virt_lines_off_by_1 = true
+        end,
+    },
     -- use 'saadparwaiz1/cmp_luasnip'
     -- use 'L3MON4D3/LuaSnip'
     -- use 'hrsh7th/vim-vsnip'
@@ -517,6 +544,7 @@ require("lazy").setup({
                         TroubleNormal = { link = "NormalDark" },
                         TroubleNormalNC = { link = "TroubleNormal" },
                         NeoTreeNormal = { link = "NormalDark" },
+                        NeoTreeNormalNC = { link = "NeoTreeNormal" },
                         DiagnosticVirtualTextError = {
                             fg = theme.diag.error,
                             bg = c(theme.diag.error):blend(theme.ui.bg, 0.95):to_hex(),
@@ -634,6 +662,7 @@ require("lazy").setup({
         "rcarriga/neotest",
         cmd = { "Neotest", "NeotestSummary", "NeotestNearest", "NeotestAttach" },
         dependencies = {
+            "nvim-neotest/nvim-nio",
             "rcarriga/neotest-python",
             "rcarriga/neotest-vim-test",
             "rcarriga/neotest-plenary",
@@ -759,50 +788,6 @@ require("lazy").setup({
         "NvChad/nvim-colorizer.lua",
         event = { "BufReadPre", "BufNewFile" },
         config = true,
-    },
-
-    {
-        "rcarriga/nvim-notify",
-        lazy = true,
-        enabled = false,
-        init = function()
-            vim.notify = function(...)
-                require("lazy").load({ plugins = { "nvim-notify" } })
-                vim.notify(...)
-            end
-        end,
-        config = function()
-            local notify = require("notify")
-            notify.setup({
-                icons = {
-                    DEBUG = "",
-                    ERROR = "",
-                    INFO = "",
-                    HINT = "",
-                    TRACE = "✎",
-                    WARN = "",
-                },
-                -- render = "simple",
-            })
-            vim.notify = notify
-
-            local vim_notify = vim.notify
-            vim.notify = function(msg, ...)
-                if msg:match("warning: multiple different client offset_encodings") then
-                    return
-                end
-
-                vim_notify(msg, ...)
-            end
-
-            vim.keymap.set("n", "<esc>", function()
-                notify.dismiss()
-                vim.cmd.noh()
-            end)
-            vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
-                vim.notify(method.message, params.type)
-            end
-        end,
     },
 
     {

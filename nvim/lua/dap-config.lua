@@ -138,20 +138,20 @@ dap.adapters.codelldb = {
 dap.adapters.node2 = {
     type = "executable",
     command = "node-debug2-adapter",
-    args = {}
+    args = {},
 }
 
 dap.configurations.typescript = {
-        {
-            type = "node2",
-            name = "node attach",
-            request = "attach",
-            program = "${file}",
-            cwd = vim.fn.getcwd(),
-            sourceMaps = true,
-            protocol = "inspector",
-        }
-    }
+    {
+        type = "node2",
+        name = "node attach",
+        request = "attach",
+        program = "${file}",
+        cwd = vim.fn.getcwd(),
+        sourceMaps = true,
+        protocol = "inspector",
+    },
+}
 dap.configurations.javascript = dap.configurations.typescript
 
 dap.configurations.cpp = {
@@ -160,12 +160,21 @@ dap.configurations.cpp = {
         type = "codelldb",
         request = "launch",
         program = function()
-            return fn.input("Path to executable: ", fn.getcwd() .. "/", "file")
+            local name = fn.getcwd() .. "/"
+            if vim.bo.ft == "rust" then
+                name = name
+                    .. "target/debug/"
+                    .. vim.fn.system(
+                        [[ cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ).name']]
+                    )
+            end
+            return fn.input("Path to executable: ", name, "file")
         end,
         cwd = "${workspaceFolder}",
         stopOnEntry = false,
         runInTerminal = true,
         terminal = "integrated",
+        -- initCommands = { "settings set target.process.thread.step-avoid-libraries std" },
         args = function()
             local args = {}
             local i = 1

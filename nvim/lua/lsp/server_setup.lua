@@ -1,5 +1,5 @@
-local default_on_attach = require("lsp").default_on_attach
-local default_capabilities = require("lsp").default_capabilities
+local default_on_attach = require("lsp.init").default_on_attach
+local default_capabilities = require("lsp.init").default_capabilities
 local lspconfig = require("lspconfig")
 
 local function make_config(server_name)
@@ -35,7 +35,7 @@ local servers = {
     "bashls",
     "julials",
     "tsserver",
-    "rust_analyzer",
+    -- "rust_analyzer", -- handled by rustacean
     "typst_lsp",
 }
 
