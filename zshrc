@@ -7,7 +7,7 @@
 # ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 
 # zmodload zsh/zprof
-module load gnu8 forge schrodinger amber
+# module load gnu8 mamba schrodinger amber
 # $PATH {{{
 # /etc/paths: /usr/local/bin /usr/bin /bin /usr/sbin /sbin
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"            # <-- MacPorts
@@ -22,8 +22,9 @@ export PATH="$HOME/.npm-packages/bin:$PATH"                   # (node installer)
 # export PATH="$HOME/.yarn/bin:$PATH"                           # <-- yarn (node)
 export PATH="$HOME/go/bin:$PATH"                              # <-- go
 export PATH="$HOME/.local/bin:$PATH"                          # <-- local/bin
-#source "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
-#[[ -z $TMUX ]] || conda deactivate; conda activate py311      #   + TMUX fix
+#source "$HOME/anaconda3/etc/profile.d/conda.sh"
+eval "$(/home/users/tommaso.laurenzi/anaconda3/bin/conda shell.zsh hook)"
+[[ -z $TMUX ]] || conda deactivate; conda activate base      #   + TMUX fix
 source "$HOME/venvs/base/bin/activate"                        # <-- Activate the Python
 # }}}
 
