@@ -1,0 +1,46 @@
+$include /etc/inputrc
+
+set keymap vi
+set editing-mode vi
+set show-mode-in-prompt On
+set vi-ins-mode-string ""
+set vi-cmd-mode-string "\1\033[01;31m\2 N \1\033[0m\2"
+
+# "\C-p":history-search-backward
+# "\C-n":history-search-forward
+"\C-p":history-substring-search-backward
+"\C-n":history-substring-search-forward
+TAB: menu-complete
+"\e[Z": menu-complete-backward
+
+set keymap vi-insert
+"\C-a":beginning-of-line
+"\C-e":end-of-line
+"\C-l":clear-screen
+"\C-o":operate-and-get-next
+"\C-]":yank-last-arg
+# repeat previous word
+"\C-k":"\eByWWpa"
+"\C-g": glob-list-expansions
+
+set keymap vi-command
+"diw": "bde"
+"diW": "BdE"
+"ciw": "bce"
+"ciW": "BcE"
+"gU": upcase-word
+"gu": downcase-word
+"H": beginning-of-line
+"L": end-of-line
+
+
+
+set colored-stats On
+set completion-ignore-case On
+set menu-complete-display-prefix On
+set skip-completed-text On
+set show-all-if-ambiguous On
+set show-all-if-unmodified On
+set visible-stats On
+set mark-symlinked-directories On
+set blink-matching-paren On
