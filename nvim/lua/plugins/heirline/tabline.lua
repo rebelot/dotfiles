@@ -113,7 +113,7 @@ local TablineFileNameBlock = {
 local TablineCloseButton = {
     condition = function(self)
         -- return not vim.bo[self.bufnr].modified
-        return vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
+        return not vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
     end,
     { provider = " " },
     {

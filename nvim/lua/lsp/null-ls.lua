@@ -18,7 +18,9 @@ local sources = {
     -- null_ls.builtins.diagnostics.luacheck,
     -- null_ls.builtins.formatting.lua_format,
 
-    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.prettier.with({
+        args = { "--tab-width", "4" },
+    }),
 
     null_ls.builtins.formatting.shfmt,
     -- null_ls.builtins.formatting.beautysh,
@@ -35,7 +37,7 @@ local sources = {
 
     null_ls.builtins.diagnostics.vint,
 
-    null_ls.builtins.code_actions.gitsigns.with({ disabled_filetypes = { "NvimTree" } }),
+    null_ls.builtins.code_actions.gitsigns,
 
     -- null_ls.builtins.code_actions.refactoring,
     -- null_ls.builtins.completion.spell,

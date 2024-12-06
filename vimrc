@@ -105,7 +105,7 @@ noremap L $
 noremap H ^
 
 inoremap <C-l> <Right>
-nnoremap <silent><M-/> :noh<bar>diffupdate<CR><C-L>
+nnoremap <silent><esc> :noh<bar>diffupdate<CR><C-L>
 
 cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"
 cnoremap <expr><C-p> wildmenumode() ? "\<C-p>" : "\<Up>"
@@ -235,3 +235,7 @@ nnoremap zM zMz.
 " }}}
 
 " vim: ts=2 sw=2 fdm=marker
+
+set undofile
+set undodir=~/.vim/undo
+

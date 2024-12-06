@@ -31,7 +31,7 @@ require("trouble").setup({
                         "Property",
                         "Struct",
                         "Trait",
-                    },
+                   },
                 },
             },
         },
@@ -45,4 +45,3 @@ map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>")
 map("n", "<leader>xl", "<cmd>Trouble lsp toggle focus=false win.position=bottom win.relative=win win.size=.5<CR>")
 map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<CR>")
 map("n", "<leader>xL", "<cmd>Trouble loclist toggle<CR>")
--- map("n", "<leader>xp", "<cmd>Trouble symbols toggle focus=true<CR><cmd>Trouble lsp toggle focus=false win.position=bottom win.relative=win win.size=.5<CR>")

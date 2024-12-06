@@ -3,6 +3,7 @@ local disabled_rtp_plugins = {
     -- "netrwPlugin",
     -- "netrwSettings",
     -- "netrwFileHandlers",
+    -- "matchit",
     "gzip",
     "tutor",
     "zip",
@@ -17,22 +18,7 @@ local disabled_rtp_plugins = {
     "logipat",
     "rrhelper",
     "spellfile_plugin",
-    "matchit",
 }
-
--- vim.api.nvim_create_autocmd("BufRead", {
---     pattern = "plugins.lua",
---     callback = function()
---         vim.keymap.set("n", "gx", function()
---
---         end)
---     end,
---     buf = true
--- })
-
--- for _, plugin in pairs(disabled_rtp_plugins) do
---     vim.g["loaded_" .. plugin] = 1
--- end
 
 -- Bootstrap
 ------------
@@ -47,7 +33,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -83,7 +69,8 @@ require("lazy").setup({
                 },
                 server = {
                     on_attach = require("lsp.init").default_on_attach,
-                    capabilities = require("lsp.init").default_capabilities,
+                    -- capabilities = require("lsp.init").default_capabilities,
+                    capabilities = vim.lsp.protocol.make_client_capabilities(),
                     default_settings = {
                         -- rust-analyzer language server configuration
                         ["rust-analyzer"] = {
@@ -98,17 +85,20 @@ require("lazy").setup({
             }
         end,
     },
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 10000,
-        config = true,
-        enabled = false,
-    },
+    -- {
+    --     "vhyrro/luarocks.nvim",
+    --     priority = 10000,
+    --     -- config = true,
+    --     enabled = false,
+    --     opts = {
+    --         rocks = { "magick" },
+    --     },
+    -- },
     {
         "rest-nvim/rest.nvim",
         ft = "http",
         enabled = false,
-        dependencies = { "luarocks.nvim" },
+        -- dependencies = { "luarocks.nvim" },
         config = function()
             require("rest-nvim").setup()
         end,
@@ -205,11 +195,7 @@ require("lazy").setup({
             {
                 "zbirenbaum/copilot-cmp",
                 config = function()
-                    require("copilot_cmp").setup({
-                        formatters = {
-                            insert_text = require("copilot_cmp.format").remove_existing,
-                        },
-                    })
+                    require("copilot_cmp").setup()
                 end,
             },
         },
@@ -223,9 +209,9 @@ require("lazy").setup({
         event = { "BufRead", "BufNewFile" },
         opts = {
             filetypes = { julia = false, ["dap-repl"] = false },
-            panel = { enabled = true },
+            panel = { enabled = false },
             suggestion = {
-                enabled = true,
+                enabled = false,
                 auto_trigger = false,
                 keymap = {
                     accept = "<M-CR>",
@@ -251,6 +237,28 @@ require("lazy").setup({
             end
         end,
     },
+    {
+        "robitx/gp.nvim",
+        config = function()
+            require("gp").setup({
+                providers = {
+                    openai = {
+                        endpoint = "https://api.openai.com/v1/chat/completions",
+                        secret = io.open(vim.fn.expand("$XDG_CONFIG_HOME") .. "/openai"):read(),
+                    },
+                    copilot = {
+                        disable = false,
+                        endpoint = "https://api.githubcopilot.com/chat/completions",
+                        secret = {
+                            "bash",
+                            "-c",
+                            [[cat ~/.config/github-copilot/hosts.json | sed -e 's/.*oauth_token...//; s/[}"]//g']]
+                        },
+                    },
+                },
+            })
+        end,
+    },
 
     {
         "folke/trouble.nvim",
@@ -266,25 +274,32 @@ require("lazy").setup({
         cmd = "Neogen",
         config = true,
     },
-    {
-        "benlubas/molten-nvim",
-        -- see otter.nvim and quarto.nvim
-        dependencies = {
-            {
-                "3rd/image.nvim",
-                lazy = true,
-                setup = true,
-            },
-        },
-        build = ":UpdateRemotePlugins",
-        init = function()
-            vim.g.molten_auto_open_output = false
-            vim.g.molten_image_provider = "image.nvim"
-            vim.g.molten_wrap_output = true
-            vim.g.molten_virt_text_output = true
-            vim.g.molten_virt_lines_off_by_1 = true
-        end,
-    },
+    -- {
+    --     "benlubas/molten-nvim",
+    --     -- see otter.nvim and quarto.nvim
+    --     dependencies = {
+    --         {
+    --             "3rd/image.nvim",
+    --             dependencies = {
+    --                 "leafo/magick",
+    --             },
+    --             lazy = true,
+    --             setup = true,
+    --             init = function()
+    --                 package.path = package.path .. ";" .. vim.fn.expand("$HOME") .. "/.luarocks/share/lua/5.1/?/init.lua"
+    --                 package.path = package.path .. ";" .. vim.fn.expand("$HOME") .. "/.luarocks/share/lua/5.1/?.lua"
+    --             end,
+    --         },
+    --     },
+    --     build = ":UpdateRemotePlugins",
+    --     init = function()
+    --         vim.g.molten_auto_open_output = false
+    --         vim.g.molten_image_provider = "image.nvim"
+    --         vim.g.molten_wrap_output = true
+    --         vim.g.molten_virt_text_output = true
+    --         vim.g.molten_virt_lines_off_by_1 = true
+    --     end,
+    -- },
     -- use 'saadparwaiz1/cmp_luasnip'
     -- use 'L3MON4D3/LuaSnip'
     -- use 'hrsh7th/vim-vsnip'
@@ -300,6 +315,7 @@ require("lazy").setup({
     {
         "andymass/vim-matchup",
         event = "BufRead",
+        enabled = false,
         init = function()
             vim.g.matchup_override_vimtex = 1
             vim.g.matchup_matchparen_deferred = 1
@@ -320,12 +336,12 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",          ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
 
-    { dir = "/opt/local/lib/plumed/vim", ft = "plumed" },
+    -- { dir = "/opt/local/lib/plumed/vim", ft = "plumed" },
 
     {
         "nvim-treesitter/nvim-treesitter",
@@ -523,6 +539,10 @@ require("lazy").setup({
                 background = { light = "lotus", dark = "dragon" },
                 overrides = function(colors)
                     local theme = colors.theme
+                    local function blend_bg(diag)
+                        return { fg = diag, bg = c(diag):blend(theme.ui.bg, 0.95):to_hex() }
+                    end
+
                     return {
                         TelescopeTitle = { fg = theme.ui.special, bold = true },
                         TelescopePromptNormal = { bg = theme.ui.bg_p1 },
@@ -545,26 +565,11 @@ require("lazy").setup({
                         TroubleNormalNC = { link = "TroubleNormal" },
                         NeoTreeNormal = { link = "NormalDark" },
                         NeoTreeNormalNC = { link = "NeoTreeNormal" },
-                        DiagnosticVirtualTextError = {
-                            fg = theme.diag.error,
-                            bg = c(theme.diag.error):blend(theme.ui.bg, 0.95):to_hex(),
-                        },
-                        DiagnosticVirtualTextWarn = {
-                            fg = theme.diag.warning,
-                            bg = c(theme.diag.warning):blend(theme.ui.bg, 0.95):to_hex(),
-                        },
-                        DiagnosticVirtualTextHint = {
-                            fg = theme.diag.hint,
-                            bg = c(theme.diag.hint):blend(theme.ui.bg, 0.95):to_hex(),
-                        },
-                        DiagnosticVirtualTextInfo = {
-                            fg = theme.diag.info,
-                            bg = c(theme.diag.info):blend(theme.ui.bg, 0.95):to_hex(),
-                        },
-                        DiagnosticVirtualTextOk = {
-                            fg = theme.diag.ok,
-                            bg = c(theme.diag.ok):blend(theme.ui.bg, 0.95):to_hex(),
-                        },
+                        DiagnosticVirtualTextError = blend_bg(theme.diag.error),
+                        DiagnosticVirtualTextWarn = blend_bg(theme.diag.warning),
+                        DiagnosticVirtualTextHint = blend_bg(theme.diag.hint),
+                        DiagnosticVirtualTextInfo = blend_bg(theme.diag.info),
+                        DiagnosticVirtualTextOk = blend_bg(theme.diag.ok),
                         -- LspInlayHint = { fg = theme.ui.special },
                         -- EndOfBuffer = { link = 'NonText' }
                     }
@@ -586,12 +591,12 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
-        lazy = false,
-        config = true,
+        lazy = true,
+        -- config = true,
         opts = {
             default = true,
         },
@@ -765,7 +770,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
@@ -893,7 +898,13 @@ require("lazy").setup({
             vim.keymap.set("n", "<leader>vp", "<cmd>VimuxPromptCommand<CR>", { desc = "Vimux: prompt command" })
         end,
     },
-}, { dev = { path = "~/usr/src" }, performance = { rtp = { disabled_plugins = disabled_rtp_plugins } } })
+}, {
+    dev = { path = "~/usr/src" },
+    performance = { rtp = { disabled_plugins = disabled_rtp_plugins } },
+    rocks = {
+        hererocks = true,
+    },
+})
 
 -- vim.opt.rtp:append({
 --     "/Users/laurenzi/usr/src/kanagawa.nvim",

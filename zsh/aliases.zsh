@@ -13,6 +13,7 @@ alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
 alias pls="pwd && ls"
+alias wal="which -as"
 
 autoload -Uz run-help
 autoload -Uz run-help-git

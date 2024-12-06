@@ -201,7 +201,7 @@ cmp.setup({
         comparators = {
             cmp.config.compare.offset,
             cmp.config.compare.exact,
-            require("copilot_cmp.comparators").prioritize,
+            -- require("copilot_cmp.comparators").prioritize,
             -- cmp.config.compare.scopes,
             cmp.config.compare.score,
             cmp.config.compare.recently_used,
@@ -217,7 +217,7 @@ cmp.setup({
         { name = "nvim_lsp" },
         { name = "ultisnips" },
         { name = "path" },
-        { name = "copilot" },
+        -- { name = "copilot" },
     }, {
         -- { name = "buffer" },
         -- { name = "tmux", option = { all_panes = true } },
@@ -253,7 +253,7 @@ cmp.setup.filetype({ "markdown", "pandoc", "text", "tex" }, {
         -- { name = "dictionary", keyword_length = 2 },
         { name = "latex_symbols" },
         -- { name = "tmux", option = { all_panes = true } },
-        { name = "copilot" },
+        -- { name = "copilot" },
     },
 })
 

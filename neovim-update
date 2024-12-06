@@ -2,6 +2,7 @@
 
 INSTALLDIR="$HOME/usr/local/nvim"
 
+
 cd "$HOME/usr/src/neovim" || exit
 
 current="$(git --no-pager log origin/master -n 1 --pretty=format:"%H")"
@@ -11,10 +12,13 @@ latest="$(git --no-pager log origin/master -n 1 --pretty=format:"%H")"
 echo "latest hash:  $latest"
 
 if [[ $current != "$latest" ]] || [[ $1 == "-force" ]]; then
+    nvim_listen_addres=$NVIM_LISTEN_ADDRESS
+    unset NVIM_LISTEN_ADDRESS
 	git pull
 	make clean && make distclean && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$INSTALLDIR" && rm -rf "$INSTALLDIR"
     git stash && git stash drop
     make install && git log "$current"..HEAD
+    NVIM_LISTEN_ADDRESS=$nvim_listen_addres
 else
 	echo "Neovim is already at latest version"
 fi

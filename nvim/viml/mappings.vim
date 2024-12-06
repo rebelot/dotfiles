@@ -76,6 +76,7 @@ noremap <m-k> <C-Y>
 
 " close window/buffer
 nnoremap <leader>q :close<CR>
+nnoremap <C-q> :close<CR>
 nnoremap <leader>Q :bdelete<CR>
 nnoremap <leader>bd :Bdelete<CR>
 nnoremap <leader>bD :bdelete!<CR>
@@ -208,6 +209,8 @@ cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
 " cnoremap ( ()<Left>
 " cnoremap [ []<Left>
 " cnoremap { {}<Left>
+
+autocmd! nvim_popupmenu
 
 anoremenu LSP.Back        <cmd>popup PopUp<cr>
 vnoremenu LSP.Back        <cmd>popup PopUp<cr>gv

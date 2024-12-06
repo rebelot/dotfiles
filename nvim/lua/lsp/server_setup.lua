@@ -34,9 +34,13 @@ local servers = {
     "vimls",
     "bashls",
     "julials",
-    "tsserver",
+    "ts_ls",
+    "eslint",
     -- "rust_analyzer", -- handled by rustacean
     "typst_lsp",
+    "html",
+    "cssls",
+    "asm_lsp",
 }
 
 for _, server in ipairs(servers) do
