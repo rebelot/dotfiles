@@ -4,7 +4,7 @@ set keymap vi
 set editing-mode vi
 set show-mode-in-prompt On
 set vi-ins-mode-string ""
-set vi-cmd-mode-string "\1\033[01;31m\2 N \1\033[0m\2"
+set vi-cmd-mode-string "\e[01;31m N \e[0m"
 
 # "\C-p":history-search-backward
 # "\C-n":history-search-forward
@@ -12,6 +12,8 @@ set vi-cmd-mode-string "\1\033[01;31m\2 N \1\033[0m\2"
 "\C-n":history-substring-search-forward
 TAB: menu-complete
 "\e[Z": menu-complete-backward
+"\C-x\C-e": edit-and-execute-command
+"\C-j": "\C-v\C-j"
 
 set keymap vi-insert
 "\C-a":beginning-of-line
@@ -22,6 +24,9 @@ set keymap vi-insert
 # repeat previous word
 "\C-k":"\eByWWpa"
 "\C-g": glob-list-expansions
+"\C-?": possible-completions
+
+
 
 set keymap vi-command
 "diw": "bde"
@@ -32,6 +37,12 @@ set keymap vi-command
 "gu": downcase-word
 "H": beginning-of-line
 "L": end-of-line
+"j": next-screen-line
+"k": previous-screen-line
+"\e[A": next-screen-line
+"\e[B": previous-screen-line
+"\C-?": possible-completions
+"\C-x\C-e": edit-and-execute-command
 
 
 
