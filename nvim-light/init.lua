@@ -1,4 +1,5 @@
 -- Options {{{
+vim.o.updatetime = 1000
 vim.o.undofile = true
 vim.o.expandtab = true
 vim.o.shiftwidth = 4
@@ -21,4 +22,5 @@ require("mappings")
 require("autocommands")
 require("statusline")
 require("diagnostics")
+require("lsp")
 -- vim: fdm=marker
