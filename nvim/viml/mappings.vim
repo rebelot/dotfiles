@@ -210,7 +210,7 @@ cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
 " cnoremap [ []<Left>
 " cnoremap { {}<Left>
 
-autocmd! nvim_popupmenu
+autocmd! MenuPopup
 
 anoremenu LSP.Back        <cmd>popup PopUp<cr>
 vnoremenu LSP.Back        <cmd>popup PopUp<cr>gv

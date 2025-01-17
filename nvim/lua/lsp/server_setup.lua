@@ -37,7 +37,7 @@ local servers = {
     "ts_ls",
     "eslint",
     -- "rust_analyzer", -- handled by rustacean
-    "typst_lsp",
+    "tinymist",
     "html",
     "cssls",
     "asm_lsp",

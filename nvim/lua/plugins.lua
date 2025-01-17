@@ -33,7 +33,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",    lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -175,6 +175,7 @@ require("lazy").setup({
             --{ "dmitmel/cmp-cmdline-history", },
             "kdheepak/cmp-latex-symbols",
             "andersevenrud/cmp-tmux",
+            "zbirenbaum/copilot-cmp",
             {
                 "quangnguyen30192/cmp-nvim-ultisnips",
                 dependencies = {
@@ -192,15 +193,10 @@ require("lazy").setup({
                     },
                 },
             },
-            {
-                "zbirenbaum/copilot-cmp",
-                config = function()
-                    require("copilot_cmp").setup()
-                end,
-            },
         },
         config = function()
             require("plugins.cmp")
+            require("copilot_cmp").setup()
         end,
     },
 
@@ -211,7 +207,7 @@ require("lazy").setup({
             filetypes = { julia = false, ["dap-repl"] = false },
             panel = { enabled = false },
             suggestion = {
-                enabled = false,
+                enabled = true,
                 auto_trigger = false,
                 keymap = {
                     accept = "<M-CR>",
@@ -252,7 +248,7 @@ require("lazy").setup({
                         secret = {
                             "bash",
                             "-c",
-                            [[cat ~/.config/github-copilot/hosts.json | sed -e 's/.*oauth_token...//; s/[}"]//g']]
+                            [[cat ~/.config/github-copilot/hosts.json | sed -e 's/.*oauth_token...//; s/[}"]//g']],
                         },
                     },
                 },
@@ -336,7 +332,7 @@ require("lazy").setup({
 
     --{ "Konfekt/FastFold" })
 
-    { "jaredsampson/vim-pymol",          ft = "pml" },
+    { "jaredsampson/vim-pymol", ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -528,7 +524,7 @@ require("lazy").setup({
         config = function()
             -- vim.o.background = nil
             local c = require("kanagawa.lib.color")
-            vim.cmd("set bg=")
+            -- vim.cmd("set bg=")
             vim.o.cmdheight = 0
             -- vim.o.pumblend = 10
 
@@ -537,6 +533,7 @@ require("lazy").setup({
                 dimInactive = false,
                 -- transparent = true,
                 background = { light = "lotus", dark = "dragon" },
+                colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
                 overrides = function(colors)
                     local theme = colors.theme
                     local function blend_bg(diag)
@@ -591,7 +588,7 @@ require("lazy").setup({
         end,
     },
 
-    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -770,7 +767,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
