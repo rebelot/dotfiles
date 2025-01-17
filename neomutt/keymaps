@@ -1,32 +1,70 @@
 # vim: set filetype=neomuttrc:
 
-bind index,pager \CP sidebar-prev                 # Ctrl-n to select next folder
-bind index,pager \CN sidebar-next                 # Ctrl-p to select previous folder
-bind index,pager \CI sidebar-open                 # Ctrl-o to open selected folder
-bind index,pager \CB sidebar-toggle-visible       # Ctrl-b to toggle visibility of the sidebar
-
 macro index A \
     "<tag-pattern>~N<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" \
     "mark all new as read"
 
-bind index j next-entry
-bind index k previous-entry
-bind pager j next-line
-bind pager k previous-line
-
-bind attach,pager J next-entry
-bind attach,pager K previous-entry
-
-bind attach,index,pager \CD next-page
-bind attach,index,pager \CU previous-page
-bind pager g top
-bind pager G bottom
-bind attach,index g first-entry
-bind attach,index G last-entry
-
-bind editor <Tab> complete-query
 
 # open attachments with mailcap with <return>
 bind attach <return> view-mailcap             
 # save attachments to a folder
 macro attach s '<save-entry> <bol>~/Downloads<eol>' 'save attachment'
+
+bind index,pager                \CP sidebar-prev
+bind index,pager                \CN sidebar-next
+bind index,pager                \CO sidebar-open
+bind index,pager                \CB sidebar-toggle-visible
+
+# bind editor                     <Tab> complete-query
+bind editor                     ^T  complete
+bind editor                     <tab>   complete-query
+bind editor                     <space> noop
+bind attach                     <space> view-mailcap
+
+#------------------------------------------------------------
+# Vi Key Bindings
+#------------------------------------------------------------
+
+# Moving around
+bind attach,browser,index,pager g   noop
+bind attach,browser,index       gg  first-entry
+bind attach,browser,index       G   last-entry
+bind pager                      gg  top
+bind pager                      G   bottom
+bind pager                      k   previous-line
+bind pager                      j   next-line
+bind index                      j   next-entry
+bind index                      k   previous-entry
+bind attach,pager               J   next-entry
+bind attach,pager               K   previous-entry
+
+# Scrolling
+bind attach,browser,pager,index \CF next-page
+bind attach,browser,pager,index \CB previous-page
+bind attach,browser,pager,index \Cu half-up
+bind attach,browser,pager,index \Cd half-down
+bind browser,pager              \Ce next-line
+bind browser,pager              \Cy previous-line
+bind index                      \Ce next-line
+bind index                      \Cy previous-line
+
+bind index,pager                d   noop
+bind pager,index                dd  delete-message
+
+# Mail & Reply
+bind index,pager                r   noop
+bind index,pager                rr  group-reply
+bind index,pager                rl  list-reply
+bind index,pager                ro  reply       
+
+# Threads
+bind browser,pager,index        N   search-opposite
+bind pager,index                dT  delete-thread
+bind pager,index                dt  delete-subthread
+bind pager,index                gt  next-thread
+bind pager,index                gT  previous-thread
+bind index                      za  collapse-thread
+bind index                      zA  collapse-all # Missing :folddisable/foldenable
+
+# Refreshing
+bind index                      \Cl imap-fetch-mail

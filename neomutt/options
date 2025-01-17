@@ -17,9 +17,9 @@ set smart_wrap
 set tilde                            # use ~ to pad mutt
 set move=no                          # don't move messages when marking as read
 set mail_check = 30                  # check for new mail every 30 seconds
-set imap_keepalive = 900             # 15 minutes
+set imap_keepalive = 300             # 5 minutes
 set sleep_time = 0                   # don't sleep when idle
-set wait_key = no		     # mutt won't ask "press key to continue"
+set wait_key = no		             # mutt won't ask "press key to continue"
 set envelope_from                    # which from?
 set edit_headers                     # show headers when composing
 set fast_reply                       # skip to compose when replying
@@ -45,11 +45,10 @@ unset markers
 set charset = "utf-8"
 set uncollapse_jump
 set sort_re
-set sort = reverse-threads
-set sort_aux = last-date-received
-
-# set sort     = threads
-# set sort_aux = reverse-last-date-received
+# set sort = reverse-threads
+# set sort_aux = last-date-received
+set sort     = threads
+set sort_aux = reverse-last-date-received
 # How we reply and quote emails.
 
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
@@ -66,19 +65,19 @@ set mail_check_stats
 auto_view text/html text/calendar application/ics # view html automatically
 alternative_order text/enriched text/plain text/html text/*
 
-set index_format="%3C %Z %[!%m.%d.%y] %-19.19n %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
-set index_format="%Z %3C %{%b %d} %-17.17n (%5c) %s"
-set index_format="%3C %Z %{%b %d} %-19.19n (%5c) %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
+# set index_format="%3C %Z %[!%m.%d.%y] %-19.19n %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
+# set index_format="%Z %3C %{%b %d} %-17.17n (%5c) %s"
+set index_format="%3C %Z %{%b %d} %-35.35n (%5c) %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
 
 # Use GPGME
 # Use my key for signing and encrypting
-set pgp_default_key = 279B8000BC8B5D1D85A1D023A61FAA4F918A6092
+set pgp_default_key = 7E6182D87BDDD9B8C168AD89C80751DBBD26DC7D
 
 # Use GPGME
 set crypt_use_gpgme = yes
 
 # Automatically sign all out-going email
-set crypt_autosign = yes
+set crypt_autosign = no
 
 # Sign replies to signed emails
 set crypt_replysign = yes

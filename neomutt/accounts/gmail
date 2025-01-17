@@ -6,31 +6,26 @@ set realname = "Tommaso Laurenzi"
 
 # Gmail
 set imap_user = "tommaso.laurenzi@gmail.com"
+set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/gmail_pass.gpg 2>/dev/null`"
+set imap_check_subscribed=no
+
 set smtp_url = "smtps://tommaso.laurenzi@smtp.gmail.com:465/"
 set smtp_authenticators = 'login'
-
-set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/gmail_pass.gpg 2>/dev/null`"
 set smtp_pass = $imap_pass
-
-set imap_check_subscribed
-set hostname = gmail.com
 
 # Ensure TLS is enforced
 set ssl_starttls = yes
 set ssl_force_tls = yes
 
-# My mailboxes
+set hostname = "gmail.com"
 set folder="imaps://imap.gmail.com/"
 set spoolfile=+INBOX
-# set spoolfile = "imaps://imap.gmail.com/"
-# set folder     = $spoolfile
 #set record     = "+[Gmail]/Sent Mail"
 set postponed  = "+[Gmail]/Drafts"
 set trash      = "+[Gmail]/Trash"
+unset record
 
 unmailboxes *
 mailboxes $spoolfile =[Gmail]/Sent\ Mail =[Gmail]/Drafts =[Gmail]/Spam =[Gmail]/Trash =Notes
-# mailboxes $spoolfile
-unset record
 
 color status     black    red

@@ -4,25 +4,23 @@ set from = "tommaso.laurenzi@unimi.it"
 set realname = "Tommaso Laurenzi"
 
 set imap_user = "tommaso.laurenzi@unimi.it"
-set smtp_url = "smtps://tommaso.laurenzi@smtp.unimi.it:465"
-set smtp_authenticators = "login"
-
 set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/unimi_pass.gpg 2>/dev/null`"
+set imap_check_subscribed=no
+
+set smtp_url = "smtp://$imap_user@localhost:1025"
+set smtp_authenticators = "login"
 set smtp_pass = $imap_pass
-set imap_check_subscribed
-# set hostname = "unimi.it"
 
-# Ensure TLS is enforced
-set ssl_starttls = yes
-set ssl_force_tls = yes
+set ssl_starttls = no
+set ssl_force_tls = no
 
-set folder="imaps://mailserver.unimi.it:993"
+set hostname = "unimi.it"
+set folder="imap://localhost:1143/"
 set spoolfile = "+INBOX"
 set postponed = "+Drafts"
-set record = "+Sent Messages"
+set record = "+Sent"
 
 unmailboxes *
-mailboxes $spoolfile =Sent\ Messages =Sent =Drafts =Trash =Deleted\ Messages =My_Spam
-
+mailboxes $spoolfile =Sent =Drafts =Junk =Trash
 color status     black    cyan
 

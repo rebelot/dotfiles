@@ -23,19 +23,29 @@ local function organize_imports()
     end
 end
 
+-- local function set_python_path(path)
+--     local clients = vim.lsp.get_clients {
+--         bufnr = vim.api.nvim_get_current_buf(),
+--         name = 'pylance',
+--     }
+--     for _, client in ipairs(clients) do
+--         if client.settings then
+--             client.settings.python = vim.tbl_deep_extend('force', client.settings.python, { pythonPath = path })
+--         else
+--             client.config.settings = vim.tbl_deep_extend('force', client.config.settings, { python = { pythonPath = path } })
+--         end
+--         client.notify('workspace/didChangeConfiguration', { settings = nil })
+--     end
+-- end
+
 local function set_python_path(path)
-    local clients = vim.lsp.get_clients {
-        bufnr = vim.api.nvim_get_current_buf(),
-        name = 'pylance',
-    }
-    for _, client in ipairs(clients) do
-        if client.settings then
-            client.settings.python = vim.tbl_deep_extend('force', client.settings.python, { pythonPath = path })
-        else
-            client.config.settings = vim.tbl_deep_extend('force', client.config.settings, { python = { pythonPath = path } })
-        end
-        client.notify('workspace/didChangeConfiguration', { settings = nil })
-    end
+    local client = vim.lsp.get_clients({bufnr=0, name='pylance'})[1]
+    local config = client.config
+    config.settings.python.pythonPath = path
+    client.stop({ force = true })
+    vim.defer_fn(function()
+        vim.lsp.start(config)
+    end, 500)
 end
 
 vim.lsp.start({
@@ -55,7 +65,10 @@ vim.lsp.start({
 })
 
 vim.api.nvim_buf_create_user_command(0, "PylanceOrganizeImports", organize_imports, { desc = 'Organize Imports', })
-vim.api.nvim_buf_create_user_command(0, "PylanceSetPythonPath", set_python_path, {
+vim.api.nvim_buf_create_user_command(0, "PylanceSetPythonPath", function(args)
+    local path = vim.fn.fnamemodify(args.args, ":p")
+    set_python_path(path)
+end, {
     desc = 'Reconfigure pyright with the provided python path',
     nargs = 1,
     complete = 'file',
