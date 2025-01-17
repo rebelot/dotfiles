@@ -7,3 +7,4 @@ macro index <f3> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts
 # folder-hook 'unimi' 'source accounts/unimi'
 
 source accounts/gmail
+# source accounts/unimi
