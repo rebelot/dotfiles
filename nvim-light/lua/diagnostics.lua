@@ -1,6 +1,6 @@
 vim.diagnostic.config({
     float = { source = true },
-    -- virtual_text = { source = true },
+    virtual_text = { enabled = true },
     severity_sort = true
 })
 

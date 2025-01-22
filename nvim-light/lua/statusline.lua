@@ -77,7 +77,8 @@ function TabLineBufList()
     local buflist = vim.tbl_map(function(bufnr)
         local bufname = vim.api.nvim_buf_get_name(bufnr)
         local name = bufname ~= "" and vim.fn.fnamemodify(bufname, ":t") or "[No Name]"
-        name = "%" .. bufnr .. "@v:lua.tabline_switch_buf@" .. name .. "%X"
+        modified = vim.bo[bufnr].modified and "%#User3#[+]%*" or ""
+        name = "%" .. bufnr .. "@v:lua.tabline_switch_buf@" .. name .. modified .. "%X"
         local hl = bufnr == curbuf and "TabLineSel" or "TabLine"
         return string.format('%%#%s#%s%%*', hl, name)
     end, BufList.loaded_bufs)
