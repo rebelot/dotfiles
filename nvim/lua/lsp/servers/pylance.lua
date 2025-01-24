@@ -1,6 +1,60 @@
 local lspconfig = require("lspconfig")
 local lsputil = require("lspconfig.util")
 
+local function get_python_interpreters(a, l, p)
+    local paths = {}
+    local is_home_dir = function()
+        return vim.fn.getcwd(0) == vim.fn.expand("$HOME")
+    end
+    local commands = {
+        "find $HOME/venvs -name python",
+        "which -a python",
+        is_home_dir() and "" or [[find ~+ -name python]],
+    }
+    for _, cmd in ipairs(commands) do
+        local _paths = vim.fn.systemlist(cmd)
+        if _paths then
+            for _, path in ipairs(_paths) do
+                table.insert(paths, path)
+            end
+        end
+    end
+    table.sort(paths)
+    local res = {}
+    for i, path in ipairs(paths) do
+        if path ~= paths[i + 1] then
+            table.insert(res, path)
+        end
+    end
+    if a then
+        for _, p in ipairs(res) do
+            if not string.find(p, a) then
+                res = vim.fn.getcompletion(a, "file")
+            end
+        end
+    end
+    return res
+end
+
+local function set_lsp_python_path(path)
+    local client = vim.lsp.get_clients({ bufnr = 0, name = "pylance" })[1]
+    local config = client.config
+    config.settings.python.pythonPath = path
+    client.stop({ force = true })
+    vim.defer_fn(function()
+        vim.lsp.start(config)
+    end, 500)
+end
+
+local function change_python_interpreter(path)
+    local client = lsputil.get_active_client_by_name(0, "pylance")
+    client.stop()
+    local config = require("lsp.servers.pylance")
+    config.settings.python.pythonPath = path
+    lspconfig.pylance.setup(config)
+    vim.cmd("LspStart pylance")
+end
+
 -- client.server_capabilities.executeCommandProvider
 local _commands = {
     "pyright.createtypestub",
@@ -65,26 +119,19 @@ require("lspconfig.configs").pylance = {
         name = "pylance",
         autostart = true,
         single_file_support = true,
-        cmd = {
-            -- "node",
-            -- "--inspect-brk",
-            -- vim.fn.expand("$HOME/usr/src/pylance_langserver/extension/dist/server.bundle.crack.js"),
-            "delance-langserver",
-            "--stdio",
-        },
+        cmd = { "delance-langserver", "--stdio" },
         filetypes = { "python" },
         root_dir = function(fname)
             local markers = {
-                "Pipfile",
                 "pyproject.toml",
-                "pyrightconfig.json",
                 "setup.py",
                 "setup.cfg",
                 "requirements.txt",
+                "Pipfile",
+                "pyrightconfig.json",
+                ".git",
             }
-            return lsputil.root_pattern(unpack(markers))(fname)
-                or lsputil.find_git_ancestor(fname)
-                or lsputil.path.dirname(fname)
+            return vim.fs.root(0, markers)
         end,
         settings = {
             python = {
@@ -98,60 +145,17 @@ require("lspconfig.configs").pylance = {
          `pyright`, a static type checker and language server for python
          ]],
         },
-        -- before_init = function(_, config)
-        --     if not config.settings.python then
-        --         config.settings.python = {}
-        --     end
-        --     if not config.settings.python.pythonPath then
-        --         config.settings.python.pythonPath = "/Users/laurenzi/venvs/base/bin/python"
-        --     end
-        -- end,
+        before_init = function(_, config)
+            -- local venv = os.getenv("VIRTUAL_ENV")
+            if not config.settings.python then
+                config.settings.python = {}
+            end
+            if not config.settings.python.pythonPath then
+                config.settings.python.pythonPath = "python"
+            end
+        end,
     },
 }
-
-local function get_python_interpreters(a, l, p)
-    local paths = {}
-    local is_home_dir = function()
-        return vim.fn.getcwd(0) == vim.fn.expand("$HOME")
-    end
-    local commands = {
-        "find $HOME/venvs -name python",
-        "which -a python",
-        is_home_dir() and "" or "find . -name python",
-    }
-    for _, cmd in ipairs(commands) do
-        local _paths = vim.fn.systemlist(cmd)
-        if _paths then
-            for _, path in ipairs(_paths) do
-                table.insert(paths, path)
-            end
-        end
-    end
-    table.sort(paths)
-    local res = {}
-    for i, path in ipairs(paths) do
-        if path ~= paths[i + 1] then
-            table.insert(res, path)
-        end
-    end
-    if a then
-        for _, p in ipairs(res) do
-            if not string.find(p, a) then
-                res = vim.fn.getcompletion(a, "file")
-            end
-        end
-    end
-    return res
-end
-
-local function change_python_interpreter(path)
-    local client = lsputil.get_active_client_by_name(0, "pylance")
-    client.stop()
-    local config = require("lsp.servers.pylance")
-    config.settings.python.pythonPath = path
-    lspconfig.pylance.setup(config)
-    vim.cmd("LspStart pylance")
-end
 
 vim.lsp.commands["pylance.extractVariableWithRename"] = function(command, enriched_ctx)
     command.command = "pylance.extractVariable"
@@ -165,8 +169,10 @@ end
 
 return {
     on_attach = function(client, bufnr)
-        vim.api.nvim_buf_create_user_command(bufnr, "PythonInterpreter", function(cmd)
-            change_python_interpreter(cmd.args)
+        vim.api.nvim_buf_create_user_command(bufnr, "PythonInterpreter", function(args)
+            vim.fn.setenv("PATH", (args.args:gsub("/python$", "")) .. ":" .. vim.fn.getenv("PATH"))
+            vim.fn.setenv("VIRTUAL_ENV", (args.args:gsub("/bin/python$", "")))
+            change_python_interpreter(args.args)
         end, { nargs = 1, complete = get_python_interpreters, desc = "Change python interpreter" })
 
         vim.api.nvim_buf_create_user_command(
@@ -196,20 +202,35 @@ return {
     settings = {
         python = {
             analysis = {
+                indexOptions = {
+                    regenerateStdLibIndices = true,
+                },
                 indexing = true,
-                typeCheckingMode = "basic",
+                packageIndexDepths = {
+                    name = "",
+                    depth = 4,
+                    includeAllSymbols = true,
+                },
+                persistAllIndices = false,
                 useLibraryCodeForTypes = true,
-                autoImportCompletions = false, -- huge pollution
+                autoSearchPaths = true,
                 diagnosticMode = "workspace",
+                typeCheckingMode = "standard",
+                -- autoImportCompletions = false, -- huge pollution
+                supportRestructuredText = true,
+                enablePytestSupport = true,
                 inlayHints = {
                     variableTypes = true,
                     functionReturnTypes = true,
+                    callArgumentNames = true,
+                    pytestParameters = true,
                 },
+                autoFormatStrings = true,
                 -- stubPath = vim.fn.expand("$HOME/usr/src/pylance_langserver/typings"),
                 -- stubPath = './typings',
-                diagnosticSeverityOverrides = {
-                    reportMissingTypeStubs = "information",
-                },
+                -- diagnosticSeverityOverrides = {
+                --     reportMissingTypeStubs = "information",
+                -- },
             },
         },
     },
