@@ -1,3 +1,5 @@
-export PATH="$PATH:$HOME/usr/bin"
+if [ -f "$HOME/.profile" ]; then
+    . "$HOME/.profile"
+fi
 xmodmap .Xmodmap
 xcape -e 'Control_L=Escape'

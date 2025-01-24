@@ -2,7 +2,7 @@ local map = vim.keymap.set
 
 require("gitsigns").setup({
     trouble = true,
-    _inline2 = true,
+    -- _inline2 = true,
     preview_config = {
         border = vim.g.FloatBorders
     },
