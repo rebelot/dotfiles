@@ -235,6 +235,7 @@ require("lazy").setup({
     },
     {
         "robitx/gp.nvim",
+        enabled = false,
         config = function()
             require("gp").setup({
                 providers = {
@@ -485,7 +486,7 @@ require("lazy").setup({
                     )
                 end,
             },
-            "nvim-telescope/telescope-fzf-native.nvim",
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             "nvim-telescope/telescope-dap.nvim",
             {
                 "nvim-telescope/telescope-ui-select.nvim",
@@ -533,7 +534,7 @@ require("lazy").setup({
                 dimInactive = false,
                 -- transparent = true,
                 background = { light = "lotus", dark = "dragon" },
-                colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
+                -- colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
                 overrides = function(colors)
                     local theme = colors.theme
                     local function blend_bg(diag)
@@ -854,7 +855,7 @@ require("lazy").setup({
 
     "wellle/targets.vim",
 
-    {
+{
         "michaeljsmith/vim-indent-object",
         keys = { { mode = "x", "ai" }, { mode = "x", "ii" }, { mode = "o", "ai" }, { mode = "o", "ii" } },
     },
