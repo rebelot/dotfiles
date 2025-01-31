@@ -1,4 +1,9 @@
+# compose key
 
+echo "keysym Alt_R = Multi_key" >> ~/.Xsessionrc
+
+# function keys (keychron)
+`echo 0 | sudo tee /sys/module/hid_apple/parameters/fnmode`
 
 # Font fallback
 `/etc/fonts/local.conf`

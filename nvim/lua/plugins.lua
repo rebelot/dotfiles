@@ -533,7 +533,7 @@ require("lazy").setup({
                 compile = true,
                 dimInactive = false,
                 -- transparent = true,
-                background = { light = "lotus", dark = "dragon" },
+                background = { light = "lotus", dark = "wave" },
                 -- colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
                 overrides = function(colors)
                     local theme = colors.theme

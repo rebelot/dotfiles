@@ -4,7 +4,7 @@ set keymap vi
 set editing-mode vi
 set show-mode-in-prompt On
 set vi-ins-mode-string ""
-set vi-cmd-mode-string "\e[01;31m N \e[0m"
+set vi-cmd-mode-string "\1\e[01;31m\2 N \1\e[0m\2"
 
 # "\C-p":history-search-backward
 # "\C-n":history-search-forward

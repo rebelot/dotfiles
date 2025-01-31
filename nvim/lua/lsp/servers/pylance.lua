@@ -48,11 +48,11 @@ end
 
 local function change_python_interpreter(path)
     local client = lsputil.get_active_client_by_name(0, "pylance")
-    client.stop()
+    -- client.stop()
     local config = require("lsp.servers.pylance")
     config.settings.python.pythonPath = path
     lspconfig.pylance.setup(config)
-    vim.cmd("LspStart pylance")
+    vim.cmd("LspRestart pylance")
 end
 
 -- client.server_capabilities.executeCommandProvider
@@ -226,8 +226,6 @@ return {
                     pytestParameters = true,
                 },
                 autoFormatStrings = true,
-                -- stubPath = vim.fn.expand("$HOME/usr/src/pylance_langserver/typings"),
-                -- stubPath = './typings',
                 -- diagnosticSeverityOverrides = {
                 --     reportMissingTypeStubs = "information",
                 -- },
