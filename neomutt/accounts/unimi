@@ -5,7 +5,7 @@ set realname = "Tommaso Laurenzi"
 
 set imap_user = "tommaso.laurenzi@unimi.it"
 set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/unimi_pass.gpg 2>/dev/null`"
-set imap_check_subscribed=no
+set imap_check_subscribed = no
 
 set smtp_url = "smtp://$imap_user@localhost:1025"
 set smtp_authenticators = "login"

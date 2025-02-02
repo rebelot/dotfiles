@@ -1,0 +1,29 @@
+# vim: set filetype=neomuttrc:
+
+# Ensure TLS is enforced
+set ssl_starttls=yes
+set ssl_force_tls=yes
+
+# Msn
+set imap_user = 'TmY_001@msn.com'
+set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/msn_pass.gpg 2>/dev/null`"
+set imap_authenticators="oauthbearer:xoauth2"
+# set imap_oauth_refresh_command="<path to mutt_oauth2.py> <token file>"
+
+# User
+set from = $imap_user
+set realname = 'Tommaso Laurenzi'
+
+set smtp_url = "smtp://$imap_user@smtp-mail.outlook.com:587"
+set smtp_pass = $imap_pass
+set smtp_authenticators = $imap_authenticators
+#set smtp_oauth_refresh_command=${imap_oauth_refresh_command}
+
+# set hostname = "msn.com"
+set folder = imaps://imap-mail.outlook.com:993
+set spoolfile = "+INBOX"
+set postponed = "+[hotmail]/Drafts"
+set trash = "+Deleted"
+set record="+Sent"
+
+color status     black    yellow

@@ -5,6 +5,9 @@ set header_cache = "~/.cache/mutt/headers"
 set message_cachedir = "~/.cache/mutt/bodies"
 set certificate_file = "~/.cache/mutt/certificates"
 
+set imap_qresync = yes
+# set imap_deflate = yes
+
 set mailcap_path = "~/.config/neomutt/mailcap"
 set editor = "$EDITOR"
 

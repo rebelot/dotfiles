@@ -1,13 +1,13 @@
 # vim: set filetype=neomuttrc:
 
-# User
-set from = "tommaso.laurenzi@gmail.com"
-set realname = "Tommaso Laurenzi"
-
 # Gmail
 set imap_user = "tommaso.laurenzi@gmail.com"
 set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/gmail_pass.gpg 2>/dev/null`"
-set imap_check_subscribed=no
+set imap_check_subscribed = no
+
+# User
+set from = $imap_user
+set realname = "Tommaso Laurenzi"
 
 set smtp_url = "smtps://tommaso.laurenzi@smtp.gmail.com:465/"
 set smtp_authenticators = 'login'
@@ -18,11 +18,11 @@ set ssl_starttls = yes
 set ssl_force_tls = yes
 
 set hostname = "gmail.com"
-set folder="imaps://imap.gmail.com/"
+set folder = "imaps://imap.gmail.com/"
 set spoolfile=+INBOX
 #set record     = "+[Gmail]/Sent Mail"
-set postponed  = "+[Gmail]/Drafts"
-set trash      = "+[Gmail]/Trash"
+set postponed = "+[Gmail]/Drafts"
+set trash = "+[Gmail]/Trash"
 unset record
 
 unmailboxes *
