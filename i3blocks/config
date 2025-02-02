@@ -1,0 +1,88 @@
+# i3blocks config file
+#
+# Please see man i3blocks for a complete reference!
+# The man page is also hosted at http://vivien.github.io/i3blocks
+#
+# List of valid properties:
+#
+# align
+# color
+# command
+# full_text
+# instance
+# interval
+# label
+# min_width
+# name
+# separator
+# separator_block_width
+# short_text
+# signal
+# urgent
+
+# Global properties
+#
+# The top properties below are applied to every block, but can be overridden.
+# Each block command defaults to the script name to avoid boilerplate.
+command=/usr/share/i3blocks/$BLOCK_NAME
+separator_block_width=15
+# markup=pango
+separator=false
+
+# Volume indicator
+#
+# The first parameter sets the step (and units to display)
+# The second parameter overrides the mixer selection
+# See the script for details.
+[volume]
+label=
+instance=Master
+# instance=PCM
+interval=once
+signal=10
+
+# Date Time
+#
+[cal]
+full_text=
+command=thunderbird -calendar
+align=right
+color=#F79494
+
+[time]
+command=date '+%Y-%m-%d %H:%M:%S'
+interval=5
+
+[whoami]
+command=whoami
+interval=once
+
+[something]
+command=xfce4-session-logout
+full_text= 
+color=#F79494
+
+# Print click data
+# [clickme]
+# align=center
+# full_text=Click me!
+# min_width=Button=? x=? y=?
+# command=echo "Button=$BLOCK_BUTTON x=$BLOCK_X y=$BLOCK_Y $BLOCK_NAME"
+# # format=json
+# interval=once
+
+# Generic media player support
+#
+# This displays "ARTIST - SONG" if a music is playing.
+# Supported players are: spotify, vlc, audacious, xmms2, mplayer, and others.
+#[mediaplayer]
+#instance=spotify
+#interval=5
+#signal=10
+
+# OpenVPN support
+#
+# Support multiple VPN, with colors.
+#[openvpn]
+#interval=20
+
