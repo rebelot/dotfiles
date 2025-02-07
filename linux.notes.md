@@ -1,6 +1,5 @@
 # compose key
-
-echo "keysym Alt_R = Multi_key" >> ~/.Xsessionrc
+`echo "keysym Alt_R = Multi_key" >> ~/.Xsessionrc`
 
 # function keys (keychron)
 `echo 0 | sudo tee /sys/module/hid_apple/parameters/fnmode`
@@ -20,3 +19,11 @@ echo "keysym Alt_R = Multi_key" >> ~/.Xsessionrc
  </alias>
 </fontconfig>
 ```
+
+# Firefox window buttons
+`~/.mozilla/firefox/<config_dir>/chrome/userChrome.css`
+```css
+/* Remove close button*/ .titlebar-buttonbox-container{ display:none } 
+/* Remove buttons spacer */ .titlebar-spacer[type="post-tabs"]{ display:none }
+```
+

@@ -738,7 +738,7 @@ require("lazy").setup({
         "lewis6991/satellite.nvim",
         event = "BufReadPost",
         setup = true,
-        enabled = true,
+        enabled = false,
     },
     {
         "sindrets/diffview.nvim",

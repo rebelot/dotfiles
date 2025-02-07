@@ -21,6 +21,6 @@ set postponed = "+Drafts"
 set record = "+Sent"
 
 unmailboxes *
-mailboxes $spoolfile =Sent =Drafts =Junk =Trash
+mailboxes $spoolfile =Sent =Drafts =Indaco =DISCCO =Junk =Trash
 color status     black    cyan
 

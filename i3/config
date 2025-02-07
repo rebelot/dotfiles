@@ -28,13 +28,13 @@ font pango:JetBrains Mono Regular 9.5
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # Todo, fancy rofi switcher
 bindsym $mod+Escape exec xflock4
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
+# exec --no-startup-id nm-applet
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3blocks
@@ -42,6 +42,12 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# Battery
+# exec --no-startup-id cbatticon
+
+# Audio
+# exec --no-startup-id pasystray
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -185,7 +191,7 @@ for_window [class="blueman-manager"] floating enable
 
 
 for_window [all] title_window_icon on
-for_window [all] border normal 3
+for_window [all] border normal 1
 hide_edge_borders smart
 focus_on_window_activation focus
 
@@ -316,10 +322,9 @@ mode "$mode_gaps_inner" {
 bindsym $mod+g mode "$mode_gaps"
 
 
-exec --no-startup-id cbatticon
 bindsym Print exec --no-startup-id xfce4-screenshooter
 
-exec --no-startup-id "xrdb ~/.Xresources"
+# exec --no-startup-id "xrdb ~/.Xresources"
 set_from_resource $black color0
 set_from_resource $brightblack color8
 set_from_resource $red color1
@@ -341,6 +346,10 @@ set_from_resource $foreground foreground
 set_from_resource $background background
 set_from_resource $cursorColor cursorColor
 
+set_from_resource $tabline tabline
+set_from_resource $tablinesel tablinesel
+set_from_resource $nontext nontext
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
@@ -350,10 +359,10 @@ bar {
     # tray_padding 4
     colors {
             background $background
-            # separator #191919
+            separator $nontext
             #                         border          background      text
-            focused_workspace       $black            $brightblack    $foreground
-            inactive_workspace      $black            $background     $white
+            focused_workspace       $black            $tablinesel     $white
+            inactive_workspace      $black            $tabline        $brightmagenta
             urgent_workspace        $red              $red            $white
 
     }
@@ -364,13 +373,13 @@ bindsym $mod+m bar mode toggle
 
 # Color shemes for windows 
 # #                       border          background      text            indicator (a line which shows where the next window will be placed)     
-client.focused          $background       $brightblack    $foreground     $brightgreen
-client.unfocused        $black            $black          $white          $brightgreen
-client.focused_inactive $background       $background     $white          $brightgreen
-client.urgent           $red              $red            $foreground     $brightgreen
+client.focused          $tablinesel       $tablinesel     $white          $brightgreen
+client.unfocused        $tabline          $tabline        $brightmagenta  $brightgreen
+client.focused_inactive $tabline          $tabline        $brightmagenta  $brightgreen
+client.urgent           $red              $red            $white          $brightgreen
 
 # Application Autostart
 exec --no-startup-id "nitrogen --restore"
 exec --no-startup-id conky
-# exec_always --no-startup-id picom
+exec_always --no-startup-id "sleep 3; picom"
 

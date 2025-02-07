@@ -89,16 +89,16 @@ M.symbol_hl = {
 -- Handlers override --
 -----------------------
 
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    silent = true,
-    max_height = "10",
-    border = borders,
-})
+-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+--     silent = true,
+--     max_height = "10",
+--     border = borders,
+-- })
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = borders,
-    title = "Hover",
-})
+-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+--     border = borders,
+--     title = "Hover",
+-- })
 
 ------------------
 -- Capabilities --
@@ -123,15 +123,14 @@ local on_attach = function(client, bufnr)
     -- - "grr" is mapped in Normal mode to |vim.lsp.buf.references()|
     -- - "gri" is mapped in Normal mode to |vim.lsp.buf.implementation()|
     -- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
-
+    map("n", "K", function() vim.lsp.buf.hover({ border = borders }) end, { desc = "LSP: Hover" })
+    map("i", "<C-s>", function() vim.lsp.buf.signature_help({ border = borders }) end, { desc = "LSP: signature help" })
     -- map(
     --     "n",
     --     "<C-w>d",
     --     "<Cmd>split <bar> Telescope lsp_definitions<CR>",
     --     { desc = "LSP: go to definition (split window)" }
     -- )
-    -- map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP: rename" })
-    -- map({"n", "x"}, "<leader>la", vim.lsp.buf.code_action, { desc = "LSP: code action" })
     map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP: go to declaration" })
     map("n", "gr", require("telescope.builtin").lsp_references, { desc = "LSP: references" })
     map("n", "<leader>lt", require("telescope.builtin").lsp_type_definitions, { desc = "LSP: go to type definitions" })
