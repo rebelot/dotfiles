@@ -16,10 +16,10 @@ return {
             chktex = {
                 onOpenAndSave = true,
             },
-            forwardSearch = {
-                args = { "%l", "%p", "%f" },
-                executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
-            },
+            -- forwardSearch = {
+            --     args = { "%l", "%p", "%f" },
+            --     executable = "/Applications/Skim.app/Contents/SharedSupport/displayline",
+            -- },
         },
     },
 }
