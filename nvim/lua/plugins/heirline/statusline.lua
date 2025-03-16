@@ -112,14 +112,26 @@ local FileFlags = {
         condition = function()
             return vim.bo.modified
         end,
-        provider = " ● ", --[+]",
+        provider = " " .. icons.modified,
         hl = { fg = "green" },
+        on_click = {
+            callback = function(_, minwid)
+                local buf = vim.api.nvim_win_get_buf(minwid)
+                local bufname = vim.api.nvim_buf_get_name(buf)
+                vim.cmd.write(bufname)
+            end,
+            minwid = function()
+                return vim.api.nvim_get_current_win()
+            end,
+            name = "heirline_write_buf",
+        },
+
     },
     {
         condition = function()
             return not vim.bo.modifiable or vim.bo.readonly
         end,
-        provider = "",
+        provider = icons.readonly,
         hl = { fg = "orange" },
     },
 }
@@ -632,7 +644,8 @@ local ShowCmd = {
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
-ViMode = utils.surround({ "", "" }, "bright_bg", { MacroRec, ViMode, Snippets, ShowCmd })
+ViMode = utils.surround({ separators.powerline_left, separators.powerline_right }, "bright_bg",
+    { MacroRec, ViMode, Snippets, ShowCmd })
 
 local DefaultStatusline = {
     ViMode,
@@ -653,7 +666,7 @@ local DefaultStatusline = {
     -- VirtualEnv,
     Space,
     FileType,
-    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
+    { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
     SearchCount,
@@ -787,14 +800,14 @@ local WinBar = {
         condition = function()
             return conditions.buffer_matches({ buftype = { "terminal" } })
         end,
-        utils.surround({ "", "" }, "dark_red", {
+        utils.surround({ "", separators.powerline_right }, "dark_red", {
             FileType,
             Space,
             TerminalName,
             CloseButton,
         }),
     },
-    utils.surround({ "", "" }, "bright_bg", {
+    utils.surround({ "", separators.powerline_right }, "bright_bg", {
         fallthrough = false,
         {
             condition = conditions.is_not_active,

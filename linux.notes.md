@@ -20,6 +20,11 @@
 </fontconfig>
 ```
 
+# stem darkening
+
+/etc/environment
+FREETYPE_PROPERTIES="cff:no-stem-darkening=0 autofitter:no-stem-darkening=0"
+
 # Firefox window buttons
 `~/.mozilla/firefox/<config_dir>/chrome/userChrome.css`
 ```css

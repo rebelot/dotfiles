@@ -106,6 +106,19 @@ M.symbol_hl = {
 
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
+capabilities = vim.tbl_deep_extend("force", capabilities,
+    {
+        workspace = {
+            fileOperations = {
+                didCreate = true,
+                didDelete = true,
+                didRename = true,
+                willCreate = true,
+                willDelete = true,
+                willRename = true
+            }
+        }
+    })
 
 ---------------
 -- On Attach --
@@ -132,7 +145,7 @@ local on_attach = function(client, bufnr)
     --     { desc = "LSP: go to definition (split window)" }
     -- )
     map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP: go to declaration" })
-    map("n", "gr", require("telescope.builtin").lsp_references, { desc = "LSP: references" })
+    map("n", "grt", require("telescope.builtin").lsp_references, { desc = "LSP: references" })
     map("n", "<leader>lt", require("telescope.builtin").lsp_type_definitions, { desc = "LSP: go to type definitions" })
     map("n", "<leader>li", require("telescope.builtin").lsp_implementations, { desc = "LSP: go to implementations" })
     map("n", "gs", require("telescope.builtin").lsp_document_symbols, { desc = "LSP: document symbols" })
@@ -156,7 +169,34 @@ local on_attach = function(client, bufnr)
     map("n", "<leader>lhT", function()
         vim.lsp.buf.typehierarchy("supertypes")
     end, { desc = "LSP: supertypes" })
-    if client.supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
+
+    map("n", "<leader>lpd", function()
+        local params = vim.lsp.util.make_position_params()
+        return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_definition, params, function(_, result)
+            if result == nil or vim.tbl_isempty(result) then return end
+            vim.lsp.util.preview_location(result[1], { border = borders, title = "Preview definition", title_pos = "left" })
+        end)
+    end, { desc = "LSP: floating preview" })
+
+    map("n", "<leader>lpD", function()
+        local params = vim.lsp.util.make_position_params()
+        return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_declaration, params, function(_, result)
+            if result == nil or vim.tbl_isempty(result) then return end
+            vim.lsp.util.preview_location(result[1],
+                { border = borders, title = "Preview declaration", title_pos = "left" })
+        end)
+    end, { desc = "LSP: floating preview" })
+
+    map("n", "<leader>lpi", function()
+        local params = vim.lsp.util.make_position_params()
+        return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_implementation, params, function(_, result)
+            if result == nil or vim.tbl_isempty(result) then return end
+            vim.lsp.util.preview_location(result[1],
+                { border = borders, title = "Preview implementation", title_pos = "left" })
+        end)
+    end, { desc = "LSP: floating preview" })
+
+    if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
         -- set eventignore=all
         map("n", "<leader>lf", function()
             vim.lsp.buf.format({ bufnr = bufnr, async = false })
@@ -166,7 +206,7 @@ local on_attach = function(client, bufnr)
         end, { range = false, desc = "LSP: format" })
     end
 
-    if client.supports_method(vim.lsp.protocol.Methods.textDocument_rangeFormatting) then
+    if client:supports_method(vim.lsp.protocol.Methods.textDocument_rangeFormatting) then
         vim.bo[bufnr].formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:250})"
         map("x", "<leader>lf", function()
             vim.lsp.buf.format({ bufnr = bufnr, async = false })
@@ -179,8 +219,11 @@ local on_attach = function(client, bufnr)
             })
         end, { range = true, desc = "LSP: range format" })
     end
-    if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+    if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        vim.api.nvim_buf_create_user_command(bufnr, "LspInlayHints", function(args)
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+        end, { desc = "LSP: inlay hints toggle" })
     end
     -- if client.server_capabilities.signatureHelpProvider then
     --     local lsp_signature_help_au_id = vim.api.nvim_create_augroup("LSP_signature_help", { clear = true })
@@ -192,7 +235,7 @@ local on_attach = function(client, bufnr)
     --         buffer = bufnr,
     --     })
     -- end
-    if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+    if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
         local lsp_references_au_id = vim.api.nvim_create_augroup("LSP_document_highlight", { clear = false })
         vim.api.nvim_clear_autocmds({
             buffer = bufnr,
@@ -215,6 +258,17 @@ local on_attach = function(client, bufnr)
             desc = "Clear LSP document highlight",
         })
     end
+    if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange) then
+        vim.wo.foldmethod = 'expr'
+        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+    end
+
+    vim.api.nvim_buf_create_user_command(bufnr, "LspSemanticHlStop", function(args)
+        vim.lsp.semantic_tokens.stop(bufnr, args.args)
+    end, { desc = "LSP: stop semantic tokens" })
+    vim.api.nvim_buf_create_user_command(bufnr, "LspSemanticHlStart", function(args)
+        vim.lsp.semantic_tokens.start(bufnr, args.args)
+    end, { desc = "LSP: stop semantic tokens" })
 end
 
 M.default_on_attach = on_attach

@@ -189,6 +189,9 @@ nnoremap zM zMz.
 nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
 
+" Comment above
+nmap gcp "_yyPgccj
+
 " Jump to delimiter
 " inoremap <silent> <C-l> <esc>:call search("[)\\]}>,`'\"]", 'eW')<CR>a
 inoremap <silent> <C-l> <Left><cmd>call search("[)\\]}>,`'\"]", 'eW')<CR><Right>
@@ -210,7 +213,8 @@ cnoreabbrev Gdiffsplit rightbelow vertical Gdiffsplit
 " cnoremap [ []<Left>
 " cnoremap { {}<Left>
 
-autocmd! MenuPopup
+aunmenu PopUp
+autocmd! nvim.popupmenu
 
 anoremenu LSP.Back        <cmd>popup PopUp<cr>
 vnoremenu LSP.Back        <cmd>popup PopUp<cr>gv
@@ -235,7 +239,6 @@ nnoremenu DAP.Run\ to\ cursor <cmd>lua require'dap'.run_to_cursor()<CR>
 nnoremenu DAP.Eval <cmd>lua require'dapui'.eval()<CR>
 vnoremenu DAP.Eval <cmd>lua require'dapui'.eval()<CR>
 
-aunmenu PopUp
 vnoremenu PopUp.Cut           "+x
 vnoremenu PopUp.Copy          "+y
 anoremenu PopUp.Paste         "+gP

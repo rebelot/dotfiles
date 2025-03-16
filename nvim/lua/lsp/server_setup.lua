@@ -41,6 +41,7 @@ local servers = {
     "tinymist",
     "html",
     "cssls",
+    "yamlls",
     "asm_lsp",
 }
 

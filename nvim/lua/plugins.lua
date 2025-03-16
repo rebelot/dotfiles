@@ -33,7 +33,7 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim", lazy = true },
+    { "nvim-lua/plenary.nvim",    lazy = true },
 
     { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
@@ -107,6 +107,7 @@ require("lazy").setup({
     {
         "nvimtools/none-ls.nvim",
         event = { "BufRead", "BufNewFile" },
+        enabled = false,
         config = function()
             require("lsp.null-ls")
         end,
@@ -152,7 +153,8 @@ require("lazy").setup({
                 callback = function(args)
                     local bufnr = args.buf
                     local client = vim.lsp.get_client_by_id(args.data.client_id)
-                    if not vim.tbl_contains({ "copilot", "null-ls", "ltex" }, client.name) then
+                    if not client then return end
+                    if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentSymbol) then
                         require("nvim-navic").attach(client, bufnr)
                     end
                 end,
@@ -367,27 +369,6 @@ require("lazy").setup({
     -------------------------
     -- File, Fuzzy Finders --
     -------------------------
-
-    {
-        "kyazdani42/nvim-tree.lua",
-        enabled = false,
-        init = function()
-            vim.api.nvim_create_autocmd({ "BufEnter" }, {
-                callback = function(args)
-                    if vim.fn.isdirectory(args.match) == 1 then
-                        require("lazy").load({ plugins = { "nvim-tree.lua" } })
-                        vim.cmd("NvimTreeToggle")
-                        return true
-                    end
-                end,
-            })
-        end,
-        cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
-        keys = { "<leader>nt", "<leader>nf" },
-        config = function()
-            require("plugins.nvim-tree")
-        end,
-    },
     {
         "nvim-neo-tree/neo-tree.nvim",
         enabled = true,
@@ -408,7 +389,7 @@ require("lazy").setup({
                 callback = function(args)
                     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
                         if vim.api.nvim_buf_get_name(buf):match("neo%-tree") then
-                            print("neotreee!")
+                            -- print("neotreee!")
                             vim.api.nvim_buf_delete(buf, { force = true })
                             -- require("lazy").load({ plugins = { "neo-tree.nvim" } })
                             -- vim.cmd("Neotree")
@@ -418,9 +399,11 @@ require("lazy").setup({
                 end,
             })
         end,
-        branch = "v2.x",
+        branch = "v3.x",
         dependencies = {
             "MunifTanjim/nui.nvim",
+            "antosha417/nvim-lsp-file-operations",
+            -- "miversen33/netman.nvim",
             {
                 "s1n7ax/nvim-window-picker",
                 config = function()
@@ -442,9 +425,12 @@ require("lazy").setup({
             },
         },
         config = function()
+            -- require("netman").setup()
             require("plugins.neo-tree")
+            require("lsp-file-operations").setup()
         end,
     },
+
 
     {
         "stevearc/oil.nvim",
@@ -578,18 +564,18 @@ require("lazy").setup({
                 pattern = "kanagawa",
                 callback = function()
                     if vim.o.background == "light" then
-                        vim.fn.system("kitty +kitten themes Kanagawa_light")
+                        -- vim.fn.system("kitty +kitten themes Kanagawa_light")
+                        vim.fn.system("~/.config/alacritty/switch_theme kanagawa_lotus.toml")
                     elseif vim.o.background == "dark" then
-                        vim.fn.system("kitty +kitten themes Kanagawa_dragon")
-                    else
-                        vim.fn.system("kitty +kitten themes Kanagawa")
+                        -- vim.fn.system("kitty +kitten themes Kanagawa_dragon")
+                        vim.fn.system("~/.config/alacritty/switch_theme kanagawa_wave.toml")
                     end
                 end,
             })
         end,
     },
 
-    { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim",      lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -745,7 +731,7 @@ require("lazy").setup({
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     },
 
-    { "tpope/vim-fugitive", cmd = "G" },
+    { "tpope/vim-fugitive",   cmd = "G" },
     -- { "TimUntersberger/neogit", enabled = false },
 
     {
@@ -768,7 +754,7 @@ require("lazy").setup({
         end,
     },
 
-    { "moll/vim-bbye", cmd = { "Bdelete", "Bwipeout" } },
+    { "moll/vim-bbye",        cmd = { "Bdelete", "Bwipeout" } },
     { "lambdalisue/suda.vim", cmd = { "SudaRead", "SudaWrite" } },
 
     {
@@ -789,13 +775,14 @@ require("lazy").setup({
 
     {
         "NvChad/nvim-colorizer.lua",
-        event = { "BufReadPre", "BufNewFile" },
+        -- event = { "BufReadPre", "BufNewFile" },
+        cmd = { "ColorizerToggle" },
         config = true,
     },
 
     {
         "iamcco/markdown-preview.nvim",
-        build = "cd app && npm install",
+        build = "cd app && npm install && git restore .",
         cmd = "MarkdownPreview",
         ft = { "markdown", "pandoc" },
         init = function()
@@ -855,7 +842,7 @@ require("lazy").setup({
 
     "wellle/targets.vim",
 
-{
+    {
         "michaeljsmith/vim-indent-object",
         keys = { { mode = "x", "ai" }, { mode = "x", "ii" }, { mode = "o", "ai" }, { mode = "o", "ii" } },
     },

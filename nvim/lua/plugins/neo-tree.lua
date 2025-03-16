@@ -1,43 +1,5 @@
 local lsp = require("lsp.init")
 
-local function make_rename_params(old_fname, new_fname)
-    return {
-        files = {
-            {
-                oldUri = vim.uri_from_fname(old_fname),
-                newUri = vim.uri_from_fname(new_fname),
-            },
-        },
-    }
-end
-local function will_rename_handler(data)
-    local clients = vim.lsp.get_active_clients()
-    local params = make_rename_params(data.source, data.destination)
-    vim.print(params)
-    for _, client in ipairs(clients) do
-        local willRename = vim.tbl_get(client, "server_capabilities", "workspace", "fileOperations", "willRename")
-        if willRename ~= nil then
-            -- local filters = willRename.filters or {}
-            local resp = client.request_sync("workspace/willRenameFiles", params, 1000)
-            if resp and resp.result ~= nil then
-                vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
-            end
-        end
-    end
-end
-
-local function rename_handler(data)
-    local clients = vim.lsp.get_active_clients()
-    local params = make_rename_params(data.source, data.destination)
-    for _, client in ipairs(clients) do
-        local didRename = vim.tbl_get(client, "server_capabilities", "workspace", "fileOperations", "didRename")
-        if didRename ~= nil then
-            -- local filters = willRename.filters or {}
-            client.notify("workspace/didRenameFiles", params)
-        end
-    end
-end
-
 local function getTelescopeOpts(state, path)
     return {
         cwd = path,
@@ -65,6 +27,7 @@ require("neo-tree").setup({
     open_files_do_not_replace_types = { "terminal", "trouble", "qf" },
     sources = {
         "filesystem",
+        -- "netman.ui.neo-tree",
         "buffers",
         "git_status",
         "document_symbols",
@@ -126,7 +89,8 @@ require("neo-tree").setup({
             },
         },
     },
-    use_default_mappings = false,
+    -- use_default_mappings = false,
+    use_default_mappings = true,
     window = {
         position = "left",
         width = 40,
@@ -134,42 +98,28 @@ require("neo-tree").setup({
             noremap = true,
             nowait = true,
         },
+
+
         mappings = {
             ["<Tab>"] = "toggle_node",
-            ["<2-LeftMouse>"] = "open",
-            ["<cr>"] = "open",
-            ["<esc>"] = "revert_preview",
-            ["o"] = { "toggle_preview", config = { use_float = true } },
-            ["O"] = "focus_preview",
-            ["P"] = function(state)
-                local node = state.tree:get_node()
-                require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
-            end,
+            ["<Space>"] = "run_command",
+            ["P"] = "focus_parent",
+            ["<S-Tab>"] = "focus_parent",
             ["<C-s>"] = "split_with_window_picker",
             ["<C-v>"] = "vsplit_with_window_picker",
             ["<C-t>"] = "open_tabnew",
-            ["<C-w>"] = "open_with_window_picker",
-            ["C"] = "close_node",
+            ["s"] = "noop",
+            ["S"] = "noop",
+            ["t"] = "noop",
+            ["z"] = "noop",
+            ["w"] = "noop",
             ["za"] = "toggle_node",
             ["zM"] = "close_all_nodes",
             ["zR"] = "expand_all_nodes",
-            ["R"] = "refresh",
-            ["a"] = "add",
-            ["A"] = "add_directory", -- also accepts the config.show_path and config.insert_as options.
-            ["d"] = "delete",
-            ["r"] = "rename",
-            ["Y"] = "copy_to_clipboard",
-            ["x"] = "cut_to_clipboard",
-            ["p"] = "paste_from_clipboard",
-            ["y"] = "copy", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
-            ["m"] = "move", -- takes text input for destination, also accepts the config.show_path and config.insert_as options
-            ["e"] = "toggle_auto_expand_width",
-            ["q"] = "close_window",
-            ["?"] = "show_help",
-            ["<"] = "prev_source",
-            [">"] = "next_source",
-            -- custom commands
-            ["i"] = "run_command",
+            ["<C-b>"] = "noop",
+            ["O"] = { "toggle_preview", config = { use_float = true } },
+            ["<c-o>"] = "focus_preview",
+            --         -- custom commands
             ["h"] = function(state)
                 local node = state.tree:get_node()
                 if (node.type == "directory" or node:has_children()) and node:is_expanded() then
@@ -196,6 +146,10 @@ require("neo-tree").setup({
             local path = node:get_id()
             vim.api.nvim_input(": " .. path .. "<Home>")
         end,
+        focus_parent = function(state)
+            local node = state.tree:get_node()
+            require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+        end,
     },
     nesting_rules = {},
     filesystem = {
@@ -213,18 +167,6 @@ require("neo-tree").setup({
         use_libuv_file_watcher = true,
         window = {
             mappings = {
-                ["<bs>"] = "navigate_up",
-                ["."] = "set_root",
-                ["H"] = "toggle_hidden",
-                ["<C-f>"] = "fuzzy_finder",
-                ["<C-d>"] = "fuzzy_finder_directory",
-                ["#"] = "fuzzy_sorter",
-                -- ["D"] = "fuzzy_sorter_directory",
-                ["f"] = "filter_on_submit",
-                ["<C-x>"] = "clear_filter",
-                ["[g"] = "prev_git_modified",
-                ["]g"] = "next_git_modified",
-                -- custom commands
                 ["tf"] = "telescope_find",
                 ["tg"] = "telescope_grep",
             },
@@ -232,8 +174,11 @@ require("neo-tree").setup({
                 -- define keymaps for filter popup window in fuzzy_finder_mode
                 ["<down>"] = "move_cursor_down",
                 ["<C-n>"] = "move_cursor_down",
+                ["<Tab>"] = "move_cursor_down",
                 ["<up>"] = "move_cursor_up",
                 ["<C-p>"] = "move_cursor_up",
+                ["<S-Tab>"] = "move_cursor_up",
+                ["<C-c>"] = "cancel",
             },
         },
         commands = {
@@ -321,7 +266,7 @@ require("neo-tree").setup({
         window = {
             position = "float",
             mappings = {
-                ["A"] = "git_add_all",
+                ["gA"] = "git_add_all",
                 ["gu"] = "git_unstage_file",
                 ["ga"] = "git_add_file",
                 ["gr"] = "git_revert_file",
@@ -377,13 +322,7 @@ require("neo-tree").setup({
             TypeParameter = { icon = lsp.symbol_icons.TypeParameter, hl = lsp.symbol_hl.TypeParameter },
         },
     },
-    event_handlers = {
-        {
-            event = "file_renamed",
-            handler = will_rename_handler,
-            id = "optional unique id, only meaningful if you want to unsubscribe later",
-        },
-    },
+    -- event_handlers = { },
 })
 
 vim.keymap.set("n", "<leader>nt", ":Neotree toggle<CR>")

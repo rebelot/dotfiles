@@ -57,8 +57,8 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec kitty
-bindsym $mod+Shift+Return exec kitty --class floating
+bindsym $mod+Return exec alacritty
+bindsym $mod+Shift+Return exec alacritty --class floating
 for_window [class="floating"] floating enable
 
 # kill focused window
@@ -180,20 +180,22 @@ workspace_auto_back_and_forth no
 # Assign application to start on a specific workspace
 # you can find the class with the program xprop
 
-assign [class="firefox"] $ws1
-assign [class="kitty"]  $ws2
+# assign [class="firefox"] $ws1
+# assign [class="alacritty"]  $ws2
 assign [class="thunderbird"] $ws3
 assign [class="Chromium" title="Microsoft Teams"] $ws3
+
+for_window [all] title_window_icon on
+for_window [all] border normal 1
+
 for_window [class="Thunar"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="xarchiver"] floating enable
 for_window [class="Telegram"] floating enable
 for_window [class="feh"] floating enable
-for_window [class="blueman-manager"] floating enable
-
-
-for_window [all] title_window_icon on
-for_window [all] border normal 1
+for_window [class="Blueman-manager"] floating enable
+for_window [class="Conky"] border pixel 0
+ 
 hide_edge_borders smart
 focus_on_window_activation focus
 
@@ -383,5 +385,5 @@ client.urgent           $red              $red            $white          $brigh
 # Application Autostart
 exec --no-startup-id "nitrogen --restore"
 exec --no-startup-id conky
-exec_always --no-startup-id "sleep 3; picom"
+exec_always --no-startup-id "killall picom; sleep 3; picom"
 

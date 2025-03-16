@@ -29,8 +29,18 @@ local TablineFileFlags = {
         condition = function(self)
             return vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
         end,
-        provider = " ● ", --"[+]",
+        provider = " " .. icons.modified, --"[+]",
         hl = { fg = "green" },
+        on_click = {
+            callback = function(_, minwid)
+                local bufname = vim.api.nvim_buf_get_name(minwid)
+                vim.cmd.write(bufname)
+            end,
+            minwid = function(self)
+                return self.bufnr
+            end,
+            name = "heirline_tabline_write_buf",
+        },
     },
     {
         condition = function(self)
@@ -39,9 +49,9 @@ local TablineFileFlags = {
         end,
         provider = function(self)
             if vim.api.nvim_get_option_value("buftype", { buf = self.bufnr }) == "terminal" then
-                return "  "
+                return icons.terminal
             else
-                return ""
+                return icons.readonly
             end
         end,
         hl = { fg = "orange" },
@@ -174,7 +184,7 @@ vim.keymap.set("n", "gbp", function()
     vim.cmd.redrawtabline()
 end)
 
-local TablineBufferBlock = utils.surround({ "", "" }, function(self)
+local TablineBufferBlock = utils.surround({ separators.slant_left, separators.slant_right }, function(self)
     if self.is_active then
         return utils.get_highlight("TabLineSel").bg
     else

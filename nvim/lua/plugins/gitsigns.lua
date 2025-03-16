@@ -7,8 +7,11 @@ require("gitsigns").setup({
         border = vim.g.FloatBorders
     },
     on_attach = function(bufnr)
-        map("n", "<leader>hd", "<cmd>Gitsigns preview_hunk_inline<CR>", { buffer = bufnr })
+        map("n", "<leader>hp", "<cmd>Gitsigns preview_hunk_inline<CR>", { buffer = bufnr })
         map("n", "<leader>hb", "<cmd>Gitsigns blame_line<CR>", { buffer = bufnr })
+        map("n", "<leader>hr", "<cmd>Gitsigns reset_hunk<CR>", { buffer = bufnr })
+        map("n", "<leader>hs", "<cmd>Gitsigns stage_hunk<CR>", { buffer = bufnr })
+        map("n", "<leader>hu", "<cmd>Gitsigns undo_stage_hunk<CR>", { buffer = bufnr })
         map("n", "]h", "<cmd>Gitsigns next_hunk<CR>", { buffer = bufnr })
         map("n", "[h", "<cmd>Gitsigns prev_hunk<CR>", { buffer = bufnr })
         map("n", "<leader>xh", "<cmd>Gitsigns setqflist<CR>", { buffer = bufnr }) -- use trouble
