@@ -21,7 +21,6 @@ vim.diagnostic.config({
     },
     float = {
         source = true,
-        border = vim.g.FloatBorders,
         title = "Diagnostics",
         title_pos = "left",
         header = "",

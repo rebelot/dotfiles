@@ -1,6 +1,3 @@
-local lspconfig = require("lspconfig")
-local lsputil = require("lspconfig.util")
-
 local function get_python_interpreters(a, l, p)
     local paths = {}
     local is_home_dir = function()
@@ -48,10 +45,14 @@ end
 
 local function change_python_interpreter(path)
     local client = vim.lsp.get_clients({ bufnr = 0, name = "pylance" })[1]
-    local config = require("lsp.servers.pylance")
+    local config = client.config
     config.settings.python.pythonPath = path
-    lspconfig.pylance.setup(config)
-    vim.cmd("LspRestart pylance")
+    client:stop(true)
+    vim.lsp.config("pylance", config)
+    vim.defer_fn(function()
+        print("starting")
+        vim.lsp.start(config)
+    end, 500)
 end
 
 -- client.server_capabilities.executeCommandProvider
@@ -97,50 +98,38 @@ local function extract_method(client)
     -- vim.lsp.buf.rename()
 end
 
-require("lspconfig.configs").pylance = {
-    default_config = {
-        name = "pylance",
-        autostart = true,
-        single_file_support = true,
-        cmd = { "delance-langserver", "--stdio" },
-        filetypes = { "python" },
-        root_dir = function(fname)
-            local markers = {
-                "pyproject.toml",
-                "setup.py",
-                "setup.cfg",
-                "requirements.txt",
-                "Pipfile",
-                "pyrightconfig.json",
-                ".git",
-            }
-            return vim.fs.root(0, markers)
-        end,
-        settings = {
-            python = {
-                analysis = vim.empty_dict(),
-            },
-        },
-        docs = {
-            package_json = vim.fn.expand("$HOME/usr/src/pylance_langserver/extension/package.json"),
-            description = [[
+---@type vim.lsp.ClientConfig
+return {
+    name = "pylance",
+    autostart = true,
+    single_file_support = true,
+    cmd = { "delance-langserver", "--stdio" },
+    filetypes = { "python" },
+    root_markers = {
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
+        "Pipfile",
+        "pyrightconfig.json",
+        ".git",
+    },
+    docs = {
+        package_json = vim.fn.expand("$HOME/usr/src/pylance_langserver/extension/package.json"),
+        description = [[
          https://github.com/microsoft/pyright
          `pyright`, a static type checker and language server for python
          ]],
-        },
-        before_init = function(_, config)
-            -- local venv = os.getenv("VIRTUAL_ENV")
-            if not config.settings.python then
-                config.settings.python = {}
-            end
-            if not config.settings.python.pythonPath then
-                config.settings.python.pythonPath = "python"
-            end
-        end,
     },
-}
-
-return {
+    before_init = function(_, config)
+        -- local venv = os.getenv("VIRTUAL_ENV")
+        if not config.settings.python then
+            config.settings.python = {}
+        end
+        if not config.settings.python.pythonPath then
+            config.settings.python.pythonPath = "python"
+        end
+    end,
     on_attach = function(client, bufnr)
         vim.api.nvim_buf_create_user_command(bufnr, "PythonInterpreter", function(args)
             vim.fn.setenv("PATH", (args.args:gsub("/python$", "")) .. ":" .. vim.fn.getenv("PATH"))

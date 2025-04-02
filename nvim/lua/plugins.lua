@@ -42,21 +42,15 @@ require("lazy").setup({
     --------------------------------------------
 
     {
-        "neovim/nvim-lspconfig",
-        -- lazy = false,
-        event = { "BufRead", "BufNewFile" },
+        "williamboman/mason.nvim",
         cmd = "Mason",
-        dependencies = {
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-        },
+        event = { "BufRead", "BufNewFile" },
         config = function()
             require("mason").setup()
-            require("mason-lspconfig").setup()
-            require("lsp.server_setup")
-            require("lspconfig.ui.windows").default_options.border = vim.g.FloatBorders
+            require("lsp.init")
         end,
     },
+
     {
         "mrcjkb/rustaceanvim",
         lazy = false, -- This plugin is already lazy
@@ -85,15 +79,7 @@ require("lazy").setup({
             }
         end,
     },
-    -- {
-    --     "vhyrro/luarocks.nvim",
-    --     priority = 10000,
-    --     -- config = true,
-    --     enabled = false,
-    --     opts = {
-    --         rocks = { "magick" },
-    --     },
-    -- },
+    { "barreiroleo/ltex_extra.nvim" },
     {
         "rest-nvim/rest.nvim",
         ft = "http",
@@ -124,21 +110,6 @@ require("lazy").setup({
         },
     },
 
-    -- {
-    --     "onsails/lspkind-nvim",
-    --     lazy = true,
-    --     config = function()
-    --         require("lspkind").init({
-    --             mode = "symbol_text",
-    --             preset = "codicons",
-    --             symbol_map = {
-    --                 Copilot = "",
-    --             },
-    --             -- preset = "default",
-    --         })
-    --     end,
-    -- },
-
     {
         "SmiteshP/nvim-navic",
         enabled = true,
@@ -163,100 +134,46 @@ require("lazy").setup({
     },
 
     {
-        "hrsh7th/nvim-cmp",
+        'saghen/blink.cmp',
         event = { "InsertEnter", "CmdLineEnter" },
-        enabled = true,
-        dependencies = {
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-            --{"hrsh7th/cmp-nvim-lua", })
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-nvim-lsp", -- required by lsp/init.lua
-            "hrsh7th/cmp-nvim-lsp-signature-help",
-            "hrsh7th/cmp-nvim-lsp-document-symbol",
-            --{ "dmitmel/cmp-cmdline-history", },
-            "kdheepak/cmp-latex-symbols",
-            "andersevenrud/cmp-tmux",
-            "zbirenbaum/copilot-cmp",
-            {
-                "quangnguyen30192/cmp-nvim-ultisnips",
-                dependencies = {
-                    {
-                        "SirVer/ultisnips",
-                        dependencies = "honza/vim-snippets",
-                        init = function()
-                            vim.opt.rtp:append({ vim.fn.stdpath("data") .. "/site/pack/packer/start/vim-snippets" })
-                            vim.g.UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
-                            vim.g.UltiSnipsJumpForwardTrigger = "<Plug>(ultisnips_jump_forward)"
-                            vim.g.UltiSnipsJumpBackwardTrigger = "<Plug>(ultisnips_jump_backward)"
-                            vim.g.UltiSnipsListSnippets = "<Plug>(utlisnips_list_snippets)"
-                            vim.g.UltiSnipsRemoveSelectModeMappings = 0
-                        end,
-                    },
-                },
-            },
-        },
+        dependencies = { 'rafamadriz/friendly-snippets', "fang2hou/blink-copilot" },
+        build = 'cargo build --release',
         config = function()
-            require("plugins.cmp")
-            require("copilot_cmp").setup()
-        end,
+            require("plugins.blink-cmp")
+        end
     },
 
     {
         "zbirenbaum/copilot.lua",
-        event = { "BufRead", "BufNewFile" },
+        event = { "InsertEnter" },
         opts = {
             filetypes = { julia = false, ["dap-repl"] = false },
-            panel = { enabled = false },
+            panel = {
+                enabled = false,
+                keymap = {
+                    jump_prev = "[[",
+                    jump_next = "]]",
+                    accept = "<CR>",
+                    refresh = "R",
+                    open = "<M-CR>"
+                },
+                layout = {
+                    position = "right", -- | top | left | right | horizontal | vertical
+                    ratio = 0.4
+                },
+            },
             suggestion = {
-                enabled = true,
+                enabled = false,
                 auto_trigger = false,
                 keymap = {
                     accept = "<M-CR>",
                     next = "<M-n>",
                     prev = "<M-p>",
                     dismiss = "<C-]>",
+
                 },
             },
         },
-    },
-    {
-        "jackMort/ChatGPT.nvim",
-        cmd = { "ChatGPT", "ChatGPTEditWithInstructions", "ChatGPTActAs", "ChatGPTCompleteCode" },
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-        },
-        config = function()
-            local f = io.open(vim.fn.expand("$XDG_CONFIG_HOME") .. "/openai")
-            if f then
-                vim.env.OPENAI_API_KEY = f:read()
-                f:close()
-                require("chatgpt").setup({})
-            end
-        end,
-    },
-    {
-        "robitx/gp.nvim",
-        enabled = false,
-        config = function()
-            require("gp").setup({
-                providers = {
-                    openai = {
-                        endpoint = "https://api.openai.com/v1/chat/completions",
-                        secret = io.open(vim.fn.expand("$XDG_CONFIG_HOME") .. "/openai"):read(),
-                    },
-                    copilot = {
-                        disable = false,
-                        endpoint = "https://api.githubcopilot.com/chat/completions",
-                        secret = {
-                            "bash",
-                            "-c",
-                            [[cat ~/.config/github-copilot/hosts.json | sed -e 's/.*oauth_token...//; s/[}"]//g']],
-                        },
-                    },
-                },
-            })
-        end,
     },
 
     {
@@ -273,37 +190,6 @@ require("lazy").setup({
         cmd = "Neogen",
         config = true,
     },
-    -- {
-    --     "benlubas/molten-nvim",
-    --     -- see otter.nvim and quarto.nvim
-    --     dependencies = {
-    --         {
-    --             "3rd/image.nvim",
-    --             dependencies = {
-    --                 "leafo/magick",
-    --             },
-    --             lazy = true,
-    --             setup = true,
-    --             init = function()
-    --                 package.path = package.path .. ";" .. vim.fn.expand("$HOME") .. "/.luarocks/share/lua/5.1/?/init.lua"
-    --                 package.path = package.path .. ";" .. vim.fn.expand("$HOME") .. "/.luarocks/share/lua/5.1/?.lua"
-    --             end,
-    --         },
-    --     },
-    --     build = ":UpdateRemotePlugins",
-    --     init = function()
-    --         vim.g.molten_auto_open_output = false
-    --         vim.g.molten_image_provider = "image.nvim"
-    --         vim.g.molten_wrap_output = true
-    --         vim.g.molten_virt_text_output = true
-    --         vim.g.molten_virt_lines_off_by_1 = true
-    --     end,
-    -- },
-    -- use 'saadparwaiz1/cmp_luasnip'
-    -- use 'L3MON4D3/LuaSnip'
-    -- use 'hrsh7th/vim-vsnip'
-    -- use "rafamadriz/friendly-snippets"
-    -- use 'lervag/vimtex'
 
     -- -------------------
     -- Syntax and Folds --
@@ -328,14 +214,7 @@ require("lazy").setup({
 
     -- { "chrisbra/csv.vim", ft = "csv" },
 
-    --{
-    --     "tmhedberg/SimpylFold",
-    --     ft = "python",
-    -- })
-
-    --{ "Konfekt/FastFold" })
-
-    { "jaredsampson/vim-pymol", ft = "pml" },
+    { "jaredsampson/vim-pymol",     ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
@@ -456,7 +335,7 @@ require("lazy").setup({
                     vim.keymap.set(
                         "n",
                         "<leader>fr",
-                        require("telescope").extensions.frecency.frecency,
+                        function() require("telescope").extensions.frecency.frecency() end,
                         { desc = "Telescope: Frecency" }
                     )
                 end,
@@ -564,18 +443,18 @@ require("lazy").setup({
                 pattern = "kanagawa",
                 callback = function()
                     if vim.o.background == "light" then
-                        -- vim.fn.system("kitty +kitten themes Kanagawa_light")
-                        vim.fn.system("~/.config/alacritty/switch_theme kanagawa_lotus.toml")
+                        vim.fn.system("kitty +kitten themes Kanagawa_light")
+                        -- vim.fn.system("~/.config/alacritty/switch_theme kanagawa_lotus.toml")
                     elseif vim.o.background == "dark" then
-                        -- vim.fn.system("kitty +kitten themes Kanagawa_dragon")
-                        vim.fn.system("~/.config/alacritty/switch_theme kanagawa_wave.toml")
+                        vim.fn.system("kitty +kitten themes Kanagawa_dragon")
+                        -- vim.fn.system("~/.config/alacritty/switch_theme kanagawa_wave.toml")
                     end
                 end,
             })
         end,
     },
 
-    { "rebelot/lucy.nvim",      lazy = false, dev = true, enabled = false },
+    { "rebelot/lucy.nvim",  lazy = false, dev = true, enabled = false },
 
     {
         "kyazdani42/nvim-web-devicons",
@@ -731,7 +610,7 @@ require("lazy").setup({
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     },
 
-    { "tpope/vim-fugitive",   cmd = "G" },
+    { "tpope/vim-fugitive", cmd = "G" },
     -- { "TimUntersberger/neogit", enabled = false },
 
     {

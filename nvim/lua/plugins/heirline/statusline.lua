@@ -414,8 +414,8 @@ local Snippets = {
         return vim.tbl_contains({ "s", "i" }, vim.fn.mode())
     end,
     provider = function()
-        local forward = (vim.fn["UltiSnips#CanJumpForwards"]() == 1) and " " or ""
-        local backward = (vim.fn["UltiSnips#CanJumpBackwards"]() == 1) and " " or ""
+        local forward = vim.snippet.active({direction=1}) and " " or ""
+        local backward = vim.snippet.active({direction=-1}) and " " or ""
         return backward .. forward
     end,
     hl = { fg = "red", bold = true },
@@ -644,7 +644,7 @@ local ShowCmd = {
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
-ViMode = utils.surround({ separators.powerline_left, separators.powerline_right }, "bright_bg",
+ViMode = utils.surround({ separators.rounded_left, separators.rounded_right }, "bright_bg",
     { MacroRec, ViMode, Snippets, ShowCmd })
 
 local DefaultStatusline = {
@@ -800,14 +800,14 @@ local WinBar = {
         condition = function()
             return conditions.buffer_matches({ buftype = { "terminal" } })
         end,
-        utils.surround({ "", separators.powerline_right }, "dark_red", {
+        utils.surround({ "", separators.rounded_right }, "dark_red", {
             FileType,
             Space,
             TerminalName,
             CloseButton,
         }),
     },
-    utils.surround({ "", separators.powerline_right }, "bright_bg", {
+    utils.surround({ "", separators.rounded_right }, "bright_bg", {
         fallthrough = false,
         {
             condition = conditions.is_not_active,

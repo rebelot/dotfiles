@@ -4,7 +4,6 @@ require("gitsigns").setup({
     trouble = true,
     -- _inline2 = true,
     preview_config = {
-        border = vim.g.FloatBorders
     },
     on_attach = function(bufnr)
         map("n", "<leader>hp", "<cmd>Gitsigns preview_hunk_inline<CR>", { buffer = bufnr })

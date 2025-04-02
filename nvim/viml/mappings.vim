@@ -190,7 +190,7 @@ nnoremap <F2> :emenu <C-Z>
 xnoremap <F2> :emenu <C-Z>
 
 " Comment above
-nmap gcp "_yyPgccj
+nmap gcp "cyy"cPgccj
 
 " Jump to delimiter
 " inoremap <silent> <C-l> <esc>:call search("[)\\]}>,`'\"]", 'eW')<CR>a
@@ -199,9 +199,6 @@ inoremap <silent> <C-l> <Left><cmd>call search("[)\\]}>,`'\"]", 'eW')<CR><Right>
 " c-n/c-p previous command or match history
 " cnoremap <expr><C-n> wildmenumode() ? "\<C-n>" : "\<Down>"
 " cnoremap <expr><C-p> wildmenumode() ? "\<C-p>" : "\<Up>"
-" cnoremap <expr><CR> v:lua.require'cmp'.visible() ? v:lua.require'cmp'.confirm() : '\\<CR>' 
-                " \ wildmenumode() ? \
-                " \ "\<C-y>" : "\<CR>"
 
 " Sintax stuff
 nnoremap <F7> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'

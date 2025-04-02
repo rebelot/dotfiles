@@ -3,8 +3,6 @@ local o = vim.o
 local opt = vim.opt
 local fn = vim.fn
 
--- vim.g.FloatBorders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
-vim.g.FloatBorders = "rounded"
 vim.g.mapleader = ','
 
 g.python3_host_prog = vim.fn.expand("$HOME") .. "/venvs/base/bin/python"
@@ -69,6 +67,9 @@ opt.fillchars:append({
     vertright = "┣", -- '╠', --'├',
     verthoriz = "╋", -- '╬',--'┼','
 })
+-- opt.winborder = "rounded"
+vim.g.FloatBorders = "rounded"
+-- vim.g.FloatBorders = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" }
 
 opt.fillchars:append({ foldopen = "", foldsep = "│", foldclose = "" }) --   
 opt.fillchars:append({ diff = "╲" })

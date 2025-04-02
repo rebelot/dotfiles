@@ -57,8 +57,8 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec alacritty
-bindsym $mod+Shift+Return exec alacritty --class floating
+bindsym $mod+Return exec kitty
+bindsym $mod+Shift+Return exec kitty --class floating
 for_window [class="floating"] floating enable
 
 # kill focused window

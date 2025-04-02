@@ -33,7 +33,7 @@ local function wininput(opts, on_confirm, win_opts)
     }
 
     win_opts = vim.tbl_deep_extend("force", default_win_opts, win_opts)
-    win_opts.width = #default_text + #prompt + 5 < win_opts.width and win_opts.width or #default_text + #prompt + 5
+    win_opts.width = ((#default_text + #prompt + 5) < win_opts.width and win_opts.width) or #default_text + #prompt + 5
 
     local win = vim.api.nvim_open_win(buf, true, win_opts)
     vim.wo[win].winhighlight = "Search:None"
@@ -44,7 +44,7 @@ local function wininput(opts, on_confirm, win_opts)
         -- vim.cmd("startinsert!")
         vim.cmd("stopinsert!")
         vim.cmd("normal! l")
-    end, 15)
+    end, 200)
 end
 
 -- wininput({

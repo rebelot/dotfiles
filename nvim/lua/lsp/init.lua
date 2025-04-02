@@ -1,113 +1,12 @@
 local M = {}
 local borders = vim.g.FloatBorders
 
-M.symbol_icons = {
-    -- SymbolKind
-    File = " ",
-    Module = " ",
-    Namespace = " ",
-    Package = " ",
-    Class = " ",
-    Method = " ",
-    Property = " ",
-    Field = " ",
-    Constructor = " ",
-    Enum = " ",
-    Interface = " ",
-    Function = " ",
-    Variable = " ",
-    Constant = " ",
-    String = " ",
-    Number = " ",
-    Boolean = " ",
-    Array = " ",
-    Object = " ",
-    Key = " ",
-    Null = " ",
-    EnumMember = " ",
-    Struct = " ",
-    Event = " ",
-    Operator = " ",
-    TypeParameter = " ",
-    -- unique to CompletionIntemKind
-    Text = " ",
-    Unit = " ",
-    Value = " ",
-    Keyword = " ",
-    Snippet = " ",
-    Color = " ",
-    Reference = " ",
-    Folder = " ",
-
-    -- Others
-    Copilot = " ",
-}
-
-M.symbol_hl = {
-    File = "Directory",
-    Module = "@module",
-    Namespace = "@module",
-    Package = "@module",
-    Class = "Type",
-    Method = "@function.method",
-    Property = "@property",
-    Field = "@variable.member",
-    Constructor = "@constructor",
-    Enum = "Type",
-    Interface = "Type",
-    Function = "Function",
-    Variable = "@variable",
-    Constant = "Constant",
-    String = "String",
-    Number = "Number",
-    Boolean = "Boolean",
-    Array = "Type",
-    Object = "Type",
-    Key = "Identifier",
-    Null = "Type",
-    EnumMember = "Constant",
-    Struct = "Type",
-    Event = "@property",
-    Operator = "Operator",
-    TypeParameter = "Type",
-
-    Text = "@variable",
-    Unit = "Number",
-    Value = "String",
-    Keyword = "Keyword",
-    Snippet = "Special",
-    Color = "Special",
-    Reference = "Special",
-    Folder = "Directory",
-
-    Copilot = "String",
-}
-
--- https://code.visualstudio.com/api/references/icons-in-labels
-
------------------------
--- Handlers override --
------------------------
-
--- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
---     silent = true,
---     max_height = "10",
---     border = borders,
--- })
-
--- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
---     border = borders,
---     title = "Hover",
--- })
-
 ------------------
 -- Capabilities --
 ------------------
 
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-capabilities = vim.tbl_deep_extend("force", capabilities,
-    {
+vim.lsp.config("*", {
+    capabilities = {
         workspace = {
             fileOperations = {
                 didCreate = true,
@@ -118,7 +17,46 @@ capabilities = vim.tbl_deep_extend("force", capabilities,
                 willRename = true
             }
         }
-    })
+    }
+})
+
+------------
+-- Config --
+------------
+
+local servers = {
+    -- "ccls",
+    "clangd",
+    "pylance",
+    "ruff",
+    -- "pyright",
+    -- "basedpyright",
+    "marksman",
+    "luals",
+    "texlab",
+    "ltex",
+    "vimls",
+    "bashls",
+    "julials",
+    "ts_ls",
+    "eslint",
+    -- "rust_analyzer", -- handled by rustacean
+    "tinymist",
+    "html",
+    "cssls",
+    "yamlls",
+    "asm_lsp",
+}
+
+for _, server in ipairs(servers) do
+    local ok, config = pcall(require, "lsp." .. server)
+    if not ok then
+        config = {}
+    end
+    vim.lsp.config(server, config)
+end
+
+vim.lsp.enable(servers)
 
 ---------------
 -- On Attach --
@@ -174,7 +112,8 @@ local on_attach = function(client, bufnr)
         local params = vim.lsp.util.make_position_params()
         return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_definition, params, function(_, result)
             if result == nil or vim.tbl_isempty(result) then return end
-            vim.lsp.util.preview_location(result[1], { border = borders, title = "Preview definition", title_pos = "left" })
+            vim.lsp.util.preview_location(result[1],
+                { border = borders, title = "Preview definition", title_pos = "left" })
         end)
     end, { desc = "LSP: floating preview" })
 
@@ -271,6 +210,106 @@ local on_attach = function(client, bufnr)
     end, { desc = "LSP: stop semantic tokens" })
 end
 
-M.default_on_attach = on_attach
-M.default_capabilities = capabilities
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        on_attach(client, args.buf)
+    end
+})
+
+vim.api.nvim_create_autocmd("LspDetach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then return end
+        if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+            vim.api.nvim_clear_autocmds({
+                buffer = args.buf,
+                group = "LSP_document_highlight",
+            })
+        end
+    end
+})
+
+M.symbol_icons = {
+    -- SymbolKind
+    File = " ",
+    Module = " ",
+    Namespace = " ",
+    Package = " ",
+    Class = " ",
+    Method = " ",
+    Property = " ",
+    Field = " ",
+    Constructor = " ",
+    Enum = " ",
+    Interface = " ",
+    Function = " ",
+    Variable = " ",
+    Constant = " ",
+    String = " ",
+    Number = " ",
+    Boolean = " ",
+    Array = " ",
+    Object = " ",
+    Key = " ",
+    Null = " ",
+    EnumMember = " ",
+    Struct = " ",
+    Event = " ",
+    Operator = " ",
+    TypeParameter = " ",
+    -- unique to CompletionIntemKind
+    Text = " ",
+    Unit = " ",
+    Value = " ",
+    Keyword = " ",
+    Snippet = " ",
+    Color = " ",
+    Reference = " ",
+    Folder = " ",
+
+    -- Others
+    Copilot = " ",
+}
+
+M.symbol_hl = {
+    File = "Directory",
+    Module = "@module",
+    Namespace = "@module",
+    Package = "@module",
+    Class = "Type",
+    Method = "@function.method",
+    Property = "@property",
+    Field = "@variable.member",
+    Constructor = "@constructor",
+    Enum = "Type",
+    Interface = "Type",
+    Function = "Function",
+    Variable = "@variable",
+    Constant = "Constant",
+    String = "String",
+    Number = "Number",
+    Boolean = "Boolean",
+    Array = "Type",
+    Object = "Type",
+    Key = "Identifier",
+    Null = "Type",
+    EnumMember = "Constant",
+    Struct = "Type",
+    Event = "@property",
+    Operator = "Operator",
+    TypeParameter = "Type",
+
+    Text = "@variable",
+    Unit = "Number",
+    Value = "String",
+    Keyword = "Keyword",
+    Snippet = "Special",
+    Color = "Special",
+    Reference = "Special",
+    Folder = "Directory",
+
+    Copilot = "String",
+}
+
 return M

@@ -1,9 +1,9 @@
 require("nvim-treesitter.configs").setup({
     ensure_installed = "all", --  "all", "maintained" or a list
-    ignore_install = {}, -- List of parsers to ignore installing
+    ignore_install = {},      -- List of parsers to ignore installing
     highlight = {
-        enable = true, -- false will disable the whole extension
-        disable = { },
+        enable = true,        -- false will disable the whole extension
+        disable = {},
         additional_vim_regex_highlighting = false,
     },
     incremental_selection = {
@@ -66,28 +66,28 @@ require("nvim-treesitter.configs").setup({
                 ["]c"] = "@class.outer",
                 ["]k"] = "@block.outer",
                 ["]a"] = "@parameter.inner",
-                ["]s"] = { query = "@scope", query_group = "locals"},
+                ["]s"] = { query = "@scope", query_group = "locals" },
             },
             goto_next_end = {
                 ["]F"] = "@function.outer",
                 ["]C"] = "@class.outer",
                 ["]K"] = "@block.outer",
                 ["]A"] = "@parameter.inner",
-                ["]S"] = { query = "@scope", query_group = "locals"},
+                ["]S"] = { query = "@scope", query_group = "locals" },
             },
             goto_previous_start = {
                 ["[f"] = "@function.outer",
                 ["[c"] = "@class.outer",
-                ["[k"] = "@class.outer",
+                ["[k"] = "@block.outer",
                 ["[a"] = "@parameter.inner",
-                ["[s"] = { query = "@scope", query_group = "locals"},
+                ["[s"] = { query = "@scope", query_group = "locals" },
             },
             goto_previous_end = {
                 ["[F"] = "@function.outer",
                 ["[C"] = "@class.outer",
-                ["[K"] = "@class.outer",
+                ["[K"] = "@block.outer",
                 ["[A"] = "@parameter.inner",
-                ["[S"] = { query = "@scope", query_group = "locals"},
+                ["[S"] = { query = "@scope", query_group = "locals" },
             },
         },
         lsp_interop = {
@@ -103,6 +103,9 @@ require("nvim-treesitter.configs").setup({
         enable = true,
         keymaps = {
             ["<C-CR>"] = "textsubjects-smart", -- works in visual mode
+            -- ['.'] = 'textsubjects-smart',
+            -- [';'] = 'textsubjects-container-outer',
+            -- ['i;'] = 'textsubjects-container-inner',
         },
     },
     playground = {
@@ -111,8 +114,8 @@ require("nvim-treesitter.configs").setup({
 })
 
 
-local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-local map = vim.keymap.set
+-- local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+-- local map = vim.keymap.set
 -- map({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
 -- map({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
 -- map({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
