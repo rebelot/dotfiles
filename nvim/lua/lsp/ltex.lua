@@ -68,27 +68,11 @@ local filetypes = {
     'text',
 }
 local function get_language_id(_, filetype)
-    local language_id = language_id_mapping[filetype]
-    if language_id then
-        return language_id
-    else
-        return filetype
-    end
-end
-local enabled_ids = {}
-do
-    local enabled_keys = {}
-    for _, ft in ipairs(filetypes) do
-        local id = get_language_id({}, ft)
-        if not enabled_keys[id] then
-            enabled_keys[id] = true
-            table.insert(enabled_ids, id)
-        end
-    end
+  return language_id_mapping[filetype] or filetype
 end
 
 return {
-    cmd = { 'ltex-ls' },
+    cmd = { 'ltex-ls-plus' },
     filetypes = filetypes,
     root_markers = { ".git" },
     get_language_id = get_language_id,
@@ -135,13 +119,13 @@ return {
     end,
     settings = {
         ltex = {
-            -- completionEnabled = true,
-            -- additionalRules = {
-            --     enablePickyRules = true,
-            --     motherTongue = "it",
-            -- },
+            completionEnabled = true,
+            additionalRules = {
+                enablePickyRules = true,
+                motherTongue = "it",
+            },
             language = "en-US",
-            -- checkFrequency = "save",
+            checkFrequency = "save",
             -- dictionary = {
             --     ["en-US"] = read_spellfile("en.utf-8.add"),
             -- },

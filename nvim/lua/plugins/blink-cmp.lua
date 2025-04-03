@@ -9,6 +9,8 @@ local config = {
         ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
         ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+        ["<Up>"] = { function(cmp) return cmp.select_prev({ auto_insert = false }) end, "fallback" },
+        ["<Down>"] = { function(cmp) return cmp.select_next({ auto_insert = false }) end, "fallback" }
     },
     appearance = {
         nerd_font_variant = 'normal'
@@ -26,6 +28,7 @@ local config = {
                         end,
                     }
                 },
+
                 columns = {
                     { "kind_icon" }, { 'label', 'label_description', gap = 1 }, { "kind" }
                 },
@@ -49,7 +52,9 @@ local config = {
                     vim.api.nvim_feedkeys(t("<Up>"), "n", true)
                     return true
                 end
-            }
+            },
+            ["<Up>"] = { function(cmp) return cmp.select_prev({ auto_insert = false }) end, "fallback" },
+            ["<Down>"] = { function(cmp) return cmp.select_next({ auto_insert = false }) end, "fallback" }
         }
     },
     sources = {
@@ -60,6 +65,7 @@ local config = {
                 module = "blink-copilot",
                 score_offset = 0,
                 async = true,
+                opts = { kind_hl = "CmpItemKindCopilot" },
             },
         },
     },

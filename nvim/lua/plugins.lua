@@ -79,7 +79,7 @@ require("lazy").setup({
             }
         end,
     },
-    { "barreiroleo/ltex_extra.nvim" },
+    { "barreiroleo/ltex_extra.nvim", lazy = true },
     {
         "rest-nvim/rest.nvim",
         ft = "http",
@@ -214,7 +214,7 @@ require("lazy").setup({
 
     -- { "chrisbra/csv.vim", ft = "csv" },
 
-    { "jaredsampson/vim-pymol",     ft = "pml" },
+    { "jaredsampson/vim-pymol",      ft = "pml" },
 
     --{ "vim-pandoc/vim-pandoc" })
     --{ "vim-pandoc/vim-pandoc-syntax" })
