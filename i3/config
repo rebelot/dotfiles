@@ -359,13 +359,16 @@ set_from_resource $nontext nontext
 bar {
     position top
     status_command i3blocks
+    workspace_min_width 40
     tray_output primary
     # tray_padding 4
     colors {
             background $background
             separator $nontext
+            statusline $white
             #                         border          background      text
             focused_workspace       $black            $tablinesel     $white
+            active_workspace        $black            $tablinesel     $brightmagenta
             inactive_workspace      $black            $tabline        $brightmagenta
             urgent_workspace        $red              $red            $white
 

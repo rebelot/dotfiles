@@ -101,12 +101,12 @@ require("nvim-treesitter.configs").setup({
     },
     textsubjects = {
         enable = true,
-        keymaps = {
-            ["<C-CR>"] = "textsubjects-smart", -- works in visual mode
-            -- ['.'] = 'textsubjects-smart',
-            -- [';'] = 'textsubjects-container-outer',
-            -- ['i;'] = 'textsubjects-container-inner',
-        },
+        -- keymaps = {
+        --     -- ["<C-L>"] = "textsubjects-smart", -- works in visual mode
+        --     ['.'] = 'textsubjects-smart',
+        --     [';'] = 'textsubjects-container-outer',
+        --     ['i;'] = 'textsubjects-container-inner',
+        -- },
     },
     playground = {
         enable = true,

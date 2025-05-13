@@ -33,7 +33,7 @@ end
 local function change_python_interpreter(path)
     vim.g.PythonPath = path
 
-    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0, name = "pylance" })) do
+    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0, name = "basedpyright" })) do
         local config = client.config
         client:stop(true)
         vim.defer_fn(function()
@@ -42,55 +42,13 @@ local function change_python_interpreter(path)
     end
 end
 
--- client.server_capabilities.executeCommandProvider
-local commands = { "pyright.createtypestub", "pyright.organizeimports", "pyright.dumpFileDebugInfo",
-    "python.createTypeStub", "python.orderImports", "python.addOptionalForParam", "python.removeUnusedImport",
-    "python.addImport", "pylance.changeSpelling", "python.intellicode.completionItemSelected",
-    "python.intellicode.loadLanguageServerExtension", "pylance.extractMethod", "pylance.extractVariable",
-    "pylance.completionAccepted", "pylance.executedClientCommand", "pylance.moveSymbol", "pylance.getSourceFiles",
-    "pylance.getAutoImports", "pylance.convertImportFormat", "pylance.fixAll",
-    "pylance.pytest.a ddAllFixtureTypeAnnotations", "pylance.pytest.addFixtureTypeAnnotation",
-    "pylance.indexing.clearPersistedIndices", "pylance.profiling.start", "pylance.profiling.stop",
-    "pylance.logging.start", "pylance.logging.stop", "pylance.implementAllAbstractClasses",
-    "pylance.implementAllAbstractClassesWithCopil ot", "pylance.getAllDocstringRanges", "pylance.generateDocstring",
-    "pylance.fixupCopilotDocstringOutput", "pylance.server.runCurrentFileInSandbox", "pylance.implementUsingCopilot" }
-
-local function organize_imports(client)
-    local command = {
-        command = "pyright.organizeimports",
-        arguments = { vim.uri_from_bufnr(0) },
-    }
-    client:exec_cmd(command)
-end
-
----@param client vim.lsp.Client
-local function extract_variable(client)
-    local pos_params = vim.lsp.util.make_range_params(0, "utf-8")
-    local command = {
-        command = "pylance.extractVariable",
-        arguments = pos_params
-    }
-    client:exec_cmd(command)
-    -- vim.lsp.buf.rename()
-end
-
----@param client vim.lsp.Client
-local function extract_method(client)
-    local pos_params = vim.lsp.util.make_range_params(0, "utf-8")
-    local command = {
-        command = "pylance.extractMethod",
-        arguments = pos_params
-    }
-    client:exec_cmd(command)
-    -- vim.lsp.buf.rename()
-end
 
 ---@type vim.lsp.ClientConfig
 return {
-    name = "pylance",
+    name = "basedpyright",
     autostart = true,
     single_file_support = true,
-    cmd = { "delance-langserver", "--stdio" },
+    cmd = { "basedpyright-langserver", "--stdio" },
     filetypes = { "python" },
     root_markers = {
         "pyproject.toml",
@@ -116,27 +74,6 @@ return {
             change_python_interpreter(args.args)
             -- set_lsp_python_path(args.args)
         end, { nargs = 1, complete = get_python_interpreters, desc = "Change python interpreter" })
-
-        vim.api.nvim_buf_create_user_command(
-            bufnr,
-            "PylanceOrganizeImports",
-            function() organize_imports(client) end,
-            { desc = "Organize Imports" }
-        )
-
-        vim.api.nvim_buf_create_user_command(
-            bufnr,
-            "PylanceExtractVariable",
-            function() extract_variable(client) end,
-            { range = true, desc = "Extract variable" }
-        )
-
-        vim.api.nvim_buf_create_user_command(
-            bufnr,
-            "PylanceExtractMethod",
-            function() extract_method(client) end,
-            { range = true, desc = "Extract methdod" }
-        )
     end,
     settings = {
         python = {
@@ -144,13 +81,13 @@ return {
                 indexOptions = {
                     regenerateStdLibIndices = true,
                 },
-                indexing = true,
-                packageIndexDepths = {
-                    name = "",
-                    depth = 4,
-                    includeAllSymbols = true,
-                },
-                persistAllIndices = false,
+                -- indexing = true,
+                -- packageIndexDepths = {
+                --     name = "",
+                --     depth = 4,
+                --     includeAllSymbols = true,
+                -- },
+                -- persistAllIndices = false,
                 useLibraryCodeForTypes = true,
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",

@@ -26,6 +26,8 @@ vim.diagnostic.config({
         header = "",
     },
     virtual_text = true,
+    -- virtual_text = { current_line = false },
+    -- virtual_lines = { current_line = true },
     underline = true,
     update_in_insert = false,
     severity_sort = true,
@@ -34,6 +36,14 @@ vim.diagnostic.config({
 map("n", "<leader>lq", vim.diagnostic.setqflist, { desc = "Send diagnostics to quickfix" })
 
 vim.keymap.set('n', 'gL', function()
-    local new_config = not vim.diagnostic.config().virtual_lines
-    vim.diagnostic.config({ virtual_lines = new_config })
+    local virt_lines = not vim.diagnostic.config().virtual_lines
+    vim.diagnostic.config({ virtual_lines = virt_lines, virtual_text = not virt_lines })
+    -- if type(virt_lines) == 'table' then
+    --     vim.diagnostic.config({ virtual_lines = true, virtual_text = false })
+    -- else
+    --     vim.diagnostic.config({
+    --         virtual_text = { current_line = false },
+    --         virtual_lines = { current_line = true },
+    --     })
+    -- end
 end, { desc = 'Toggle diagnostic virtual_lines' })

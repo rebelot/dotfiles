@@ -1,6 +1,6 @@
 if [ -f "$HOME/.profile" ]; then
     . "$HOME/.profile"
 fi
-xmodmap .Xmodmap
+
+xmodmap $HOME/.Xmodmap
 xcape -e 'Control_L=Escape'
-# xrandr --dpi 120

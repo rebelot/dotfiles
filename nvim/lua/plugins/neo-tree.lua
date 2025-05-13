@@ -102,7 +102,7 @@ require("neo-tree").setup({
 
         mappings = {
             ["<Tab>"] = "toggle_node",
-            ["<Space>"] = "run_command",
+            ["!"] = "run_command",
             ["P"] = "focus_parent",
             ["<S-Tab>"] = "focus_parent",
             ["<C-s>"] = "split_with_window_picker",
@@ -161,7 +161,7 @@ require("neo-tree").setup({
             never_show = {},
             never_show_by_pattern = {},
         },
-        follow_current_file = true,
+        follow_current_file = { enabled = true },
         group_empty_dirs = true,
         hijack_netrw_behavior = "open_default",
         use_libuv_file_watcher = true,
@@ -251,7 +251,7 @@ require("neo-tree").setup({
         },
     },
     buffers = {
-        follow_current_file = true,
+        follow_current_file = {enabled = true},
         group_empty_dirs = true,
         show_unloaded = true,
         window = {

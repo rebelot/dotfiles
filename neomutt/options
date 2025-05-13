@@ -2,11 +2,13 @@
 
 # Where to put the stuff
 set header_cache = "~/.cache/mutt/headers"
-set message_cachedir = "~/.cache/mutt/bodies"
+set message_cache_dir = "~/.cache/mutt/bodies"
 set certificate_file = "~/.cache/mutt/certificates"
 
 set imap_qresync = yes
-# set imap_deflate = yes
+set imap_deflate = yes
+
+set read_inc = 100
 
 set mailcap_path = "~/.config/neomutt/mailcap"
 set editor = "$EDITOR"
@@ -70,7 +72,8 @@ alternative_order text/enriched text/plain text/html text/*
 
 # set index_format="%3C %Z %[!%m.%d.%y] %-19.19n %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
 # set index_format="%Z %3C %{%b %d} %-17.17n (%5c) %s"
-set index_format="%3C %Z %{%b %d} %-35.35n (%5c) %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
+# set index_format="%3C %Z %{%b %d} %-35.35n (%5c) %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
+set index_format="%3C %Z %{%b %d} %-35.35n %?M?(%02M)& ? %s%> %?y?[%Y]?"
 
 # Use GPGME
 # Use my key for signing and encrypting

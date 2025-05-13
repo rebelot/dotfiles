@@ -68,7 +68,7 @@ local filetypes = {
     'text',
 }
 local function get_language_id(_, filetype)
-  return language_id_mapping[filetype] or filetype
+    return language_id_mapping[filetype] or filetype
 end
 
 return {
@@ -115,7 +115,9 @@ return {
     --     })
     -- end,
     on_attach = function(client, bufnr)
-        require("ltex_extra").setup()
+        require("ltex_extra").setup({
+            load_langs = { "en-US", 'it' }
+        })
     end,
     settings = {
         ltex = {

@@ -202,6 +202,11 @@ local on_attach = function(client, bufnr)
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
     end
 
+    if client:supports_method('textDocument/documentColor') then
+        vim.lsp.document_color.enable(true, bufnr)
+        vim.notify("LSP: Document color enabled")
+    end
+
     vim.api.nvim_buf_create_user_command(bufnr, "LspSemanticHlStop", function(args)
         vim.lsp.semantic_tokens.stop(bufnr, args.args)
     end, { desc = "LSP: stop semantic tokens" })

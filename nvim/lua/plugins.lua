@@ -102,7 +102,7 @@ require("lazy").setup({
     {
         "j-hui/fidget.nvim",
         enabled = true,
-        event = "LspAttach",
+        event = { "BufRead", "BufNewFile" },
         opts = {
             notification = {
                 override_vim_notify = true,

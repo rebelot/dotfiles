@@ -53,7 +53,7 @@ o.smoothscroll = true
 -- o.scrolloff = 16 -- minimal number of lines above/below cursor (see autocommands)
 o.splitkeep = 'screen'
 o.conceallevel = 2 -- conceal marked text
-o.completeopt = "menuone,noinsert,noselect"
+o.completeopt = "menuone,noinsert,noselect,nearest"
 o.pumheight = 15   -- set menu max height
 o.maxmempattern = 5000
 
