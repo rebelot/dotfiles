@@ -1,11 +1,10 @@
-tags
-.DS_Store
 zsh/cache
-README.pdf
-nvim/plugin/packer_compiled.lua
 nvim/spell/
 kitty/kitty.conf.bak
 kitty/kitty.orig.conf
 kitty/current-theme.conf
 nvim/lazy-lock.json
-neomutt/accounts/*pass*
+neomutt/accounts/*pass*.gpg
+neomutt/accounts/*.token
+neomutt/.mailsynclastrun
+google_api

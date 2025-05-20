@@ -1,0 +1,7 @@
+[calendars]
+
+  [[work]]
+    type = calendar
+    path = ~/.local/share/calendar/unimi/calendar/
+    readonly = False
+    addresses = tommaso.laurenzi@unimi.it

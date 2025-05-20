@@ -1,6 +1,6 @@
 source mailboxes
 source options
 source keymaps
-source colors
+source styles
+# source styles.muttrc
 
-# macro index O "<shell-escape>offlineimap <enter>" "run offlineimap to sync all mail"

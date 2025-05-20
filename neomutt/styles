@@ -1,0 +1,133 @@
+# vim: set filetype=neomuttrc:
+
+set index_format="%2C %zs %zt %zc %9@date@ %-35.35n %?y?[%y] ?%?g?[%g] ?%?X?󰁦& ? %?M?(%M) ?%s"
+set status_format="%r %D  %<M?%M/>%m%<n? 󰎔 %n>%<u?  %u>%<R?  %R>%<o? Old:%o>%<d?  %d>%<F? 󰈽 %F>%<t?  %t>%<p?  %p>%<b? 󰶎 %b>%<l? %l>%> %<T?%s/%S&%T/%s> %5P"
+set pager_format="%Z %C/%m: %n %?y?[%y] ?%?g?[%g] ?%s %*  %{!%d %b %H:%M} %?X?󰁦 %X ?%P"
+set attach_format = "%u%D%I %t%4n 󰁦 %T%d%*  %s [%m/%M]"
+
+index-format-hook  date  "~d<1d"    "%[%a %H:%M]"
+# index-format-hook  date  "~d<1m"    "%[%a %d/%m]"
+index-format-hook  date  "~d<1y"    "%[%a %d/%m]"
+index-format-hook  date  "~A"       "%[%d/%m/%y]"
+
+set hidden_tags = "inbox,unread,draft,flagged,passed,replied,attachment,signed,encrypted"
+set to_chars=" "
+set flag_chars = "󰈽󱫅󰎔󰎔 "
+set crypt_chars = " "
+set status_chars = "󱧄"
+
+# The currently defined objects are: attach_headers,  attachment,  body,  bold,
+# error, hdrdefault,  header,  index,  index_author,  index_collapsed,
+# index_date, index_flags, index_label, index_number, index_size,
+# index_subject, index_tag, index_tags, indicator, markers, message, normal,
+# progress, prompt, quoted, quotedN, search, signature, status, stripe_even,
+# stripe_odd, tilde, tree, underline. sidebar_background, sidebar_divider,
+# sidebar_flagged, sidebar_highlight, sidebar_indicator, sidebar_new,
+# sidebar_ordinary, sidebar_spool_file compose_header,
+# compose_security_encrypt, compose_security_sign, compose_security_both,
+# compose_security_none
+
+# Default index colors:
+color index yellow default
+color index_collapsed brightblue default
+color index_label brightgreen default
+color index_flags magenta default
+color index_flags brightgreen default "~N"
+color index_flags brightred default "~D"
+color index_author cyan default
+color index_subject white default
+color index_number blue default
+
+# New mail is boldened:
+color index brightyellow default "~N"
+color index_author brightcyan default "~N"
+color index_subject brightwhite default "~N"
+
+# Tagged mail is highlighted:
+color index brightyellow brightblack "~T"
+color index_author brightcyan brightblack "~T"
+color index_subject brightwhite brightblack "~T"
+
+# Flagged mail is highlighted:
+color index brightgreen default "~F"
+color index_subject brightgreen default "~F"
+color index_author brightgreen default "~F"
+
+# Other colors and aesthetic settings:
+mono bold bold
+mono underline underline
+mono indicator reverse
+mono error bold
+
+color normal default default
+color indicator brightblack white
+color tree red default
+
+color sidebar_background white black
+color sidebar_divider black black
+color sidebar_flagged default default
+color sidebar_new blue default
+color sidebar_highlight brightblack brightblack
+color sidebar_indicator brightblack white
+color sidebar_spool_file brightblack red
+
+color error red default
+color tilde black default
+color message cyan default
+color markers red white
+color search brightblack brightyellow
+
+color status lightyellow black
+color status magenta default '[]'
+color status blue default '[]'
+color status cyan default ' [0-9]{1,2} [A-Za-z]+ [0-9]{2}:[0-9]{2}'
+color status red default ' [0-9]+'
+color status red default '󱫅'
+color status blue default "󰎔|([󰶎󰎔] [0-9]+)"
+color status green default '󰈽 [0-9]+'
+color status cyan default ' [0-9]+'
+color status green default ''
+color status red default '[󱧄]'
+color status brightcyan default '([A-Za-z ]*) ' 1
+
+color attachment white default
+
+color quoted green default
+color quoted1 blue default
+color quoted2 cyan default
+color quoted3 yellow default
+color quoted4 red default
+color quoted5 magenta default
+color signature brightgreen default
+color bold black default
+color underline black default
+
+# Message headers
+set header_color_partial
+color hdrdefault default default
+color header cyan default "^From:.*$"
+color header magenta default "^To:.*$"
+color header white default "^(CC|BCC):.*$"
+color header yellow default "^Date:.*$"
+color header brightwhite default "^Subject:.*$"
+color header brightblue default "^X-Label:.*$"
+
+color body brightcyan default "[\-\.+_a-zA-Z0-9]+@[\-\.a-zA-Z0-9]+" # Email addresses
+color body brightblue default "(https?|ftp)://[\-\.,/%~_:?&=\#a-zA-Z0-9]+" # URL
+color body green default "\`[^\`]*\`" # Green text between ` and `
+color body brightblue default "^# \.*" # Headings as bold blue
+color body brightcyan default "^## \.*" # Subheadings as bold cyan
+color body brightgreen default "^### \.*" # Subsubheadings as bold green
+color body yellow default "^(\t| )*(-|\\*) \.*" # List items as yellow
+color body brightcyan default "[;:][-o][)/(|]" # emoticons
+color body brightcyan default "[;:][)(|]" # emoticons
+color body brightcyan default "[ ][*][^*]*[*][ ]?" # more emoticon?
+color body brightcyan default "[ ]?[*][^*]*[*][ ]" # more emoticon?
+color body red default "(BAD signature)"
+color body cyan default "(Good signature)"
+color body brightblack default "^gpg: Good signature .*"
+color body brightyellow default "^gpg: "
+color body brightyellow red "^gpg: BAD signature from.*"
+mono body bold "^gpg: Good signature"
+mono body bold "^gpg: BAD signature from.*"
+color body red default "([a-z][a-z0-9+-]*://(((([a-z0-9_.!~*'();:&=+$,-]|%[0-9a-f][0-9a-f])*@)?((([a-z0-9]([a-z0-9-]*[a-z0-9])?)\\.)*([a-z]([a-z0-9-]*[a-z0-9])?)\\.?|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)(:[0-9]+)?)|([a-z0-9_.!~*'()$,;:@&=+-]|%[0-9a-f][0-9a-f])+)(/([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*(;([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*)*(/([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*(;([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*)*)*)?(\\?([a-z0-9_.!~*'();/?:@&=+$,-]|%[0-9a-f][0-9a-f])*)?(#([a-z0-9_.!~*'();/?:@&=+$,-]|%[0-9a-f][0-9a-f])*)?|(www|ftp)\\.(([a-z0-9]([a-z0-9-]*[a-z0-9])?)\\.)*([a-z]([a-z0-9-]*[a-z0-9])?)\\.?(:[0-9]+)?(/([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*(;([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*)*(/([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*(;([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*)*)*)?(\\?([-a-z0-9_.!~*'();/?:@&=+$,]|%[0-9a-f][0-9a-f])*)?(#([-a-z0-9_.!~*'();/?:@&=+$,]|%[0-9a-f][0-9a-f])*)?)[^].,:;!)? \t\r\n<>\"]"

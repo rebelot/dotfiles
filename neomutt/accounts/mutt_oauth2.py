@@ -26,6 +26,7 @@ import json
 import argparse
 import urllib.parse
 import urllib.request
+import urllib.error
 import imaplib
 import poplib
 import smtplib
@@ -35,17 +36,16 @@ import hashlib
 import time
 from datetime import timedelta, datetime
 from pathlib import Path
+import shlex
 import socket
 import http.server
 import subprocess
-import readline
 
 # The token file must be encrypted because it contains multi-use bearer tokens
 # whose usage does not require additional verification. Specify whichever
 # encryption and decryption pipes you prefer. They should read from standard
-# input and write to standard output. The example values here invoke GPG,
-# although won't work until an appropriate identity appears in the first line.
-ENCRYPTION_PIPE = ['gpg', '--encrypt', '--recipient', 'YOUR_GPG_IDENTITY']
+# input and write to standard output. The example values here invoke GPG.
+ENCRYPTION_PIPE = ['gpg', '--encrypt', '--default-recipient-self']
 DECRYPTION_PIPE = ['gpg', '--decrypt']
 
 registrations = {
@@ -59,14 +59,13 @@ registrations = {
         'smtp_endpoint': 'smtp.gmail.com',
         'sasl_method': 'OAUTHBEARER',
         'scope': 'https://mail.google.com/',
-        'client_id': '',
-        'client_secret': '',
     },
     'microsoft': {
         'authorize_endpoint': 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
         'devicecode_endpoint': 'https://login.microsoftonline.com/common/oauth2/v2.0/devicecode',
         'token_endpoint': 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-        'redirect_uri': 'https://login.microsoftonline.com/common/oauth2/nativeclient',
+        # 'redirect_uri': 'https://login.microsoftonline.com/common/oauth2/nativeclient',
+        'redirect_uri': 'https://localhost',
         'tenant': 'common',
         'imap_endpoint': 'outlook.office365.com',
         'pop_endpoint': 'outlook.office365.com',
@@ -75,25 +74,48 @@ registrations = {
         'scope': ('offline_access https://outlook.office.com/IMAP.AccessAsUser.All '
                   'https://outlook.office.com/POP.AccessAsUser.All '
                   'https://outlook.office.com/SMTP.Send'),
-        'client_id': '',
-        'client_secret': '',
     },
 }
 
 ap = argparse.ArgumentParser(epilog='''
 This script obtains and prints a valid OAuth2 access token.  State is maintained in an
-encrypted TOKENFILE.  Run with "--verbose --authorize" to get started or whenever all
-tokens have expired, optionally with "--authflow" to override the default authorization
-flow.  To truly start over from scratch, first delete TOKENFILE.  Use "--verbose --test"
-to test the IMAP/POP/SMTP endpoints.
+encrypted TOKENFILE.  Run with "--verbose --authorize --encryption-pipe 'foo@bar.org'"
+to get started or whenever all tokens have expired, optionally with "--authflow" to override
+the default authorization flow.  To truly start over from scratch, first delete TOKENFILE.
+Use "--verbose --test" to test the IMAP/POP/SMTP endpoints.
 ''')
 ap.add_argument('-v', '--verbose', action='store_true', help='increase verbosity')
 ap.add_argument('-d', '--debug', action='store_true', help='enable debug output')
 ap.add_argument('tokenfile', help='persistent token storage')
 ap.add_argument('-a', '--authorize', action='store_true', help='manually authorize new tokens')
 ap.add_argument('--authflow', help='authcode | localhostauthcode | devicecode')
+ap.add_argument('--format', type=str, choices=['token', 'sasl', 'msasl'], default='token',
+                help='''output format:
+    token - plain access token (default);
+    sasl - base64 encoded SASL token string for the specified protocol [--protocol] and user [--email];
+    msasl - like sasl, preceeded with the SASL method''')
+ap.add_argument('--protocol', type=str, choices=['imap', 'pop', 'smtp'], default='imap',
+                help='protocol used for SASL output (default: imap)')
 ap.add_argument('-t', '--test', action='store_true', help='test IMAP/POP/SMTP endpoints')
+ap.add_argument('--decryption-pipe', type=shlex.split, default=DECRYPTION_PIPE,
+                help='decryption command (string), reads from stdin and writes '
+                'to stdout, default: "{}"'.format(
+                    " ".join(DECRYPTION_PIPE)))
+ap.add_argument('--encryption-pipe', type=shlex.split, default=ENCRYPTION_PIPE,
+                help='encryption command (string), reads from stdin and writes '
+                'to stdout, suggested: "{}"'.format(
+                    " ".join(ENCRYPTION_PIPE)))
+ap.add_argument('--client-id', type=str, default='',
+                help='Provider id from registration')
+ap.add_argument('--client-secret', type=str, default='',
+                help='(optional) Provider secret from registration')
+ap.add_argument('--provider', type=str, choices=registrations.keys(),
+                help='Specify provider to use.')
+ap.add_argument('--email', type=str, help='Your email address.')
 args = ap.parse_args()
+
+ENCRYPTION_PIPE = args.encryption_pipe
+DECRYPTION_PIPE = args.decryption_pipe
 
 token = {}
 path = Path(args.tokenfile)
@@ -126,14 +148,21 @@ if args.debug:
 if not token:
     if not args.authorize:
         sys.exit('You must run script with "--authorize" at least once.')
-    print('Available app and endpoint registrations:', *registrations)
-    token['registration'] = input('OAuth2 registration: ')
-    token['authflow'] = input('Preferred OAuth2 flow ("authcode" or "localhostauthcode" '
-                              'or "devicecode"): ')
-    token['email'] = input('Account e-mail address: ')
+    if not ENCRYPTION_PIPE:
+        sys.exit("You need to provide a suitable --encryption-pipe setting")
+    print('', )
+    token['registration'] = args.provider or input(
+        'Available app and endpoint registrations: {regs}\nOAuth2 registration: '.format(
+            regs=', '.join(registrations.keys())))
+    token['authflow'] = args.authflow or input(
+        'Preferred OAuth2 flow ("authcode" or "localhostauthcode" or "devicecode"): '
+    )
+    token['email'] = args.email or input('Account e-mail address: ')
     token['access_token'] = ''
     token['access_token_expiration'] = ''
     token['refresh_token'] = ''
+    token['client_id'] = args.client_id or input('Client ID: ')
+    token['client_secret'] = args.client_secret or input('Client secret: ')
     writetokenfile()
 
 if token['registration'] not in registrations:
@@ -145,7 +174,7 @@ authflow = token['authflow']
 if args.authflow:
     authflow = args.authflow
 
-baseparams = {'client_id': registration['client_id']}
+baseparams = {'client_id': token['client_id']}
 # Microsoft uses 'tenant' but Google does not
 if 'tenant' in registration:
     baseparams['tenant'] = registration['tenant']
@@ -222,7 +251,7 @@ if args.authorize:
                     if 'code' in querydict:
                         authcode = querydict['code'][0]
                     self.do_HEAD()
-                    self.wfile.write(b'<html><head><title>Authorizaton result</title></head>')
+                    self.wfile.write(b'<html><head><title>Authorization result</title></head>')
                     self.wfile.write(b'<body><p>Authorization redirect completed. You may '
                                      b'close this window.</p></body></html>')
             with http.server.HTTPServer(('127.0.0.1', listen_port), MyHandler) as httpd:
@@ -238,7 +267,7 @@ if args.authorize:
             del p[k]
         p.update({'grant_type': 'authorization_code',
                   'code': authcode,
-                  'client_secret': registration['client_secret'],
+                  'client_secret': token['client_secret'],
                   'code_verifier': verifier})
         print('Exchanging the authorization code for an access token')
         try:
@@ -276,7 +305,7 @@ if args.authorize:
         print(response['message'])
         del p['scope']
         p.update({'grant_type': 'urn:ietf:params:oauth:grant-type:device_code',
-                  'client_secret': registration['client_secret'],
+                  'client_secret': token['client_secret'],
                   'device_code': response['device_code']})
         interval = int(response['interval'])
         print('Polling...', end='', flush=True)
@@ -322,7 +351,8 @@ if not access_token_valid():
     if not token['refresh_token']:
         sys.exit('ERROR: No refresh token. Run script with "--authorize".')
     p = baseparams.copy()
-    p.update({'client_secret': registration['client_secret'],
+    p.update({'client_id': token['client_id'],
+              'client_secret': token['client_secret'],
               'refresh_token': token['refresh_token'],
               'grant_type': 'refresh_token'})
     try:
@@ -348,13 +378,20 @@ if not access_token_valid():
     sys.exit('ERROR: No valid access token. This should not be able to happen.')
 
 
-if args.verbose:
-    print('Access Token: ', end='')
-print(token['access_token'])
+def build_sasl_string(protocol, user=None):
+    '''Build appropriate SASL string, which depends on cloud server's supported SASL method and used protocol.'''
+    user = user or token['email']
+    bearer_token = token['access_token']
+    if protocol == 'imap':
+        host, port = registration['imap_endpoint'], 993
+    elif protocol == 'pop':
+        host, port = registration['pop_endpoint'], 995
+    elif protocol == 'smtp':
+        # SMTP_SSL would be simpler but Microsoft does not answer on port 465.
+        host, port = registration['smtp_endpoint'], 587
+    else:
+        sys.exit(f'Unknown protocol {protocol}')
 
-
-def build_sasl_string(user, host, port, bearer_token):
-    '''Build appropriate SASL string, which depends on cloud server's supported SASL method.'''
     if registration['sasl_method'] == 'OAUTHBEARER':
         return f'n,a={user},\1host={host}\1port={port}\1auth=Bearer {bearer_token}\1\1'
     if registration['sasl_method'] == 'XOAUTH2':
@@ -362,12 +399,25 @@ def build_sasl_string(user, host, port, bearer_token):
     sys.exit(f'Unknown SASL method {registration["sasl_method"]}.')
 
 
+if args.format == 'msasl':
+    if args.verbose:
+        print('SASL Method and String: ', end='')
+    print(registration['sasl_method'], base64.standard_b64encode(build_sasl_string(args.protocol, args.email).encode()).decode())
+elif args.format == 'sasl':
+    if args.verbose:
+        print('SASL String: ', end='')
+    print(base64.standard_b64encode(build_sasl_string(args.protocol, args.email).encode()).decode())
+else:
+    if args.verbose:
+        print('Access Token: ', end='')
+    print(token['access_token'])
+
+
 if args.test:
     errors = False
 
     imap_conn = imaplib.IMAP4_SSL(registration['imap_endpoint'])
-    sasl_string = build_sasl_string(token['email'], registration['imap_endpoint'], 993,
-                                    token['access_token'])
+    sasl_string = build_sasl_string('imap')
     if args.debug:
         imap_conn.debug = 4
     try:
@@ -384,8 +434,7 @@ if args.test:
         errors = True
 
     pop_conn = poplib.POP3_SSL(registration['pop_endpoint'])
-    sasl_string = build_sasl_string(token['email'], registration['pop_endpoint'], 995,
-                                    token['access_token'])
+    sasl_string = build_sasl_string('pop')
     if args.debug:
         pop_conn.set_debuglevel(2)
     try:
@@ -400,10 +449,8 @@ if args.test:
         print('POP authentication FAILED (does your account allow POP?):', e.args[0].decode())
         errors = True
 
-    # SMTP_SSL would be simpler but Microsoft does not answer on port 465.
     smtp_conn = smtplib.SMTP(registration['smtp_endpoint'], 587)
-    sasl_string = build_sasl_string(token['email'], registration['smtp_endpoint'], 587,
-                                    token['access_token'])
+    sasl_string = build_sasl_string('smtp')
     smtp_conn.ehlo('test')
     smtp_conn.starttls()
     smtp_conn.ehlo('test')

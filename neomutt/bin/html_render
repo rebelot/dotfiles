@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# render html as markdown and display in glow, supports syntax highlighting
+# requires: html2text, glow
+# author: CEUK
+
+perl -0777pe 's/(<code class="sourceCode\s?)(\w+?)(">)(.*?)(<\/code>)/\1\2\3\n```\2\n\4\n```\n\5/gs' "$1" | html2text | sed -re 's/^\s+(```(\w+)?)/\1/gm' > /tmp/mutt.md
+glow  /tmp/mutt.md | sed 's/\x1b\[[6-9;]*m//g'

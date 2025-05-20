@@ -1,25 +1,45 @@
 # vim: set filetype=neomuttrc:
 
-macro index A \
-    "<tag-pattern>~N<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" \
-    "mark all new as read"
+set abort_key = "<Esc>"
+macro index,pager,attach,editor,compose <F5> <sync-mailbox><check-stats>
+
+macro index O "<shell-escape>~/.config/neomutt/bin/mailsync > /dev/null 2>&1 &<enter>" "Sync all mail"
+macro index \C= "<shell-escape>read -p 'Enter a search term to find with notmuch: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;s/\^id:// for@a;$,=\"|\";print@a' | perl -le '@a=<>; chomp@a; s/\\+/\\\\+/ for@a;print@a' \`\"<enter>" "show only messages matching a notmuch pattern"
+macro index x "<limit>all\n" "show all messages (undo limit)"
+macro index A "<tag-pattern>~N<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all new as read"
+macro pager U '<pipe-message>urlscan -d -w 80<enter>' "call urlscan to open links"
+macro attach,compose U "<pipe-entry> urlscan -d -w 80<Enter>" "call urlscan to extract URLs out of a message"
+
+bind index \Cv vfolder-from-query
 
 
 # open attachments with mailcap with <return>
 bind attach <return> view-mailcap             
 # save attachments to a folder
-macro attach s '<save-entry> <bol>~/Downloads<eol>' 'save attachment'
+# macro attach s '<save-entry><bol>~/Downloads<eol>' 'save attachment'
+macro attach s '<save-entry><kill-line>~/Downloads/<enter>a' "Save file to ~/Downloads"
 
+bind index,pager                + entire-thread
+bind index,pager                \` modify-labels
+macro index,pager               S <sync-mailbox><check-stats>
+bind index,pager                H view-raw-message
 bind index,pager                \CP sidebar-prev
 bind index,pager                \CN sidebar-next
 bind index,pager                \CO sidebar-open
 bind index,pager                \CB sidebar-toggle-visible
 
-# bind editor                     <Tab> complete-query
 bind editor                     ^T  complete
 bind editor                     <tab>   complete-query
 bind editor                     <space> noop
 bind attach                     <space> view-mailcap
+
+bind index,pager i noop
+bind index,pager,attach,browser,query,alias,compose q exit
+bind index t tag-entry
+bind index T tag-thread
+bind index * tag-pattern
+bind index u undelete-message
+bind index U undelete-thread
 
 #------------------------------------------------------------
 # Vi Key Bindings
@@ -33,6 +53,8 @@ bind pager                      gg  top
 bind pager                      G   bottom
 bind pager                      k   previous-line
 bind pager                      j   next-line
+bind pager                      <up> previous-line		# Mouse wheel
+bind pager                      <down> next-line		# Mouse wheel
 bind index                      j   next-entry
 bind index                      k   previous-entry
 bind attach,pager               J   next-entry
@@ -48,8 +70,10 @@ bind browser,pager              \Cy previous-line
 bind index                      \Ce next-line
 bind index                      \Cy previous-line
 
+# Delete
 bind index,pager                d   noop
 bind pager,index                dd  delete-message
+bind pager,index                dt  delete-thread
 
 # Mail & Reply
 bind index,pager                r   noop
@@ -63,8 +87,12 @@ bind pager,index                dT  delete-thread
 bind pager,index                dt  delete-subthread
 bind pager,index                gt  next-thread
 bind pager,index                gT  previous-thread
+bind index                      z noop
 bind index                      za  collapse-thread
 bind index                      zA  collapse-all # Missing :folddisable/foldenable
+bind index                      zz current-middle
+bind index                      zt current-top
+bind index                      zb current-bottom
 
 # Refreshing
-bind index                      \Cl imap-fetch-mail
+# bind index                      \Cl imap-fetch-mail

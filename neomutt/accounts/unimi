@@ -1,26 +1,25 @@
-# vim: set filetype=neomuttrc:
+# vim: set filetype=neomuttrc list:
 
 set from = "tommaso.laurenzi@unimi.it"
-set realname = "Tommaso Laurenzi"
+set real_name = "Tommaso Laurenzi"
 
-set imap_user = "tommaso.laurenzi@unimi.it"
+set imap_user = $from
 set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/unimi_pass.gpg 2>/dev/null`"
 set imap_check_subscribed = no
 
-set smtp_url = "smtp://$imap_user@localhost:1025"
+set smtp_user = $imap_user
+set smtp_url = "smtp://tommaso.laurenzi@unimi.it@localhost:1025"
 set smtp_authenticators = "login"
 set smtp_pass = $imap_pass
 
 set ssl_starttls = no
 set ssl_force_tls = no
 
-set hostname = "unimi.it"
-set folder="imap://localhost:1143/"
-set spoolfile = "+INBOX"
+set query_command = "~/.config/neomutt/bin/ldap_contacts '%s'"
+
+set folder = ~/.local/share/mail/unimi
+set spool_file = "UNIMI Inbox"
 set postponed = "+Drafts"
 set record = "+Sent"
-
-unmailboxes *
-mailboxes $spoolfile =Sent =Drafts =Indaco =DISCCO =Junk =Trash
-color status     black    cyan
+set trash = "+Trash"
 

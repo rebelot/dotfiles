@@ -4,9 +4,37 @@ macro index <f2> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts
 macro index <f3> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/gmail<enter><change-folder>!<enter>'
 macro index <f4> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/msn<enter><change-folder>!<enter>'
 
-# folder-hook 'gmail' 'source accounts/gmail'
-# folder-hook 'unimi' 'source accounts/unimi'
-
 source accounts/gmail
-# source accounts/unimi
-# source accounts/msn
+folder-hook ($folder|gmail) 'source ~/.config/neomutt/accounts/gmail'
+virtual-mailboxes "GMAIL Inbox" "notmuch://?query=tag:inbox and path:gmail/INBOX/** &type=threads"
+named-mailboxes "  Sent Mail" '+[Gmail].Sent Mail' \
+                "  Drafts" '+[Gmail].Drafts' \
+                "  Spam" '+[Gmail].Spam' \
+                "  Trash" '+[Gmail].Trash' \
+                "  Notes" '+Notes'
+
+source accounts/msn
+folder-hook ($folder|msn) 'source ~/.config/neomutt/accounts/msn'
+virtual-mailboxes "MSN Inbox" "notmuch://?query=tag:inbox and path:msn/INBOX/** &type=threads"
+named-mailboxes "  Sent" '+Sent' \
+                "  Outbox" '+Outbox' \
+                "  Drafts" '+Drafts' \
+                "  Deleted" '+Deleted' \
+                "  Archive" '+Archive' \
+                "  Notes" '+Notes' \
+                "  Junk" '+Junk'
+
+source accounts/unimi
+folder-hook ($folder|unimi) 'source ~/.config/neomutt/accounts/unimi'
+virtual-mailboxes "UNIMI Inbox" "notmuch://?query=tag:inbox and path:unimi/INBOX/** &type=threads"
+named-mailboxes "  Sent" '+Sent' \
+                "  Drafts" '+Drafts' \
+                "  Indaco" '+Indaco' \
+                "  DISCCO" '+DISCCO' \
+                "  Junk" '+Junk' \
+                "  Trash" '+Trash'
+
+virtual-mailboxes \
+        "Unread"    "notmuch://?query=tag:unread"\
+        "Flagged"   "notmuch://?query=tag:flagged"\
+        "Sent"      "notmuch://?query=folder:/Sent.*/"  

@@ -1,0 +1,242 @@
+#!/usr/bin/env python3
+
+import datetime
+import os
+import re
+import sys
+
+import icalendar  # https://pypi.python.org/pypi/icalendar
+import pytz       # https://pypi.python.org/pypi/pytz
+import tzlocal    # https://pypi.python.org/pypi/tzlocal
+
+TIME_FORMAT = '%-I:%M %P'
+DATE_FORMAT = '%A, %B %-d, %Y'
+DATETIME_FORMAT = "%s %s" % (DATE_FORMAT , TIME_FORMAT)
+
+FREQ_UNITS = {
+    'SECONDLY': 'second',
+    'MINUTELY': 'minute',
+    'HOURLY': 'hour',
+    'DAILY': 'day',
+    'WEEKLY': 'week',
+    'MONTHLY': 'month',
+    'YEARLY': 'year',
+}
+
+# Get local timezone.  Use TZ environment variable if present, otherwise use
+# the tzlocal module to figure it out.
+if 'TZ' in os.environ:
+    tz = pytz.timezone(os.environ['TZ'])
+else:
+    tz = tzlocal.get_localzone()
+
+
+def get_dtend(event):
+    if 'DTEND' in event:
+        return event['DTEND'].dt
+    else:
+        return None
+
+def localize(dt):
+    """Take a datetime in an arbitrary timezone and return it in the local
+    timezone."""
+    global tz
+    if dt.tzinfo:
+        return dt.astimezone(tz)
+    else:
+        return tz.localize(dt)
+
+def format_time(dt):
+    dtlocal = localize(dt)
+    fmt = dtlocal.strftime(TIME_FORMAT)
+    if fmt == '12:00 pm':
+        return 'noon'
+    elif fmt == '12:00 am':
+        return 'midnight'
+    else:
+        return fmt
+
+def format_date(dt):
+    if isinstance(dt, datetime.datetime):
+        dtlocal = localize(dt)
+    else:
+        dtlocal = dt
+    return dtlocal.strftime(DATE_FORMAT)
+
+def format_datetime(dt):
+    dtlocal = localize(dt)
+    return dtlocal.strftime(DATETIME_FORMAT)
+
+def format_person(person):
+    if 'ROLE' in person.params:
+        role = person.params['ROLE']
+        if role == 'CHAIR':
+            status_tpl = '{%s} '
+        elif role == 'REQ-PARTICIPANT':
+            status_tpl = '[%s] '
+        elif role == 'OPT-PARTICIPANT':
+            status_tpl = '<%s> '
+        elif role == 'NON-PARTICIPANT':
+            status_tpl = '(%s) '
+        else:
+            status_tpl = '?%s? '
+    else:
+        status_tpl = '_%s_ '
+    if 'PARTSTAT' in person.params:
+        status = person.params['PARTSTAT']
+        if status == 'NEEDS-ACTION':
+            display_status = status_tpl % ' '
+        elif status == 'ACCEPTED':
+            display_status = status_tpl % 'Y'
+        elif status == 'DECLINED':
+            display_status = status_tpl % '-'
+        elif status == 'TENTATIVE':
+            display_status = status_tpl % '~'
+        else:
+            display_status = status_tpl % '?'
+    else:
+        display_status = ''
+
+    email_address = re.sub('mailto:', '', person, flags=re.I)
+    if 'CN' in person.params:
+        # Sometimes programs will reuse the person's email address as the CN if
+        # they don't have a better value to use.  We'll strip that out, since
+        # it's kind of redundant.  The regex is nessary to catch cases where the
+        # email address is placed within quotes.
+        if re.search('^[\'"]?%s[\'"]?$' % re.escape(email_address), person.params['CN']):
+            display_name = email_address
+        else:
+            display_name = '%s <%s>' % (person.params['CN'], email_address)
+    else:
+        display_name = email_address
+    return display_status + display_name
+
+
+cal = icalendar.Calendar.from_ical(sys.stdin.read())
+if 'METHOD' in cal:
+    if cal['METHOD'] == 'PUBLISH':
+        print('=== Publication ===')
+    elif cal['METHOD'] == 'REQUEST':
+        print('=== Reply Requested ===')
+    elif cal['METHOD'] == 'REPLY':
+        print('=== Response to Earlier Request ===')
+    elif cal['METHOD'] == 'ADD':
+        print('=== Request to Add a Calendar Entry ===')
+    elif cal['METHOD'] == 'CANCEL':
+        print('=== Cancellation ===')
+    elif cal['METHOD'] == 'REFRESH':
+        print('=== Request for Updated Information ===')
+    elif cal['METHOD'] == 'COUNTER':
+        print('=== Response to Earlier Request with Changes ===')
+    elif cal['METHOD'] == 'DECLINECOUNTER':
+        print('=== Denial of Request for Changes to Earlier Proposal ===')
+    print()
+
+for event in cal.subcomponents:
+    if event.name == 'VEVENT':
+        if 'CLASS' in event and event['CLASS'] != 'PUBLIC':
+            print("Classification: %s" % event['CLASS'])
+        if 'STATUS' in event and event['STATUS'] != 'CONFIRMED':
+            print("Status:    %s" % event['STATUS'])
+        if 'ORGANIZER' in event:
+            print("Organizer: %s" % format_person(event['ORGANIZER']))
+        if 'SUMMARY' in event:
+            print("Event:     %s" % event['SUMMARY'])
+        elif 'UID' in event:
+            print('UID:       %s' % event['UID'])
+
+        if 'DTSTART' in event:
+            dtstart = event['DTSTART'].dt
+            dtend = get_dtend(event)
+            if isinstance(dtstart, datetime.datetime):
+                # We have time information.
+                if dtend:
+                    # We have an end date and time.
+                    if dtstart.date() == dtend.date():
+                        # Start end end times are on the same day.
+                        # This is a common occurence, so let's format things in a
+                        # friendly way.
+                        print("Date:      %s" % format_date(dtstart))
+                        print("Starts:    %s" % format_time(dtstart))
+                        print("Ends:      %s" % format_time(dtend))
+                    else:
+                        # Start and end times are on different days.
+                        print("Starts:    %s" % format_datetime(dtstart))
+                        print("Ends:      %s" % format_datetime(dtend))
+                else:
+                    # No end date/time.
+                    print("Starts:    %s" % format_datetime(dtstart))
+            else:
+                # We have no time information.
+                if dtend and dtstart != dtend:
+                    # There's an end date and it's different from the start date.
+                    print("Starts:    %s" % format_date(dtstart))
+                    print("Ends:      %s" % format_date(dtend))
+                else:
+                    # Either starts and ends on the same day or there's no end date.
+                    print("Date:      %s" % format_date(dtstart))
+
+        if 'RRULE' in event:
+            rrule = event['RRULE']
+            interval = ""
+            freq = ""
+            count = ""
+            until = ""
+
+            if 'INTERVAL' in rrule:
+                try:
+                    interval_num = int(rrule['INTERVAL'][0])
+                    if interval_num == 1:
+                        interval = ''
+                    elif interval_num == 2:
+                        interval = 'other '
+                    elif interval_num // 10 % 10 == 1:
+                        interval = '%dth ' % interval_num
+                    elif interval_num % 10 == 2:
+                        interval = '%dnd ' % interval_num
+                    elif interval_num % 10 == 3:
+                        interval = '%drd ' % interval_num
+                    else:
+                        interval = '%dth ' % interval_num
+                except ValueError:
+                    interval = rrule['INTERVAL'][0]
+            if 'FREQ' in rrule:
+                if rrule['FREQ'][0] in FREQ_UNITS:
+                    freq_unit = FREQ_UNITS[rrule['FREQ'][0]]
+                    freq = 'Every %s%s' % (interval, freq_unit)
+                else:
+                    freq_unit = rrule['FREQ'][0][:-2].lower()
+                    freq = '%s, with an interval of %s' % (rrule['FREQ'][0], rrule['INTERVAL'])
+            else:
+                freq_unit = 'interval'
+                freq = 'Every <unknown interval>'
+            if 'COUNT' in rrule:
+                count = 'for %s %s' % (rrule['COUNT'][0], freq_unit + 's')
+            if 'UNTIL' in rrule:
+                if isinstance(rrule['UNTIL'][0], datetime.datetime):
+                    until = "until %s" % format_datetime(rrule['UNTIL'][0])
+                else:
+                    until = "until %s" % format_date(rrule['UNTIL'][0])
+
+            params = [x for x in [freq, count, until] if (x and len(x) > 0)]
+            print("Recurs:    %s" % ' '.join(params))
+
+        if 'URL' in event:
+            print("URL:       %s" % event['URL'])
+        if 'LOCATION' in event:
+            print("Location:  %s" % event['LOCATION'])
+        if 'CONTACT' in event:
+            print("Contact:   %s" % event['CONTACT'])
+        if 'ATTENDEE' in event:
+            if isinstance(event['ATTENDEE'], list):
+                print("Attendees: %s" % format_person(event['ATTENDEE'][0]))
+                for attendee in event['ATTENDEE'][1:]:
+                    print("           %s" % format_person(attendee))
+            else:
+                print("Attendee:  %s" % format_person(event['ATTENDEE']))
+        if 'DESCRIPTION' in event:
+            print("Description:")
+            # If the encode() call isn't there, print() will choke on anything that
+            # isn't ASCII.
+            print(event['DESCRIPTION'])
+        print()

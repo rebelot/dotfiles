@@ -1,107 +1,99 @@
 # vim: set filetype=neomuttrc:
 
-# Where to put the stuff
-set header_cache = "~/.cache/mutt/headers"
-set message_cache_dir = "~/.cache/mutt/bodies"
-set certificate_file = "~/.cache/mutt/certificates"
+# set query_command = "abook --mutt-query '%s'"
 
-set imap_qresync = yes
-set imap_deflate = yes
-
-set read_inc = 100
-
-set mailcap_path = "~/.config/neomutt/mailcap"
-set editor = "$EDITOR"
-
-# settings
-set pager_index_lines = 8          
-set pager_context = 5                # show 3 lines of context
-set pager_stop                       # stop at end of message
-set menu_scroll                      # scroll menu
+### Pager
+set pager_index_lines = 8
+set pager_context = 5
+set pager_stop
 set smart_wrap
-set tilde                            # use ~ to pad mutt
-set move=no                          # don't move messages when marking as read
-set mail_check = 30                  # check for new mail every 30 seconds
-set imap_keepalive = 300             # 5 minutes
-set sleep_time = 0                   # don't sleep when idle
-set wait_key = no		             # mutt won't ask "press key to continue"
-set envelope_from                    # which from?
-set edit_headers                     # show headers when composing
-set fast_reply                       # skip to compose when replying
-set askcc                            # ask for CC:
-set fcc_attach                       # save attachments with the body
-set forward_format = "Fwd: %s"       # format of subject when forwarding
-set forward_decode                   # decode when forwarding
-set forward_quote                    # include message in forwards
-set mime_forward                     # forward attachments as part of body
-set attribution = "On %d, %n wrote:" # format of quoting header
-set reply_to                         # reply to Reply to: field
-set reverse_name                     # reply as whomever it was to
-set include                          # include message in replies
-set text_flowed=yes                  # correct indentation for plain text
-set beep_new             # bell on new mails
-set pipe_decode          # strip headers and eval mimes when piping
-set thorough_search      # strip headers and eval mimes before searching
-unset sig_dashes                     # no dashes before sig
-unset markers
+set menu_scroll
+set tilde
+set markers = no
+set allow_ansi
 
-# sort/threading
-# Sort by newest conversation first.
-set charset = "utf-8"
+set edit_headers
+set ask_cc
+set text_flowed=yes
+set beep_new
+set pipe_decode
 set uncollapse_jump
-set sort_re
-# set sort = reverse-threads
-# set sort_aux = last-date-received
-set sort     = threads
-set sort_aux = reverse-last-date-received
-# How we reply and quote emails.
+set sleep_time = 0
+set mark_old = no
+set mime_forward = no
+set forward_attachments = yes
+set wait_key = no
+set fast_reply	
+set fcc_attach
+set forward_format = "Fwd: %s"
+set date_format="%d/%m/%y %H:%M"
+set send_charset = "utf-8"
+set reply_regex = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
+set quote_regex = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+set forward_quote
+set reverse_name
+set include
+set mail_check = 60
+set count_alternatives=yes
+set auto_tag
+set auto_subscribe
+set flag_safe
+set browser_sort = unsorted
 
-set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
-set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
-set send_charset = "utf-8:iso-8859-1:us-ascii" # send in utf-8
-
-#sidebar
-set sidebar_visible # comment to disable sidebar by default
-set sidebar_short_path
-set sidebar_folder_indent
-set sidebar_format = "%B %* [%?N?%N / ?%S]"
-set mail_check_stats
-
-auto_view text/html text/calendar application/ics # view html automatically
-alternative_order text/enriched text/plain text/html text/*
-
-# set index_format="%3C %Z %[!%m.%d.%y] %-19.19n %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
-# set index_format="%Z %3C %{%b %d} %-17.17n (%5c) %s"
-# set index_format="%3C %Z %{%b %d} %-35.35n (%5c) %?X?(%1X)& ? %?M?(%02M)& ? %s%> %?y?[%Y]?"
-set index_format="%3C %Z %{%b %d} %-35.35n %?M?(%02M)& ? %s%> %?y?[%Y]?"
-
-# Use GPGME
-# Use my key for signing and encrypting
-set pgp_default_key = 7E6182D87BDDD9B8C168AD89C80751DBBD26DC7D
-
-# Use GPGME
+### Encryption
+set pgp_default_key = 'tommaso.laurenzi'
 set crypt_use_gpgme = yes
-
-# Automatically sign all out-going email
-set crypt_autosign = no
-
-# Sign replies to signed emails
-set crypt_replysign = yes
-
-# Encrypt replies to encrypted emails
-set crypt_replyencrypt = yes
-
-# Encrypt and sign replies to encrypted and signed email
-set crypt_replysignencrypted = yes
-
-# Attempt to verify signatures automatically
+set crypt_auto_sign = no
+set crypt_reply_sign = yes
+set crypt_reply_encrypt = yes
+set crypt_reply_sign_encrypted = yes
 set crypt_verify_sig = yes
-
-# So you can view encrypted emails automatically
-auto_view application/pgp-encrypted
-
-# Attempt to encrypt automatically, if possible
-# I would recommend setting this to no as university often have spam filters
-# And this will cause your emails to be marked as spam
-# as they can't decrypt your emails LMAO
 set crypt_opportunistic_encrypt = no
+
+
+### index sorting
+# set sort = 'reverse-date'
+set use_threads = reverse
+set sort = last-date
+
+### sidebar
+set mail_check_stats
+set mail_check_stats_interval = 60
+set sidebar_visible
+set sidebar_width = 30
+set sidebar_format = "%D%<F? [%F]>%* %<N?(%N) >%<S?%S>"
+set sidebar_folder_indent = no
+set sidebar_next_new_wrap = yes
+set sidebar_short_path = yes
+bind index,pager B sidebar-toggle-visible
+
+### headers
+ignore *
+unignore from: to: cc: date: subject: x-label:
+unhdr_order *
+hdr_order from: to: cc: date: subject: x-label:
+
+### Notmuch
+set nm_query_type=threads
+set nm_record
+set nm_record_tags = "sent"
+set nm_default_url = "notmuch:///$HOME/.local/share/mail"
+set nm_record_tags = "sent"
+set virtual_spool_file
+
+### Attachments
+set mime_type_query_command = "file --mime-type -b %s"
+set mailcap_path = $HOME/.config/neomutt/mailcap
+set display_filter = "tac | sed '/\\\[-- Autoview/,+1d' | tac"
+auto_view application/ics
+auto_view text/calendar
+auto_view text/plain
+auto_view text/html
+auto_view application/pgp-encrypted
+alternative_order text/calendar text/enriched text/plain text/html text/*
+
+
+set timeout = 30
+# timeout-hook 'exec sync-mailbox'
+# startup-hook 'exec sync-mailbox'
+# shutdown-hook 'exec sync-mailbox'

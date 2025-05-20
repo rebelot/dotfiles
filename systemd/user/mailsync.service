@@ -1,0 +1,9 @@
+[Unit]
+Description=Mailbox synchronization service
+
+[Service]
+Type=oneshot
+ExecStart=/home/laurenzi/.config/neomutt/bin/mailsync
+
+[Install]
+WantedBy=default.target
