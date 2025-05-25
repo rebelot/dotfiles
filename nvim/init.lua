@@ -15,7 +15,7 @@
 -- check gbprod/yanky.nvim
 -- vim.loader.enable()
 
-require("vim._extui").enable({})
+-- require("vim._extui").enable({})
 
 -- general configurations
 require("options")

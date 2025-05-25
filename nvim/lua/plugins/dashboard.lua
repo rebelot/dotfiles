@@ -116,25 +116,32 @@ vim.api.nvim_create_autocmd("Filetype", {
     callback = function()
         vim.cmd([[
             setlocal buftype=nofile
-            setlocal nonumber norelativenumber nocursorline noruler fillchars=eob:\ 
-            nnoremap <buffer> <F2> :h news.txt<CR> 
+            setlocal nonumber norelativenumber nocursorline noruler fillchars=eob:\
+            nnoremap <buffer> <F2> :h news.txt<CR>
         ]])
     end,
 })
 
-require("dashboard").setup({
-    theme = "doom",
-    config = {
-        header = header,
-        center = center,
-        footer = function()
-            return {
-                "type  :help<Enter>  or  <F1>  for on-line help,  <F2>  news changelog",
-                "Startup time: " .. require"lazy".stats().startuptime .. " ms"
-            }
-        end,
-    },
-})
+return {
+    -- Go Glepnir!
+    "glepnir/dashboard-nvim",
+    event = "VimEnter",
+    enabled = true,
+    keys = { { "<F3>", "<cmd>Dashboard<CR>", { desc = "Dashboard: open" } } },
+    opts = {
+        theme = "doom",
+        config = {
+            header = header,
+            center = center,
+            footer = function()
+                return {
+                    "type  :help<Enter>  or  <F1>  for on-line help,  <F2>  news changelog",
+                    "Startup time: " .. require "lazy".stats().startuptime .. " ms"
+                }
+            end,
+        },
+    }
+}
 
 -- " =================     ===============     ===============   ========  ========
 -- " \\ . . . . . . .\\   //. . . . . . .\\   //. . . . . . .\\  \\. . .\\// . . //
