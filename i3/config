@@ -186,7 +186,7 @@ assign [class="thunderbird"] $ws3
 assign [class="Chromium" title="Microsoft Teams"] $ws3
 
 for_window [all] title_window_icon on
-for_window [all] border normal 1
+# for_window [all] border normal 1
 
 for_window [class="Thunar"] floating enable
 for_window [class="Pavucontrol"] floating enable

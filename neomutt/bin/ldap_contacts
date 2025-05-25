@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ## Perform a contact search via ldap
 
-query="(|(mail=$1*)(givenName=$1*)(cn=$1*))"
+query="(|(mail=$**)(givenName=$**)(cn=$**))"
 email="tommaso.laurenzi@unimi.it"
 pass=$(gpg -dq ~/.config/neomutt/accounts/unimi_pass.gpg 2>/dev/null)
 

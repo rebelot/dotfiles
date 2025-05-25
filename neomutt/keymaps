@@ -1,5 +1,7 @@
 # vim: set filetype=neomuttrc:
 
+macro index,pager <F12> '<enter-command>echo "mailsync last run: `date -r ~/.config/neomutt/.mailsynclastrun`"<enter>'
+
 set abort_key = "<Esc>"
 macro index,pager,attach,editor,compose <F5> <sync-mailbox><check-stats>
 
@@ -15,6 +17,7 @@ bind index \Cv vfolder-from-query
 
 # open attachments with mailcap with <return>
 bind attach <return> view-mailcap             
+macro attach 'V' "<pipe-entry>iconv -c --to-code=UTF8 > ~/.cache/mutt-mail.html<enter><shell-escape>open ~/.cache/mutt-mail.html<enter>"
 # save attachments to a folder
 # macro attach s '<save-entry><bol>~/Downloads<eol>' 'save attachment'
 macro attach s '<save-entry><kill-line>~/Downloads/<enter>a' "Save file to ~/Downloads"
@@ -32,6 +35,8 @@ bind editor                     ^T  complete
 bind editor                     <tab>   complete-query
 bind editor                     <space> noop
 bind attach                     <space> view-mailcap
+
+macro compose \Ca ":source ~/.config/neomutt/bin/attach_browser|<enter>"
 
 bind index,pager i noop
 bind index,pager,attach,browser,query,alias,compose q exit

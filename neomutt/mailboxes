@@ -6,7 +6,7 @@ macro index <f4> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts
 
 source accounts/gmail
 folder-hook ($folder|gmail) 'source ~/.config/neomutt/accounts/gmail'
-virtual-mailboxes "GMAIL Inbox" "notmuch://?query=tag:inbox and path:gmail/INBOX/** &type=threads"
+virtual-mailboxes "GMAIL_Inbox" "notmuch://?query=tag:inbox and path:gmail/INBOX/** &type=threads"
 named-mailboxes "  Sent Mail" '+[Gmail].Sent Mail' \
                 "  Drafts" '+[Gmail].Drafts' \
                 "  Spam" '+[Gmail].Spam' \
@@ -15,7 +15,7 @@ named-mailboxes "  Sent Mail" '+[Gmail].Sent Mail' \
 
 source accounts/msn
 folder-hook ($folder|msn) 'source ~/.config/neomutt/accounts/msn'
-virtual-mailboxes "MSN Inbox" "notmuch://?query=tag:inbox and path:msn/INBOX/** &type=threads"
+virtual-mailboxes "MSN_Inbox" "notmuch://?query=tag:inbox and path:msn/INBOX/** &type=threads"
 named-mailboxes "  Sent" '+Sent' \
                 "  Outbox" '+Outbox' \
                 "  Drafts" '+Drafts' \
@@ -26,7 +26,7 @@ named-mailboxes "  Sent" '+Sent' \
 
 source accounts/unimi
 folder-hook ($folder|unimi) 'source ~/.config/neomutt/accounts/unimi'
-virtual-mailboxes "UNIMI Inbox" "notmuch://?query=tag:inbox and path:unimi/INBOX/** &type=threads"
+virtual-mailboxes "UNIMI_Inbox" "notmuch://?query=tag:inbox and path:unimi/INBOX/** &type=threads"
 named-mailboxes "  Sent" '+Sent' \
                 "  Drafts" '+Drafts' \
                 "  Indaco" '+Indaco' \

@@ -1,0 +1,19 @@
+#!/bin/sh
+file=~/.config/neomutt/.mailsynclastrun
+if [ -f "$file" ]; then
+    now=$(date +%s)
+    mod=$(date -r "$file" +%s)
+    diff=$((now - mod))
+
+    if [ $diff -lt 60 ]; then
+        echo "${diff}s ago"
+    elif [ $diff -lt 3600 ]; then
+        echo "$((diff / 60))m ago"
+    else
+        h=$((diff / 3600))
+        m=$(( (diff % 3600) / 60 ))
+        echo "${h}h ${m}m ago"
+    fi
+else
+    echo "never"
+fi

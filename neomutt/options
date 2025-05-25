@@ -1,6 +1,6 @@
 # vim: set filetype=neomuttrc:
 
-# set query_command = "abook --mutt-query '%s'"
+unset help
 
 ### Pager
 set pager_index_lines = 8
@@ -33,7 +33,7 @@ set quote_regex = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 set forward_quote
 set reverse_name
 set include
-set mail_check = 60
+set mail_check = 5
 set count_alternatives=yes
 set auto_tag
 set auto_subscribe
@@ -61,7 +61,6 @@ set mail_check_stats
 set mail_check_stats_interval = 60
 set sidebar_visible
 set sidebar_width = 30
-set sidebar_format = "%D%<F? [%F]>%* %<N?(%N) >%<S?%S>"
 set sidebar_folder_indent = no
 set sidebar_next_new_wrap = yes
 set sidebar_short_path = yes
@@ -90,10 +89,14 @@ auto_view text/calendar
 auto_view text/plain
 auto_view text/html
 auto_view application/pgp-encrypted
-alternative_order text/calendar text/enriched text/plain text/html text/*
+alternative_order text/calendar text/html text/enriched text/plain text/*
 
 
 set timeout = 30
 # timeout-hook 'exec sync-mailbox'
 # startup-hook 'exec sync-mailbox'
 # shutdown-hook 'exec sync-mailbox'
+
+unset spam_separator
+spam "X-Forefront-Antispam-Report:.*CAT:SPM.*" 1
+spam "X-Microsoft-Antispam-Mailbox-Delivery:.*RF:JunkEmail.*" 1
