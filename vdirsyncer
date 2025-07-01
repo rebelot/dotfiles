@@ -1,0 +1,62 @@
+[general]
+status_path = "~/.config/vdirsyncer/status/"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;    EXAMPLE OFFICE365 INTEGRATION VIA DAVMAIL     ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[pair unimi]
+a = "unimi_local"
+b = "unimi_remote"
+metadata = ["color"]
+collections = ["from b"]
+conflict_resolution = "b wins"
+
+[storage unimi_remote]
+type = "caldav"
+url = "http://localhost:1080/users/tommaso.laurenzi@unimi.it/calendar"
+username = "tommaso.laurenzi@unimi.it"
+password.fetch = ["command", "gpg", "-dq", "~/.config/neomutt/accounts/unimi_pass.gpg"]
+
+[storage unimi_local]
+type = "filesystem"
+path = "~/.local/share/calendar/unimi/"
+fileext = ".ics"
+
+;[pair INDACO_STAFF]
+;a = "INDACO_STAFF_local"
+;b = "INDACO_STAFF_remote"
+;metadata = ["color"]
+;collections = null
+;conflict_resolution = "b wins"
+;
+;[storage INDACO_STAFF_remote]
+;type = "caldav"
+;url = "http://localhost:1080/users/matteo.savatteri@unimi.it/calendar/INDACO STAFF/"
+;username = "tommaso.laurenzi@unimi.it"
+;password.fetch = ["command", "gpg", "-dq", "~/.config/neomutt/accounts/unimi_pass.gpg"]
+;
+;[storage INDACO_STAFF_local]
+;type = "filesystem"
+;path = "~/.local/share/calendar/INDACO_STAFF/"
+;fileext = ".ics"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;  EXAMPLE GOOGLE CALENDAR INTEGRATION   ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;[pair personal_calendar]
+;a = "gmail_local"
+;b = "gmail_remote"
+;collections = ["from a", "from b"]
+;conflict_resolution = "b wins"
+;metadata = ["color"]
+;
+;[storage gmail_local]
+;type = "filesystem"
+;path = "~/.local/share/calendar/CALENDAR_gmail/"
+;fileext = ".ics"
+;
+;[storage gmail_remote]
+;type = "google_calendar"
+;token_file = "~/.config/vdirsyncer/vdirsyncer_google_oauth_personal"
+;client_id = "..."
+;client_secret = "..."
