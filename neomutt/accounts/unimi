@@ -15,11 +15,12 @@ set smtp_pass = $imap_pass
 set ssl_starttls = no
 set ssl_force_tls = no
 
-set query_command = "~/.config/neomutt/bin/ldap_contacts '%s'"
+set query_command = "~/.config/neomutt/bin/ldap_contacts %s"
 
 set folder = ~/.local/share/mail/unimi
 set spool_file = "UNIMI Inbox"
 set postponed = "+Drafts"
-set record = "+Sent"
+# set record = "+Sent"
+unset record
 set trash = "+Trash"
 

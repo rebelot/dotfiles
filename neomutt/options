@@ -17,6 +17,7 @@ set ask_cc
 set text_flowed=yes
 set beep_new
 set pipe_decode
+set collapse_all
 set uncollapse_jump
 set sleep_time = 0
 set mark_old = no
@@ -28,6 +29,7 @@ set fcc_attach
 set forward_format = "Fwd: %s"
 set date_format="%d/%m/%y %H:%M"
 set send_charset = "utf-8"
+set assumed_charset = "utf-8:us-ascii"
 set reply_regex = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 set quote_regex = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 set forward_quote

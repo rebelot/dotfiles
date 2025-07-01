@@ -1,6 +1,7 @@
 # vim: set filetype=neomuttrc:
 
-set index_format="%2C %zs %zt %zc %9@date@ %-35.35n %?H? ?%?y?[%y] ?%?g?[%g] ?%?X?󰁦& ? %?M?(%M) ?%s"
+set index_format="%3C %zs %zt %zc %9@date@ %-35.35n %?H? ?%?y?[%y] ?%?g?[%g] ?%?X?󰁦& ? %?M?(%M) ?%s"
+# set index_format="%3C %zs %zt %zc %-35.35n %?H? ?%?y?[%y] ?%?g?[%g] ?%?X?󰁦& ? %?M?(%M) ?%s%* %@date@"
 # set status_format="%r %D  %<M?%M/>%m%<n? 󰎔 %n>%<u?  %u>%<R?  %R>%<o? Old:%o>%<d?  %d>%<F? 󰈽 %F>%<t?  %t>%<p?  %p>%<b? 󰶎 %b>%<l?  %l>%> %<T?%s/%S&%T/%s> %5P"
 timeout-hook 'source ~/.config/neomutt/set_status'
 set pager_format="%C/%m %zs %zt %zc %?y?[%y] ?%?g?[%g] ?%n: %s%*  %{!%d %b %H:%M}  %-5c %?X?󰁦 %X ?%3P"
@@ -39,7 +40,7 @@ color index_flags brightgreen default "~N"
 color index_flags brightred default "~D"
 color index_author cyan default
 color index_subject white default
-color index_number blue default
+color index_number lightblack default
 
 # New mail is boldened:
 color index brightyellow default "~N"

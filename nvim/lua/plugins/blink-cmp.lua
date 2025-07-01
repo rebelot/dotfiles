@@ -24,6 +24,9 @@ return {
         completion = {
             documentation = { auto_show = true, window = { border = vim.g.FloatBorders } },
             ghost_text = { enabled = true },
+            trigger = {
+                show_on_backspace = true,
+            },
             menu = {
                 draw = {
                     components = {

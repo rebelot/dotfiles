@@ -1,31 +1,24 @@
 # vim: set filetype=neomuttrc:
 
-# Gmail
-set imap_user = "tommaso.laurenzi@gmail.com"
-set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/gmail_pass.gpg 2>/dev/null`"
+set from = "tommaso.laurenzi@gmail.com"
+set real_name = "Tommaso Laurenzi"
+
+set imap_user = $from
+set imap_pass = "`gpg2 -q --for-your-eyes-only --no-tty -d ~/.config/neomutt/accounts/gmail_pass.gpg`"
 set imap_check_subscribed = no
 
-# User
-set from = $imap_user
-set realname = "Tommaso Laurenzi"
 
 set smtp_url = "smtps://tommaso.laurenzi@smtp.gmail.com:465/"
 set smtp_authenticators = 'login'
 set smtp_pass = $imap_pass
 
-# Ensure TLS is enforced
-set ssl_starttls = yes
-set ssl_force_tls = yes
+set query_command = "notmuch address 'folder:gmail/**' and '(from:\"/%s/\"' or 'to:\"/%s/\")' and not 'folder:\"/.*(Junk|Spam|Trash).*/\"'"
 
-set hostname = "gmail.com"
-set folder = "imaps://imap.gmail.com/"
-set spoolfile=+INBOX
-#set record     = "+[Gmail]/Sent Mail"
-set postponed = "+[Gmail]/Drafts"
-set trash = "+[Gmail]/Trash"
+set folder = ~/.local/share/mail/gmail
+set spool_file = "GMAIL Inbox"
+set postponed = "+[Gmail].Drafts"
+set trash = "+[Gmail].Trash"
+# gmail automatically saves sent messages in the Sent folder
 unset record
 
-unmailboxes *
-mailboxes $spoolfile =[Gmail]/Sent\ Mail =[Gmail]/Drafts =[Gmail]/Spam =[Gmail]/Trash =Notes
 
-color status     black    red

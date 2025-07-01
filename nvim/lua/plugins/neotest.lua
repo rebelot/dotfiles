@@ -9,7 +9,8 @@ return {
         "rouge8/neotest-rust",
         "vim-test/vim-test",
     },
-    config = function()
+    config = function(_, config)
+        require("neotest").setup(config)
         vim.cmd([[
 command! NeotestSummary lua require("neotest").summary.toggle()
 command! NeotestFile lua require("neotest").run.run(vim.fn.expand("%"))

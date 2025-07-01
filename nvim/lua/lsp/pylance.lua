@@ -42,6 +42,22 @@ local function change_python_interpreter(path)
     end
 end
 
+-- local function set_python_path(path)
+--     local clients = vim.lsp.get_clients {
+--         bufnr = vim.api.nvim_get_current_buf(),
+--         name = 'pyright',
+--     }
+--     for _, client in ipairs(clients) do
+--         if client.settings then
+--             client.settings.python = vim.tbl_deep_extend('force', client.settings.python, { pythonPath = path })
+--         else
+--             client.config.settings = vim.tbl_deep_extend('force', client.config.settings,
+--                 { python = { pythonPath = path } })
+--         end
+--         client.notify('workspace/didChangeConfiguration', { settings = nil })
+--     end
+-- end
+
 -- client.server_capabilities.executeCommandProvider
 local commands = { "pyright.createtypestub", "pyright.organizeimports", "pyright.dumpFileDebugInfo",
     "python.createTypeStub", "python.orderImports", "python.addOptionalForParam", "python.removeUnusedImport",
@@ -154,7 +170,7 @@ return {
                 useLibraryCodeForTypes = true,
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
-                typeCheckingMode = "standard",
+                typeCheckingMode = "strict",
                 -- autoImportCompletions = false, -- huge pollution
                 supportRestructuredText = true,
                 enablePytestSupport = true,

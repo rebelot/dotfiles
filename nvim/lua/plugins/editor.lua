@@ -161,11 +161,15 @@ return {
     {
         "kylechui/nvim-surround",
         keys = {
+            { mode = "i", "<C-g>s" },
+            { mode = "i", "<C-g>S" },
             { mode = "n", "ys" },
+            { mode = "n", "yS" },
             { mode = "n", "cs" },
+            { mode = "n", "cS" },
             { mode = "n", "ds" },
-            { mode = "i", "<C-g>" },
             { mode = "x", "S" },
+            { mode = "x", "gS" },
         },
         config = true,
     },
@@ -216,4 +220,13 @@ return {
     -- use 'ggandor/leap.nvim'
 
     "tpope/vim-repeat",
+    {
+        "ThePrimeagen/refactoring.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        lazy = false,
+        opts = {},
+    },
 }

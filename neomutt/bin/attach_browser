@@ -7,7 +7,7 @@ cd "$HOME" || exit
 # export FZF_DEFAULT_COMMAND='fdfind -t f -e pdf -e png -e jpg -e zip -e tar -e gz -e rar -e html -e md --absolute-path'
 
 # /usr/bin/fzf -m --prompt='Choose one/multiple file(s) to attach >' | \
-yazi --chooser-file /dev/stdout |
+"$HOME"/.nix-profile/bin/yazi --chooser-file /dev/stdout |
     while IFS=$'\n' read -r attachment; do
         echo "push 'a$attachment<enter>'"
     done

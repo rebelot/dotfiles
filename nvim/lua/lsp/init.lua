@@ -46,6 +46,7 @@ local servers = {
     "cssls",
     "yamlls",
     "asm_lsp",
+    -- "ty"
 }
 
 for _, server in ipairs(servers) do
@@ -57,6 +58,14 @@ for _, server in ipairs(servers) do
 end
 
 vim.lsp.enable(servers)
+local _original_convert_input_to_markdown_lines = vim.lsp.util.convert_input_to_markdown_lines
+---@diagnostic disable-next-line: duplicate-set-field
+function vim.lsp.util.convert_input_to_markdown_lines(input, contents)
+    if input.value then
+        input.value = input.value:gsub("<ul>\n\n", "* "):gsub("</ul>\n", "")
+    end
+    return _original_convert_input_to_markdown_lines(input, contents)
+end
 
 ---------------
 -- On Attach --

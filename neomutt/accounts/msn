@@ -1,29 +1,25 @@
 # vim: set filetype=neomuttrc:
 
-# Ensure TLS is enforced
+# https://github.com/neomutt/neomutt/tree/main/contrib/oauth2
+# https://github.com/mozilla/releases-comm-central/blob/0165864bd792e989a9582405e4cce8ab4fce1b6d/mailnews/base/src/OAuth2Providers.sys.mjs#L177-L186
+# ./mutt_oauth2.py --email EMAIL --client-id=9e5f94bc-e8a4-4e73-b8be-63364c29d753 --authorize --provider microsoft TOKENFILE
+
 set ssl_starttls=yes
 set ssl_force_tls=yes
 
-# Msn
-set imap_user = 'TmY_001@msn.com'
-set imap_pass = "`gpg -dq ~/.config/neomutt/accounts/msn_pass.gpg 2>/dev/null`"
-set imap_authenticators="oauthbearer:xoauth2"
-# set imap_oauth_refresh_command="<path to mutt_oauth2.py> <token file>"
-
 # User
-set from = $imap_user
-set realname = 'Tommaso Laurenzi'
+set from = 'tmy_001@msn.com'
+set real_name = 'Tommaso Laurenzi'
 
-set smtp_url = "smtp://$imap_user@smtp-mail.outlook.com:587"
-set smtp_pass = $imap_pass
-set smtp_authenticators = $imap_authenticators
-#set smtp_oauth_refresh_command=${imap_oauth_refresh_command}
+set smtp_url = "smtp://${from}@smtp.office365.com:587/"
+set smtp_authenticators = "xoauth2"
+set smtp_oauth_refresh_command = "~/.config/neomutt/accounts/mutt_oauth2.py ~/.config/neomutt/accounts/${from}.token"
 
-# set hostname = "msn.com"
-set folder = imaps://imap-mail.outlook.com:993
-set spoolfile = "+INBOX"
-set postponed = "+[hotmail]/Drafts"
+set query_command = "notmuch address 'folder:/^msn.*/' and '(from:/%s/' or 'to:/%s/)' and not 'folder:\"/.*(Junk|Spam|Trash).*/\"'"
+
+set folder = ~/.local/share/mail/msn
+set spool_file = "MSN Inbox"
+set postponed = "+Drafts"
 set trash = "+Deleted"
 set record="+Sent"
 
-color status     black    yellow

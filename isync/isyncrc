@@ -1,0 +1,93 @@
+####################################################
+# Define your email accounts you want to sync here #
+####################################################
+
+# https://github.com/mozilla/releases-comm-central/blob/0165864bd792e989a9582405e4cce8ab4fce1b6d/mailnews/base/src/OAuth2Providers.sys.mjs#L177-L186
+# apt install libsasl2-modules-kdexoauth2
+IMAPAccount msn
+Host outlook.office365.com
+Port 993
+User tmy_001@msn.com
+PassCmd "~/.config/neomutt/accounts/mutt_oauth2.py ~/.config/neomutt/accounts/tmy_001@msn.com.token"
+SSLType IMAPS
+AuthMechs XOAUTH2
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore msn-remote
+Account msn
+
+MaildirStore msn-local
+SubFolders Verbatim
+Path ~/.local/share/mail/msn/
+Inbox ~/.local/share/mail/msn/INBOX
+Flatten .
+
+Channel msn
+Far :msn-remote:
+Near :msn-local:
+Patterns *
+Create Both
+SyncState *
+Expunge Both
+MaxMessages 0
+
+
+IMAPAccount gmail
+Host imap.gmail.com
+Port 993
+User tommaso.laurenzi@gmail.com
+# app password: https://support.google.com/accounts/answer/185833?hl=en
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.config/neomutt/accounts/gmail_pass.gpg"
+AuthMechs LOGIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+SubFolders Verbatim
+Path ~/.local/share/mail/gmail/
+Inbox ~/.local/share/mail/gmail/INBOX
+Flatten .
+
+Channel gmail
+Expunge Both
+Far :gmail-remote:
+Near :gmail-local:
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+Patterns *
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
+
+
+# DavMail
+IMAPAccount unimi
+Host 127.0.0.1
+Timeout 200
+Port 1143
+User tommaso.laurenzi@unimi.it
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.config/neomutt/accounts/unimi_pass.gpg"
+SSLType None    
+AuthMechs LOGIN
+
+IMAPStore unimi-remote
+Account unimi
+
+MaildirStore unimi-local
+SubFolders Verbatim
+Path ~/.local/share/mail/unimi/
+Inbox ~/.local/share/mail/unimi/INBOX
+Flatten .
+
+Channel unimi
+Expunge Both
+Far :unimi-remote:
+Near :unimi-local:
+Patterns *
+Create Both
+SyncState *
+MaxMessages 0
+ExpireUnread no
