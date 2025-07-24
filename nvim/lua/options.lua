@@ -9,6 +9,7 @@ g.python3_host_prog = vim.fn.expand("$HOME") .. "/venvs/base/bin/python"
 g.python_host_prog = vim.fn.expand("$HOME") .. "/venvs/base27/bin/python"
 
 o.termguicolors = true -- enable gui colors for terminal
+opt.cpoptions:append("~")
 g.vimsyn_embed = "lPr"
 g.tex_flavor = "latex"
 o.encoding = "utf-8"

@@ -1,3 +1,9 @@
+---@brief
+---
+--- https://detachhead.github.io/basedpyright
+---
+--- `basedpyright`, a static type checker and language server for python
+
 local function get_python_interpreters(a, l, p)
     local paths = {}
     local is_home_dir = function()
@@ -42,12 +48,7 @@ local function change_python_interpreter(path)
     end
 end
 
-
----@type vim.lsp.ClientConfig
 return {
-    name = "basedpyright",
-    autostart = true,
-    single_file_support = true,
     cmd = { "basedpyright-langserver", "--stdio" },
     filetypes = { "python" },
     root_markers = {
@@ -59,40 +60,13 @@ return {
         "pyrightconfig.json",
         ".git",
     },
-    before_init = function(_, config)
-        local venv = os.getenv("VIRTUAL_ENV")
-        if not config.settings.python then
-            config.settings.python = {}
-        end
-        config.settings.python.pythonPath = vim.g.PythonPath or venv or vim.g.python3_host_prog
-        vim.notify("PythonPath: " .. config.settings.python.pythonPath)
-    end,
-    on_attach = function(client, bufnr)
-        vim.api.nvim_buf_create_user_command(bufnr, "PythonInterpreter", function(args)
-            vim.fn.setenv("PATH", (args.args:gsub("/python$", "")) .. ":" .. vim.fn.getenv("PATH"))
-            vim.fn.setenv("VIRTUAL_ENV", (args.args:gsub("/bin/python$", "")))
-            change_python_interpreter(args.args)
-            -- set_lsp_python_path(args.args)
-        end, { nargs = 1, complete = get_python_interpreters, desc = "Change python interpreter" })
-    end,
     settings = {
-        python = {
+        basedpyright = {
             analysis = {
-                indexOptions = {
-                    regenerateStdLibIndices = true,
-                },
-                -- indexing = true,
-                -- packageIndexDepths = {
-                --     name = "",
-                --     depth = 4,
-                --     includeAllSymbols = true,
-                -- },
-                -- persistAllIndices = false,
-                useLibraryCodeForTypes = true,
-                autoSearchPaths = true,
-                diagnosticMode = "workspace",
                 typeCheckingMode = "standard",
-                -- autoImportCompletions = false, -- huge pollution
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "workspace",
                 supportRestructuredText = true,
                 enablePytestSupport = true,
                 inlayHints = {
@@ -102,10 +76,34 @@ return {
                     pytestParameters = true,
                 },
                 autoFormatStrings = true,
-                -- diagnosticSeverityOverrides = {
-                --     reportMissingTypeStubs = "information",
-                -- },
             },
         },
     },
+    before_init = function(_, config)
+        local venv = os.getenv("VIRTUAL_ENV")
+        if not config.settings.python then
+            config.settings.python = {}
+        end
+        config.settings.python.pythonPath = vim.g.PythonPath
+            or (venv and venv .. "/bin/python")
+            or vim.g.python3_host_prog
+        vim.notify("pythonPath: " .. config.settings.python.pythonPath)
+    end,
+    on_attach = function(client, bufnr)
+        vim.api.nvim_buf_create_user_command(bufnr, "LspPyrightOrganizeImports", function()
+            client:exec_cmd({
+                command = "basedpyright.organizeimports",
+                arguments = { vim.uri_from_bufnr(bufnr) },
+            })
+        end, {
+            desc = "Organize Imports",
+        })
+
+        vim.api.nvim_buf_create_user_command(bufnr, "PythonInterpreter", function(args)
+            vim.fn.setenv("PATH", (args.args:gsub("/python$", "")) .. ":" .. vim.fn.getenv("PATH"))
+            vim.fn.setenv("VIRTUAL_ENV", (args.args:gsub("/bin/python$", "")))
+            change_python_interpreter(args.args)
+            -- set_lsp_python_path(args.args)
+        end, { nargs = 1, complete = get_python_interpreters, desc = "Change python interpreter" })
+    end,
 }

@@ -24,6 +24,7 @@ vim.diagnostic.config({
         title = "Diagnostics",
         title_pos = "left",
         header = "",
+        border = vim.g.FloatBorders,
     },
     virtual_text = true,
     -- virtual_text = { current_line = false },
