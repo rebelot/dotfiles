@@ -43,7 +43,7 @@ return {
         ft = "http",
         enabled = false,
         -- dependencies = { "luarocks.nvim" },
-        config = true
+        config = true,
     },
 
     {
@@ -71,7 +71,9 @@ return {
                 callback = function(args)
                     local bufnr = args.buf
                     local client = vim.lsp.get_client_by_id(args.data.client_id)
-                    if not client then return end
+                    if not client then
+                        return
+                    end
                     if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentSymbol) then
                         require("nvim-navic").attach(client, bufnr)
                     end
@@ -79,7 +81,6 @@ return {
             })
         end,
     },
-
 
     {
         "zbirenbaum/copilot.lua",
@@ -93,11 +94,11 @@ return {
                     jump_next = "]]",
                     accept = "<CR>",
                     refresh = "R",
-                    open = "<M-CR>"
+                    open = "<M-CR>",
                 },
                 layout = {
                     position = "right", -- | top | left | right | horizontal | vertical
-                    ratio = 0.4
+                    ratio = 0.4,
                 },
             },
             suggestion = {
@@ -108,7 +109,6 @@ return {
                     next = "<M-n>",
                     prev = "<M-p>",
                     dismiss = "<C-]>",
-
                 },
             },
         },
@@ -162,8 +162,11 @@ return {
             map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>")
             map("n", "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>")
             map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>")
-            map("n", "<leader>xl",
-                "<cmd>Trouble lsp toggle focus=false win.position=bottom win.relative=win win.size=.5<CR>")
+            map(
+                "n",
+                "<leader>xl",
+                "<cmd>Trouble lsp toggle focus=false win.position=bottom win.relative=win win.size=.5<CR>"
+            )
             map("n", "<leader>xQ", "<cmd>Trouble qflist toggle<CR>")
             map("n", "<leader>xL", "<cmd>Trouble loclist toggle<CR>")
         end,
@@ -180,8 +183,11 @@ return {
             local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
+                    null_ls.builtins.diagnostics.mypy,
                     null_ls.builtins.formatting.prettierd,
-                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.stylua.with({
+                        args = { "--indent-width", "4", "--indent-type", "Spaces", "-" },
+                    }),
                     null_ls.builtins.formatting.shfmt,
                     null_ls.builtins.formatting.shellharden,
 
@@ -189,8 +195,8 @@ return {
                     null_ls.builtins.code_actions.refactoring,
                     null_ls.builtins.code_actions.proselint,
                     null_ls.builtins.code_actions.textlint,
-                }
+                },
             })
         end,
-    }
+    },
 }

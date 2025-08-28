@@ -125,7 +125,6 @@ local FileFlags = {
             end,
             name = "heirline_write_buf",
         },
-
     },
     {
         condition = function()
@@ -414,8 +413,8 @@ local Snippets = {
         return vim.tbl_contains({ "s", "i" }, vim.fn.mode())
     end,
     provider = function()
-        local forward = vim.snippet.active({direction=1}) and " " or ""
-        local backward = vim.snippet.active({direction=-1}) and " " or ""
+        local forward = vim.snippet.active({ direction = 1 }) and " " or ""
+        local backward = vim.snippet.active({ direction = -1 }) and " " or ""
         return backward .. forward
     end,
     hl = { fg = "red", bold = true },
@@ -644,10 +643,33 @@ local ShowCmd = {
 local Align = { provider = "%=" }
 local Space = { provider = " " }
 
-ViMode = utils.surround({ separators.rounded_left, separators.rounded_right }, "bright_bg",
-    { MacroRec, ViMode, Snippets, ShowCmd })
+ViMode = utils.surround(
+    { separators.rounded_left, separators.rounded_right },
+    "bright_bg",
+    { MacroRec, ViMode, Snippets, ShowCmd }
+)
 
 local DefaultStatusline = {
+    {
+        condition = function(self)
+            if vim.o.laststatus ~= 3 then
+                return false
+            end
+            for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                local bufnr = vim.api.nvim_win_get_buf(win)
+                if vim.api.nvim_get_option_value("filetype", { buf = bufnr }) == "neo-tree" then
+                    self.winid = win
+                    return true
+                end
+            end
+        end,
+        provider = function(self)
+            return string.rep(" ", vim.api.nvim_win_get_width(self.winid))
+        end,
+        hl = {
+            bg = utils.get_highlight("NeoTreeNormal").bg,
+        },
+    },
     ViMode,
     Space,
     Spell,
@@ -666,7 +688,7 @@ local DefaultStatusline = {
     -- VirtualEnv,
     Space,
     FileType,
-    { flexible = 3,   { FileEncoding, Space }, { provider = "" } },
+    { flexible = 3, { FileEncoding, Space }, { provider = "" } },
     Space,
     Ruler,
     SearchCount,
