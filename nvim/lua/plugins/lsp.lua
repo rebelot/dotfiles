@@ -37,6 +37,7 @@ return {
             }
         end,
     },
+    { "R-nvim/R.nvim", opts = { esc_term = false } },
     { "barreiroleo/ltex_extra.nvim", lazy = true },
     {
         "rest-nvim/rest.nvim",
@@ -105,7 +106,7 @@ return {
                 enabled = false,
                 auto_trigger = false,
                 keymap = {
-                    accept = "<M-CR>",
+                    -- accept = "<M-CR>",
                     next = "<M-n>",
                     prev = "<M-p>",
                     dismiss = "<C-]>",
@@ -183,7 +184,7 @@ return {
             local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
-                    null_ls.builtins.diagnostics.mypy,
+                    -- null_ls.builtins.diagnostics.mypy,
                     null_ls.builtins.formatting.prettierd,
                     null_ls.builtins.formatting.stylua.with({
                         args = { "--indent-width", "4", "--indent-type", "Spaces", "-" },
@@ -198,5 +199,52 @@ return {
                 },
             })
         end,
+    },
+    {
+        "yetone/avante.nvim",
+        -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+        -- ⚠️ must add this setting! ! !
+        build = "make",
+        event = "VeryLazy",
+        version = false, -- Never set this value to "*"! Never!
+        ---@module 'avante'
+        ---@type avante.Config
+        opts = {
+            provider = "copilot",
+            selection = { enabled = false },
+        },
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            --- The below dependencies are optional,
+            "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+            "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+            "zbirenbaum/copilot.lua", -- for providers='copilot'
+            {
+                -- support for image pasting
+                "HakonHarnes/img-clip.nvim",
+                event = "VeryLazy",
+                opts = {
+                    -- recommended settings
+                    default = {
+                        embed_image_as_base64 = false,
+                        prompt_for_file_name = false,
+                        drag_and_drop = {
+                            insert_mode = true,
+                        },
+                        -- required for Windows users
+                        use_absolute_path = true,
+                    },
+                },
+            },
+            {
+                -- Make sure to set this up properly if you have lazy=true
+                "MeanderingProgrammer/render-markdown.nvim",
+                opts = {
+                    file_types = { "markdown", "Avante" },
+                },
+                ft = { "markdown", "Avante" },
+            },
+        },
     },
 }

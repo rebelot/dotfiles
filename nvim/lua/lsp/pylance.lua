@@ -127,6 +127,14 @@ local function extract_method(client)
     -- vim.lsp.buf.rename()
 end
 
+local change_annotations = {
+    ["default"] = {
+        label = "Rename",
+        needsConfirmation = false,
+        description = "Renamed symbol.",
+    },
+}
+
 ---@type vim.lsp.ClientConfig
 return {
     name = "pylance",
@@ -173,6 +181,12 @@ return {
             extract_method(client)
         end, { range = true, desc = "Extract methdod" })
     end,
+    handlers = {
+        ["textDocument/rename"] = function(_, res, ctx)
+            res.changeAnnotations = res.changeAnnotations or change_annotations
+            vim.lsp.handlers["textDocument/rename"](_, res, ctx)
+        end,
+    },
     settings = {
         python = {
             analysis = {

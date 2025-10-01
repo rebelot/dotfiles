@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 ## Perform a contact search via ldap
 
-query="(|(mail=$**)(givenName=$**)(cn=$**))"
+query="(|(mail=$**)(givenName=$**)(surname=$**)(cn=$**))"
 email="tommaso.laurenzi@unimi.it"
 pass=$(gpg -dq ~/.config/neomutt/accounts/unimi_pass.gpg 2>/dev/null)
 
+echo
 ldapsearch -H ldap://localhost:1389 \
-    -x \
-    -D$email \
-    -w"$pass" \
-    -b 'ou=people' \
-    "$query" \
-    'mail' \
-    'title' \
-    'givenName' \
-    'sn' |
-    awk -F': ' \
-        '/^uid/{uid=$2; getline; mail=$2; getline; first=$2; getline; last=$2; getline; title=$2; printf("%s\t%s %s\t%s\n",tolower(mail),first,last,title)}'
+	-x \
+	-D$email \
+	-w"$pass" \
+	-b 'ou=people' \
+	-LLL \
+	-E pr=500/noprompt \
+	"$query" \
+	'mail' \
+	'cn' | sed -n -e 's/^mail: //p' -e 's/^cn: //p' | paste - - | sort -u

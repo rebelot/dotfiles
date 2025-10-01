@@ -86,6 +86,11 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType", "BufEnter" }, {
         if vim.tbl_contains({ "terminal", "prompt", "nofile", "help" }, vim.bo[buf].buftype) then
             vim.cmd([[setl nocursorline | setl signcolumn=no | let &l:relativenumber = &l:number]])
         end
+
+        -- if vim.tbl_contains({ "cmd", "msg" }, vim.bo[buf].filetype) then
+        --     vim.cmd([[setl nocursorline]])
+        -- end
+
         -- if vim.tbl_contains({ "NvimTree" }, vim.bo[buf].filetype) then
         --     vim.cmd([[setl cursorline | setl signcolumn=yes:1 | let &l:relativenumber = &l:number]])
         -- end
@@ -98,6 +103,14 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType", "BufEnter" }, {
         if vim.bo[buf].filetype == "trouble" then
             vim.cmd([[setl cursorline nonu signcolumn=no | let &l:relativenumber = &l:number]])
         end
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "cmd", "msg", "pager", "dialog" },
+    callback = function(args)
+        vim.api.nvim_set_option_value("winhl", "Normal:MsgArea", {})
+        vim.cmd([[setl nocursorline]])
     end,
 })
 
@@ -151,14 +164,14 @@ autocmd("TermOpen", {
     callback = function(args)
         vim.bo.ft = "terminal"
         vim.cmd([[setlocal nonumber norelativenumber winhl=Normal:NormalDark]])
-        if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
-            vim.cmd("startinsert")
-        end
+        -- if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
+        --     vim.cmd("startinsert")
+        -- end
     end,
 })
-autocmd({ "WinEnter", "BufWinEnter" }, {
-    command = [[ if &buftype == 'terminal' | startinsert | endif ]],
-})
+-- autocmd({ "WinEnter", "BufWinEnter" }, {
+--     command = [[ if &buftype == 'terminal' | startinsert | endif ]],
+-- })
 
 -------------
 --  Folds  --

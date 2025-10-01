@@ -14,10 +14,10 @@ vim.lsp.config("*", {
                 didRename = true,
                 willCreate = true,
                 willDelete = true,
-                willRename = true
-            }
-        }
-    }
+                willRename = true,
+            },
+        },
+    },
 })
 
 ------------
@@ -46,6 +46,7 @@ local servers = {
     "cssls",
     "yamlls",
     "asm_lsp",
+    "r_language_server",
     -- "ty"
 }
 
@@ -83,8 +84,12 @@ local on_attach = function(client, bufnr)
     -- - "grr" is mapped in Normal mode to |vim.lsp.buf.references()|
     -- - "gri" is mapped in Normal mode to |vim.lsp.buf.implementation()|
     -- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
-    map("n", "K", function() vim.lsp.buf.hover({ border = borders }) end, { desc = "LSP: Hover" })
-    map("i", "<C-s>", function() vim.lsp.buf.signature_help({ border = borders }) end, { desc = "LSP: signature help" })
+    map("n", "K", function()
+        vim.lsp.buf.hover({ border = borders })
+    end, { desc = "LSP: Hover" })
+    map("i", "<C-s>", function()
+        vim.lsp.buf.signature_help({ border = borders })
+    end, { desc = "LSP: signature help" })
     -- map(
     --     "n",
     --     "<C-w>d",
@@ -120,27 +125,39 @@ local on_attach = function(client, bufnr)
     map("n", "<leader>lpd", function()
         local params = vim.lsp.util.make_position_params()
         return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_definition, params, function(_, result)
-            if result == nil or vim.tbl_isempty(result) then return end
-            vim.lsp.util.preview_location(result[1],
-                { border = borders, title = "Preview definition", title_pos = "left" })
+            if result == nil or vim.tbl_isempty(result) then
+                return
+            end
+            vim.lsp.util.preview_location(
+                result[1],
+                { border = borders, title = "Preview definition", title_pos = "left" }
+            )
         end)
     end, { desc = "LSP: floating preview" })
 
     map("n", "<leader>lpD", function()
         local params = vim.lsp.util.make_position_params()
         return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_declaration, params, function(_, result)
-            if result == nil or vim.tbl_isempty(result) then return end
-            vim.lsp.util.preview_location(result[1],
-                { border = borders, title = "Preview declaration", title_pos = "left" })
+            if result == nil or vim.tbl_isempty(result) then
+                return
+            end
+            vim.lsp.util.preview_location(
+                result[1],
+                { border = borders, title = "Preview declaration", title_pos = "left" }
+            )
         end)
     end, { desc = "LSP: floating preview" })
 
     map("n", "<leader>lpi", function()
         local params = vim.lsp.util.make_position_params()
         return vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_implementation, params, function(_, result)
-            if result == nil or vim.tbl_isempty(result) then return end
-            vim.lsp.util.preview_location(result[1],
-                { border = borders, title = "Preview implementation", title_pos = "left" })
+            if result == nil or vim.tbl_isempty(result) then
+                return
+            end
+            vim.lsp.util.preview_location(
+                result[1],
+                { border = borders, title = "Preview implementation", title_pos = "left" }
+            )
         end)
     end, { desc = "LSP: floating preview" })
 
@@ -207,11 +224,11 @@ local on_attach = function(client, bufnr)
         })
     end
     if client:supports_method(vim.lsp.protocol.Methods.textDocument_foldingRange) then
-        vim.wo.foldmethod = 'expr'
-        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+        vim.wo.foldmethod = "expr"
+        vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
     end
 
-    if client:supports_method('textDocument/documentColor') then
+    if client:supports_method("textDocument/documentColor") then
         vim.lsp.document_color.enable(true, bufnr)
         vim.notify("LSP: Document color enabled")
     end
@@ -228,20 +245,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         on_attach(client, args.buf)
-    end
+    end,
 })
 
 vim.api.nvim_create_autocmd("LspDetach", {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then return end
+        if not client then
+            return
+        end
         if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             vim.api.nvim_clear_autocmds({
                 buffer = args.buf,
                 group = "LSP_document_highlight",
             })
         end
-    end
+    end,
 })
 
 M.symbol_icons = {

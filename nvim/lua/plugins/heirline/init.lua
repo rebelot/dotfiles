@@ -38,7 +38,7 @@ require("heirline").setup({
                 return
             end
             return conditions.buffer_matches({
-                buftype = { "nofile", "prompt", "help", "quickfix" },
+                buftype = { "nofile", "prompt", "help", "quickfix", "msg", "cmd", "pager", "dialog" },
                 filetype = { "^git.*", "fugitive", "Trouble", "dashboard" },
             }, args.buf)
         end,
