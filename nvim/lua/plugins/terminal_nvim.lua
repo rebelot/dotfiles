@@ -23,18 +23,21 @@ local ipython = require("terminal").terminal:new({
     layout = { open_cmd = "botright vertical new" },
     cmd = { "ipython" },
     autoclose = true,
+    startinsert = true,
 })
 
 local htop = require("terminal").terminal:new({
     layout = { open_cmd = "float" },
     cmd = { "htop" },
     autoclose = true,
+    startinsert = true,
 })
 
 local lazygit = require("terminal").terminal:new({
     layout = { open_cmd = "float", height = 0.9, width = 0.9 },
     cmd = { "lazygit" },
     autoclose = true,
+    startinsert = true,
 })
 
 vim.env["GIT_EDITOR"] = "nvr --remote-tab-wait-silent +'set bufhidden=wipe'"
