@@ -28,13 +28,14 @@ local servers = {
     -- "ccls",
     "clangd",
     "pylance",
-    "ruff",
     -- "pyright",
     -- "basedpyright",
+    -- "ty",
+    "ruff",
     "marksman",
-    "luals",
+    "lua_ls",
     "texlab",
-    "ltex",
+    "ltex_plus",
     "vimls",
     "bashls",
     "julials",
@@ -47,16 +48,8 @@ local servers = {
     "yamlls",
     "asm_lsp",
     "r_language_server",
-    -- "ty"
+    "tailwindcss",
 }
-
-for _, server in ipairs(servers) do
-    local ok, config = pcall(require, "lsp." .. server)
-    if not ok then
-        config = {}
-    end
-    vim.lsp.config(server, config)
-end
 
 vim.lsp.enable(servers)
 local _original_convert_input_to_markdown_lines = vim.lsp.util.convert_input_to_markdown_lines
@@ -77,7 +70,7 @@ local on_attach = function(client, bufnr)
         opts = vim.tbl_extend("force", { noremap = true, silent = true, buffer = bufnr, desc = "LSP" }, opts)
         return vim.keymap.set(mode, key, expr, opts)
     end
-    map("n", "gd", require("telescope.builtin").lsp_definitions, { desc = "LSP: go to definition" })
+    map("n", "gd", require("fzf-lua").lsp_definitions, { desc = "LSP: go to definition" })
 
     -- - "grn" is mapped in Normal mode to |vim.lsp.buf.rename()|
     -- - "gra" is mapped in Normal and Visual mode to |vim.lsp.buf.code_action()|
@@ -90,23 +83,11 @@ local on_attach = function(client, bufnr)
     map("i", "<C-s>", function()
         vim.lsp.buf.signature_help({ border = borders })
     end, { desc = "LSP: signature help" })
-    -- map(
-    --     "n",
-    --     "<C-w>d",
-    --     "<Cmd>split <bar> Telescope lsp_definitions<CR>",
-    --     { desc = "LSP: go to definition (split window)" }
-    -- )
     map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP: go to declaration" })
-    map("n", "grt", require("telescope.builtin").lsp_references, { desc = "LSP: references" })
-    map("n", "<leader>lt", require("telescope.builtin").lsp_type_definitions, { desc = "LSP: go to type definitions" })
-    map("n", "<leader>li", require("telescope.builtin").lsp_implementations, { desc = "LSP: go to implementations" })
-    map("n", "gs", require("telescope.builtin").lsp_document_symbols, { desc = "LSP: document symbols" })
-    map(
-        "n",
-        "gS",
-        require("telescope.builtin").lsp_dynamic_workspace_symbols,
-        { desc = "LSP: dynamic workspace symbols" }
-    )
+    map("n", "grr", require("fzf-lua").lsp_references, { desc = "LSP: references" })
+    map("n", "<leader>lt", require("fzf-lua").lsp_typedefs, { desc = "LSP: go to type definitions" })
+    map("n", "gs", require("fzf-lua").lsp_document_symbols, { desc = "LSP: document symbols" })
+    map("n", "gS", require("fzf-lua").lsp_live_workspace_symbols, { desc = "LSP: dynamic workspace symbols" })
     map("n", "<leader>lwl", function()
         vim.print(vim.lsp.buf.list_workspace_folders())
     end, { desc = "LSP: list workspace folders" })
@@ -234,10 +215,10 @@ local on_attach = function(client, bufnr)
     end
 
     vim.api.nvim_buf_create_user_command(bufnr, "LspSemanticHlStop", function(args)
-        vim.lsp.semantic_tokens.stop(bufnr, args.args)
+        vim.lsp.semantic_tokens.enable(false, { client_id = args.args })
     end, { desc = "LSP: stop semantic tokens" })
     vim.api.nvim_buf_create_user_command(bufnr, "LspSemanticHlStart", function(args)
-        vim.lsp.semantic_tokens.start(bufnr, args.args)
+        vim.lsp.semantic_tokens.enable(true, { client_id = args.args })
     end, { desc = "LSP: stop semantic tokens" })
 end
 

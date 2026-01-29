@@ -59,6 +59,8 @@ autocmd({ "BufRead", "BufNewFile" }, {
     end,
 })
 
+autocmd("FileType", { pattern = "typescript*", command = "setlocal shiftwidth=2 tabstop=2" })
+
 -----------------
 --  Scrolloff  --
 -----------------
@@ -176,11 +178,6 @@ autocmd("TermOpen", {
 -------------
 --  Folds  --
 -------------
-
--- fix for Telescope #699
--- autocmd("BufWinEnter", {
---     command = 'normal! zx',
--- })
 
 -----------
 --  LSP  --

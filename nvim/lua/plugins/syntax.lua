@@ -58,9 +58,9 @@ return {
                     map('n', "<leader>ss", function() tw.swap_next("@parameter.inner") end)
                     map('n', "<leader>sf", function() tw.swap_next("@function.outer") end)
                     map('n', "<leader>sk", function() tw.swap_next("@block.outer") end)
-                    map('n', "<leader>sS", function() tw.swap_next("@parameter.inner") end)
-                    map('n', "<leader>sF", function() tw.swap_next("@function.outer") end)
-                    map('n', "<leader>sK", function() tw.swap_next("@block.outer") end)
+                    map('n', "<leader>sS", function() tw.swap_previous("@parameter.inner") end)
+                    map('n', "<leader>sF", function() tw.swap_previous("@function.outer") end)
+                    map('n', "<leader>sK", function() tw.swap_previous("@block.outer") end)
                     map({ 'n', 'x', 'o' }, "]f", function() tm.goto_next_start("@function.outer", 'textobjects') end)
                     map({ 'n', 'x', 'o' }, "]c", function() tm.goto_next_start("@class.outer", 'textobjects') end)
                     map({ 'n', 'x', 'o' }, "]k", function() tm.goto_next_start("@block.outer", 'textobjects') end)
@@ -87,12 +87,12 @@ return {
             { "nvim-treesitter/nvim-treesitter-context", config = true },
         },
         config = function()
-            -- { "neomuttrc", "muttrc", "vim" }
+            local excluded_filetypes = { "neomuttrc", "muttrc", "vim" }
             vim.api.nvim_create_autocmd('FileType', {
                 callback = function()
-                    -- if vim.tbl_contains({ "rust", "python", "lua", "sh", "markdown", }, vim.bo.filetype) then
-                    if vim.bo.buftype == '' and not vim.tbl_contains({ "neomuttrc", "muttrc", "vim" }, vim.bo.filetype) then
-                        if not vim.treesitter.language.add(vim.bo.filetype) then return end
+                    if vim.bo.buftype == '' and not vim.tbl_contains(excluded_filetypes, vim.bo.filetype) then
+                        local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
+                        if not (lang and vim.treesitter.language.add(lang)) then return end
                         vim.notify("starting treesitter for ft " .. vim.bo.filetype)
                         vim.treesitter.start()
                         vim.wo.foldmethod = "expr"

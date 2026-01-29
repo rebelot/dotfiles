@@ -203,7 +203,7 @@ return {
                 useLibraryCodeForTypes = true,
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
-                typeCheckingMode = "strict",
+                typeCheckingMode = "standard",
                 -- autoImportCompletions = false, -- huge pollution
                 supportRestructuredText = true,
                 enablePytestSupport = true,

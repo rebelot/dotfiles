@@ -25,13 +25,6 @@ return {
                     end
 
                     return {
-                        TelescopeTitle = { fg = theme.ui.special, bold = true },
-                        TelescopePromptNormal = { bg = theme.ui.bg_p1 },
-                        TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
-                        TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
-                        TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
-                        TelescopePreviewNormal = { bg = theme.ui.bg_dim },
-                        TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
                         NormalFloat = { bg = "none" },
                         FloatTitle = { bg = "none" },
                         FloatBorder = { bg = "none" },
@@ -74,6 +67,8 @@ return {
 
     { "rebelot/lucy.nvim", lazy = false, dev = true, enabled = false },
 
+    { "catppuccin/nvim", name = "catppuccin" },
+
     {
         "kyazdani42/nvim-web-devicons",
         lazy = true,
@@ -99,5 +94,4 @@ return {
         cmd = "CccPick",
         opts = { bar_len = 60 },
     },
-
 }

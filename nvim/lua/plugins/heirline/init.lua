@@ -39,7 +39,7 @@ require("heirline").setup({
             end
             return conditions.buffer_matches({
                 buftype = { "nofile", "prompt", "help", "quickfix" },
-                filetype = { "^git.*", "fugitive", "Trouble", "dashboard", "msg", "cmd", "pager", "dialog" },
+                filetype = { "^git.*", "fugitive", "Trouble", "dashboard", "msg", "cmd", "pager", "dialog", "fzf" },
             }, args.buf)
         end,
         colors = setup_colors,

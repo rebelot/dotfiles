@@ -44,14 +44,14 @@ local center = {
         keymap = "",
         key = "f",
         icon = "  ",
-        action = "Telescope find_files",
+        action = "FzfLua files",
     },
     {
         desc = "Recents",
         keymap = "",
         key = "r",
         icon = "  ",
-        action = "Telescope oldfiles",
+        action = "FzfLua oldfiles",
     },
 
     {
@@ -59,7 +59,7 @@ local center = {
         keymap = "",
         key = "b",
         icon = "  ",
-        action = "Telescope file_browser",
+        action = "Neotree",
     },
 
     {
@@ -99,7 +99,7 @@ local center = {
         keymap = "",
         key = "c",
         icon = "  ",
-        action = "Telescope find_files cwd=~/.config/nvim",
+        action = "FzfLua files cwd=~/.config/nvim",
     },
     {
         desc = "Exit",

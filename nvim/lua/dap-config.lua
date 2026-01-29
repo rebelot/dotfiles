@@ -35,11 +35,11 @@ map("n", "<leader>dh", dap.run_to_cursor, { desc = "DAP: Run to cursor" })
 map("n", "<leader>de", dap.set_exception_breakpoints, { desc = "DAP: Set exception breakpoints" })
 
 map("n", "<leader>dv", function()
-    require("telescope").extensions.dap.variables()
-end, { desc = "DAP-Telescope: Variables" })
+    require("fzf-lua").dap_variables()
+end, { desc = "DAP-fzf: Variables" })
 map("n", "<leader>dc", function()
-    require("telescope").extensions.dap.commands()
-end, { desc = "DAP-Telescope: Commands" })
+    require("fzf-lua").dap_commands()
+end, { desc = "DAP-fzf: Commands" })
 
 map({ "n", "x" }, "<leader>dx", function()
     require("dapui").eval()
@@ -135,6 +135,12 @@ dap.adapters.codelldb = {
     },
 }
 
+dap.adapters.cppdbg = {
+    id = "cppdbg",
+    type = "executable",
+    command = "/home/laurenzi/.local/share/nvim/mason/bin/OpenDebugAD7",
+}
+
 dap.adapters.node2 = {
     type = "executable",
     command = "node-debug2-adapter",
@@ -203,6 +209,28 @@ dap.configurations.cpp = {
             return fn.input("Path to executable: ", fn.getcwd() .. "/", "file")
         end,
         waitFor = true,
+    },
+    {
+        name = "Launch file (cpptools)",
+        type = "cppdbg",
+        request = "launch",
+        program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+        end,
+        cwd = "${workspaceFolder}",
+        stopAtEntry = true,
+    },
+    {
+        name = "Attach to gdbserver :1234 (cpptools)",
+        type = "cppdbg",
+        request = "launch",
+        MIMode = "gdb",
+        miDebuggerServerAddress = "localhost:1234",
+        miDebuggerPath = "/usr/bin/gdb",
+        cwd = "${workspaceFolder}",
+        program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+        end,
     },
 }
 

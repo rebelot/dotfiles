@@ -10,7 +10,6 @@
 -- check out vim.quickui
 -- folke/todo-comments.nvim
 -- {"folke/flash.nvim"}
--- check telescope project for bookmarks
 -- check out sidebar-nvim/sidebar.nvim
 -- check gbprod/yanky.nvim
 -- vim.loader.enable()
