@@ -61,6 +61,8 @@ function vim.lsp.util.convert_input_to_markdown_lines(input, contents)
     return _original_convert_input_to_markdown_lines(input, contents)
 end
 
+vim.lsp.codelens.enable(true)
+
 ---------------
 -- On Attach --
 ---------------
@@ -102,6 +104,14 @@ local on_attach = function(client, bufnr)
     map("n", "<leader>lhT", function()
         vim.lsp.buf.typehierarchy("supertypes")
     end, { desc = "LSP: supertypes" })
+
+    map("n", "<leader>lcl", function()
+        vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled())
+    end, { desc = "LSP: toggle codelens" })
+
+    map("n", "<leader>lcr", function()
+        vim.lsp.codelens.run()
+    end, { desc = "LSP: run codelens" })
 
     map("n", "<leader>lpd", function()
         local params = vim.lsp.util.make_position_params()
@@ -210,7 +220,7 @@ local on_attach = function(client, bufnr)
     end
 
     if client:supports_method("textDocument/documentColor") then
-        vim.lsp.document_color.enable(true, bufnr)
+        vim.lsp.document_color.enable(true, { bufnr = bufnr })
         vim.notify("LSP: Document color enabled")
     end
 

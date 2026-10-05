@@ -30,7 +30,7 @@ return {
             end,
         })
     end,
-    branch = "v3.x",
+    -- branch = "v3.x",
     dependencies = {
         "MunifTanjim/nui.nvim",
         "antosha417/nvim-lsp-file-operations",
@@ -227,11 +227,11 @@ return {
                             zindex = 10,
                             highlight = "NeoTreeSymbolicLinkTarget",
                         },
-                        { "clipboard", zindex = 10 },
-                        { "bufnr", zindex = 10 },
-                        { "modified", zindex = 20, align = "right" },
+                        { "clipboard",   zindex = 10 },
+                        { "bufnr",       zindex = 10 },
+                        { "modified",    zindex = 20, align = "right" },
                         { "diagnostics", zindex = 20, align = "right" },
-                        { "git_status", zindex = 20, align = "right" },
+                        { "git_status",  zindex = 20, align = "right" },
                     },
                 },
             },
@@ -242,7 +242,7 @@ return {
                 {
                     "container",
                     content = {
-                        { "name", zindex = 10 },
+                        { "name",      zindex = 10 },
                         {
                             "symlink_target",
                             zindex = 10,
@@ -344,6 +344,7 @@ return {
         vim.keymap.set("n", "<leader>nf", ":Neotree source=filesystem reveal reveal_force_cwd<CR>")
         vim.keymap.set("n", "<leader>nF", ":Neotree source=filesystem reveal_file=<cfile><CR>")
         vim.keymap.set("n", "<leader>ng", ":Neotree source=git_status dir=%:p:h left<CR>")
+        vim.keymap.set("n", "<leader>nb", ":Neotree source=buffers<CR>")
         vim.keymap.set("n", "<leader>ns", ":Neotree source=document_symbols<CR>")
     end,
 }

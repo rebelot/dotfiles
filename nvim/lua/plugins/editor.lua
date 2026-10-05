@@ -218,33 +218,67 @@ return {
         keys = { { mode = "x", "ai" }, { mode = "x", "ii" }, { mode = "o", "ai" }, { mode = "o", "ii" } },
     },
 
-    -- {"folke/flash.nvim"}
     {
-        "phaazon/hop.nvim",
-        keys = { { mode = "n", "S" }, { mode = { "n", "x" }, "s" }, { mode = "o", "x" } },
-        opts = {
-            teasing = false,
-            multi_window = true,
-            char2_fallback_key = "<CR>",
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        enabled = false,
+        opts = {},
+        keys = {
+            {
+                "s",
+                mode = { "n", "x", "o" },
+                function()
+                    require("flash").jump()
+                end,
+                desc = "Flash",
+            },
+            {
+                "<C-S>",
+                mode = { "n", "x", "o" },
+                function()
+                    require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+            },
+            {
+                "r",
+                mode = "o",
+                function()
+                    require("flash").remote()
+                end,
+                desc = "Remote Flash",
+            },
+            {
+                "R",
+                mode = { "o", "x" },
+                function()
+                    require("flash").treesitter_search()
+                end,
+                desc = "Treesitter Search",
+            },
+            {
+                "<c-s>",
+                mode = { "c" },
+                function()
+                    require("flash").toggle()
+                end,
+                desc = "Toggle Flash Search",
+            },
         },
-        config = function(_, opts)
-            require("hop").setup(opts)
-            vim.keymap.set({ "n", "x" }, "s", require("hop").hint_char2, { desc = "Hop: Hint char2" })
-            vim.keymap.set({ "o" }, "x", require("hop").hint_char2, { desc = "Hop: Hint char2" })
-            vim.keymap.set("n", "S", require("hop").hint_lines_skip_whitespace, { desc = "Hop: Hint line start" })
-        end,
     },
-
-    -- use 'ggandor/leap.nvim'
 
     "tpope/vim-repeat",
     {
         "ThePrimeagen/refactoring.nvim",
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
+            "lewis6991/async.nvim",
         },
         lazy = false,
-        opts = {},
+        config = function()
+            require("refactoring").setup({})
+            vim.keymap.set({ "n", "x" }, "<leader>rs", function()
+                require("refactoring").select_refactor()
+            end, { desc = "Select refactor" })
+        end,
     },
 }

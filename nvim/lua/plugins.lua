@@ -18,6 +18,7 @@ local disabled_rtp_plugins = {
     "logipat",
     "rrhelper",
     "spellfile_plugin",
+    "dir",
 }
 
 -- Bootstrap
@@ -32,19 +33,19 @@ require("lazy").setup({
     ----------------
     --  Required  --
     ----------------
-    { "nvim-lua/plenary.nvim",     lazy = true },
+    { "nvim-lua/plenary.nvim", lazy = true },
 
-    { "dstein64/vim-startuptime",  cmd = "StartupTime" },
-    { import = 'plugins.blink-cmp' },
-    { import = 'plugins.dashboard' },
-    { import = 'plugins.debug' },
-    { import = 'plugins.editor' },
-    { import = 'plugins.lsp' },
-    { import = 'plugins.neo-tree' },
-    { import = 'plugins.neotest' },
-    { import = 'plugins.syntax' },
-    { import = 'plugins.ui' },
-    { import = 'plugins.debug' },
+    { "dstein64/vim-startuptime", cmd = "StartupTime" },
+    { import = "plugins.blink-cmp" },
+    { import = "plugins.dashboard" },
+    { import = "plugins.debug" },
+    { import = "plugins.editor" },
+    { import = "plugins.lsp" },
+    { import = "plugins.neo-tree" },
+    { import = "plugins.neotest" },
+    { import = "plugins.syntax" },
+    { import = "plugins.ui" },
+    { import = "plugins.debug" },
 }, {
     dev = { path = "~/usr/src" },
     performance = { rtp = { disabled_plugins = disabled_rtp_plugins } },

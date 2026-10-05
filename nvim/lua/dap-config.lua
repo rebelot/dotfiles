@@ -95,7 +95,7 @@ table.insert(dap.configurations.python, {
     -- python = function() end,
     pythonPath = function()
         local path
-        for _, server in ipairs(vim.lsp.buf_get_clients()) do
+        for _, server in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
             path = vim.tbl_get(server, "config", "settings", "python", "pythonPath")
             if path then
                 break

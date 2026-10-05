@@ -40,7 +40,7 @@ return {
             }
         end,
     },
-    { "R-nvim/R.nvim", opts = { esc_term = false } },
+    { "R-nvim/R.nvim",               opts = { esc_term = false } },
     { "barreiroleo/ltex_extra.nvim", lazy = true },
     {
         "rest-nvim/rest.nvim",
@@ -192,6 +192,7 @@ return {
                     null_ls.builtins.formatting.stylua.with({
                         args = { "--indent-width", "4", "--indent-type", "Spaces", "-" },
                     }),
+                    null_ls.builtins.formatting.sql_formatter.with({ args = { "-l", "mariadb" } }),
                     null_ls.builtins.formatting.shfmt,
                     null_ls.builtins.formatting.shellharden,
 
@@ -207,6 +208,8 @@ return {
         "yetone/avante.nvim",
         build = "make",
         event = "VeryLazy",
+        enabled = false,
+
         version = false,
         ---@module 'avante'
         ---@type avante.Config

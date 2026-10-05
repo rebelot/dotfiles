@@ -2,24 +2,41 @@ local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 return {
-    'saghen/blink.cmp',
+    "saghen/blink.cmp",
     event = { "InsertEnter", "CmdLineEnter" },
-    dependencies = { 'rafamadriz/friendly-snippets', "fang2hou/blink-copilot" },
-    build = 'cargo build --release',
+    -- version = "1.*",
+    dependencies = {
+        "rafamadriz/friendly-snippets",
+        "fang2hou/blink-copilot",
+        "saghen/blink.lib",
+    },
+    build = function()
+        require("blink.cmp").build():pwait()
+    end,
 
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
         keymap = {
-            preset = 'default',
+            preset = "default",
             ["<CR>"] = { "accept", "fallback" },
             ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
             ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
-            ["<Up>"] = { function(cmp) return cmp.select_prev({ auto_insert = false }) end, "fallback" },
-            ["<Down>"] = { function(cmp) return cmp.select_next({ auto_insert = false }) end, "fallback" }
+            ["<Up>"] = {
+                function(cmp)
+                    return cmp.select_prev({ auto_insert = false })
+                end,
+                "fallback",
+            },
+            ["<Down>"] = {
+                function(cmp)
+                    return cmp.select_next({ auto_insert = false })
+                end,
+                "fallback",
+            },
         },
         appearance = {
-            nerd_font_variant = 'normal'
+            nerd_font_variant = "normal",
         },
         completion = {
             documentation = { auto_show = true, window = { border = vim.g.FloatBorders } },
@@ -35,44 +52,61 @@ return {
                                 local kind_icon = require("lsp.init").symbol_icons[ctx.kind]
                                 return kind_icon
                             end,
-                        }
+                        },
                     },
 
                     columns = {
-                        { "kind_icon" }, { 'label', 'label_description', gap = 1 }, { "kind" }
+                        { "kind_icon" },
+                        { "label", "label_description", gap = 1 },
+                        { "kind" },
                     },
-                }
+                },
             },
             list = {
-                selection = { preselect = false, auto_insert = true }
-            }
+                selection = { preselect = false, auto_insert = true },
+            },
         },
         cmdline = {
             completion = {
                 list = {
-                    selection = { preselect = true, auto_insert = false }
-                }
+                    selection = { preselect = false, auto_insert = true },
+                },
             },
             keymap = {
                 ["<CR>"] = { "accept", "fallback" },
-                ["<C-N>"] = { "select_next",
+                ["<C-Y>"] = { "accept", "fallback" },
+                ["<C-N>"] = {
+                    "select_next",
                     function(cmp)
-                        vim.api.nvim_feedkeys(t("<Down>"), "n", true)
-                        return true
-                    end
+                        -- vim.api.nvim_feedkeys(t("<Down>"), "n", true)
+                        -- return true
+                        return "<Down>"
+                    end,
                 },
-                ["<C-P>"] = { "select_prev",
+                ["<C-P>"] = {
+                    "select_prev",
                     function(cmp)
-                        vim.api.nvim_feedkeys(t("<Up>"), "n", true)
-                        return true
-                    end
+                        -- vim.api.nvim_feedkeys(t("<Up>"), "n", true)
+                        -- return true
+                        return "<Up>"
+                    end,
                 },
-                ["<Up>"] = { function(cmp) return cmp.select_prev({ auto_insert = false }) end, "fallback" },
-                ["<Down>"] = { function(cmp) return cmp.select_next({ auto_insert = false }) end, "fallback" }
-            }
+                ["<Up>"] = {
+                    function(cmp)
+                        return cmp.select_prev({ auto_insert = false })
+                    end,
+                    "fallback",
+                },
+                ["<Down>"] = {
+                    function(cmp)
+                        return cmp.select_next({ auto_insert = false })
+                    end,
+                    "fallback",
+                },
+            },
         },
         sources = {
-            default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot' },
+            default = { "lsp", "path", "snippets", "buffer", "copilot" },
             providers = {
                 copilot = {
                     name = "copilot",
@@ -84,6 +118,6 @@ return {
             },
         },
         signature = { enabled = true, window = { border = vim.g.FloatBorders } },
-        fuzzy = { implementation = "prefer_rust_with_warning" },
-    }
+        fuzzy = { implementation = "rust" },
+    },
 }

@@ -11,7 +11,7 @@ end
 
 autocmd("TextYankPost", {
     callback = function()
-        vim.highlight.on_yank({ higroup = "IncSearch", timeout = 500 })
+        vim.hl.hl_op({ higroup = "IncSearch", timeout = 500 })
     end,
 })
 
@@ -93,9 +93,9 @@ autocmd({ "WinEnter", "BufWinEnter", "FileType", "BufEnter" }, {
         --     vim.cmd([[setl nocursorline]])
         -- end
 
-        -- if vim.tbl_contains({ "NvimTree" }, vim.bo[buf].filetype) then
-        --     vim.cmd([[setl cursorline | setl signcolumn=yes:1 | let &l:relativenumber = &l:number]])
-        -- end
+        if vim.tbl_contains({ "neo-tree" }, vim.bo[buf].filetype) then
+            vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
+        end
         if vim.bo[buf].buftype == "" then
             vim.cmd([[setl cursorline | let &l:relativenumber = &l:number]])
         end
